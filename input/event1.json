@@ -1,0 +1,300 @@
+{
+    "Id": "FD7DC58E68A9447FB987460138FB3C85",
+    "Ranc": 0,
+    "Type": "1",
+    "Active": true,
+    "Detail": {
+        "de": {
+            "Title": "100. Giro d'Italia: Start der 19. Etappe Innichen - Piancavallo",
+            "Header": null,
+            "BaseText": "★ 100. Giro d'Italia ★\n\nIn Innichen ist dieses Jahr Start der 19. Etappe des  Giro d’Italia. Die Fahrradelite trifft sich zur historischen 100. Ausgabe dieses Klassikers in den Dolomiten. Am Freitag 26. Mai 2017 kämpfen sich Radsportprofis der ganzen Welt von Innichen nach Sexten und über den Kreuzbergpass nach Sappada, Sella Chianzutan bis sie nach 191 Kilometern im 1290 m hoch liegenden Piancavallo eintreffen.\n\n08:30 Uhr Eröffnung Giro Village\n\n10:30 Uhr Präsentation Athleten",
+            "Keywords": null,
+            "Language": "de",
+            "MetaDesc": null,
+            "IntroText": null,
+            "MetaTitle": null,
+            "SubHeader": null,
+            "GetThereText": null,
+            "AdditionalText": null
+        },
+        "en": {
+            "Title": "100th Giro d'Italia: start of the 19th stage San Candido - Piancavallo",
+            "Header": null,
+            "BaseText": "★ 100th Giro d'Italia ★\n\nIn San Candido starts the 19th stage of the Giro d'Italia 2017:\nSan Candido/Innichen - Piancavallo (191km)\n\n8.30 a.m.: Opening Giro Village\n\n10.30 a.m.: Athletes Präsentation",
+            "Keywords": null,
+            "Language": "en",
+            "MetaDesc": null,
+            "IntroText": null,
+            "MetaTitle": null,
+            "SubHeader": null,
+            "GetThereText": null,
+            "AdditionalText": null
+        },
+        "it": {
+            "Title": "100° Giro d'Italia: partenza della 19° tappa San Candido - Piancavallo",
+            "Header": null,
+            "BaseText": "★ 100° Giro d'Italia ★\n\nSan Candido e la bicicletta… una storia d’amore infinita!\n\nDa molti anni San Candido ha un forte legame con il ciclismo. Molti turisti adorano i numerosi percorsi per mountain-bike e le ciclabili che passano tra le possenti montagne. I ciclisti qui si sentono a casa anche grazie alla calorosa ospitalità della popolazione.\n\nDunque non c’è da meravigliarsi se il nostro paesino sarà il punto di partenza della 19a tappa della 100a edizione del Giro d’Italia. L’élite del ciclismo si radunerà nelle Dolomiti per affrontare le tappe più difficili della 100a edizione di questo grande classico. Dalla Val di Fassa, passando da Ortisei fino ad arrivare da noi a San Candido!\n\nVenerdì, 26 maggio 2017 i ciclisti provenienti da tutto il mondo pedaleranno da San Candido verso Sesto, passeranno da Passo Monte Croce, Sella Chianzutan e raggiungeranno il traguardo dopo 191 km di fatica a Piancavallo, ad un’altitudine di 1290 m.\n\nIl paese si tinge di rosa! Non perdetevi la partenza di questa tappa spettacolare che attraverserà le Dolomiti.\n\nOre 08:30: Apertura Giro Village\n\nOre 10:30: Presentazione atleti",
+            "Keywords": null,
+            "Language": "it",
+            "MetaDesc": null,
+            "IntroText": null,
+            "MetaTitle": null,
+            "SubHeader": null,
+            "GetThereText": null,
+            "AdditionalText": null
+        }
+    },
+    "OrgRID": "522822DA51CA11D18F1400A02427D15E",
+    "PayMet": "0",
+    "SignOn": "0",
+    "Ticket": "0",
+    "Topics": [
+        {
+            "TopicRID": "162C0067811B477DA725D2F5F2D98398",
+            "TopicInfo": "Sport"
+        }
+    ],
+    "DateEnd": "2017-05-26T00:00:00",
+    "Gpstype": "position",
+    "SmgTags": null,
+    "Altitude": null,
+    "Latitude": 46.7329,
+    "DateBegin": "2017-05-26T00:00:00",
+    "EventDate": [
+        {
+            "To": "2017-05-26T00:00:00",
+            "End": "14:00:00",
+            "From": "2017-05-26T00:00:00",
+            "Begin": "11:30:00",
+            "Ticket": true,
+            "GpsEast": 0,
+            "Entrance": "00:00:00",
+            "GpsNorth": 0,
+            "MaxPersons": 0,
+            "MinPersons": 0,
+            "SingleDays": false
+        }
+    ],
+    "Longitude": 12.2815,
+    "Shortname": "100. Giro d'Italia: Start der 19. Etappe Innichen - Piancavallo",
+    "SmgActive": false,
+    "TopicRIDs": [
+        "162C0067811B477DA725D2F5F2D98398"
+    ],
+    "DistrictId": "79CBD8A651C911D18F1400A02427D15E",
+    "EventPrice": {},
+    "LastChange": "2017-05-23T00:05:21.5158375",
+    "DistrictIds": [
+        "79CBD8A651C911D18F1400A02427D15E"
+    ],
+    "FirstImport": "2016-10-26T00:05:39.3145998",
+    "HasLanguage": [
+        "de",
+        "it",
+        "en"
+    ],
+    "ContactInfos": {
+        "de": {
+            "Tax": null,
+            "Url": "http://www.giroditalia.it/",
+            "Vat": null,
+            "City": "Innichen",
+            "Email": "info@innichen.it",
+            "Address": "Dorfzentrum",
+            "LogoUrl": null,
+            "Surname": null,
+            "ZipCode": "39038",
+            "Language": "de",
+            "Faxnumber": null,
+            "Givenname": null,
+            "NamePrefix": null,
+            "CompanyName": "",
+            "CountryCode": null,
+            "CountryName": null,
+            "Phonenumber": "+39 0474 913149"
+        },
+        "en": {
+            "Tax": null,
+            "Url": "http://www.giroditalia.it/",
+            "Vat": null,
+            "City": "San Candido / Innichen",
+            "Email": "info@sancandido.info",
+            "Address": "village center",
+            "LogoUrl": null,
+            "Surname": null,
+            "ZipCode": "39038",
+            "Language": "en",
+            "Faxnumber": null,
+            "Givenname": null,
+            "NamePrefix": null,
+            "CompanyName": "",
+            "CountryCode": null,
+            "CountryName": null,
+            "Phonenumber": "+39 0474 913149"
+        },
+        "it": {
+            "Tax": null,
+            "Url": "http://www.giroditalia.it/",
+            "Vat": null,
+            "City": "San Candido",
+            "Email": "info@sancandido.info",
+            "Address": "centro paese",
+            "LogoUrl": null,
+            "Surname": null,
+            "ZipCode": "39038",
+            "Language": "it",
+            "Faxnumber": null,
+            "Givenname": null,
+            "NamePrefix": null,
+            "CompanyName": "",
+            "CountryCode": null,
+            "CountryName": null,
+            "Phonenumber": "+39 0474 913149"
+        }
+    },
+    "ImageGallery": [],
+    "LocationInfo": {
+        "TvInfo": {
+            "Id": "522822DA51CA11D18F1400A02427D15E",
+            "Name": {
+                "cs": "Innichen/San Candido",
+                "de": "Innichen",
+                "en": "San Candido/Innichen",
+                "fr": "San Candido/Innichen",
+                "it": "San Candido",
+                "nl": "San Candido/Innichen",
+                "pl": "San Candido/Innichen",
+                "ru": "Сан-Кандидо/Innichen"
+            }
+        },
+        "AreaInfo": null,
+        "RegionInfo": {
+            "Id": "D2633A1FC24E11D18F1B006097B8970B",
+            "Name": {
+                "cs": "Drei Zinnen Dolomiten/Tre Cime Dolomiti",
+                "de": "Drei Zinnen Dolomiten",
+                "en": "Three Peaks Dolomites",
+                "fr": "Tre Cime Dolomiti/Drei Zinnen Dolomiten",
+                "it": "Tre Cime Dolomiti",
+                "nl": "Tre Cime Dolomiti/Drei Zinnen Dolomiten",
+                "pl": "Tre Cime Dolomiti/Drei Zinnen Dolomiten",
+                "ru": "Чиме Доломитовые Альпы/Drei Zinnen Dolomiten"
+            }
+        },
+        "DistrictInfo": {
+            "Id": "79CBD8A651C911D18F1400A02427D15E",
+            "Name": {
+                "cs": "Innichen /S. Candido",
+                "de": "Innichen ",
+                "en": "S. Candido/Innichen ",
+                "fr": "S. Candido/Innichen ",
+                "it": "S. Candido",
+                "nl": "S. Candido/Innichen ",
+                "pl": "S. Candido/Innichen ",
+                "ru": "Сан-Кандидо"
+            }
+        },
+        "MunicipalityInfo": {
+            "Id": "C9F8EA73E9DC456A8DB9914F0CB29324",
+            "Name": {
+                "cs": "Innichen/S. Candido",
+                "de": "Innichen",
+                "en": "S. Candido/Innichen",
+                "fr": "S. Candido/Innichen",
+                "it": "S. Candido",
+                "nl": "S. Candido/Innichen",
+                "pl": "S. Candido/Innichen",
+                "ru": "Сан-Кандидо"
+            }
+        }
+    },
+    "EventDatesEnd": [
+        "2017-05-26T00:00:00"
+    ],
+    "NextBeginDate": "2017-05-26T00:00:00",
+    "EventPublisher": null,
+    "OrganizerInfos": {
+        "de": {
+            "Tax": "00127470219",
+            "Url": "http://www.sancandido.info",
+            "Vat": "",
+            "City": "Innichen",
+            "Email": "info@innichen.it",
+            "Address": "Pflegplatz 1",
+            "LogoUrl": null,
+            "Surname": "",
+            "ZipCode": "39038",
+            "Language": "de",
+            "Faxnumber": "0474 913677",
+            "Givenname": "",
+            "NamePrefix": null,
+            "CompanyName": "Tourismusverein Innichen",
+            "CountryCode": null,
+            "CountryName": null,
+            "Phonenumber": "0474 913149"
+        },
+        "en": {
+            "Tax": "00127470219",
+            "Url": "http://www.sancandido.info",
+            "Vat": "",
+            "City": "Innichen",
+            "Email": "info@innichen.it",
+            "Address": "Pflegeplatz 1",
+            "LogoUrl": null,
+            "Surname": "",
+            "ZipCode": "39038",
+            "Language": "en",
+            "Faxnumber": "0474 913677",
+            "Givenname": "",
+            "NamePrefix": null,
+            "CompanyName": "Tourist office  Innichen",
+            "CountryCode": null,
+            "CountryName": null,
+            "Phonenumber": "0474 913149"
+        },
+        "it": {
+            "Tax": "00127470219",
+            "Url": "http://www.sancandido.info",
+            "Vat": "",
+            "City": "San Candido",
+            "Email": "info@innichen.it",
+            "Address": "P.zza del Magistrato 1",
+            "LogoUrl": null,
+            "Surname": "",
+            "ZipCode": "39038",
+            "Language": "it",
+            "Faxnumber": "0474 913677",
+            "Givenname": "",
+            "NamePrefix": null,
+            "CompanyName": "Associazione Turistica  S. Candido",
+            "CountryCode": null,
+            "CountryName": null,
+            "Phonenumber": "0474 913149"
+        }
+    },
+    "EventDatesBegin": [
+        "2017-05-26T00:00:00"
+    ],
+    "EventDateCounter": 1,
+    "EventAdditionalInfos": {
+        "de": {
+            "Reg": "",
+            "Mplace": "",
+            "Language": "de",
+            "Location": ""
+        },
+        "en": {
+            "Reg": "",
+            "Mplace": "",
+            "Language": "en",
+            "Location": ""
+        },
+        "it": {
+            "Reg": "",
+            "Mplace": "",
+            "Language": "it",
+            "Location": ""
+        }
+    },
+    "AltitudeUnitofMeasure": null
+}

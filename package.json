@@ -1,0 +1,22 @@
+{
+  "name": "reference-server",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node event-converter.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tgoprince/odh-alpinebits-destination-data-server.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/tgoprince/odh-alpinebits-destination-data-server/issues"
+  },
+  "homepage": "https://github.com/tgoprince/odh-alpinebits-destination-data-server#readme",
+  "dependencies": {
+    "ajv": "^6.10.2"
+  }
+}
