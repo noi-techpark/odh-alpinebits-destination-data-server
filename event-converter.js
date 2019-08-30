@@ -1,13 +1,18 @@
 const fs = require('fs');
 
+const { translateFields, translateArrayFields, translateMultilingualFields } = require('./translator');
+const { createObject } = require('./templates');
+
 // const Ajv = require('ajv');
 // let ajv = new Ajv();
 // let schema = JSON.parse(fs.readFileSync('Event.schema.json'));
 // let validate = ajv.compile(schema);
 
 // let source = JSON.parse(fs.readFileSync('event1.json'));
-
-let entry = JSON.parse(fs.readFileSync('input/events-with-image.json'));
+const inputFile = 'input/events-with-image.json';
+console.log("Reading " + inputFile + "...");
+let entry = JSON.parse(fs.readFileSync(inputFile));
+console.log("Converting " + entry.Items.length + " entries...")
 
 const languageMapping = [
   ["it","ita"],
@@ -15,107 +20,141 @@ const languageMapping = [
   ["de","deu"]
 ]
 
-const text = {
-  eng: null,
-  ita: null,
-  deu: null
-};
-
-const emptyEvent = {
-  "@type": "Event",
-  id: null,
-  // name: { ...text },
-  // shortName: { ...text },
-  // description: { ...text },
-  // abstract: { ...text },
-  startDate: null,
-  endDate: null,
-  venues: []
-}
-
-const emptyImage = {
-  "@type": "MediaObject",
-  name: { ...text },
-  description: { ...text },
-  url: null,
-  contentType: null,
-  height: null,
-  width: null,
-  license: null,
-  copyrightOwner: {
-    "@type": "Agent",
-    name: { ...text }
-  }
-}
-
-// isLanguageNested: true => object.property.it
-// isLanguageNested: false => object.it.property
-const translateMultilingualFields = (source, target, fieldMapping, languageMapping, isLanguageNested) => {
-  // TODO: languageMapping and fieldMapping must be lists of
-  for (fieldEntry of fieldMapping) {
-    let [sourceField, targetField] = fieldEntry;
-
-    for (languageEntry of languageMapping) {
-      let [sourceLanguage, targetLanguage] = languageEntry;
-
-      if(!target[targetField])
-        target[targetField] = {}
-
-      if(isLanguageNested && source[sourceField])
-        target[targetField][targetLanguage] = source[sourceField][sourceLanguage];
-      else if (!isLanguageNested && source[sourceLanguage])
-        target[targetField][targetLanguage] = source[sourceLanguage][sourceField];
-    }
-  }
-}
-
-const translateFields = (source, target, fieldMapping, valueMapping = {}) => {
-  for (fieldEntry of fieldMapping) {
-    let [sourceField, targetField] = fieldEntry;
-    target[targetField] = valueMapping[sourceField] ? valueMapping[sourceField][source[sourceField]] : source[sourceField];
-  }
-}
-
 for (source of entry.Items) {
 
-  // TODO: create function to create empty objects. It is better to have fields with null values than to have missing fields.
-
-  let target = JSON.parse(JSON.stringify(emptyEvent));
-
+  let target = createObject('Event');
+  
   const directMapping = [
     ["Id", "id"],
     ["LastChange", "lastUpdate"],
     ["DateBegin", "startDate"],
     ["DateEnd", "endDate"],
   ]
-
   translateFields(source, target, directMapping);
-
-  // target.id = source.Id;
-
-  // Metadata
-  target.dataProvider = "http://tourism.opendatahub.bz.it/";
-  // target.lastUpdate = source.LastChange;
 
   // Basic textual descriptions
   if(source.Detail) {
-
     const descriptionMapping = [
       ["Title", "name"],
       ["BaseText", "description"]
     ];
-
     translateMultilingualFields(source.Detail, target, descriptionMapping, languageMapping, false);
+  }
 
+  if(source.ContactInfos) {
+    const urlMapping = [ ["Url", "url"] ];
+    translateMultilingualFields(source.ContactInfos, target, urlMapping, languageMapping, false);
   }
 
   // Dates
   // TODO: multiple days
-  // target.startDate = source.DateBegin;
-  // target.endDate = source.DateEnd;
 
   // Venue
-  let venue = {
+  // TODO: add the venue's address
+  let venue = createObject('Venue');
+  target.venues.push(venue);
+
+  const venueMapping = [ ["Location", "name"] ];
+  translateMultilingualFields(source.EventAdditionalInfos, venue, venueMapping, languageMapping, false);
+
+  let address = createObject('Address');
+  venue.address = address;
+
+  if(source.LocationInfo && source.LocationInfo.MunicipalityInfo) {
+    const cityMapping = [ ["Name", "city"] ];
+    translateMultilingualFields(source.LocationInfo.MunicipalityInfo, address, cityMapping, languageMapping, true);
+  }
+
+  if(source.Latitude && source.Longitude) {
+    let point = createObject('Point');
+    venue.geometries.push(point);
+
+    point.coordinates.push(source.Latitude);
+    point.coordinates.push(source.Longitude);
+
+    if(source.Altitude)
+      point.coordinates.push(source.Altitude);
+  }
+
+  // Organizer
+  // Basic textual descriptions
+  const sourceOrganizer = source.OrganizerInfos;
+  if(sourceOrganizer) {
+    let targetOrganizer = createObject('Agent');
+    target.organizers = [ targetOrganizer ];
+
+    const organizerMapping = [ ["Url", "url"] ];
+    translateMultilingualFields(sourceOrganizer, targetOrganizer, organizerMapping, languageMapping, false);
+
+    let contactPoint = createObject('ContactPoint');
+    targetOrganizer.contacts = [contactPoint];
+
+    let orgAddress = createObject('Address');
+    contactPoint.address = orgAddress;
+
+    const addressMapping = [
+      ["Address", "street"],
+      ["City", "city"],
+      ["ZipCode", "zipcode"],
+    ];
+    translateMultilingualFields(sourceOrganizer, orgAddress, addressMapping, languageMapping, false);
+
+    let inferredType = {
+      error: 0,
+      organization: 0,
+      person: 0
+    };
+
+    for (languageEntry of languageMapping) {
+      let [sourceLanguage, targetLanguage] = languageEntry;
+
+      if(sourceOrganizer[sourceLanguage]) {
+        const phonenumber = sourceOrganizer[sourceLanguage].Phonenumber.trim();
+        contactPoint.telephone = contactPoint.telephone || phonenumber;
+
+        const email = sourceOrganizer[sourceLanguage].Email.trim();
+        contactPoint.email = contactPoint.email || email;
+
+        const ignoreValues = ["Undefiniert","!","-",".","sonstige"];
+        const companyName = sourceOrganizer[sourceLanguage].CompanyName.trim();
+        const givenName = sourceOrganizer[sourceLanguage].Givenname.trim();
+        const surname = sourceOrganizer[sourceLanguage].Surname.trim();
+
+        const isValidCompanyName = companyName && !ignoreValues.includes(companyName);
+        const isValidGivenName = givenName && !ignoreValues.includes(givenName);
+        const isValidSurname = surname && !ignoreValues.includes(surname);
+
+        if(!isValidCompanyName && !isValidGivenName && !isValidSurname) {
+          inferredType.error++;
+          targetOrganizer.name[targetLanguage] = null;
+        }
+        else if(isValidCompanyName) {
+          inferredType.organization++;
+          targetOrganizer.name[targetLanguage] = companyName;
+        }
+        else if ((isValidGivenName || isValidSurname) && !(isValidGivenName && isValidSurname)){
+            if(isValidSurname){
+              inferredType.organization++;
+              targetOrganizer.name[targetLanguage] = surname;
+            }
+            else {
+              inferredType.organization++;
+              targetOrganizer.name[targetLanguage] = givenName;
+            }
+        }
+        else {
+          inferredType.person++;
+          targetOrganizer.name[targetLanguage] = givenName+" "+surname;
+        }
+      }
+    }
+
+    if(inferredType.organization)
+      targetOrganizer.category = "organization";
+    else if (inferredType.person)
+      targetOrganizer.category = "person";
+    else
+      targetOrganizer.category = null;
 
   }
 
@@ -144,7 +183,7 @@ for (source of entry.Items) {
   // Images
   target.multimediaDescriptions = []
   for (sourceImage of source.ImageGallery) {
-    let targetImage = {}
+    let targetImage = createObject('MediaObject');
 
     target.multimediaDescriptions.push(targetImage);
 
@@ -171,29 +210,30 @@ for (source of entry.Items) {
     ];
 
     translateMultilingualFields(sourceImage, targetImage, imageMultilingualFieldMapping, languageMapping, true);
-  }
 
-  if(target.multimediaDescriptions.length>0) {
-
-    // const outputFile = "target.json";
-    const outputFile = "output/"+target.id+".json";
-    const outputContent = JSON.stringify(target, null, 2);
-
-    fs.writeFile(outputFile, outputContent, function (err) {
-      if (err) throw err;
-    });
-
-    // var isValid = validate(target);
-    //
-    // if(isValid){
-    //   console.log('OK: The object is VALID!');
-    // }
-    // else {
-    //   console.log('ERROR: The object is INVALID!');
-    //   console.log(JSON.stringify(validate.errors,null,2));
-    // }
+    const owner = createObject('Agent');
+    owner.name.ita = owner.name.deu = owner.name.eng = sourceImage.CopyRight;
+    targetImage.copyrightOwner = owner;
 
   }
+
+  // const outputFile = "target.json";
+  const outputFile = "output/"+target.id+".json";
+  const outputContent = JSON.stringify(target, null, 2);
+
+  fs.writeFile(outputFile, outputContent, function (err) {
+    if (err) throw err;
+  });
+
+  // var isValid = validate(target);
+  //
+  // if(isValid){
+  //   console.log('OK: The object is VALID!');
+  // }
+  // else {
+  //   console.log('ERROR: The object is INVALID!');
+  //   console.log(JSON.stringify(validate.errors,null,2));
+  // }
 
 }
 
