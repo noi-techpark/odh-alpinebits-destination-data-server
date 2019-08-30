@@ -1,15 +1,18 @@
 const templates = {
   Event: {
     "@type": "Event",
-    id: null,
     dataProvider: "http://tourism.opendatahub.bz.it/",
+    lastUpdate: null,
+    id: null,
     name: {},
     shortName: {},
     description: {},
     abstract: {},
     startDate: null,
     endDate: null,
-    venues: []
+    venues: [],
+    organizer: {},
+    publisher: {}
   },
   Agent: {
     "@type": "Agent",
@@ -48,8 +51,9 @@ const templates = {
     id: null,
     name: {},
     description: {},
-    address: { },
-    geometries: []
+    address: {},
+    geometries: [],
+    openingHours: []
   },
   ContactPoint: {
     "@type": "ContactPoint",
@@ -57,6 +61,12 @@ const templates = {
     telephone: null,
     address: {},
     availableHours: {}
+  },
+  HoursSpecification: {
+    "@type": "HoursSpecification",
+    "hours": [],
+    "validFrom": null,
+    "validTo": null
   }
 }
 

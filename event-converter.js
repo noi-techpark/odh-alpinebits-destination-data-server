@@ -4,11 +4,10 @@ const { translateFields, translateArrayFields, translateMultilingualFields } = r
 const { createObject } = require('./templates');
 
 // const Ajv = require('ajv');
-// let ajv = new Ajv();
+// let ajv = new Ajv( { verbose: true } );
 // let schema = JSON.parse(fs.readFileSync('Event.schema.json'));
 // let validate = ajv.compile(schema);
 
-// let source = JSON.parse(fs.readFileSync('event1.json'));
 const inputFile = 'input/events-with-image.json';
 console.log("Reading " + inputFile + "...");
 let entry = JSON.parse(fs.readFileSync(inputFile));
@@ -23,14 +22,15 @@ const languageMapping = [
 for (source of entry.Items) {
 
   let target = createObject('Event');
-  
+
   const directMapping = [
     ["Id", "id"],
-    ["LastChange", "lastUpdate"],
     ["DateBegin", "startDate"],
     ["DateEnd", "endDate"],
   ]
   translateFields(source, target, directMapping);
+
+  target.lastUpdate = source.LastChange+"+02:00";
 
   // Basic textual descriptions
   if(source.Detail) {
@@ -46,11 +46,7 @@ for (source of entry.Items) {
     translateMultilingualFields(source.ContactInfos, target, urlMapping, languageMapping, false);
   }
 
-  // Dates
-  // TODO: multiple days
-
   // Venue
-  // TODO: add the venue's address
   let venue = createObject('Venue');
   target.venues.push(venue);
 
@@ -60,9 +56,13 @@ for (source of entry.Items) {
   let address = createObject('Address');
   venue.address = address;
 
-  if(source.LocationInfo && source.LocationInfo.MunicipalityInfo) {
-    const cityMapping = [ ["Name", "city"] ];
-    translateMultilingualFields(source.LocationInfo.MunicipalityInfo, address, cityMapping, languageMapping, true);
+  if(source.ContactInfos) {
+    const venueAddressMapping = [
+      ["Address", "street"],
+      ["City", "city"],
+      ["ZipCode", "zipcode"],
+    ];
+    translateMultilingualFields(source.ContactInfos, address, venueAddressMapping, languageMapping, false);
   }
 
   if(source.Latitude && source.Longitude) {
@@ -76,8 +76,26 @@ for (source of entry.Items) {
       point.coordinates.push(source.Altitude);
   }
 
+  // Dates and times
+  if(source.EventDate && source.EventDate.length===1) {
+    const date = source.EventDate[0];
+    target.startDate = date.From.replace(/T.*/,"T"+date.Begin);
+    target.endDate = date.To.replace(/T.*/,"T"+date.End);
+  }
+  for (date of source.EventDate) {
+    let hoursSpec = createObject('HoursSpecification');
+    venue.openingHours.push(hoursSpec);
+
+    hoursSpec.validFrom = date.From.replace(/T.*/,"");
+    hoursSpec.validTo = date.To.replace(/T.*/,"");
+
+    hoursSpec.hours = {
+      opens: date.Begin,
+      closes: date.End
+    };
+  }
+
   // Organizer
-  // Basic textual descriptions
   const sourceOrganizer = source.OrganizerInfos;
   if(sourceOrganizer) {
     let targetOrganizer = createObject('Agent');
@@ -187,7 +205,6 @@ for (source of entry.Items) {
 
     target.multimediaDescriptions.push(targetImage);
 
-    // targetImage.url = sourceImage.ImageUrl;
     const imageFieldMapping = [
       ["ImageUrl","url"],
       ["Width","width"],
@@ -217,7 +234,6 @@ for (source of entry.Items) {
 
   }
 
-  // const outputFile = "target.json";
   const outputFile = "output/"+target.id+".json";
   const outputContent = JSON.stringify(target, null, 2);
 
@@ -232,7 +248,7 @@ for (source of entry.Items) {
   // }
   // else {
   //   console.log('ERROR: The object is INVALID!');
-  //   console.log(JSON.stringify(validate.errors,null,2));
+  //   // console.log(JSON.stringify(validate.errors,null,2));
   // }
 
 }
