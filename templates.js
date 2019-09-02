@@ -3,16 +3,40 @@ const templates = {
     "@type": "Event",
     dataProvider: "http://tourism.opendatahub.bz.it/",
     lastUpdate: null,
-    id: null,
-    name: {},
-    shortName: {},
-    description: {},
-    abstract: {},
+    id: "",
+    name: {
+      deu: "",
+      eng: "",
+      ita: ""
+    },
+    shortName: {
+      deu: "",
+      eng: "",
+      ita: ""
+    },
+    description: {
+      deu: "",
+      eng: "",
+      ita: ""
+    },
+    abstract: {
+      deu: "",
+      eng: "",
+      ita: ""
+    },
     startDate: null,
     endDate: null,
     venues: [],
-    organizer: {},
-    publisher: {}
+    organizers: [],
+    publisher: {
+      "@type": "Agent",
+      name: {
+        deu: "LTS - Landesverband der Tourismusorganisationen Südtirols",
+        eng: "LTS - Landesverband der Tourismusorganisationen Südtirols",
+        ita: "LTS - Landesverband der Tourismusorganisationen Südtirols"
+      },
+      url: "https://lts.it"
+    }
   },
   Agent: {
     "@type": "Agent",
@@ -20,13 +44,13 @@ const templates = {
   },
   MediaObject: {
     "@type": "MediaObject",
-    name: {},
+    // name: {},
     description: {},
-    url: null,
-    contentType: null,
-    height: null,
-    width: null,
-    license: null,
+    url: "",
+    contentType: "image/jpeg",
+    // height: 0,
+    // width: 0,
+    license: "",
     copyrightOwner: {}
   },
   Address: {
@@ -48,25 +72,22 @@ const templates = {
   },
   Venue: {
     "@type": "Venue",
-    id: null,
+    id: "",
     name: {},
-    description: {},
+    // description: {},
     address: {},
     geometries: [],
     openingHours: []
   },
   ContactPoint: {
     "@type": "ContactPoint",
-    email: null,
-    telephone: null,
-    address: {},
-    availableHours: {}
+    address: {}
   },
   HoursSpecification: {
     "@type": "HoursSpecification",
-    "hours": [],
-    "validFrom": null,
-    "validTo": null
+    hours: [],
+    validFrom: null,
+    validTo: null
   }
 }
 

@@ -1029,17 +1029,17 @@
         "height": {
           "description": "The height of an image or a video in pixels.",
           "type": "integer",
-          "minimum": 1
+          "minimum": 0
         },
         "width": {
           "description": "The width of an image or a video in pixels.",
           "type": "integer",
-          "minimum": 1
+          "minimum": 0
         },
         "duration": {
           "description": "The duration of an audio or a video in seconds.",
           "type": "number",
-          "minimum": 1
+          "minimum": 0
         },
         "license": {
           "description": "The license defined for a media object. The value of this field should be a valid license identifier as defined in https://spdx.org/licenses/ (e.g. CC-BY-4.0, FreeImage)",

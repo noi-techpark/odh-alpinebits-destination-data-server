@@ -1,15 +1,11 @@
 1. Explain the Details fields: Header, MetaDesc, IntroText, MetaTitle, SubHeader, GetThereText, AdditionalText.
-
 2. Verify all the different types of date.
-
 3. Let's define our event categories
-
+4, Should we add the following properties to agents? "Tax": "01125780211", "Vat": "82010080214",
 
 ISSUES:
 1. How should we handle objects that do not exist in a server's database?
 2. What should we do about empty fields? { name: { ita: null, eng: null, deu: null} }?
-
-
 
 USED
 - Detail.Title

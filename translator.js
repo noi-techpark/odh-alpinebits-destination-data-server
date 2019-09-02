@@ -1,6 +1,6 @@
 // isLanguageNested: true => object.property.it
 // isLanguageNested: false => object.it.property
-module.exports.translateMultilingualFields = (source, target, fieldMapping, languageMapping, isLanguageNested) => {
+module.exports.translateMultilingualFields = (source, target, fieldMapping, languageMapping, isLanguageNested, ignoreNullValues) => {
   // TODO: languageMapping and fieldMapping must be lists of
   for (fieldEntry of fieldMapping) {
     let [sourceField, targetField] = fieldEntry;
@@ -11,9 +11,9 @@ module.exports.translateMultilingualFields = (source, target, fieldMapping, lang
       if(!target[targetField])
         target[targetField] = {}
 
-      if(isLanguageNested && source[sourceField])
+      if(isLanguageNested && source[sourceField] && (!ignoreNullValues || source[sourceField][sourceLanguage]))
         target[targetField][targetLanguage] = source[sourceField][sourceLanguage];
-      else if (!isLanguageNested && source[sourceLanguage])
+      else if (!isLanguageNested && source[sourceLanguage] && (!ignoreNullValues || source[sourceLanguage][sourceField]))
         target[targetField][targetLanguage] = source[sourceLanguage][sourceField];
     }
   }

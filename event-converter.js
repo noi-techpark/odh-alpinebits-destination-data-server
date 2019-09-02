@@ -3,13 +3,15 @@ const fs = require('fs');
 const { translateFields, translateArrayFields, translateMultilingualFields } = require('./translator');
 const { createObject } = require('./templates');
 
-// const Ajv = require('ajv');
-// let ajv = new Ajv( { verbose: true } );
-// let schema = JSON.parse(fs.readFileSync('Event.schema.json'));
-// let validate = ajv.compile(schema);
+const Ajv = require('ajv');
+let ajv = new Ajv( { verbose: false } );
+let schema = JSON.parse(fs.readFileSync('Event.schema.json'));
+let validate = ajv.compile(schema);
 
-const inputFile = 'input/events-with-image.json';
+// const inputFile = 'input/events-with-image.json'; // small dataset with 33 events
+const inputFile = 'input/events.json'; // medium dataset with 500 events (~5MB)
 console.log("Reading " + inputFile + "...");
+
 let entry = JSON.parse(fs.readFileSync(inputFile));
 console.log("Converting " + entry.Items.length + " entries...")
 
@@ -38,17 +40,18 @@ for (source of entry.Items) {
       ["Title", "name"],
       ["BaseText", "description"]
     ];
-    translateMultilingualFields(source.Detail, target, descriptionMapping, languageMapping, false);
+    translateMultilingualFields(source.Detail, target, descriptionMapping, languageMapping, false, true);
   }
 
   if(source.ContactInfos) {
     const urlMapping = [ ["Url", "url"] ];
-    translateMultilingualFields(source.ContactInfos, target, urlMapping, languageMapping, false);
+    translateMultilingualFields(source.ContactInfos, target, urlMapping, languageMapping, false, true);
   }
 
   // Venue
   let venue = createObject('Venue');
   target.venues.push(venue);
+  venue.id = source.Id+"/location";
 
   const venueMapping = [ ["Location", "name"] ];
   translateMultilingualFields(source.EventAdditionalInfos, venue, venueMapping, languageMapping, false);
@@ -63,6 +66,8 @@ for (source of entry.Items) {
       ["ZipCode", "zipcode"],
     ];
     translateMultilingualFields(source.ContactInfos, address, venueAddressMapping, languageMapping, false);
+
+    address.zipcode = address.zipcode.ita || address.zipcode.eng || address.zipcode.deu;
   }
 
   if(source.Latitude && source.Longitude) {
@@ -79,20 +84,25 @@ for (source of entry.Items) {
   // Dates and times
   if(source.EventDate && source.EventDate.length===1) {
     const date = source.EventDate[0];
-    target.startDate = date.From.replace(/T.*/,"T"+date.Begin);
-    target.endDate = date.To.replace(/T.*/,"T"+date.End);
+    target.startDate = date.From.replace(/T.*/,"T"+date.Begin+"+02:00");
+    target.endDate = date.To.replace(/T.*/,"T"+date.End+"+02:00");
   }
-  for (date of source.EventDate) {
-    let hoursSpec = createObject('HoursSpecification');
-    venue.openingHours.push(hoursSpec);
+  else {
+    target.startDate += "+02:00"
+    target.endDate += "+02:00"
 
-    hoursSpec.validFrom = date.From.replace(/T.*/,"");
-    hoursSpec.validTo = date.To.replace(/T.*/,"");
+    for (date of source.EventDate) {
+      let hoursSpec = createObject('HoursSpecification');
+      venue.openingHours.push(hoursSpec);
 
-    hoursSpec.hours = {
-      opens: date.Begin,
-      closes: date.End
-    };
+      hoursSpec.validFrom = date.From.replace(/T.*/,"");
+      hoursSpec.validTo = date.To.replace(/T.*/,"");
+
+      hoursSpec.hours = [{
+        opens: date.Begin,
+        closes: date.End
+      }];
+    }
   }
 
   // Organizer
@@ -102,7 +112,7 @@ for (source of entry.Items) {
     target.organizers = [ targetOrganizer ];
 
     const organizerMapping = [ ["Url", "url"] ];
-    translateMultilingualFields(sourceOrganizer, targetOrganizer, organizerMapping, languageMapping, false);
+    translateMultilingualFields(sourceOrganizer, targetOrganizer, organizerMapping, languageMapping, false, true);
 
     let contactPoint = createObject('ContactPoint');
     targetOrganizer.contacts = [contactPoint];
@@ -116,6 +126,7 @@ for (source of entry.Items) {
       ["ZipCode", "zipcode"],
     ];
     translateMultilingualFields(sourceOrganizer, orgAddress, addressMapping, languageMapping, false);
+    orgAddress.zipcode = orgAddress.zipcode.ita || orgAddress.zipcode.eng || orgAddress.zipcode.deu;
 
     let inferredType = {
       error: 0,
@@ -131,7 +142,8 @@ for (source of entry.Items) {
         contactPoint.telephone = contactPoint.telephone || phonenumber;
 
         const email = sourceOrganizer[sourceLanguage].Email.trim();
-        contactPoint.email = contactPoint.email || email;
+        if(email)
+          contactPoint.email = email;
 
         const ignoreValues = ["Undefiniert","!","-",".","sonstige"];
         const companyName = sourceOrganizer[sourceLanguage].CompanyName.trim();
@@ -144,27 +156,54 @@ for (source of entry.Items) {
 
         if(!isValidCompanyName && !isValidGivenName && !isValidSurname) {
           inferredType.error++;
-          targetOrganizer.name[targetLanguage] = null;
+          // targetOrganizer.name[targetLanguage] = null;
         }
         else if(isValidCompanyName) {
           inferredType.organization++;
+          if(!targetOrganizer.name) targetOrganizer = {};
+
           targetOrganizer.name[targetLanguage] = companyName;
         }
         else if ((isValidGivenName || isValidSurname) && !(isValidGivenName && isValidSurname)){
             if(isValidSurname){
               inferredType.organization++;
+
+              if(!targetOrganizer.name) targetOrganizer = {};
               targetOrganizer.name[targetLanguage] = surname;
             }
             else {
               inferredType.organization++;
+
+              if(!targetOrganizer.name) targetOrganizer = {};
               targetOrganizer.name[targetLanguage] = givenName;
             }
         }
         else {
           inferredType.person++;
+
+          if(!targetOrganizer.name) targetOrganizer = {};
           targetOrganizer.name[targetLanguage] = givenName+" "+surname;
         }
       }
+    }
+
+    //If email and telephone number are not specified in organizer, try to get it from the ContactInfos field.
+    if(!targetOrganizer.email){
+      if(source.ContactInfos.de && source.ContactInfos.de.Email && source.ContactInfos.de.Email.trim())
+        targetOrganizer.email = source.ContactInfos.de.Email.trim();
+      else if(source.ContactInfos.it && source.ContactInfos.it.Email && source.ContactInfos.it.Email.trim())
+        targetOrganizer.email = source.ContactInfos.it.Email.trim();
+      else if(source.ContactInfos.en && source.ContactInfos.en.Email && source.ContactInfos.en.Email.trim())
+        targetOrganizer.email = source.ContactInfos.en.Email.trim();
+    }
+
+    if(!targetOrganizer.telephone){
+      if(source.ContactInfos.de && source.ContactInfos.de.Phonenumber && source.ContactInfos.de.Phonenumber.trim())
+        targetOrganizer.telephone = source.ContactInfos.de.Phonenumber.trim();
+      else if(source.ContactInfos.it && source.ContactInfos.it.Phonenumber && source.ContactInfos.it.Phonenumber.trim())
+        targetOrganizer.telephone = source.ContactInfos.it.Phonenumber.trim();
+      else if(source.ContactInfos.en && source.ContactInfos.en.Phonenumber && source.ContactInfos.en.Phonenumber.trim())
+        targetOrganizer.telephone = source.ContactInfos.en.Phonenumber.trim();
     }
 
     if(inferredType.organization)
@@ -172,9 +211,10 @@ for (source of entry.Items) {
     else if (inferredType.person)
       targetOrganizer.category = "person";
     else
-      targetOrganizer.category = null;
-
+      targetOrganizer.category = "organization"; // TODO: decide how to handle cases like this.
   }
+
+
 
   // Event categories
   const categoryMapping = {
@@ -207,8 +247,8 @@ for (source of entry.Items) {
 
     const imageFieldMapping = [
       ["ImageUrl","url"],
-      ["Width","width"],
-      ["Height","height"],
+      // ["Width","width"],
+      // ["Height","height"],
       ["License","license"]
     ]
 
@@ -222,7 +262,7 @@ for (source of entry.Items) {
     translateFields(sourceImage, targetImage, imageFieldMapping, imageValueMapping);
 
     const imageMultilingualFieldMapping = [
-      ["ImageTitle", "name"],
+      // ["ImageTitle", "name"],
       ["ImageDesc", "description"],
     ];
 
@@ -231,7 +271,6 @@ for (source of entry.Items) {
     const owner = createObject('Agent');
     owner.name.ita = owner.name.deu = owner.name.eng = sourceImage.CopyRight;
     targetImage.copyrightOwner = owner;
-
   }
 
   const outputFile = "output/"+target.id+".json";
@@ -241,15 +280,15 @@ for (source of entry.Items) {
     if (err) throw err;
   });
 
-  // var isValid = validate(target);
-  //
-  // if(isValid){
-  //   console.log('OK: The object is VALID!');
-  // }
-  // else {
-  //   console.log('ERROR: The object is INVALID!');
-  //   // console.log(JSON.stringify(validate.errors,null,2));
-  // }
+  var isValid = validate(target);
+
+  if(isValid){
+    console.log('OK: The object is VALID!');
+  }
+  else {
+    console.log('ERROR: The object is INVALID!',target.id);
+    console.log(JSON.stringify(validate.errors,null,2));
+  }
 
 }
 
