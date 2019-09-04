@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node event-converter.js"
+    "translate": "node src/alpinebits-translator.js",
+    "serialize": "node src/alpinebits-translator.js",
   },
   "repository": {
     "type": "git",
@@ -17,6 +18,7 @@
   },
   "homepage": "https://github.com/tgoprince/odh-alpinebits-destination-data-server#readme",
   "dependencies": {
-    "ajv": "^6.10.2"
+    "ajv": "^6.10.2",
+    "jsonapi-serializer": "^3.6.5"
   }
 }

@@ -6,6 +6,7 @@
 ISSUES:
 1. How should we handle objects that do not exist in a server's database?
 2. What should we do about empty fields? { name: { ita: null, eng: null, deu: null} }?
+3. We must always add IDs
 
 USED
 - Detail.Title

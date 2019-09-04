@@ -30,16 +30,20 @@ const templates = {
     organizers: [],
     publisher: {
       "@type": "Agent",
+      id: "lts",
       name: {
         deu: "LTS - Landesverband der Tourismusorganisationen Südtirols",
         eng: "LTS - Landesverband der Tourismusorganisationen Südtirols",
         ita: "LTS - Landesverband der Tourismusorganisationen Südtirols"
       },
       url: "https://lts.it"
-    }
+    },
+    structure: "simple",
+    // subEvents: [],
   },
   Agent: {
     "@type": "Agent",
+    id: "123456",
     name: {}
   },
   MediaObject: {
