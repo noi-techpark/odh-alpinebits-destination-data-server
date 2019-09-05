@@ -1,6 +1,6 @@
 // isLanguageNested: true => object.property.it
 // isLanguageNested: false => object.it.property
-module.exports.translateMultilingualFields = (source, target, fieldMapping, languageMapping, isLanguageNested, ignoreNullValues) => {
+function transformMultilingualFields (source, target, fieldMapping, languageMapping, isLanguageNested, ignoreNullValues) {
   // TODO: languageMapping and fieldMapping must be lists of
   for (fieldEntry of fieldMapping) {
     let [sourceField, targetField] = fieldEntry;
@@ -19,7 +19,7 @@ module.exports.translateMultilingualFields = (source, target, fieldMapping, lang
   }
 }
 
-module.exports.translateFields = (source, target, fieldMapping, valueMapping = {}) => {
+function transformFields (source, target, fieldMapping, valueMapping = {}) {
   for (fieldEntry of fieldMapping) {
     let [sourceField, targetField] = fieldEntry;
     target[targetField] = valueMapping[sourceField] ? valueMapping[sourceField][source[sourceField]] : source[sourceField];
@@ -27,7 +27,7 @@ module.exports.translateFields = (source, target, fieldMapping, valueMapping = {
 }
 
 // TODO currently unused. Check later...
-module.exports.translateArrayFields = (source, target, fieldMapping, valueMapping = {}) => {
+function transformArrayFields (source, target, fieldMapping, valueMapping = {}) {
   for (fieldEntry of fieldMapping) {
     const [sourceField, targetField] = fieldEntry;
     target[targetField] = [];
@@ -38,3 +38,17 @@ module.exports.translateArrayFields = (source, target, fieldMapping, valueMappin
     }
   }
 }
+
+function safeGet (path, object) {
+  let value = path.reduce( (xs, x) => (xs && xs[x]) ? xs[x] : null, object );
+
+  if(typeof value === 'string' || value instanceof String)
+    return value.trim();
+
+  return value;
+}
+
+module.exports.transformMultilingualFields = transformMultilingualFields;
+module.exports.transformFields = transformFields;
+module.exports.transformArrayFields = transformArrayFields;
+module.exports.safeGet = safeGet;

@@ -1,8 +1,8 @@
 const templates = {
   Event: {
     "@type": "Event",
-    dataProvider: "http://tourism.opendatahub.bz.it/",
-    lastUpdate: null,
+    dataProvider: "",
+    lastUpdate: "",
     id: "",
     name: {
       deu: "",
@@ -24,21 +24,14 @@ const templates = {
       eng: "",
       ita: ""
     },
+    structure: "simple",
     startDate: null,
     endDate: null,
     venues: [],
     organizers: [],
-    publisher: {
-      "@type": "Agent",
-      id: "lts",
-      name: {
-        deu: "LTS - Landesverband der Tourismusorganisationen Südtirols",
-        eng: "LTS - Landesverband der Tourismusorganisationen Südtirols",
-        ita: "LTS - Landesverband der Tourismusorganisationen Südtirols"
-      },
-      url: "https://lts.it"
-    },
-    structure: "simple",
+    publisher: {},
+    contributors: [],
+    sponsors: []
     // subEvents: [],
   },
   Agent: {
@@ -51,7 +44,7 @@ const templates = {
     // name: {},
     description: {},
     url: "",
-    contentType: "image/jpeg",
+    contentType: "",
     // height: 0,
     // width: 0,
     license: "",

@@ -1,4 +1,4 @@
-{
+module.exports = {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "https://www.alpinebits.org/schemas/v1/general/Event",
   "title": "Event",

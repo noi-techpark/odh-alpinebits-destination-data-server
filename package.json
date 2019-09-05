@@ -4,8 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "translate": "node src/alpinebits-translator.js",
-    "serialize": "node src/alpinebits-translator.js",
+    "start": "node src/main.js"
   },
   "repository": {
     "type": "git",
