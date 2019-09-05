@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node src/main.js"
+    "start-local": "node src/main-local.js",
+    "start": "node src/main-network.js"
   },
   "repository": {
     "type": "git",
@@ -18,6 +19,7 @@
   "homepage": "https://github.com/tgoprince/odh-alpinebits-destination-data-server#readme",
   "dependencies": {
     "ajv": "^6.10.2",
+    "axios": "^0.19.0",
     "jsonapi-serializer": "^3.6.5"
   }
 }
