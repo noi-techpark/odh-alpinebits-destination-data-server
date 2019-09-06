@@ -3,11 +3,14 @@ const path = require('path');
 const Ajv = require('ajv');
 const eventSchema = require('./schemas/eventSchema');
 
-const defaultParameters = {
+const params = {
   verbose: false
 }
 
-function validateEventData(data, parameters = defaultParameters){
+let ajv = new Ajv(params);
+let validate = ajv.compile(eventSchema);
+
+function validateEventData(data){
   let result = {
     valid: [],
     invalid: []
@@ -21,9 +24,7 @@ function validateEventData(data, parameters = defaultParameters){
   return result;
 }
 
-function validateEvent(object, result, parameters = defaultParameters) {
-  let ajv = new Ajv(parameters);
-  let validate = ajv.compile(eventSchema);
+function validateEvent(object, result) {
   let isValid = validate(object);
 
   if(isValid){
