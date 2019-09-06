@@ -1,7 +1,7 @@
 const fs = require('fs');
-const { transformEvent } = require ('./transformers/odh2alpinebits');
-const { serializeEvent } = require ('./serializers/jsonapi-serializer');
-const { validateEventList } = require ('./validators/validator');
+const { transformEvent } = require ('./transformer/odh2alpinebits');
+const { serializeEvent } = require ('./serializer/jsonapi-serializer');
+const { validateEventList } = require ('./validator/validator');
 
 // small dataset with 33 events
 // const inputFile = 'input/events-with-image.json';

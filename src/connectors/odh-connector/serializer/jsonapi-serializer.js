@@ -5,8 +5,8 @@ const agentAttributes = [...basicAttributes,'category','contacts'];
 const mediaObjectAttributes = [...basicAttributes,'contentType','height','width','duration','license','copyrightOwner'];
 const metaAttributes = ['dataProvider', 'lastUpdate'];
 
-function serializeEvent(data, included){
-  let EventSerializer = new JSONAPISerializer('events', getRootEventSerialization(included));
+function serializeEventData(data, baseURL, included){
+  let EventSerializer = new JSONAPISerializer('events', getRootEventSerialization(baseURL, included));
   return EventSerializer.serialize(data);
 }
 
@@ -100,6 +100,7 @@ function getGeometrySerialization(included) {
     attributes: ['coordinates', 'category'],
     transform: function (data) {
        data.category = data['@type'];
+       console.log(data);
        return data;
     }
   });
@@ -118,12 +119,17 @@ function getVenueSerialization(included) {
   });
 }
 
-function getEventSerialization(included) {
+function getEventSerialization(request, included) {
   return({
     attributes: [...metaAttributes, ...basicAttributes, 'startDate', 'endDate', 'originalStartDate',
   'originalEndDate', 'categories', 'structure', 'status', 'capacity', 'multimediaDescriptions', 'publisher', 'organizers', 'sponsors', 'contributors', 'series', 'venues'],
     keyForAttribute: 'camelCase',
     nullIfMissing: true,
+    dataLinks: {
+      self: function (data, pos){
+        return request.baseUrl + "/" + getType("",data) + "/" + data.id;
+      }
+    },
     typeForAttribute: getType,
     multimediaDescriptions: getMediaSerialization(included),
     publisher: getAgentSerialization(included),
@@ -135,19 +141,21 @@ function getEventSerialization(included) {
   })
 }
 
-function getRootEventSerialization(included) {
-  let serializer = getEventSerialization(included);
-  serializer.attributes.push('subEvents');
+function getRootEventSerialization(request) {
+  let serializer = getEventSerialization(request, false);
 
+  serializer.topLevelLinks = { self: request.selfUrl };
+
+  serializer.attributes.push('subEvents');
   let subEvents = {
     ref: 'id',
-    included: included,
+    included: false,
     typeForAttribute: getType,
-    ...getEventSerialization(included)
+    ...getEventSerialization(request, false),
   }
-
   serializer.subEvents = subEvents;
+
   return serializer;
 }
 
-module.exports.serializeEvent = serializeEvent;
+module.exports.serializeEventData = serializeEventData;

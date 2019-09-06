@@ -7,32 +7,28 @@ const languageMapping = [
   ['de','deu']
 ]
 
-function transformEvent(data, onSuccess, onError) {
+function transformEventData(data) {
   try {
     let result;
-    if (Array.isArray(data)) {
+
+    if (Array.isArray(data.Items)) {
       result = [];
-
-      for (object of data)
-        result.push(transformSingleEvent(object, onSuccess, onError));
-
-      onSuccess(data, result);
-      return result;
+      for (object of data.Items)
+        result.push(transformEvent(object));
+    }
+    else {
+      result = transformEvent(data);
     }
 
-    result = transformSingleEvent(data, onError);
-    onSuccess(data, result);
     return result;
   }
   catch(exception){
-    if(onError)
-      onError(exception, data);
-
+    console.log(exception);
     return null;
   }
 }
 
-function transformSingleEvent(object) {
+function transformEvent(object) {
   const source = JSON.parse(JSON.stringify(object));
   let target = createObject('Event');
 
@@ -360,4 +356,4 @@ function transformMediaObject(mediaObject) {
   return newMediaObject;
 }
 
-module.exports.transformEvent = transformEvent;
+module.exports.transformEventData = transformEventData;

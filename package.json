@@ -4,8 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start-local": "node src/main-local.js",
-    "start": "node src/main-network.js"
+    "server": "nodemon src/server.js"
   },
   "repository": {
     "type": "git",
@@ -20,6 +19,11 @@
   "dependencies": {
     "ajv": "^6.10.2",
     "axios": "^0.19.0",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
     "jsonapi-serializer": "^3.6.5"
+  },
+  "devDependencies": {
+    "nodemon": "^1.19.2"
   }
 }

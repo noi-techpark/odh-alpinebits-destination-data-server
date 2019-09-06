@@ -1,8 +1,8 @@
 const fs = require('fs');
-const { transformEvent } = require ('./transformers/odh2alpinebits');
-const { serializeEvent } = require ('./serializers/jsonapi-serializer');
-const { validateEventList } = require ('./validators/validator');
-const { getEvent } = require ('./connectors/odh-connector');
+const { transformEvent } = require ('./transformer/odh2alpinebits');
+const { serializeEvent } = require ('./serializer/jsonapi-serializer');
+const { validateEventList } = require ('./validator/validator');
+const { getEvent } = require ('./odh-connector');
 
 // large dataset with 25000 events (~190MB)
 // const inputFile = 'input/events-all.json';
