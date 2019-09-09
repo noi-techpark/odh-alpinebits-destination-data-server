@@ -1,5 +1,5 @@
 const odhConnector = require('../connectors/odh-connector/odh-connector');
-const { parseCollectionRequest, parseResourceRequest } = require('./request');
+const { parseCollectionRequest, parseResourceRequest } = require('../request');
 
 module.exports = function(app) {
 
