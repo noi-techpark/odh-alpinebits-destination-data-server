@@ -6,11 +6,11 @@ const AGENT = 'agents';
 const MEDIA_OBJECT = 'mediaObjects';
 const EVENT_SERIES = 'eventSeries';
 const GEOMETRY = 'geometries';
+const PLACE = 'places';
 
 const basicAttr = ['name','shortName','description','abstract','url'];
-const agentAttr = [...basicAttr,'category','contacts'];
-const mediaObjectAttr = [...basicAttr,'contentType','height','width','duration','license','copyrightOwner'];
 const metaAttr = ['dataProvider', 'lastUpdate'];
+
 
 function serializeEventData(data, request, meta) {
   let Serializer;
@@ -24,7 +24,7 @@ function serializeEventData(data, request, meta) {
 }
 
 function getEventCollectionSerialization(request, meta) {
-  const serializer = getRootEventSerialization(request);
+  const serializer = getEventSerialization(request, [], true);
   const pagination = getPagination(request, meta, EVENT);
 
   serializer.topLevelLinks = {
@@ -39,33 +39,37 @@ function getEventCollectionSerialization(request, meta) {
   return serializer;
 }
 
-function getRootEventSerialization(request, meta) {
-  let serializer = getEventSerialization(request, []);
+function getEventSerialization(request, path = [], isRoot) {
+  let links = {};
+  let subEvents = {};
+  let attr = [...metaAttr, ...basicAttr, 'startDate', 'endDate', 'originalStartDate',
+  'originalEndDate', 'categories', 'structure', 'status', 'capacity', 'multimediaDescriptions', 'publisher', 'organizers', 'sponsors', 'contributors', 'series', 'venues'];
 
-  serializer.topLevelLinks = { self: request.selfUrl };
+  if(isRoot){
+    links = {
+      self: request.selfUrl
+    };
 
-  let path = ['subEvents'];
-  serializer.attributes.push('subEvents');
-  let subEvents = {
-    ref: 'id',
-    included: isIncluded(request.query.include, path),
-    typeForAttribute: getType,
-    ...getEventSerialization(request, path),
+    subEvents = {
+      ref: 'id',
+      included: isIncluded(request, ['subEvents']),
+      typeForAttribute: getType,
+      ...getEventSerialization(request, ['subEvents'], false),
+    }
+
+    attr.push('subEvents');
   }
-  serializer.subEvents = subEvents;
 
-  return serializer;
-}
+  let selectedAttr = request.query.fields[EVENT];
 
-function getEventSerialization(request, path = []) {
   return({
-    attributes: [...metaAttr, ...basicAttr, 'startDate', 'endDate', 'originalStartDate',
-  'originalEndDate', 'categories', 'structure', 'status', 'capacity', 'multimediaDescriptions', 'publisher', 'organizers', 'sponsors', 'contributors', 'series', 'venues'],
+    attributes: selectedAttr || attr,
     keyForAttribute: 'camelCase',
     nullIfMissing: true,
     dataLinks: {
-      self: (data) => getSelfLink(request, getType("", data), data)
+      self: (data) => getSelfLink(request, EVENT, data)
     },
+    topLevelLinks: links,
     typeForAttribute: getType,
     multimediaDescriptions: getMediaSerialization(request, [...path, 'multimediaDescriptions']),
     publisher: getAgentSerialization(request, [...path, 'publisher']),
@@ -73,7 +77,8 @@ function getEventSerialization(request, path = []) {
     sponsors:getAgentSerialization(request, [...path, 'sponsors']),
     contributors: contributorSerialization(request, [...path, 'contributors']),
     series: getEventSeriesSerialization(request, [...path, 'series']),
-    venues: getVenueSerialization(request, [...path, 'venues'])
+    venues: getVenueSerialization(request, [...path, 'venues']),
+    subEvents: subEvents
   })
 }
 
@@ -98,11 +103,14 @@ function getContactSerialization() {
 }
 
 function getAgentSerialization(request, path = []) {
+  let defaultAttr = [...basicAttr,'category','contacts'];
+  let selectedAttr = request.query.fields[AGENT];
+
   return ({
     ref: 'id',
-    included: isIncluded(request.query.include, path),
+    included: isIncluded(request, path),
     typeForAttribute: getType,
-    attributes: [...agentAttr],
+    attributes: selectedAttr || defaultAttr,
     contacts: getContactSerialization()
   });
 }
@@ -118,21 +126,27 @@ function contributorSerialization(request, path = []) {
 }
 
 function getMediaSerialization(request, path = []) {
+  let defaultAttr = [...basicAttr,'contentType','height','width','duration','license','copyrightOwner'];
+  let selectedAttr = request.query.fields[MEDIA_OBJECT];
+
   return ({
     ref: 'id',
-    included: isIncluded(request.query.include, path),
+    included: isIncluded(request, path),
     typeForAttribute: getType,
-    attributes: [...mediaObjectAttr],
+    attributes: selectedAttr || defaultAttr,
     copyrightOwner: getAgentSerialization(request, [...path,'copyrightOwner'])
   });
 }
 
 function getEventSeriesSerialization(request, path = []) {
+  let defaultAttr = [...basicAttr, 'multimediaDescriptions', 'frequency'];
+  let selectedAttr = request.query.fields[EVENT_SERIES];
+
   return ({
     ref: 'id',
-    included: isIncluded(request.query.include, path),
+    included: isIncluded(request, path),
     typeForAttribute: getType,
-    attributes: [...basicAttr, 'multimediaDescriptions', 'frequency'],
+    attributes: selectedAttr || defaultAttr,
     multimediaDescriptions: getMediaSerialization(request, [...path, 'multimediaDescriptions'])
   });
 }
@@ -140,7 +154,7 @@ function getEventSeriesSerialization(request, path = []) {
 function getGeometrySerialization(request, path = []) {
   return ({
     ref: 'id',
-    included: isIncluded(request.query.include, path),
+    included: isIncluded(request, path),
     typeForAttribute: getType,
     attributes: ['coordinates', 'category'],
     transform: function (data) {
@@ -152,11 +166,14 @@ function getGeometrySerialization(request, path = []) {
 }
 
 function getVenueSerialization(request, path = []) {
+  let defaultAttr = [...basicAttr, 'multimediaDescriptions', 'frequency', 'address', 'geometries', 'howToArrive', 'connections', 'openingHours'];
+  let selectedAttr = request.query.fields[PLACE];
+
   return ({
     ref: 'id',
-    included: isIncluded(request.query.include, path),
+    included: isIncluded(request, path),
     typeForAttribute: getType,
-    attributes: [...basicAttr, 'multimediaDescriptions', 'frequency', 'address', 'geometries', 'howToArrive', 'connections', 'openingHours'],
+    attributes: selectedAttr || defaultAttr,
     multimediaDescriptions: getMediaSerialization(request, path),
     address: getAddressSerialization(),
     openingHours: getHoursSerialization(),
@@ -181,6 +198,9 @@ function getType (attribute, data) {
     case 'MultiLineString':
     case 'MultiPolygon':
       return GEOMETRY;
+    case 'Venue':
+    case 'Place':
+      return PLACE;
 
     return data['@type'];
   }
@@ -190,11 +210,13 @@ function getSelfLink(request, resourceType, data){
   return request.baseUrl + '/' + resourceType + '/' + data.id;
 }
 
-function isIncluded(includeQuery, path){
-  if(!path || (Array.isArray(path) && path.length===0) || !includeQuery)
+function isIncluded(request, path){
+  let { include } = request.query;
+
+  if(!path || (Array.isArray(path) && path.length===0) || !include)
     return false;
 
-  let object = includeQuery;
+  let object = include;
 
   for (entry of path){
     if(!object[entry])
