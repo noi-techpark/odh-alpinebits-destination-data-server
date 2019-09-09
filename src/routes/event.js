@@ -1,32 +1,39 @@
 const odhConnector = require('../connectors/odh-connector/odh-connector');
 
-function getRequestData(request) {
-  const baseUrl = request.protocol + '://' + request.get('host');
-  const selfUrl = baseUrl + request.originalUrl;
-
-  return {
-    baseUrl,
-    selfUrl
-  }
+function getResourceRequest(request) {
+  return ({
+    baseUrl: request.protocol + '://' + request.get('host') + '/api/v1',
+    selfUrl: request.protocol + '://' + request.get('host') + request.originalUrl,
+    query: request.query,
+    params: request.params
+  });
 }
 
+function getCollectionRequest(request) {
+  let coreRequest = getResourceRequest(request);
+  if(!coreRequest.query.page)
+    coreRequest.query.page = { size: 10, number: 1 };
+
+  return coreRequest;
+}
 
 module.exports = function(app) {
 
-  app.get('/v1/events', function(request, response) {
+  app.get('/api/v1/events', function(request, response) {
 
-    const requestData = getRequestData(request);
+    const requestData = getCollectionRequest(request);
 
-    odhConnector.getEvents(requestData, true).then( (data) => {
+    odhConnector.getEvents(requestData).then( (data) => {
       response.json(data);
     });
 
   });
 
-  app.get('/v1/events/:id', function(request, response) {
+  app.get('/api/v1/events/:id', function(request, response) {
 
-    const requestData = getRequestData(request);
-    odhConnector.getEvent(request.params, requestData, true).then( (data) => {
+    const requestData = getResourceRequest(request);
+
+    odhConnector.getEvent(requestData).then( (data) => {
       response.json(data);
     });
   });

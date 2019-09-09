@@ -1,35 +1,79 @@
 let JSONAPISerializer = require('jsonapi-serializer').Serializer;
+let { getPagination } = require('./pagination');
 
-const basicAttributes = ['name','shortName','description','abstract','url'];
-const agentAttributes = [...basicAttributes,'category','contacts'];
-const mediaObjectAttributes = [...basicAttributes,'contentType','height','width','duration','license','copyrightOwner'];
-const metaAttributes = ['dataProvider', 'lastUpdate'];
+const EVENT = 'events';
+const AGENT = 'agents';
+const MEDIA_OBJECT = 'mediaObjects';
+const EVENT_SERIES = 'eventSeries';
+const GEOMETRY = 'geometries';
 
-function serializeEventData(data, baseURL, included){
-  let EventSerializer = new JSONAPISerializer('events', getRootEventSerialization(baseURL, included));
-  return EventSerializer.serialize(data);
+const basicAttr = ['name','shortName','description','abstract','url'];
+const agentAttr = [...basicAttr,'category','contacts'];
+const mediaObjectAttr = [...basicAttr,'contentType','height','width','duration','license','copyrightOwner'];
+const metaAttr = ['dataProvider', 'lastUpdate'];
+
+function serializeEventData(data, request, meta) {
+  let Serializer;
+
+  if(Array.isArray(data))
+    Serializer = new JSONAPISerializer('events', getEventCollectionSerialization(request, meta));
+  else
+    Serializer = new JSONAPISerializer('events', getRootEventSerialization(request, meta));
+
+  return Serializer.serialize(data);
 }
 
-function getType (attribute, data) {
-  switch(data['@type']) {
-    case 'Event':
-      return 'events';
-    case 'Agent':
-      return 'agents';
-    case 'MediaObject':
-      return 'mediaObjects';
-    case 'EventSeries':
-      return 'eventSeries';
-    case 'Point':
-    case 'LineString':
-    case 'Polygon':
-    case 'MultiPoint':
-    case 'MultiLineString':
-    case 'MultiPolygon':
-      return 'geometries';
+function getEventCollectionSerialization(request, meta) {
+  const serializer = getRootEventSerialization(request);
+  const pagination = getPagination(request, meta, EVENT);
 
-    return data['@type'];
+  serializer.topLevelLinks = {
+    ...serializer.topLevelLinks,
+    ...pagination.links
   }
+
+  serializer.meta = {
+    ...pagination.meta
+  }
+
+  return serializer;
+}
+
+function getRootEventSerialization(request, meta) {
+  let serializer = getEventSerialization(request);
+
+  serializer.topLevelLinks = { self: request.selfUrl };
+
+  serializer.attributes.push('subEvents');
+  let subEvents = {
+    ref: 'id',
+    included: false,
+    typeForAttribute: getType,
+    ...getEventSerialization(request),
+  }
+  serializer.subEvents = subEvents;
+
+  return serializer;
+}
+
+function getEventSerialization(request) {
+  return({
+    attributes: [...metaAttr, ...basicAttr, 'startDate', 'endDate', 'originalStartDate',
+  'originalEndDate', 'categories', 'structure', 'status', 'capacity', 'multimediaDescriptions', 'publisher', 'organizers', 'sponsors', 'contributors', 'series', 'venues'],
+    keyForAttribute: 'camelCase',
+    nullIfMissing: true,
+    dataLinks: {
+      self: (data) => getSelfLink(request, getType("", data), data)
+    },
+    typeForAttribute: getType,
+    multimediaDescriptions: getMediaSerialization(request),
+    publisher: getAgentSerialization(request),
+    organizers: getAgentSerialization(request),
+    sponsors:getAgentSerialization(request),
+    contributors: contributorSerialization(request),
+    series: getEventSeriesSerialization(request),
+    venues: getVenueSerialization(request)
+  })
 }
 
 function getAddressSerialization() {
@@ -46,56 +90,56 @@ function getHoursSerialization() {
 
 function getContactSerialization() {
   return ({
-    attributes: [...basicAttributes, 'email', 'telephone', 'address', 'availableHours'],
+    attributes: [...basicAttr, 'email', 'telephone', 'address', 'availableHours'],
     address: getAddressSerialization(),
     availableHours: getHoursSerialization()
   });
 }
 
-function getAgentSerialization(included) {
+function getAgentSerialization(request) {
   return ({
     ref: 'id',
-    included: included,
+    included: false,
     typeForAttribute: getType,
-    attributes: [...agentAttributes],
+    attributes: [...agentAttr],
     contacts: getContactSerialization()
   });
 }
 
-function contributorSerialization(included) {
+function contributorSerialization(request) {
   return ({
     ref: 'id',
-    included: included,
+    included: false,
     typeForAttribute: getType,
     attributes: ['agent', 'role'],
-    agent: getAgentSerialization(included)
+    agent: getAgentSerialization(request)
   });
 }
 
-function getMediaSerialization(included) {
+function getMediaSerialization(request) {
   return ({
     ref: 'id',
-    included: included,
+    included: false,
     typeForAttribute: getType,
-    attributes: [...mediaObjectAttributes],
-    copyrightOwner: getAgentSerialization(included)
+    attributes: [...mediaObjectAttr],
+    copyrightOwner: getAgentSerialization(request)
   });
 }
 
-function getEventSeriesSerialization(included) {
+function getEventSeriesSerialization(request) {
   return ({
     ref: 'id',
-    included: included,
+    included: false,
     typeForAttribute: getType,
-    attributes: [...basicAttributes, 'multimediaDescriptions', 'frequency'],
-    multimediaDescriptions: getMediaSerialization(included)
+    attributes: [...basicAttr, 'multimediaDescriptions', 'frequency'],
+    multimediaDescriptions: getMediaSerialization(request)
   });
 }
 
-function getGeometrySerialization(included) {
+function getGeometrySerialization(request) {
   return ({
     ref: 'id',
-    included: included,
+    included: false,
     typeForAttribute: getType,
     attributes: ['coordinates', 'category'],
     transform: function (data) {
@@ -106,56 +150,43 @@ function getGeometrySerialization(included) {
   });
 }
 
-function getVenueSerialization(included) {
+function getVenueSerialization(request) {
   return ({
-    ref: 'id',
-    included: included,
-    typeForAttribute: getType,
-    attributes: [...basicAttributes, 'multimediaDescriptions', 'frequency', 'address', 'geometries', 'howToArrive', 'connections', 'openingHours'],
-    multimediaDescriptions: getMediaSerialization(included),
-    address: getAddressSerialization(),
-    openingHours: getHoursSerialization(),
-    geometries: getGeometrySerialization(included)
-  });
-}
-
-function getEventSerialization(request, included) {
-  return({
-    attributes: [...metaAttributes, ...basicAttributes, 'startDate', 'endDate', 'originalStartDate',
-  'originalEndDate', 'categories', 'structure', 'status', 'capacity', 'multimediaDescriptions', 'publisher', 'organizers', 'sponsors', 'contributors', 'series', 'venues'],
-    keyForAttribute: 'camelCase',
-    nullIfMissing: true,
-    dataLinks: {
-      self: function (data, pos){
-        return request.baseUrl + "/" + getType("",data) + "/" + data.id;
-      }
-    },
-    typeForAttribute: getType,
-    multimediaDescriptions: getMediaSerialization(included),
-    publisher: getAgentSerialization(included),
-    organizers: getAgentSerialization(included),
-    sponsors:getAgentSerialization(included),
-    contributors: contributorSerialization(included),
-    series: getEventSeriesSerialization(included),
-    venues: getVenueSerialization(included)
-  })
-}
-
-function getRootEventSerialization(request) {
-  let serializer = getEventSerialization(request, false);
-
-  serializer.topLevelLinks = { self: request.selfUrl };
-
-  serializer.attributes.push('subEvents');
-  let subEvents = {
     ref: 'id',
     included: false,
     typeForAttribute: getType,
-    ...getEventSerialization(request, false),
-  }
-  serializer.subEvents = subEvents;
+    attributes: [...basicAttr, 'multimediaDescriptions', 'frequency', 'address', 'geometries', 'howToArrive', 'connections', 'openingHours'],
+    multimediaDescriptions: getMediaSerialization(request),
+    address: getAddressSerialization(),
+    openingHours: getHoursSerialization(),
+    geometries: getGeometrySerialization(request)
+  });
+}
 
-  return serializer;
+function getType (attribute, data) {
+  switch(data['@type']) {
+    case 'Event':
+      return EVENT;
+    case 'Agent':
+      return AGENT;
+    case 'MediaObject':
+      return MEDIA_OBJECT;
+    case 'EventSeries':
+      return EVENT_SERIES;
+    case 'Point':
+    case 'LineString':
+    case 'Polygon':
+    case 'MultiPoint':
+    case 'MultiLineString':
+    case 'MultiPolygon':
+      return GEOMETRY;
+
+    return data['@type'];
+  }
+}
+
+function getSelfLink(request, resourceType, data){
+  return request.baseUrl + '/' + resourceType + '/' + data.id;
 }
 
 module.exports.serializeEventData = serializeEventData;
