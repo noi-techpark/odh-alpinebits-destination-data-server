@@ -1,3 +1,4 @@
+var shajs = require('sha.js')
 const { transformFields, transformArrayFields, transformMultilingualFields, safeGet } = require('./transformation');
 const { createObject } = require('./templates');
 
@@ -160,7 +161,7 @@ function transformCategory(category) {
 function transformPublisher() {
   let publisher = createObject('Agent');
   let lts = {
-    id: "lts",
+    id: shajs('sha256').update('lts').digest('hex'),
     name: {
       deu: "LTS - Landesverband der Tourismusorganisationen Südtirols",
       eng: "LTS - Landesverband der Tourismusorganisationen Südtirols",
@@ -351,6 +352,7 @@ function transformMediaObject(mediaObject) {
 
   const owner = createObject('Agent');
   owner.name.ita = owner.name.deu = owner.name.eng = mediaObject.CopyRight;
+  owner.id = shajs('sha256').update(mediaObject.CopyRight).digest('hex');
   newMediaObject.copyrightOwner = owner;
 
   return newMediaObject;
