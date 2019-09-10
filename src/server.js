@@ -15,6 +15,7 @@ app.use(function(req, res, next) {
     next();
 });
 
+require('./routes/home.js')(app);
 require('./routes/event.js')(app);
 
 app.listen(8080, function () {

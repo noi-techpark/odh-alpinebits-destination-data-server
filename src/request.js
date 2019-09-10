@@ -102,3 +102,5 @@ function parseCollectionRequest(request) {
 
 module.exports.parseResourceRequest = parseResourceRequest;
 module.exports.parseCollectionRequest = parseCollectionRequest;
+module.exports.getBaseUrl = getBaseUrl;
+module.exports.getSelfUrl = getSelfUrl;

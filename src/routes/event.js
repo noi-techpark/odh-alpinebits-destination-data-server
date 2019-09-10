@@ -8,6 +8,7 @@ module.exports = function(app) {
     const parsedRequest = parseCollectionRequest(request);
 
     odhConnector.getEvents(parsedRequest).then( (data) => {
+      response.status(200);
       response.json(data);
     });
 
@@ -18,6 +19,7 @@ module.exports = function(app) {
     const parsedRequest = parseResourceRequest(request);
 
     odhConnector.getEvent(parsedRequest).then( (data) => {
+      response.status(200);
       response.json(data);
     });
   });
