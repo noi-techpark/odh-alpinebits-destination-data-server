@@ -18,7 +18,7 @@ function serializeEventData(data, request, meta) {
   if(Array.isArray(data))
     Serializer = new JSONAPISerializer('events', getEventCollectionSerialization(request, meta));
   else
-    Serializer = new JSONAPISerializer('events', getRootEventSerialization(request, meta));
+    Serializer = new JSONAPISerializer('events', getEventSerialization(request, [], true));
 
   return Serializer.serialize(data);
 }
@@ -174,10 +174,10 @@ function getVenueSerialization(request, path = []) {
     included: isIncluded(request, path),
     typeForAttribute: getType,
     attributes: selectedAttr || defaultAttr,
-    multimediaDescriptions: getMediaSerialization(request, path),
+    multimediaDescriptions: getMediaSerialization(request, [...path,'multimediaDescriptions']),
     address: getAddressSerialization(),
     openingHours: getHoursSerialization(),
-    geometries: getGeometrySerialization(request, path)
+    geometries: getGeometrySerialization(request, [...path,'geometries'])
   });
 }
 
