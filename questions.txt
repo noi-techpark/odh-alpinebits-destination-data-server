@@ -7,7 +7,7 @@ ISSUES:
 1. How should we handle objects that do not exist in a server's database?
 2. What should we do about empty fields? { name: { ita: null, eng: null, deu: null} }?
 3. We must always add IDs
-
+4. Sorting could not be implemented in the ODH (the sorting parameter provided by the API does not work..)
 USED
 - Detail.Title
 - Detail.BaseText

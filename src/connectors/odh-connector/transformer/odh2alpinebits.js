@@ -275,7 +275,7 @@ function transformOrganizer(organizer, contact) {
 
 function transformVenue(source) {
   let venue = createObject('Venue');
-  venue.id = source.Id+'/location';
+  venue.id = source.Id+'+location';
 
   const venueMapping = [ ['Location', 'name'] ];
   transformMultilingualFields(source.EventAdditionalInfos, venue, venueMapping, languageMapping, false);
@@ -296,7 +296,7 @@ function transformVenue(source) {
 
   if(source.Latitude && source.Longitude) {
     let point = createObject('Point');
-    point.id = source.Id+'/point';
+    point.id = source.Id+'+point';
     venue.geometries.push(point);
 
     point.coordinates.push(source.Latitude);

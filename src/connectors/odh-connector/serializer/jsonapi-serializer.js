@@ -11,16 +11,90 @@ const PLACE = 'places';
 const basicAttr = ['name','shortName','description','abstract','url'];
 const metaAttr = ['dataProvider', 'lastUpdate'];
 
+module.exports = {
 
-function serializeEventData(data, request, meta) {
-  let Serializer;
+  serializeEvent: function (data, request, meta) {
+    let Serializer;
 
-  if(Array.isArray(data))
-    Serializer = new JSONAPISerializer('events', getEventCollectionSerialization(request, meta));
-  else
-    Serializer = new JSONAPISerializer('events', getEventSerialization(request, [], true));
+    if(Array.isArray(data))
+      Serializer = new JSONAPISerializer(EVENT, getEventCollectionSerialization(request, meta));
+    else
+      Serializer = new JSONAPISerializer(EVENT, getEventSerialization(request, [], true));
 
-  return Serializer.serialize(data);
+    return Serializer.serialize(data);
+  },
+  serializeSubevents: function (data, request, meta) {
+    Serializer = new JSONAPISerializer(EVENT, getEventSerialization(request, [], true));
+    return Serializer.serialize(data.subEvents || []);
+  },
+
+  serializePublisher: getFieldSerializationFunction('publisher', AGENT, getAgentSerialization, getEmptyObject),
+  serializeSeries: getFieldSerializationFunction('series', EVENT_SERIES, getEventSeriesSerialization, getEmptyObject),
+
+  serializeMediaObjects: getFieldSerializationFunction('multimediaDescriptions', MEDIA_OBJECT, getMediaSerialization, getEmptyArray),
+  serializeMediaObject: getResourceInArraySerializationFunction('multimediaDescriptions', 'objectId', MEDIA_OBJECT, getMediaSerialization),
+
+  serializeContributors: getFieldSerializationFunction('contributors', AGENT, getAgentSerialization, getEmptyArray),
+  serializeContributor: getResourceInArraySerializationFunction('contributors', 'agentId', AGENT, getAgentSerialization),
+
+  serializeOrganizers: getFieldSerializationFunction('organizers', AGENT, getAgentSerialization, getEmptyArray),
+  serializeOrganizer: getResourceInArraySerializationFunction('organizers', 'agentId', AGENT, getAgentSerialization),
+
+  serializeSponsors: getFieldSerializationFunction('sponsors', AGENT, getAgentSerialization, getEmptyArray),
+  serializeSponsor: getResourceInArraySerializationFunction('sponsors', 'agentId', PLACE, getAgentSerialization),
+
+  serializeVenues: getFieldSerializationFunction('venues', PLACE, getVenueSerialization, getEmptyArray),
+  serializeVenue: getResourceInArraySerializationFunction('venues', 'venueId', PLACE, getVenueSerialization),
+  serializeGeometries: function (data, request, meta){
+    Serializer = new JSONAPISerializer(GEOMETRY, getGeometrySerialization(request, [], true));
+    let venue = data.venues.find((venue) => venue.id === request.params.venueId);
+    return Serializer.serialize(venue.geometries || []);
+  }
+}
+
+function getFieldSerializationFunction (field, resourceType, getSerialization, getEmptyResponse) {
+  return (
+    function (data, request, meta) {
+      Serializer = new JSONAPISerializer(resourceType, getSerialization(request, [], true));
+
+      let filteredData = data[field];
+
+      if(!data[field])
+        return getEmptyResponse(request)
+
+      return Serializer.serialize(filteredData);
+    }
+  )
+}
+
+function getResourceInArraySerializationFunction (field, subResourceId, resourceType, getSerialization) {
+  return (
+    function (data, request, meta) {
+      Serializer = new JSONAPISerializer(resourceType, getSerialization(request, [], true));
+
+      const subResource = data[field].find((resource) => resource.id === request.params[subResourceId]);
+
+      return Serializer.serialize(subResource);
+    }
+  )
+}
+
+function getEmptyObject(request){
+  return ({
+    links: {
+      self: request.selfUrl
+    },
+    data: {}
+  });
+}
+
+function getEmptyArray(request){
+  return ({
+    links: {
+      self: request.selfUrl
+    },
+    data: []
+  });
 }
 
 function getEventCollectionSerialization(request, meta) {
@@ -109,6 +183,7 @@ function getAgentSerialization(request, path = []) {
   return ({
     ref: 'id',
     included: isIncluded(request, path),
+    keyForAttribute: 'camelCase',
     typeForAttribute: getType,
     attributes: selectedAttr || defaultAttr,
     contacts: getContactSerialization()
@@ -119,6 +194,7 @@ function contributorSerialization(request, path = []) {
   return ({
     ref: 'id',
     included: true,
+    keyForAttribute: 'camelCase',
     typeForAttribute: getType,
     attributes: ['agent', 'role'],
     agent: getAgentSerialization(request, [...path, 'agent'])
@@ -132,6 +208,7 @@ function getMediaSerialization(request, path = []) {
   return ({
     ref: 'id',
     included: isIncluded(request, path),
+    keyForAttribute: 'camelCase',
     typeForAttribute: getType,
     attributes: selectedAttr || defaultAttr,
     copyrightOwner: getAgentSerialization(request, [...path,'copyrightOwner'])
@@ -145,6 +222,7 @@ function getEventSeriesSerialization(request, path = []) {
   return ({
     ref: 'id',
     included: isIncluded(request, path),
+    keyForAttribute: 'camelCase',
     typeForAttribute: getType,
     attributes: selectedAttr || defaultAttr,
     multimediaDescriptions: getMediaSerialization(request, [...path, 'multimediaDescriptions'])
@@ -155,6 +233,7 @@ function getGeometrySerialization(request, path = []) {
   return ({
     ref: 'id',
     included: isIncluded(request, path),
+    keyForAttribute: 'camelCase',
     typeForAttribute: getType,
     attributes: ['coordinates', 'category'],
     transform: function (data) {
@@ -172,6 +251,7 @@ function getVenueSerialization(request, path = []) {
   return ({
     ref: 'id',
     included: isIncluded(request, path),
+    keyForAttribute: 'camelCase',
     typeForAttribute: getType,
     attributes: selectedAttr || defaultAttr,
     multimediaDescriptions: getMediaSerialization(request, [...path,'multimediaDescriptions']),
@@ -227,5 +307,3 @@ function isIncluded(request, path){
 
   return true;
 }
-
-module.exports.serializeEventData = serializeEventData;

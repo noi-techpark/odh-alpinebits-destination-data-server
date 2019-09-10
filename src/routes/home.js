@@ -1,4 +1,4 @@
-const { getBaseUrl, getSelfUrl } = require('../request');
+const { getBaseUrl, getSelfUrl } = require('../request-parser');
 
 function getHomeResponse(request, response) {
   let data = {
@@ -6,7 +6,7 @@ function getHomeResponse(request, response) {
       self: getSelfUrl(request),
       events: getBaseUrl(request)+'/events'
     },
-    data: {}
+    data: []
   };
 
   response.status(200);
