@@ -31,7 +31,8 @@ const templates = {
     organizers: [],
     publisher: {},
     contributors: [],
-    sponsors: []
+    sponsors: [],
+    multimediaDescriptions: []
     // subEvents: [],
   },
   Agent: {
@@ -74,7 +75,8 @@ const templates = {
     // description: {},
     address: {},
     geometries: [],
-    openingHours: []
+    openingHours: [],
+    multimediaDescriptions: []
   },
   ContactPoint: {
     "@type": "ContactPoint",

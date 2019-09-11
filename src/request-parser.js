@@ -1,16 +1,16 @@
-function getBaseUrl(request) {
-  return request.protocol + '://' + request.get('host') + '/api/v1';
+function getBaseUrl(req) {
+  return req.protocol + '://' + req.get('host') + '/api/v1';
 }
 
-function getSelfUrl(request) {
-  return request.protocol + '://' + request.get('host') + request.originalUrl;
+function getSelfUrl(req) {
+  return req.protocol + '://' + req.get('host') + req.originalUrl;
 }
 
-function createRequest(request){
+function createRequest(req){
   return ({
-    baseUrl: getBaseUrl(request),
-    selfUrl: getSelfUrl(request),
-    params: request.params,
+    baseUrl: getBaseUrl(req),
+    selfUrl: getSelfUrl(req),
+    params: req.params,
     query: {
       include: {},
       fields: {}
@@ -19,8 +19,8 @@ function createRequest(request){
 }
 
 //TODO: VALIDATE QUERY PARAMETERS (only exisitng parameters, parameter values)
-function parsePage(request) {
-  const { page } = request.query;
+function parsePage(req) {
+  const { page } = req.query;
 
   let result = {
     size: 10,
@@ -40,8 +40,8 @@ function parsePage(request) {
 }
 
 // "include=organizers,venues,venues.geometries => ['organizers','venues','venues.geometries']"
-function parseInclude(request) {
-  const { include } = request.query;
+function parseInclude(req) {
+  const { include } = req.query;
 
   let result = {}
 
@@ -67,8 +67,8 @@ function parseInclude(request) {
   return result;
 }
 
-function parseFields(request) {
-  let { fields } = request.query;
+function parseFields(req) {
+  let { fields } = req.query;
 
   if(!fields)
     return {};
@@ -81,21 +81,21 @@ function parseFields(request) {
   return result;
 }
 
-function parseResourceRequest(request) {
-  let parsedRequest = createRequest(request);
+function parseResourceRequest(req) {
+  let parsedRequest = createRequest(req);
 
-  parsedRequest.query.fields = parseFields(request);
-  parsedRequest.query.include = parseInclude(request);
+  parsedRequest.query.fields = parseFields(req);
+  parsedRequest.query.include = parseInclude(req);
 
   return parsedRequest;
 }
 
-function parseCollectionRequest(request) {
-  let parsedRequest = createRequest(request);
+function parseCollectionRequest(req) {
+  let parsedRequest = createRequest(req);
 
-  parsedRequest.query.page = parsePage(request);
-  parsedRequest.query.fields = parseFields(request);
-  parsedRequest.query.include = parseInclude(request);
+  parsedRequest.query.page = parsePage(req);
+  parsedRequest.query.fields = parseFields(req);
+  parsedRequest.query.include = parseInclude(req);
   console.log(parsedRequest.query.fields);
   return parsedRequest;
 }

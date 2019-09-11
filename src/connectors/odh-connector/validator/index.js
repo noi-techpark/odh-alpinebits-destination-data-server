@@ -10,18 +10,18 @@ const params = {
 let ajv = new Ajv(params);
 let validate = ajv.compile(eventSchema);
 
-function validateEventData(data){
-  let result = {
-    valid: [],
-    invalid: []
-  }
-
-  let dataToValidate = Array.isArray(data) ? data : [data];
-
-  for (object of dataToValidate)
+module.exports = {
+  validateEvent: function (object) {
+    let result = { valid: [], invalid: [] }
     validateEvent(object, result);
-
-  return result;
+    return result;
+  },
+  validateEventArray: function (array) {
+    let result = { valid: [], invalid: [] }
+    for (object of array)
+      validateEvent(object, result);
+    return result;
+  }
 }
 
 function validateEvent(object, result) {
@@ -38,5 +38,3 @@ function validateEvent(object, result) {
     // console.log(JSON.stringify(validate.errors,null,2));
   }
 }
-
-module.exports.validateEventData = validateEventData;

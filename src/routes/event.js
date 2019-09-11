@@ -1,4 +1,4 @@
-const odhConnector = require('../connectors/odh-connector/odh-connector');
+const odhConnector = require('../connectors/odh-connector');
 const { parseCollectionRequest, parseResourceRequest } = require('../request-parser');
 
 module.exports = function(app) {
@@ -13,7 +13,7 @@ module.exports = function(app) {
 
   app.get('/api/v1/events/:id', function(req, res) {
     const parsedRequest = parseResourceRequest(req);
-    odhConnector.getEvent(parsedRequest).then( (data) => {
+    odhConnector.getEventById(parsedRequest).then( (data) => {
       res.json(data);
     });
   });

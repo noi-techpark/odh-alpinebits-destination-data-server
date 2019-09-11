@@ -2,32 +2,37 @@ var shajs = require('sha.js')
 const { transformFields, transformArrayFields, transformMultilingualFields, safeGet } = require('./transformation');
 const { createObject } = require('./templates');
 
+module.exports = {
+  transformEventArray: function(data) {
+    try {
+      let result = [];
+
+      for (object of data.Items)
+        result.push(transformEvent(object));
+
+      return result;
+    }
+    catch(exception){
+      console.log(exception);
+      return null;
+    }
+  },
+  transformEvent: function(data) {
+    try {
+      return transformEvent(data);
+    }
+    catch(exception){
+      console.log(exception);
+      return null;
+    }
+  }
+}
+
 const languageMapping = [
   ['it','ita'],
   ['en','eng'],
   ['de','deu']
 ]
-
-function transformEventData(data) {
-  try {
-    let result;
-
-    if (Array.isArray(data.Items)) {
-      result = [];
-      for (object of data.Items)
-        result.push(transformEvent(object));
-    }
-    else {
-      result = transformEvent(data);
-    }
-
-    return result;
-  }
-  catch(exception){
-    console.log(exception);
-    return null;
-  }
-}
 
 function transformEvent(object) {
   const source = JSON.parse(JSON.stringify(object));
@@ -357,5 +362,3 @@ function transformMediaObject(mediaObject) {
 
   return newMediaObject;
 }
-
-module.exports.transformEventData = transformEventData;
