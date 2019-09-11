@@ -2,9 +2,14 @@ const { getBaseUrl, getSelfUrl } = require('../request-parser');
 
 function getHomeResponse(request, response) {
   let data = {
+    jsonapi: {
+      version: "1.0"
+    },
     links: {
       self: getSelfUrl(request),
-      events: getBaseUrl(request)+'/events'
+      resources: {
+        events: getBaseUrl(request)+'/events'
+      }
     },
     data: []
   };
