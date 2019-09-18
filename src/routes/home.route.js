@@ -1,4 +1,4 @@
-const { getBaseUrl, getSelfUrl } = require('../request-parser');
+const { getBaseUrl, getSelfUrl } = require('./request-parser');
 
 function getHomeResponse(request, response) {
   let data = {

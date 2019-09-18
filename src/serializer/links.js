@@ -21,13 +21,18 @@ module.exports.addPagination = function (resource, request, metadata) {
   let regex = /page\[number\]=[0-9]+/
   let pageQueryStr = 'page[number]='
 
-  if(!selfUrl.match(regex))
+  if(!selfUrl.match(regex)){
+
+    regexParams = /page|include|fields/
+    hasParams = !!selfUrl.match(regexParams);
+
     topLevelLinks = {
-      next: selfUrl + '&' + pageQueryStr + next,
-      prev: selfUrl + '&' + pageQueryStr + prev,
-      first: selfUrl + '&' + pageQueryStr + first,
-      last: selfUrl + '&' + pageQueryStr + last,
+      next: selfUrl + (hasParams ? '&' : '?') + pageQueryStr + next,
+      prev: selfUrl + (hasParams ? '&' : '?') + pageQueryStr + prev,
+      first: selfUrl + (hasParams ? '&' : '?') + pageQueryStr + first,
+      last: selfUrl + (hasParams ? '&' : '?') + pageQueryStr + last,
     }
+  }
   else
     topLevelLinks = {
       next: selfUrl.replace(regex, pageQueryStr + next),

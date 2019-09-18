@@ -1,35 +1,30 @@
 const axios = require('axios');
-
 const odh2ab = require ('./odh2alpinebits');
-const serializer = require ('./serializer');
-const validator = require ('./validator');
-const { createOdhQuery } = require ('./odh-query-builder');
 
 const EVENT_PATH = 'Event';
 
 module.exports = {
-  getEvents: getResource(EVENT_PATH, odh2ab.transformEventArray, validator.validateEventArray, serializer.serializeEvents),
-  getEventById: getSubResource(EVENT_PATH, odh2ab.transformEvent, validator.validateEvent, serializer.serializeEvent),
-  getEventPublisher: getSubResource(EVENT_PATH, odh2ab.transformEvent, validator.validateEvent, serializer.serializePublisher),
-  getEventMediaObjects: getSubResource(EVENT_PATH, odh2ab.transformEvent, validator.validateEvent, serializer.serializeMediaObjects),
-  getEventOrganizers: getSubResource(EVENT_PATH, odh2ab.transformEvent, validator.validateEvent, serializer.serializeOrganizers),
-  getEventSponsors: getSubResource(EVENT_PATH, odh2ab.transformEvent, validator.validateEvent, serializer.serializeSponsors),
-  getEventVenues: getSubResource(EVENT_PATH, odh2ab.transformEvent, validator.validateEvent, serializer.serializeVenues),
+  fetchEvents: fetchResource(EVENT_PATH, odh2ab.transformEventArray),
+  fetchEventById: fetchSubResource(EVENT_PATH, odh2ab.transformEvent),
+  fetchEventPublisher: fetchSubResource(EVENT_PATH, odh2ab.transformEvent, 'publisher'),
+  fetchEventMediaObjects: fetchSubResource(EVENT_PATH, odh2ab.transformEvent, 'multimediaDescriptions'),
+  fetchEventOrganizers: fetchSubResource(EVENT_PATH, odh2ab.transformEvent, 'organizers'),
+  fetchEventVenues: fetchSubResource(EVENT_PATH, odh2ab.transformEvent, 'venues'),
 }
 
-function getResource (basePath, transform, validate, serialize) {
+function fetchResource (basePath, transform) {
   return (
     function(request) {
-      return getFromServer(basePath, request, transform, validate, serialize);
+      return fetch(basePath, request, transform);
     }
   );
 }
 
-function getSubResource (basePath, transform, validate, serialize) {
+function fetchSubResource (basePath, transform, field) {
   return (
     function(request) {
       let fullPath = basePath+'/'+request.params.id;
-      return getFromServer(fullPath, request, transform, validate, serialize);
+      return fetch(fullPath, request, transform, field);
     }
   );
 }
@@ -38,50 +33,35 @@ function getSubResource (basePath, transform, validate, serialize) {
 transform(openDataHubObject): a function to transform an OpenDataHub response into the AlpineBits format
   input: an object retrieved from the OpenDataHub API
   output: an obejct following the AlpineBits format
-
-validate(alpineBitsObject): a function to validate an AlpineBits object
-  input: an obejct following the AlpineBits format
-  output: an object with validation results {valid: [], invalid: []}
-
-serialize(alpineBitsObject): a function to serialize an AlpineBits object following the JSON:API standard
-  input: an obejct following the AlpineBits format
-  output: an JSON:API compliant object
 */
 
-async function getFromServer(path, request, transform, validate, serialize) {
+async function fetch(path, request, transform, field) {
   try {
     const instance = axios.create({
       baseURL: 'http://tourism.opendatahub.bz.it/api/',
       timeout: 2000,
     });
 
-    console.log('\n> Retrieving data from the OpenDataHub API (http://tourism.opendatahub.bz.it/api)...');
-    const fullOdhPath = path + createOdhQuery(request);
-    const responseOdh = await instance.get(fullOdhPath);
-    const dataOdh = responseOdh.data;
-    console.log('OK: Data received.\n');
+    console.log('\n> Fetching data from the OpenDataHub API (http://tourism.opendatahub.bz.it/api)...');
+    const odhApiPath = getUrl(path, request);
+    const res = await instance.get(odhApiPath);
+    console.log('OK: Data received from the OpenDataHub API.\n');
 
     console.log('> Transforming data to the AlpineBits format...');
-    const dataAlpineBits = transform(dataOdh);
+    const data = transform(res.data);
 
-    if(dataAlpineBits) {
+    if(data) {
       console.log('OK: Sucessfully transformed data.\n');
+      const meta = getResponseMeta(res.data);
 
-      console.log('> Validating AlpineBits objects...');
-      const validation = validate(dataAlpineBits);
-      console.log('OK: Objects validated (valid:'+validation.valid.length+', invalid: '+validation.invalid.length+')\n');
+      if(field)
+        return { data: data[field], meta };
 
-      console.log('> Serializing objects in JSON:API format...');
-
-      const meta = getResponseMeta(dataOdh);
-      const dataJsonApi = serialize(dataAlpineBits, request, meta);
-      console.log('OK: Sucessfully serialized objects.\n');
-
-      return dataJsonApi;
+      return { data, meta };
     }
     else {
       console.log('ERROR: Failed to transform the input data!\n');
-      return null;
+      return {data: null, meta: null};
     }
 
   }
@@ -89,6 +69,24 @@ async function getFromServer(path, request, transform, validate, serialize) {
     console.log(error);
   }
 }
+
+function getUrl(path, request) {
+  const { page } = request.query;
+  let odhQuery = []
+
+  if (page) {
+    if (page.size)
+      odhQuery.push("pagesize="+page.size);
+    if (page.number)
+      odhQuery.push("pagenumber="+page.number);
+  }
+
+  if(odhQuery.length)
+    return path+"?"+odhQuery.join("&");
+
+  return path;
+}
+
 
 function getResponseMeta(dataOdh){
   let count = dataOdh.TotalResults;

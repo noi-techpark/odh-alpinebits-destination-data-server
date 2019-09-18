@@ -17,8 +17,8 @@ app.use(function(req, res, next) {
     next();
 });
 
-require('./routes/home.js')(app);
-require('./routes/event.js')(app);
+require('./routes/home.route.js')(app);
+require('./routes/event.route.js')(app);
 
 app.get('*', function(req, res){
   error = errors.notFound;

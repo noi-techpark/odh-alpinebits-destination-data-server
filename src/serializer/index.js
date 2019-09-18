@@ -39,7 +39,7 @@ module.exports = {
     includes.add(resource, request);
     fields.add(resource, request);
 
-    return serialize(resource, data.publisher);
+    return serialize(resource, data);
   },
   serializeOrganizers:  function (data, request, meta) {
     let resource = resources.getOptions('agents');
@@ -49,7 +49,7 @@ module.exports = {
     includes.add(resource, request);
     fields.add(resource, request);
 
-    return serialize(resource, data.organizers);
+    return serialize(resource, data);
   },
   serializeMediaObjects: function (data, request, meta) {
     let resource = resources.getOptions('mediaObjects');
@@ -59,7 +59,7 @@ module.exports = {
     includes.add(resource, request);
     fields.add(resource, request);
 
-    return serialize(resource, data.multimediaDescriptions);
+    return serialize(resource, data);
   },
   serializeVenues: function (data, request, meta) {
     let resource = resources.getOptions('places');
@@ -69,6 +69,6 @@ module.exports = {
     includes.add(resource, request);
     fields.add(resource, request);
 
-    return serialize(resource, data.venues);
+    return serialize(resource, data);
   }
 }
