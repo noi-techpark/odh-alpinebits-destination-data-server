@@ -36,37 +36,31 @@ transform(openDataHubObject): a function to transform an OpenDataHub response in
 */
 
 async function fetch(path, request, transform, field) {
-  try {
-    const instance = axios.create({
-      baseURL: 'http://tourism.opendatahub.bz.it/api/',
-      timeout: 2000,
-    });
+  const instance = axios.create({
+    baseURL: 'http://tourism.opendatahub.bz.it/api/',
+    timeout: 300000,
+  });
 
-    console.log('\n> Fetching data from the OpenDataHub API (http://tourism.opendatahub.bz.it/api)...');
-    const odhApiPath = getUrl(path, request);
-    const res = await instance.get(odhApiPath);
-    console.log('OK: Data received from the OpenDataHub API.\n');
+  console.log('\n> Fetching data from the OpenDataHub API (http://tourism.opendatahub.bz.it/api)...');
+  const odhApiPath = getUrl(path, request);
+  const res = await instance.get(odhApiPath);
+  console.log('OK: Data received from the OpenDataHub API.\n');
 
-    console.log('> Transforming data to the AlpineBits format...');
-    const data = transform(res.data);
+  console.log('> Transforming data to the AlpineBits format...');
+  const data = transform(res.data);
 
-    if(data) {
-      console.log('OK: Sucessfully transformed data.\n');
-      const meta = getResponseMeta(res.data);
+  if(data) {
+    console.log('OK: Sucessfully transformed data.\n');
+    const meta = getResponseMeta(res.data);
 
-      if(field)
-        return { data: data[field], meta };
+    if(field)
+      return { data: data[field], meta };
 
-      return { data, meta };
-    }
-    else {
-      console.log('ERROR: Failed to transform the input data!\n');
-      return {data: null, meta: null};
-    }
-
+    return { data, meta };
   }
-  catch (error) {
-    console.log(error);
+  else {
+    console.log('ERROR: Failed to transform the input data!\n');
+    return {data: null, meta: null};
   }
 }
 

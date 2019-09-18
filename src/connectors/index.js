@@ -1,6 +1,7 @@
 const serializer = require('../serializer');
 const validator = require('../validator');
 const connector = require('./odh-connector');
+const errors = require('../messages/errors');
 
 /*
 fetch(): an asynchronous function to retrieve data from a source data return
@@ -26,6 +27,7 @@ async function handleRequest(request, fetch, validate, serialize) {
   catch (error) {
     console.log('ERROR: Failed to retrieve data!');
     console.log(error);
+    return(errors.timeout);
   }
 
   if(!response.data)

@@ -1,4 +1,12 @@
 module.exports = {
+  timeout: {
+    errors: [
+      {
+        title: "Data request to the provider's enpoint timed out.",
+        status: 504
+      }
+    ]
+  },
   notImplemented: {
     errors: [
       {

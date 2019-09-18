@@ -11,16 +11,26 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.use(express.json());
 
-app.use(function(req, res, next) {
-    res.setHeader("Content-Type", "application/vnd.api+json");
-    res.json = (body) => res.send(JSON.stringify(body, null, 2));
-    next();
+app.use( (req, res, next) => {
+  //TODO: Add security layer
+  next();
+});
+
+app.use( (req, res, next) => {
+  //TODO: Add header validation layer
+  next();
+});
+
+app.use( (req, res, next) => {
+  res.setHeader("Content-Type", "application/vnd.api+json");
+  res.json = (body) => res.send(JSON.stringify(body, null, 2));
+  next();
 });
 
 require('./routes/home.route.js')(app);
 require('./routes/event.route.js')(app);
 
-app.get('*', function(req, res){
+app.get('*', (req, res) => {
   error = errors.notFound;
   res.json(error);
   res.status(error.status);

@@ -96,7 +96,6 @@ function parseCollectionRequest(req) {
   parsedRequest.query.page = parsePage(req);
   parsedRequest.query.fields = parseFields(req);
   parsedRequest.query.include = parseInclude(req);
-  console.log(parsedRequest.query.fields);
   return parsedRequest;
 }
 
