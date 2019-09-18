@@ -1,4 +1,5 @@
 const axios = require('axios');
+
 const odh2ab = require ('./odh2alpinebits');
 const serializer = require ('./serializer');
 const validator = require ('./validator');
@@ -9,29 +10,14 @@ const EVENT_PATH = 'Event';
 module.exports = {
   getEvents: getResource(EVENT_PATH, odh2ab.transformEventArray, validator.validateEventArray, serializer.serializeEvents),
   getEventById: getSubResource(EVENT_PATH, odh2ab.transformEvent, validator.validateEvent, serializer.serializeEvent),
-  getSubEvents: getSubResource(EVENT_PATH, odh2ab.transformEvent, validator.validateEvent, serializer.serializeSubevents),
-
   getEventPublisher: getSubResource(EVENT_PATH, odh2ab.transformEvent, validator.validateEvent, serializer.serializePublisher),
-  getEventSeries: getSubResource(EVENT_PATH, odh2ab.transformEvent, validator.validateEvent, serializer.serializeSeries),
-
   getEventMediaObjects: getSubResource(EVENT_PATH, odh2ab.transformEvent, validator.validateEvent, serializer.serializeMediaObjects),
-  getEventMediaObjectById: getSubResource(EVENT_PATH, odh2ab.transformEvent, validator.validateEvent, serializer.serializeMediaObject),
-
-  getEventContributors: getSubResource(EVENT_PATH, odh2ab.transformEvent, validator.validateEvent, serializer.serializeContributors),
-  getEventContributorById: getSubResource(EVENT_PATH, odh2ab.transformEvent, validator.validateEvent, serializer.serializeContributor),
-
   getEventOrganizers: getSubResource(EVENT_PATH, odh2ab.transformEvent, validator.validateEvent, serializer.serializeOrganizers),
-  getEventOrganizerById: getSubResource(EVENT_PATH, odh2ab.transformEvent, validator.validateEvent, serializer.serializeOrganizer),
-
   getEventSponsors: getSubResource(EVENT_PATH, odh2ab.transformEvent, validator.validateEvent, serializer.serializeSponsors),
-  getEventSponsorById: getSubResource(EVENT_PATH, odh2ab.transformEvent, validator.validateEvent, serializer.serializeSponsor),
-
   getEventVenues: getSubResource(EVENT_PATH, odh2ab.transformEvent, validator.validateEvent, serializer.serializeVenues),
-  getEventVenueById: getSubResource(EVENT_PATH, odh2ab.transformEvent, validator.validateEvent, serializer.serializeVenue),
-  getEventVenueGeometries: getSubResource(EVENT_PATH, odh2ab.transformEvent, validator.validateEvent, serializer.serializeGeometries),
 }
 
-function getResource (basePath, transform, validate, serialize) { 
+function getResource (basePath, transform, validate, serialize) {
   return (
     function(request) {
       return getFromServer(basePath, request, transform, validate, serialize);
@@ -108,9 +94,16 @@ function getResponseMeta(dataOdh){
   let count = dataOdh.TotalResults;
   let current = dataOdh.CurrentPage;
   let last = pages = dataOdh.TotalPages;
-  let prev = current > 1 ? current-1 : 1;
-  let next = current < last ? current+1 : last;
+  let next = (current < last) ? current+1 : last;
   let first = 1;
+
+  let prev = 1;
+  if(current > 1) {
+    if(current <= last)
+      prev = current-1;
+    else
+      prev = last;
+  }
 
   return ({
     page: {
