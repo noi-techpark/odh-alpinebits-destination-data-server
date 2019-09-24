@@ -1,5 +1,5 @@
 const axios = require('axios');
-const odh2ab = require ('./odh2alpinebits');
+const odh2ab = require ('../transformers/odh2alpinebits');
 
 const EVENT_PATH = 'Event';
 
