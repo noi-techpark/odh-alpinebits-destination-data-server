@@ -1,6 +1,6 @@
 const serializer = require('../serializer');
 const validator = require('../validator');
-const connector = require('./odh-connector');
+const odhConnector = require('./odh-connector');
 const errors = require('../messages/errors');
 
 /*
@@ -20,7 +20,7 @@ async function handleRequest(request, fetch, validate, serialize) {
   let response;
 
   try {
-    console.log('> Dispatching request to connector...');
+    console.log('> Dispatching request to OpenDataHub connector...');
     response = await fetch(request);
     console.log('OK: Request completed.\n');
   }
@@ -59,21 +59,21 @@ async function handleRequest(request, fetch, validate, serialize) {
 
 module.exports = {
   getEvents: (request) => {
-    return handleRequest(request, connector.fetchEvents, validator.validateEventArray, serializer.serializeEvents)
+    return handleRequest(request, odhConnector.fetchEvents, validator.validateEventArray, serializer.serializeEvents)
   },
   getEventById: (request) => {
-    return handleRequest(request, connector.fetchEventById, validator.validateEvent, serializer.serializeEvent)
+    return handleRequest(request, odhConnector.fetchEventById, validator.validateEvent, serializer.serializeEvent)
   },
   getEventMedia: (request) => {
-    return handleRequest(request, connector.fetchEventMedia, validator.validateMediaObjectArray, serializer.serializeMediaObjects)
+    return handleRequest(request, odhConnector.fetchEventMediaObjects, validator.validateMediaObjectArray, serializer.serializeMediaObjects)
   },
   getEventPublisher: (request) => {
-    return handleRequest(request, connector.fetchEventPublisher, validator.validateAgent, serializer.serializePublisher)
+    return handleRequest(request, odhConnector.fetchEventPublisher, validator.validateAgent, serializer.serializePublisher)
   },
   getEventOrganizers: (request) => {
-    return handleRequest(request, connector.fetchEventOrganizers, validator.validateAgentArray, serializer.serializeOrganizers)
+    return handleRequest(request, odhConnector.fetchEventOrganizers, validator.validateAgentArray, serializer.serializeOrganizers)
   },
   getEventVenues: (request) => {
-    return handleRequest(request, connector.fetchEventVenues, validator.validateVenueArray, serializer.serializeVenues)
+    return handleRequest(request, odhConnector.fetchEventVenues, validator.validateVenueArray, serializer.serializeVenues)
   }
 }
