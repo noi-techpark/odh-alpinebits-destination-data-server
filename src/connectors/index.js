@@ -16,7 +16,6 @@ serialize(alpineBitsObject): a function to serialize an AlpineBits object follow
 */
 
 async function handleRequest(request, fetch, validate, serialize) {
-  console.log();
   let response;
 
   try {
@@ -25,10 +24,14 @@ async function handleRequest(request, fetch, validate, serialize) {
     console.log('OK: Request completed.\n');
   }
   catch (error) {
+    //TODO: improve error handling (e.g. check if this error is indeed a timeout) )
     console.log('ERROR: Failed to retrieve data!');
     console.log(error);
-    return(errors.timeout);
+    console.log('Error: ' + error.syscall + ' ' + error.code + ' ' + error.config.url);
+    throw errors.gatewayTimeout;
   }
+
+  console.log(response.status, response.data);
 
   if(!response.data)
     console.log('ERROR: No data was retrieved!\n');
@@ -41,6 +44,7 @@ async function handleRequest(request, fetch, validate, serialize) {
   catch (error) {
     console.log('ERROR: Failed to validate data!');
     console.log(error);
+    throw errors.cantValidate;
   }
 
   try {
@@ -52,9 +56,8 @@ async function handleRequest(request, fetch, validate, serialize) {
   catch (error) {
     console.log('ERROR: Failed to serialize response data!');
     console.log(error);
-    return null;
+    throw errors.cantSerialize;
   }
-
 }
 
 module.exports = {

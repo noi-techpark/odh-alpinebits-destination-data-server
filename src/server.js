@@ -13,16 +13,13 @@ app.use(express.json());
 
 app.use( (req, res, next) => {
   //TODO: Add security layer
-  next();
-});
-
-app.use( (req, res, next) => {
   //TODO: Add header validation layer
+  console.log('Request received: '+req.protocol+'://'+req.get('host')+req.originalUrl);
   next();
 });
 
 app.use( (req, res, next) => {
-  res.setHeader("Content-Type", "application/vnd.api+json");
+  res.setHeader('Content-Type', 'application/vnd.api+json');
   res.json = (body) => res.send(JSON.stringify(body, null, 2));
   next();
 });
@@ -31,11 +28,10 @@ require('./routes/home.route.js')(app);
 require('./routes/event.route.js')(app);
 
 app.get('*', (req, res) => {
-  error = errors.notFound;
-  res.json(error);
-  res.status(error.status);
+  res.status(errors.notFound.status);
+  res.json(errors.createResponse(errors.notFound));
 });
 
 app.listen(8080, function () {
-  console.log("App listening at http://localhost:%s", this.address().port);
+  console.log('App listening at http://localhost:%s', this.address().port);
 })

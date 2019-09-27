@@ -1,5 +1,6 @@
 const axios = require('axios');
 const odh2ab = require ('../transformers/odh2alpinebits');
+const errors = require ('../messages/errors');
 
 const EVENT_PATH = 'Event';
 
@@ -59,8 +60,9 @@ async function fetch(path, request, transform, field) {
     return { data, meta };
   }
   else {
+    //CONTINUE HERE!
     console.log('ERROR: Failed to transform the input data!\n');
-    return {data: null, meta: null};
+    throw errors.cantTransform;
   }
 }
 
