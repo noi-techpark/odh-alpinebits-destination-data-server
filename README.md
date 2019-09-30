@@ -34,9 +34,11 @@ We set up the server to listen to HTTP request on the port 8080.
 
 ### Test
 
-To run the end-to-end tests, execute:
+To run the **end-to-end** tests, execute:
 ```
 npm run test
 ```
+
+*Note that the server needs to be running for these tests to be properly executed.*
 
 For the tests, we are using the [Jest](https://jestjs.io/) framework.
