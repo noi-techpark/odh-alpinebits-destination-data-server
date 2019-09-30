@@ -39,6 +39,10 @@ To run the **end-to-end** tests, execute:
 npm run test
 ```
 
-*Note that the server needs to be running for these tests to be properly executed.*
+*Note:*
+
+* *The server needs to be running for these tests to be properly executed.*
+
+* *The whole test suite takes ~13s to be executed, as it makes multiple HTTP requests to the OpenDataHub API.*
 
 For the tests, we are using the [Jest](https://jestjs.io/) framework.
