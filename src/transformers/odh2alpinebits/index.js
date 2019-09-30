@@ -4,27 +4,15 @@ const { createObject } = require('./templates');
 
 module.exports = {
   transformEventArray: function(data) {
-    try {
-      let result = [];
+    let result = [];
 
-      for (object of data.Items)
-        result.push(transformEvent(object));
+    for (object of data.Items)
+      result.push(transformEvent(object));
 
-      return result;
-    }
-    catch(exception){
-      console.log(exception);
-      return null;
-    }
+    return result;
   },
   transformEvent: function(data) {
-    try {
-      return transformEvent(data);
-    }
-    catch(exception){
-      console.log(exception);
-      return null;
-    }
+    return transformEvent(data);
   }
 }
 

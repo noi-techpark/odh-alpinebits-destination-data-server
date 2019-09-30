@@ -1,8 +1,6 @@
 {
   "name": "reference-server",
   "version": "0.0.1",
-  "description": "",
-  "main": "index.js",
   "scripts": {
     "server": "nodemon src/server.js",
     "test": "jest"
@@ -11,8 +9,7 @@
     "type": "git",
     "url": "git+https://github.com/tgoprince/odh-alpinebits-destination-data-server.git"
   },
-  "author": "",
-  "license": "ISC",
+  "author": ["Tiago Prince Sales", "Claudenir M. Fonseca"],
   "bugs": {
     "url": "https://github.com/tgoprince/odh-alpinebits-destination-data-server/issues"
   },

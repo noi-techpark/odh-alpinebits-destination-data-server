@@ -24,17 +24,8 @@ async function handleRequest(request, fetch, validate, serialize) {
     console.log('OK: Request completed.\n');
   }
   catch (error) {
-    //TODO: improve error handling (e.g. check if this error is indeed a timeout) )
-    console.log('ERROR: Failed to retrieve data!');
-    console.log(error);
-    console.log('Error: ' + error.syscall + ' ' + error.code + ' ' + error.config.url);
-    throw errors.gatewayTimeout;
+    throw error;
   }
-
-  console.log(response.status, response.data);
-
-  if(!response.data)
-    console.log('ERROR: No data was retrieved!\n');
 
   try {
     console.log('> Validating AlpineBits objects...');

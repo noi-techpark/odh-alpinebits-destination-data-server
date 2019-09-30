@@ -39,18 +39,43 @@ transform(openDataHubObject): a function to transform an OpenDataHub response in
 async function fetch(path, request, transform, field) {
   const instance = axios.create({
     baseURL: 'http://tourism.opendatahub.bz.it/api/',
-    timeout: 300000,
+    timeout: 60000,
   });
 
-  console.log('\n> Fetching data from the OpenDataHub API (http://tourism.opendatahub.bz.it/api)...');
-  const odhApiPath = getUrl(path, request);
-  const res = await instance.get(odhApiPath);
+  let res;
+
+  try {
+    console.log('\n> Fetching data from the OpenDataHub API (http://tourism.opendatahub.bz.it/api)...');
+    const odhApiPath = getUrl(path, request);
+    res = await instance.get(odhApiPath);
+  }
+  catch(error){
+    console.log('ERROR:',error.message);
+
+    if(error.code==='ENOTFOUND'){
+      console.log("ERROR: OpenDataHub API unavailable!");
+      throw(errors.gatewayUnavailable)
+    }
+
+    if(error.code==='ECONNABORTED'){
+      console.log("ERROR: Connection to the OpenDataHub API aborted!");
+      throw(errors.gatewayTimeout)
+    }
+
+    console.log("ERROR: Could not connect to the OpenDataHub API!");
+    throw(errors.serverFailed)
+  }
+
+  if(!res.data || res.status!==200){
+    console.log("ERROR: Resource not found!");
+    throw errors.notFound;
+  }
+
   console.log('OK: Data received from the OpenDataHub API.\n');
 
-  console.log('> Transforming data to the AlpineBits format...');
-  const data = transform(res.data);
-
-  if(data) {
+  try {
+    console.log('> Transforming data to the AlpineBits format...');
+    const data = transform(res.data);
     console.log('OK: Sucessfully transformed data.\n');
     const meta = getResponseMeta(res.data);
 
@@ -59,8 +84,7 @@ async function fetch(path, request, transform, field) {
 
     return { data, meta };
   }
-  else {
-    //CONTINUE HERE!
+  catch(error) {
     console.log('ERROR: Failed to transform the input data!\n');
     throw errors.cantTransform;
   }

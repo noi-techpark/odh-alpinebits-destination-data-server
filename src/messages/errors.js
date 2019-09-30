@@ -1,15 +1,15 @@
 const types = {
-  notImplemented: {
-    title: "The route has not been implemented yet.",
-    status: 503
-  },
   notFound: {
     title: "Resource(s) not found.",
     status: 404
   },
-  gatewayTimeout: {
-    title: "Request to the gateway timed out.",
-    status: 504
+  serverFailed: {
+    title: "Server failed to respond.",
+    status: 500
+  },
+  gatewayFailed: {
+    title: "Request to the gateway failed.",
+    status: 500
   },
   cantValidate: {
     title: "Server failed to validate response.",
@@ -22,6 +22,18 @@ const types = {
   cantTransform: {
     title: "Server failed to transform gateway's response.",
     status: 500
+  },
+  notImplemented: {
+    title: "The route has not been implemented yet.",
+    status: 501
+  },
+  gatewayUnavailable: {
+    title: "Gateway is currently unavailable.",
+    status: 503
+  },
+  gatewayTimeout: {
+    title: "Request to the gateway timed out.",
+    status: 504
   }
 }
 
