@@ -1,0 +1,29 @@
+{
+  "name": "reference-server",
+  "version": "0.0.1",
+  "scripts": {
+    "server": "nodemon src/server.js",
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tgoprince/odh-alpinebits-destination-data-server.git"
+  },
+  "author": ["Tiago Prince Sales", "Claudenir M. Fonseca"],
+  "bugs": {
+    "url": "https://github.com/tgoprince/odh-alpinebits-destination-data-server/issues"
+  },
+  "homepage": "https://github.com/tgoprince/odh-alpinebits-destination-data-server#readme",
+  "dependencies": {
+    "ajv": "^6.10.2",
+    "axios": "^0.19.0",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "jsonapi-serializer": "^3.6.5",
+    "sha.js": "^2.4.11"
+  },
+  "devDependencies": {
+    "jest": "^24.9.0",
+    "nodemon": "^1.19.2"
+  }
+}
