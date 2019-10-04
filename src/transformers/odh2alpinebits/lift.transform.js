@@ -2,7 +2,7 @@ const shajs = require('sha.js')
 const utils = require('./utils');
 const templates = require('./templates');
 
-module.exports.transform = (object) => {
+module.exports = (object) => {
   const source = JSON.parse(JSON.stringify(object));
   let target = templates.createObject('Lift');
 
@@ -35,8 +35,11 @@ module.exports.transform = (object) => {
 function transformGeometry(points){
   let geometry = templates.createObject('LineString');
   points.forEach(point => {
-    console.log(point);
-    //COntinue here...
+    let newPoint = [];
+    geometry.coordinates.push(newPoint);
+    newPoint.push(point.Latitude);
+    newPoint.push(point.Longitude);
+    newPoint.push(point.Altitude);
   })
   return geometry;
 }

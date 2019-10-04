@@ -2,7 +2,7 @@ const shajs = require('sha.js')
 const utils = require('./utils');
 const templates = require('./templates');
 
-module.exports.transform = (object) => {
+module.exports = (object) => {
   const source = JSON.parse(JSON.stringify(object));
   let target = templates.createObject('Event');
 

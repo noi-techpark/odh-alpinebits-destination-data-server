@@ -1,5 +1,5 @@
-const transformEvent = require('./event.transform').transform;
-const transformLift = require('./lift.transform').transform;
+const transformEvent = require('./event.transform');
+const transformLift = require('./lift.transform');
 
 module.exports = {
   transformEventArray: function(data) {
