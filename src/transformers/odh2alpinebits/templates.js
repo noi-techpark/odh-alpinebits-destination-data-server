@@ -68,6 +68,10 @@ const templates = {
     "@type": "Point",
     coordinates: []
   },
+  LineString:  {
+    "@type": "LineString",
+    coordinates: []
+  },
   Venue: {
     "@type": "Venue",
     id: "",
@@ -87,6 +91,25 @@ const templates = {
     hours: [],
     validFrom: null,
     validTo: null
+  },
+  Lift: {
+    "@type": "Lift",
+    id: "",
+    name: {},
+    shortName: {},
+    description: {},
+    abstract: {},
+    category: null,
+    length: null,
+    minHeight: null,
+    maxHeight: null,
+    capacityPerHour: null,
+    personsPerChair: null,
+    connections: [],
+    openingHours: [],
+    address: {},
+    geometries: [],
+    howToArrive: {}
   }
 }
 

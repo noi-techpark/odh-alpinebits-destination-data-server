@@ -3,32 +3,58 @@ const odh2ab = require ('../transformers/odh2alpinebits');
 const errors = require ('../messages/errors');
 
 const EVENT_PATH = 'Event';
+const ACTIVITY_PATH = 'Activity';
 
-module.exports = {
-  fetchEvents: fetchResource(EVENT_PATH, odh2ab.transformEventArray),
-  fetchEventById: fetchSubResource(EVENT_PATH, odh2ab.transformEvent),
-  fetchEventPublisher: fetchSubResource(EVENT_PATH, odh2ab.transformEvent, 'publisher'),
-  fetchEventMediaObjects: fetchSubResource(EVENT_PATH, odh2ab.transformEvent, 'multimediaDescriptions'),
-  fetchEventOrganizers: fetchSubResource(EVENT_PATH, odh2ab.transformEvent, 'organizers'),
-  fetchEventVenues: fetchSubResource(EVENT_PATH, odh2ab.transformEvent, 'venues'),
+function fetchEvents (request) {
+  let path = EVENT_PATH;
+  let queryArray = getPaginationQuery(request);
+
+  if(queryArray.length)
+    path+="?"+queryArray.join("&");
+
+  return fetch(path, request, odh2ab.transformEventArray)
 }
 
-function fetchResource (basePath, transform) {
+function fetchLifts (request) {
+  let queryArray = getPaginationQuery(request);
+  queryArray.push('activitytype=512')
+
+  let path = ACTIVITY_PATH+"?"+queryArray.join("&");
+
+  return fetch(path, request, odh2ab.transformLiftArray)
+}
+
+function getPaginationQuery(request) {
+  const { page } = request.query;
+  let pageArray = []
+
+  if (page) {
+    if (page.size)
+      pageArray.push("pagesize="+page.size);
+    if (page.number)
+      pageArray.push("pagenumber="+page.number);
+  }
+  return pageArray;
+}
+
+function fetchResourceById(resource, transform) {
   return (
     function(request) {
-      return fetch(basePath, request, transform);
+      let path = resource+'/'+request.params.id;
+      return fetch(path, request, transform);
     }
   );
 }
 
-function fetchSubResource (basePath, transform, field) {
+function fetchSubResource(resource, transform, field) {
   return (
     function(request) {
-      let fullPath = basePath+'/'+request.params.id;
-      return fetch(fullPath, request, transform, field);
+      let path = resource+'/'+request.params.id;
+      return fetch(path, request, transform, field);
     }
   );
 }
+
 
 /*
 transform(openDataHubObject): a function to transform an OpenDataHub response into the AlpineBits format
@@ -46,11 +72,10 @@ async function fetch(path, request, transform, field) {
 
   try {
     console.log('\n> Fetching data from the OpenDataHub API (http://tourism.opendatahub.bz.it/api)...');
-    const odhApiPath = getUrl(path, request);
-    res = await instance.get(odhApiPath);
+    res = await instance.get(path);
   }
   catch(error){
-    console.log('ERROR:',error.message);
+    console.log(error);
 
     if(error.code==='ENOTFOUND'){
       console.log("ERROR: OpenDataHub API unavailable!");
@@ -85,28 +110,11 @@ async function fetch(path, request, transform, field) {
     return { data, meta };
   }
   catch(error) {
+    console.log(error);
     console.log('ERROR: Failed to transform the input data!\n');
     throw errors.cantTransform;
   }
 }
-
-function getUrl(path, request) {
-  const { page } = request.query;
-  let odhQuery = []
-
-  if (page) {
-    if (page.size)
-      odhQuery.push("pagesize="+page.size);
-    if (page.number)
-      odhQuery.push("pagenumber="+page.number);
-  }
-
-  if(odhQuery.length)
-    return path+"?"+odhQuery.join("&");
-
-  return path;
-}
-
 
 function getResponseMeta(dataOdh){
   let count = dataOdh.TotalResults;
@@ -134,4 +142,15 @@ function getResponseMeta(dataOdh){
       count,
     }
   });
+}
+
+module.exports = {
+  fetchEvents: fetchEvents,
+  fetchEventById: fetchResourceById(EVENT_PATH, odh2ab.transformEvent),
+  fetchEventPublisher: fetchSubResource(EVENT_PATH, odh2ab.transformEvent, 'publisher'),
+  fetchEventMediaObjects: fetchSubResource(EVENT_PATH, odh2ab.transformEvent, 'multimediaDescriptions'),
+  fetchEventOrganizers: fetchSubResource(EVENT_PATH, odh2ab.transformEvent, 'organizers'),
+  fetchEventVenues: fetchSubResource(EVENT_PATH, odh2ab.transformEvent, 'venues'),
+  fetchLifts: fetchLifts,
+  fetchLiftById: fetchResourceById(ACTIVITY_PATH, odh2ab.transformLift),
 }

@@ -6,6 +6,7 @@ const eventSchema = require('./schemas/event.schema');
 const venueSchema = require('./schemas/venue.schema');
 const agentSchema = require('./schemas/agent.schema');
 const mediaObjectSchema = require('./schemas/mediaobject.schema');
+const liftSchema = require('./schemas/lift.schema');
 
 let ajv = new Ajv({ verbose: false });
 
@@ -13,6 +14,7 @@ let eventAjv = ajv.compile(eventSchema);
 let venueAjv = ajv.compile(venueSchema);
 let mediaObjectAjv = ajv.compile(mediaObjectSchema);
 let agentAjv = ajv.compile(agentSchema);
+let liftAjv = ajv.compile(liftSchema);
 
 module.exports = {
   validateEvent: (object) => validateObject(eventAjv, object),
@@ -21,6 +23,8 @@ module.exports = {
   validateMediaObjectArray: (array) => validateArray(mediaObjectAjv, array),
   validateAgent: (object) => validateObject(agentAjv, object),
   validateAgentArray: (array) => validateArray(agentAjv, array),
+  validateLift: (object) => validateObject(liftAjv, object),
+  validateLiftArray: (object) => validateArray(liftAjv, object)
 }
 
 function validateObject(validation, object){

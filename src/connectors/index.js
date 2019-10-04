@@ -69,5 +69,11 @@ module.exports = {
   },
   getEventVenues: (request) => {
     return handleRequest(request, odhConnector.fetchEventVenues, validator.validateVenueArray, serializer.serializeVenues)
+  },
+  getLifts: (request) => {
+    return handleRequest(request, odhConnector.fetchLifts, validator.validateLiftArray, serializer.serializeLifts)
+  },
+  getLiftById: (request) => {
+    return handleRequest(request, odhConnector.fetchLiftById, validator.validateLift, serializer.serializeLift)
   }
 }

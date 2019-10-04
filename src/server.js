@@ -26,6 +26,8 @@ app.use( (req, res, next) => {
 
 require('./routes/home.route.js')(app);
 require('./routes/events.route.js')(app);
+require('./routes/lifts.route.js')(app);
+
 require('./routes/places.route.js')(app);
 require('./routes/agents.route.js')(app);
 require('./routes/media-objects.route.js')(app);

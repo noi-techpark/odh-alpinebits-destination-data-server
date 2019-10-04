@@ -10,7 +10,7 @@ function serialize(resource, data) {
 }
 
 module.exports = {
-  serializeEvents: function (data, request, meta) {
+  serializeEvents: (data, request, meta) => {
     let resource = resources.getOptions('events');
 
     links.addPagination(resource, request, meta);
@@ -22,7 +22,7 @@ module.exports = {
 
     return serialize(resource, data);
   },
-  serializeEvent: function (data, request, meta) {
+  serializeEvent: (data, request, meta) => {
     let resource = resources.getOptions('events');
 
     links.addSelf(resource, request);
@@ -31,7 +31,7 @@ module.exports = {
 
     return serialize(resource, data);
   },
-  serializePublisher: function (data, request, meta) {
+  serializePublisher: (data, request, meta) => {
     let resource = resources.getOptions('agents');
 
     links.addSelf(resource, request);
@@ -41,7 +41,7 @@ module.exports = {
 
     return serialize(resource, data);
   },
-  serializeOrganizers:  function (data, request, meta) {
+  serializeOrganizers: (data, request, meta) => {
     let resource = resources.getOptions('agents');
 
     links.addSelf(resource, request);
@@ -51,7 +51,7 @@ module.exports = {
 
     return serialize(resource, data);
   },
-  serializeMediaObjects: function (data, request, meta) {
+  serializeMediaObjects: (data, request, meta) => {
     let resource = resources.getOptions('mediaObjects');
 
     links.addSelf(resource, request);
@@ -61,7 +61,7 @@ module.exports = {
 
     return serialize(resource, data);
   },
-  serializeVenues: function (data, request, meta) {
+  serializeVenues: (data, request, meta) => {
     let resource = resources.getOptions('places');
 
     links.addSelf(resource, request);
@@ -70,5 +70,11 @@ module.exports = {
     fields.add(resource, request);
 
     return serialize(resource, data);
+  },
+  serializeLifts: (data, request, meta) => {
+    return data;
+  },
+  serializeLift: (data, request, meta) => {
+    return data;
   }
 }

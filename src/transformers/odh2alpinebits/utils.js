@@ -1,7 +1,20 @@
+var sanitizeHtml = require('sanitize-html');
+
+const languageMapping = [
+  ['it','ita'],
+  ['en','eng'],
+  ['de','deu']
+]
+
 // isLanguageNested: true => object.property.it
 // isLanguageNested: false => object.it.property
 function transformMultilingualFields (source, target, fieldMapping, languageMapping, isLanguageNested, ignoreNullValues) {
   // TODO: languageMapping and fieldMapping must be lists of
+  sanitizeOpts = {
+    allowedTags: [],
+    allowedAttributes: {}
+  };
+
   for (fieldEntry of fieldMapping) {
     let [sourceField, targetField] = fieldEntry;
 
@@ -12,9 +25,9 @@ function transformMultilingualFields (source, target, fieldMapping, languageMapp
         target[targetField] = {}
 
       if(isLanguageNested && source[sourceField] && (!ignoreNullValues || source[sourceField][sourceLanguage]))
-        target[targetField][targetLanguage] = source[sourceField][sourceLanguage];
+        target[targetField][targetLanguage] = sanitizeHtml(source[sourceField][sourceLanguage], sanitizeOpts);
       else if (!isLanguageNested && source[sourceLanguage] && (!ignoreNullValues || source[sourceLanguage][sourceField]))
-        target[targetField][targetLanguage] = source[sourceLanguage][sourceField];
+        target[targetField][targetLanguage] = sanitizeHtml(source[sourceLanguage][sourceField], sanitizeOpts);
     }
   }
 }
@@ -48,7 +61,38 @@ function safeGet (path, object) {
   return value;
 }
 
-module.exports.transformMultilingualFields = transformMultilingualFields;
-module.exports.transformFields = transformFields;
-module.exports.transformArrayFields = transformArrayFields;
-module.exports.safeGet = safeGet;
+function transformBasicProperties(source) {
+  let target = {};
+  let fieldMapping = [['Id','id']]
+  transformFields(source, target, fieldMapping);
+
+  // Basic textual descriptions
+  if(source.Detail) {
+    fieldMapping = [['Title','name'],['BaseText','description']];
+    transformMultilingualFields(source.Detail, target, fieldMapping, languageMapping, false, true);
+  }
+
+  if(source.ContactInfos) {
+    fieldMapping = [['Url', 'url']];
+    transformMultilingualFields(source.ContactInfos, target, fieldMapping, languageMapping, false, true);
+  }
+
+  return target;
+}
+
+function transformMetadata(source) {
+  target = {};
+  target.lastUpdate = source.LastChange+'+02:00';
+  target.dataProvider = "http://tourism.opendatahub.bz.it/";
+  return target;
+}
+
+module.exports = {
+  transformMultilingualFields,
+  transformFields,
+  transformArrayFields,
+  safeGet,
+  transformBasicProperties,
+  transformMetadata,
+  languageMapping
+}
