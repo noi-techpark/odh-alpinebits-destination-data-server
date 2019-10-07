@@ -1,11 +1,12 @@
 const express = require('express');
 const cors = require('cors');
 const errors = require('./messages/errors');
+require('custom-env').env();
 
 var app = express();
 
 const corsOptions = {
-  origin: 'http://localhost:4200',
+  origin: process.env.REF_SERVER_CORS_ORIGIN,
   optionsSuccessStatus: 200
 }
 app.use(cors(corsOptions));
@@ -39,6 +40,6 @@ app.get('*', (req, res) => {
   res.json(errors.createResponse(errors.notFound));
 });
 
-app.listen(8080, function () {
+app.listen(process.env.REF_SERVER_PORT, function () {
   console.log('App listening at http://localhost:%s', this.address().port);
 })

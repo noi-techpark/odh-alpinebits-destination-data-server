@@ -1,6 +1,7 @@
 const axios = require('axios');
 const odh2ab = require ('../transformers/odh2alpinebits');
 const errors = require ('../messages/errors');
+require('custom-env').env();
 
 const EVENT_PATH = 'Event';
 const ACTIVITY_PATH = 'Activity';
@@ -64,8 +65,8 @@ transform(openDataHubObject): a function to transform an OpenDataHub response in
 
 async function fetch(path, request, transform, field) {
   const instance = axios.create({
-    baseURL: 'http://tourism.opendatahub.bz.it/api/',
-    timeout: 60000,
+    baseURL: process.env.ODH_BASE_URL,
+    timeout: process.env.ODH_TIMEOUT,
   });
 
   let res;
