@@ -48,6 +48,7 @@ const GEOMETRY = {
     ...DEFAULT_OPTS,
     attributes: ['coordinates', 'category'],
     transform: function (data) {
+      console.log("HERE!!!");
        data.category = data['@type'];
        return data;
     }
@@ -58,7 +59,7 @@ const PLACE = {
   name: 'places',
   opts: {
     ...DEFAULT_OPTS,
-    attributes: [...BASIC_ATTR, 'multimediaDescriptions', 'frequency', 'address', 'geometries', 'howToArrive', 'connections', 'openingHours'],
+    attributes: [...BASIC_ATTR, 'multimediaDescriptions', 'address', 'geometries', 'howToArrive', 'connections', 'openingHours'],
     multimediaDescriptions: MEDIA_OBJECT.opts,
     address: ADDRESS.opts,
     openingHours: HOURS.opts,
@@ -119,6 +120,21 @@ const EVENT = {
   relationships: [..._EVENT_REL]
 }
 
+const LIFT = {
+  name: 'lifts',
+  opts: {
+    ...DEFAULT_OPTS,
+    attributes: [...BASIC_ATTR,'category','length','minAltitude','maxAltitude','capacityPerHour','personsPerChair',
+    'howToArrive','address','geometries','openingHours','connections','multimediaDescriptions'],
+    multimediaDescriptions: MEDIA_OBJECT.opts,
+    address: ADDRESS.opts,
+    openingHours: HOURS.opts,
+    geometries: GEOMETRY.opts,
+    connections: {}
+  },
+  relationships: ['multimediaDescriptions', 'connections']
+}
+
 function typeForAttribute (attribute, data) {
   switch(data['@type']) {
     case 'Event':
@@ -139,6 +155,8 @@ function typeForAttribute (attribute, data) {
     case 'Venue':
     case 'Place':
       return PLACE.name;
+    case 'Lift':
+      return LIFT.name;
 
     return data['@type'];
   }
@@ -171,7 +189,8 @@ const resources = {
   'events': EVENT,
   'agents': AGENT,
   'mediaObjects': MEDIA_OBJECT,
-  'places': PLACE
+  'places': PLACE,
+  'lifts': LIFT
 }
 
 module.exports = {

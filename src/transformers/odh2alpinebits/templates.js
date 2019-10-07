@@ -65,11 +65,13 @@ const templates = {
     complement: {},
   },
   Point:  {
-    "@type": "Point",
+    "@type": "Geometry",
+    category: "Point",
     coordinates: []
   },
   LineString:  {
-    "@type": "LineString",
+    "@type": "Geometry",
+    category: "LineString",
     coordinates: []
   },
   Venue: {
@@ -99,6 +101,7 @@ const templates = {
     shortName: {},
     description: {},
     abstract: {},
+    multimediaDescriptions: [],
     category: null,
     length: null,
     minAltitude: null,

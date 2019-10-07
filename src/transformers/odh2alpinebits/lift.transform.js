@@ -97,16 +97,28 @@ module.exports = (object) => {
 
   target.category = categoryMapping[source.SubType];
 
-  let geometry = templates.createObject('LineString');
-  target.geometries.push(geometry);
+  if(source.GpsInfo && source.GpsInfo.length>=1) {
+    if(source.GpsInfo.length===1) {
+      let geometry = templates.createObject('Point');
+      target.geometries.push(geometry);
+      let point = source.GpsInfo[0];
+      geometry.coordinates.push(point.Longitude);
+      geometry.coordinates.push(point.Latitude);
+      geometry.coordinates.push(point.Altitude);
+    }
+    else {
+      let geometry = templates.createObject('LineString');
+      target.geometries.push(geometry);
 
-  source.GpsInfo.forEach(point => {
-    let newPoint = [];
-    newPoint.push(point.Longitude);
-    newPoint.push(point.Latitude);
-    newPoint.push(point.Altitude);
-    geometry.coordinates.push(newPoint);
-  })
+      source.GpsInfo.forEach(point => {
+        let newPoint = [];
+        newPoint.push(point.Longitude);
+        newPoint.push(point.Latitude);
+        newPoint.push(point.Altitude);
+        geometry.coordinates.push(newPoint);
+      })
+    }
+  }
 
   target.length = source.DistanceLength>0 ? source.DistanceLength : null;
 

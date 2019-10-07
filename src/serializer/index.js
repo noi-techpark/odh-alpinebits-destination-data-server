@@ -72,9 +72,23 @@ module.exports = {
     return serialize(resource, data);
   },
   serializeLifts: (data, request, meta) => {
-    return data;
+    let resource = resources.getOptions('lifts');
+
+    links.addPagination(resource, request, meta);
+    links.addSelf(resource, request);
+    links.addDataLinks(resource, request);
+    includes.add(resource, request);
+    fields.add(resource, request);
+
+    return serialize(resource, data);
   },
   serializeLift: (data, request, meta) => {
-    return data;
+    let resource = resources.getOptions('lifts');
+    
+    links.addSelf(resource, request);
+    includes.add(resource, request);
+    fields.add(resource, request);
+
+    return serialize(resource, data);
   }
 }

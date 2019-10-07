@@ -24,4 +24,12 @@ module.exports = function(app) {
       .then(data => res.json(data))
       .catch(error => handleError(error, req, res));
   });
+
+  app.get('/api/v1/lifts/:id/multimediaDescriptions', function(req, res) {
+    handleNotImplemented(req,res);
+  });
+
+  app.get('/api/v1/lifts/:id/connections', function(req, res) {
+    handleNotImplemented(req,res);
+  });
 }
