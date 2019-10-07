@@ -9,7 +9,6 @@ const languageMapping = [
 // isLanguageNested: true => object.property.it
 // isLanguageNested: false => object.it.property
 function transformMultilingualFields (source, target, fieldMapping, languageMapping, isLanguageNested, ignoreNullValues) {
-  // TODO: languageMapping and fieldMapping must be lists of
   sanitizeOpts = {
     allowedTags: [],
     allowedAttributes: {}

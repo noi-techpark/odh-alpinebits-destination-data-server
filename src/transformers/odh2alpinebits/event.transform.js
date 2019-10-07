@@ -201,16 +201,16 @@ function transformOrganizer(organizer, contact) {
   //If email and telephone number are not specified in organizer, try to get it from the ContactInfos field.
   // TODO: improve this part of the code. Too many duplicates...
   if(!newOrganizer.email) {
-    const deEmail = utils.safeGet(['de','Email']);
-    const itEmail = utils.safeGet(['it','Email']);
-    const enEmail = utils.safeGet(['en','Email']);
+    const deEmail = utils.safeGet(['de','Email'],contact);
+    const itEmail = utils.safeGet(['it','Email'],contact);
+    const enEmail = utils.safeGet(['en','Email'],contact);
     newOrganizer.email = deEmail || itEmail || enEmail;
   }
 
   if(!newOrganizer.telephone) {
-    const deTelephone = utils.safeGet(['de','Phonenumber']);
-    const itTelephone = utils.safeGet(['it','Phonenumber']);
-    const enTelephone = utils.safeGet(['en','Phonenumber']);
+    const deTelephone = utils.safeGet(['de','Phonenumber'],contact);
+    const itTelephone = utils.safeGet(['it','Phonenumber'],contact);
+    const enTelephone = utils.safeGet(['en','Phonenumber'],contact);
     newOrganizer.telephone = deTelephone || itTelephone || enTelephone;
   }
 
