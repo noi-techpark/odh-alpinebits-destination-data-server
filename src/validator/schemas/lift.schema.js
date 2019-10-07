@@ -17,10 +17,16 @@ module.exports = {
       "minLength": 1
     },
     "name": {
-      "$ref": "#/definitions/textField"
+      "$ref": "#/definitions/text"
+    },
+    "shortName": {
+      "$ref": "#/definitions/text"
+    },
+    "abstract": {
+      "$ref": "#/definitions/text"
     },
     "description": {
-      "$ref": "#/definitions/textField"
+      "$ref": "#/definitions/text"
     },
     "url": {
       "$ref": "#/definitions/url"
@@ -203,27 +209,27 @@ module.exports = {
       }
     },
     "category": {
-      "type": "string",
-      "enum": [
-        "chairlift",
-        "gondola",
-        "funicular"
-      ]
+      "type": "string"
     },
     "length": {
-      "type": "number"
+      "description": "The total lenght of a lift in meters.",
+      "type": ["number", "null"]
     },
     "minAltitude": {
-      "type": "number"
+      "description": "The lowest elevation point of a lift in meters above sea level.",
+      "type": ["number", "null"]
     },
     "maxAltitude": {
-      "type": "number"
+      "description": "The maximum elevation point of a lift in meters above sea level.",
+      "type": ["number", "null"]
     },
     "capacity": {
-      "type": "integer"
+      "description": "The average number of people a lift can transport per hour.",
+      "type": ["number", "null"]
     },
     "personsPerChair": {
-      "type": "integer"
+      "description": "The maximum number of people that fits in a single chair/cabin of a lift.",
+      "type": ["number", "null"]
     },
     "openingHours": {
       "type": "array",
@@ -243,26 +249,10 @@ module.exports = {
       "propertyNames": {
         "type": "string",
         "enum": [
-          "en",
-          "it",
-          "de"
-        ]
-      }
-    },
-    "shortText": {
-      "patternProperties": {
-        "": {
-          "type": "string",
-          "maxLength": 48
-        }
-      },
-      "type": "object",
-      "propertyNames": {
-        "type": "string",
-        "enum": [
-          "en",
-          "it",
-          "de"
+          "eng",
+          "ita",
+          "deu",
+          "lld"
         ]
       }
     },
@@ -283,31 +273,11 @@ module.exports = {
           "propertyNames": {
             "type": "string",
             "enum": [
-              "en",
-              "it",
-              "de"
+              "eng",
+              "ita",
+              "deu",
+              "lld"
             ]
-          }
-        }
-      ]
-    },
-    "textField": {
-      "oneOf": [
-        {
-          "$ref": "#/definitions/text"
-        },
-        {
-          "type": "object",
-          "required": [
-            "default"
-          ],
-          "properties": {
-            "default": {
-              "$ref": "#/definitions/text"
-            },
-            "short": {
-              "$ref": "#/definitions/shortText"
-            }
           }
         }
       ]
@@ -327,10 +297,16 @@ module.exports = {
           "minLength": 1
         },
         "name": {
-          "$ref": "#/definitions/textField"
+          "$ref": "#/definitions/text"
+        },
+        "shortName": {
+          "$ref": "#/definitions/text"
+        },
+        "abstract": {
+          "$ref": "#/definitions/text"
         },
         "description": {
-          "$ref": "#/definitions/textField"
+          "$ref": "#/definitions/text"
         },
         "url": {
           "$ref": "#/definitions/url"
@@ -360,10 +336,16 @@ module.exports = {
                 "minLength": 1
               },
               "name": {
-                "$ref": "#/definitions/textField"
+                "$ref": "#/definitions/text"
+              },
+              "shortName": {
+                "$ref": "#/definitions/text"
+              },
+              "abstract": {
+                "$ref": "#/definitions/text"
               },
               "description": {
-                "$ref": "#/definitions/textField"
+                "$ref": "#/definitions/text"
               },
               "url": {
                 "$ref": "#/definitions/url"
@@ -432,10 +414,16 @@ module.exports = {
           "minLength": 1
         },
         "name": {
-          "$ref": "#/definitions/textField"
+          "$ref": "#/definitions/text"
+        },
+        "shortName": {
+          "$ref": "#/definitions/text"
+        },
+        "abstract": {
+          "$ref": "#/definitions/text"
         },
         "description": {
-          "$ref": "#/definitions/textField"
+          "$ref": "#/definitions/text"
         },
         "url": {
           "$ref": "#/definitions/url"
@@ -444,29 +432,24 @@ module.exports = {
           "type": "string",
           "pattern": "^(application|audio|font|example|image|message|model|multipart|text|video)/[a-zA-Z0-9-.+]+$"
         },
-        "fileExtension": {
-          "type": "string",
-          "minLength": 1
-        },
         "height": {
+          "description": "The height of an image or a video in pixels.",
           "type": "integer",
           "minimum": 1
         },
         "width": {
+          "description": "The width of an image or a video in pixels.",
           "type": "integer",
           "minimum": 1
         },
         "duration": {
+          "description": "The duration of an audio or a video in seconds.",
           "type": "number",
           "minimum": 1
         },
         "license": {
-          "type": "string",
-          "enum": [
-            "cc0",
-            "cc1",
-            "cc2"
-          ]
+          "description": "The license defined for a media object. The value of this field should be a valid license identifier as defined in https://spdx.org/licenses/ (e.g. CC-BY-4.0, FreeImage)",
+          "type": "string"
         },
         "copyrightOwner": {
           "$ref": "#/definitions/agent"
@@ -523,12 +506,7 @@ module.exports = {
           "const": "Address"
         },
         "category": {
-          "type": "string",
-          "enum": [
-            "billing",
-            "main",
-            "shipping"
-          ]
+          "type": "string"
         },
         "street": {
           "$ref": "#/definitions/text"
@@ -546,23 +524,13 @@ module.exports = {
           "$ref": "#/definitions/text"
         },
         "country": {
-          "required": [
-            "name",
-            "code"
-          ],
-          "properties": {
-            "name": {
-              "$ref": "#/definitions/text"
-            },
-            "code": {
-              "type": "string",
-              "enum": [
-                "IT",
-                "DE",
-                "AU"
-              ]
-            }
-          }
+          "description": "A two-letter country code as defined in the ISO 3166.",
+          "type": "string",
+          "enum": [
+            "IT",
+            "DE",
+            "AU"
+          ]
         }
       }
     },

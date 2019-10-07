@@ -51,5 +51,6 @@ function validate(validation, object, result) {
     let message = object && object.id ? 'Object <'+object.id+'>' : 'Data';
     console.log('ERROR: '+message+' is INVALID!');
     result.invalid.push(object);
+    console.log(validation.errors);
   }
 }
