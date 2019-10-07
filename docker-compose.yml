@@ -1,0 +1,9 @@
+version: "2"
+services:
+  destination-data-server:
+    container_name: destination-data-server
+    env_file: .env
+    build: .
+    restart: always
+    ports:
+      - "${REF_SERVER_PORT}:${REF_SERVER_EXPOSED_PORT}"
