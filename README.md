@@ -12,6 +12,8 @@ The current version of the server accepts HTTP GET requests on the following rou
 * /events/:id/venues
 * /events/:id/publisher
 * /events/:id/organizers
+* /lifts
+* /lifts/:id
 
 
 ### Install
@@ -39,9 +41,21 @@ To run the **end-to-end** tests, execute:
 npm run test
 ```
 
+### Server Deployment
+
+To deploy the server with Docker, execute:
+```
+docker-compose build
+docker-compose start
+```
+
 *Note:*
 
 * *The server needs to be running for these tests to be properly executed.*
+
+* *These commands must be executed from within the project's folder.*
+
+* *Please set the environment variables as you need within the '.env' file.*
 
 * *The whole test suite takes ~13s to be executed, as it makes multiple HTTP requests to the OpenDataHub API.*
 

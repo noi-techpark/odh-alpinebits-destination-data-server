@@ -65,7 +65,13 @@ const templates = {
     complement: {},
   },
   Point:  {
-    "@type": "Point",
+    "@type": "Geometry",
+    category: "Point",
+    coordinates: []
+  },
+  LineString:  {
+    "@type": "Geometry",
+    category: "LineString",
     coordinates: []
   },
   Venue: {
@@ -87,6 +93,26 @@ const templates = {
     hours: [],
     validFrom: null,
     validTo: null
+  },
+  Lift: {
+    "@type": "Lift",
+    id: "",
+    name: {},
+    shortName: {},
+    description: {},
+    abstract: {},
+    multimediaDescriptions: [],
+    category: null,
+    length: null,
+    minAltitude: null,
+    maxAltitude: null,
+    capacityPerHour: null,
+    personsPerChair: null,
+    connections: [],
+    openingHours: [],
+    address: {},
+    geometries: [],
+    howToArrive: {}
   }
 }
 

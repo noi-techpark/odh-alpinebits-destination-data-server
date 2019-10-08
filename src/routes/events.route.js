@@ -7,7 +7,7 @@ function handleNotImplemented(req, res){
 }
 
 function handleError(err, req, res ){
-  console.log("event.route.js: HandleError");
+  console.log(err);
   res.status(err.status || 500);
   res.json(errors.createResponse(err));
 }
