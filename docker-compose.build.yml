@@ -1,0 +1,10 @@
+version: '3.4'
+
+services:
+  app:
+    image: ${DOCKER_IMAGE_APP}:${DOCKER_TAG_APP}
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: npm run server
+    restart: unless-stopped
