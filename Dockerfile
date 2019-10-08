@@ -1,20 +1,18 @@
+# Base Dokcer image for Node.js
 FROM node:10
 
-# Create app directory
+# Working directory
 WORKDIR /src/destination-data-server
 
-# Install app dependencies
-# A wildcard is used to ensure both package.json AND package-lock.json are copied
-# where available (npm@5+)
+# Copies package.json and package-lock.json and runs npm install
 COPY package*.json ./
-
 RUN npm install
-# If you are building your code for production
-# RUN npm ci --only=production
 
-# Bundle app source
+# Bundles app source
 COPY . .
 
+# Exposes the services on the specified port
 EXPOSE "${REF_SERVER_PORT}"
 
+# Initiates the server
 CMD [ "npm", "run", "server" ]
