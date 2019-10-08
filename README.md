@@ -12,6 +12,8 @@ The current version of the server accepts HTTP GET requests on the following rou
 * /events/:id/venues
 * /events/:id/publisher
 * /events/:id/organizers
+* /lifts
+* /lifts/:id
 
 
 ### Install
