@@ -3,7 +3,7 @@ version: '3.4'
 services:
   app:
     image: ${DOCKER_IMAGE_APP}:${DOCKER_TAG_APP}
-    command: npm run server
     restart: unless-stopped
+    env_file: .env
     ports:
-      - "1007:8080"
+      - "${DOCKER_SERVER_PORT}:${REF_SERVER_PORT}"

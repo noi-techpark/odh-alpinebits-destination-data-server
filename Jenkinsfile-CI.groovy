@@ -9,7 +9,7 @@ pipeline {
     stages {
         stage('Configure') {
             steps {
-                sh "echo '' > .env"
+                sh "cp .env.example .env"
                 sh "echo 'DOCKER_IMAGE_APP=${DOCKER_IMAGE_APP}' >> .env"
                 sh "echo 'DOCKER_TAG_APP=${DOCKER_TAG_APP}' >> .env"
             }

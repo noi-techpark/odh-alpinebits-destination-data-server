@@ -9,14 +9,23 @@ pipeline {
         DOCKER_SERVICES = "app"
         DOCKER_SERVER_IP = "63.33.73.203"
         DOCKER_SERVER_DIRECTORY = "/var/docker/alpinebits-destination-data-server"
+        DOCKER_SERVER_PORT = "1007"
+        REF_SERVER_CORS_ORIGIN = "*"
+        ODH_BASE_URL = "https://tourism.opendatahub.bz.it/api/"
+        ODH_TIMEOUT = "60000"
     }
 
     stages {
         stage('Configure') {
             steps {
-                sh "echo '' > .env"
+                sh "cp .env.example .env"
                 sh "echo 'DOCKER_IMAGE_APP=${DOCKER_IMAGE_APP}' >> .env"
                 sh "echo 'DOCKER_TAG_APP=${DOCKER_TAG_APP}' >> .env"
+
+                sh 'sed -i -e "s%\\(DOCKER_SERVER_PORT\\s*=\\).*\\$%\\1${DOCKER_SERVER_PORT}%" .env'
+                sh 'sed -i -e "s%\\(REF_SERVER_CORS_ORIGIN\\s*=\\).*\\$%\\1${REF_SERVER_CORS_ORIGIN}%" .env'
+                sh 'sed -i -e "s%\\(ODH_BASE_URL\\s*=\\).*\\$%\\1${ODH_BASE_URL}%" .env'
+                sh 'sed -i -e "s%\\(ODH_TIMEOUT\\s*=\\).*\\$%\\1${ODH_TIMEOUT}%" .env'
             }
         }
         stage('Build & Push') {
