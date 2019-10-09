@@ -25,6 +25,16 @@ function fetchLifts (request) {
   return fetch(path, request, odh2ab.transformLiftArray)
 }
 
+function fetchSnowparks (request) {
+  let queryArray = getPaginationQuery(request);
+  queryArray.push('activitytype=256')
+  queryArray.push('subtype=16')
+
+  let path = ACTIVITY_PATH+"?"+queryArray.join("&");
+
+  return fetch(path, request, odh2ab.transformSnowparkArray)
+}
+
 function getPaginationQuery(request) {
   const { page } = request.query;
   let pageArray = []
@@ -154,4 +164,6 @@ module.exports = {
   fetchEventVenues: fetchSubResource(EVENT_PATH, odh2ab.transformEvent, 'venues'),
   fetchLifts: fetchLifts,
   fetchLiftById: fetchResourceById(ACTIVITY_PATH, odh2ab.transformLift),
+  fetchSnowparks: fetchSnowparks,
+  fetchSnowparkById: fetchResourceById(ACTIVITY_PATH, odh2ab.transformSnowpark),
 }

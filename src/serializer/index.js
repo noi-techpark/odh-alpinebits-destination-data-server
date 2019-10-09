@@ -84,7 +84,27 @@ module.exports = {
   },
   serializeLift: (data, request, meta) => {
     let resource = resources.getOptions('lifts');
-    
+
+    links.addSelf(resource, request);
+    includes.add(resource, request);
+    fields.add(resource, request);
+
+    return serialize(resource, data);
+  },
+  serializeSnowparks: (data, request, meta) => {
+    let resource = resources.getOptions('snowparks');
+
+    links.addPagination(resource, request, meta);
+    links.addSelf(resource, request);
+    links.addDataLinks(resource, request);
+    includes.add(resource, request);
+    fields.add(resource, request);
+
+    return serialize(resource, data);
+  },
+  serializeSnowpark: (data, request, meta) => {
+    let resource = resources.getOptions('snowparks');
+
     links.addSelf(resource, request);
     includes.add(resource, request);
     fields.add(resource, request);

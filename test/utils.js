@@ -1,13 +1,11 @@
 const axios = require('axios');
-
-const baseURL = 'http://localhost:8080'
+require('custom-env').env();
 
 const axiosInstance = axios.create({
-  baseURL: baseURL,
+  baseURL: process.env.REF_SERVER_URL,
   timeout: 300000,
 });
 
 module.exports = {
-  baseURL,
   axiosInstance
 };

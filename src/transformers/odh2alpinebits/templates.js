@@ -101,6 +101,7 @@ const templates = {
     shortName: {},
     description: {},
     abstract: {},
+    url: {},
     multimediaDescriptions: [],
     category: null,
     length: null,
@@ -113,6 +114,27 @@ const templates = {
     address: {},
     geometries: [],
     howToArrive: {}
+  },
+  Snowpark: {
+    "@type": "Snowpark",
+    id: "",
+    name: {},
+    shortName: {},
+    description: {},
+    abstract: {},
+    url: {},
+    multimediaDescriptions: [],
+    address: {},
+    geometries: [],
+    howToArrive: {},
+    connections: [],
+    category: null,
+    area: null,
+    minAltitude: null,
+    maxAltitude: null,
+    difficulty: null,
+    features: [],
+    openingHours: []
   }
 }
 
