@@ -1,7 +1,7 @@
 const serializer = require('../serializer');
 const validator = require('../validator');
 const odhConnector = require('./odh-connector');
-const errors = require('../messages/errors');
+const errors = require('../errors');
 
 /*
 fetch(): an asynchronous function to retrieve data from a source data return

@@ -1,6 +1,6 @@
 const express = require('express');
 const cors = require('cors');
-const errors = require('./messages/errors');
+const errors = require('./errors');
 require('custom-env').env();
 
 var app = express();
@@ -36,9 +36,7 @@ require('./routes/media-objects.route.js')(app);
 require('./routes/event-series.route.js')(app);
 
 app.get('*', (req, res) => {
-  console.log('ERROR: Resource not found ('+req.originalUrl+')');
-  res.status(errors.notFound.status);
-  res.json(errors.createResponse(errors.notFound));
+  errors.handleError(errors.notFound, req, res);
 });
 
 app.listen(process.env.REF_SERVER_PORT, function () {

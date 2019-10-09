@@ -2,22 +2,43 @@ module.exports.basicResourceRouteTests = (opts) => {
   const axios = require('axios');
   const utils = require('./utils');
 
-  let id, baseUrl,headers, status, data, links;
+  describe(`API tests for 404 requests to /${opts.route}/:id`, () => {
+    let status, data;
 
-  beforeAll( () => {
-    return utils.axiosInstance.get(`/api/v1/${opts.route}?page[size]=1`)
-      .then( response => {
-        id = response.data.data[0].id;
-        baseUrl = `/api/v1/${opts.route}/${id}`;
-        return utils.axiosInstance.get(baseUrl);
-      })
-      .then( response => {
-        ({headers, status} = response);
-        ({meta, data, links} = response.data);
-      })
-  })
+    beforeAll( () => {
+      return utils.axiosInstance.get(`/api/v1/${opts.route}/i-dont-exist`)
+        .catch( res => {
+          ({status, data} = res.response);
+        })
+    })
 
-  describe(`Basic API tests for /${opts.route}/:id`, () => {
+    test(`/${opts.route}/:id: status should be 404 NOT FOUND`, () => {
+      expect(status).toEqual(404)
+    });
+
+    test(`/${opts.route}/:id: well-formed response`, () => {
+      expect(data.errors.length).toEqual(1);
+      let error = data.errors[0];
+      expect(error.status).toEqual(404);
+      expect(error.title).toBeDefined();
+    });
+  });
+
+  describe(`Basic API tests for 200 requests to /${opts.route}/:id`, () => {
+    let id, baseUrl,headers, status, data, links;
+
+    beforeAll( () => {
+      return utils.axiosInstance.get(`/api/v1/${opts.route}?page[size]=1`)
+        .then( response => {
+          id = response.data.data[0].id;
+          baseUrl = `/api/v1/${opts.route}/${id}`;
+          return utils.axiosInstance.get(baseUrl);
+        })
+        .then( response => {
+          ({headers, status} = response);
+          ({meta, data, links} = response.data);
+        })
+    })
 
     test(`/${opts.route}/:id: route exists`, () => {
       expect(data).toBeDefined();
@@ -27,7 +48,7 @@ module.exports.basicResourceRouteTests = (opts) => {
       expect(headers['content-type']).toEqual(expect.stringContaining('application/vnd.api+json'));
     });
 
-    test(`/${opts.route}/:id: status 200 OK`, () => {
+    test(`/${opts.route}/:id: status should be 200 OK`, () => {
       expect(status).toEqual(200);
     });
 

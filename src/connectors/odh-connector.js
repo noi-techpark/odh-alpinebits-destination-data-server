@@ -1,6 +1,6 @@
 const axios = require('axios');
 const odh2ab = require ('../transformers/odh2alpinebits');
-const errors = require ('../messages/errors');
+const errors = require ('../errors');
 require('custom-env').env();
 
 const EVENT_PATH = 'Event';
