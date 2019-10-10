@@ -135,6 +135,22 @@ const LIFT = {
   relationships: ['multimediaDescriptions', 'connections']
 }
 
+const SNOWPARK = {
+  name: 'snowparks',
+  opts: {
+    ...DEFAULT_OPTS,
+    attributes: [...BASIC_ATTR, 'category','difficulty','area','minAltitude','maxAltitude','capacityPerHour','personsPerChair',
+    'howToArrive','address','geometries','openingHours','features','connections','multimediaDescriptions'],
+    multimediaDescriptions: MEDIA_OBJECT.opts,
+    address: ADDRESS.opts,
+    openingHours: HOURS.opts,
+    geometries: GEOMETRY.opts,
+    connections: {},
+    features: {}
+  },
+  relationships: ['multimediaDescriptions', 'connections']
+}
+
 function typeForAttribute (attribute, data) {
   switch(data['@type']) {
     case 'Event':
@@ -157,6 +173,8 @@ function typeForAttribute (attribute, data) {
       return PLACE.name;
     case 'Lift':
       return LIFT.name;
+    case 'Snowpark':
+      return SNOWPARK.name;
 
     return data['@type'];
   }
@@ -190,7 +208,8 @@ const resources = {
   'agents': AGENT,
   'mediaObjects': MEDIA_OBJECT,
   'places': PLACE,
-  'lifts': LIFT
+  'lifts': LIFT,
+  'snowparks': SNOWPARK
 }
 
 module.exports = {

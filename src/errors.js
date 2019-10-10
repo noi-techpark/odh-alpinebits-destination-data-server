@@ -37,13 +37,18 @@ const types = {
   }
 }
 
-function createResponse(error){
-  return ({
-    errors: [ error ]
-  });
+function handleError(err, req, res ){
+  console.log(err);
+  res.status(err.status || 500);
+  res.json({ errors: [ err ] });
+}
+
+function handleNotImplemented(req, res){
+  handleError(types.notImplemented, req, res);
 }
 
 module.exports = {
   ...types,
-  createResponse
+  handleError,
+  handleNotImplemented
 }
