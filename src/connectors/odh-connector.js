@@ -1,6 +1,6 @@
 const axios = require('axios');
 const odh2ab = require ('../transformers/odh2alpinebits');
-const errors = require ('../messages/errors');
+const errors = require ('../errors');
 require('custom-env').env();
 
 const EVENT_PATH = 'Event';
@@ -23,6 +23,16 @@ function fetchLifts (request) {
   let path = ACTIVITY_PATH+"?"+queryArray.join("&");
 
   return fetch(path, request, odh2ab.transformLiftArray)
+}
+
+function fetchSnowparks (request) {
+  let queryArray = getPaginationQuery(request);
+  queryArray.push('activitytype=256')
+  queryArray.push('subtype=16')
+
+  let path = ACTIVITY_PATH+"?"+queryArray.join("&");
+
+  return fetch(path, request, odh2ab.transformSnowparkArray)
 }
 
 function getPaginationQuery(request) {
@@ -154,4 +164,6 @@ module.exports = {
   fetchEventVenues: fetchSubResource(EVENT_PATH, odh2ab.transformEvent, 'venues'),
   fetchLifts: fetchLifts,
   fetchLiftById: fetchResourceById(ACTIVITY_PATH, odh2ab.transformLift),
+  fetchSnowparks: fetchSnowparks,
+  fetchSnowparkById: fetchResourceById(ACTIVITY_PATH, odh2ab.transformSnowpark),
 }

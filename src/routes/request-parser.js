@@ -1,9 +1,9 @@
 function getBaseUrl(req) {
-  return req.protocol + '://' + req.get('host') + '/api/v1';
+  return process.env.REF_SERVER_URL + '/api/v1';
 }
 
 function getSelfUrl(req) {
-  return req.protocol + '://' + req.get('host') + req.originalUrl;
+  return  process.env.REF_SERVER_URL + req.originalUrl;
 }
 
 function createRequest(req){

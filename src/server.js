@@ -1,6 +1,6 @@
 const express = require('express');
 const cors = require('cors');
-const errors = require('./messages/errors');
+const errors = require('./errors');
 require('custom-env').env();
 
 var app = express();
@@ -15,7 +15,7 @@ app.use(express.json());
 app.use( (req, res, next) => {
   //TODO: Add security layer
   //TODO: Add header validation layer
-  console.log('> Request received: '+req.protocol+'://'+req.get('host')+req.originalUrl);
+  console.log('> Request received: ' + process.env.REF_SERVER_URL + req.originalUrl);
   next();
 });
 
@@ -28,6 +28,7 @@ app.use( (req, res, next) => {
 require('./routes/home.route.js')(app);
 require('./routes/events.route.js')(app);
 require('./routes/lifts.route.js')(app);
+require('./routes/snowparks.route.js')(app);
 
 require('./routes/places.route.js')(app);
 require('./routes/agents.route.js')(app);
@@ -35,11 +36,9 @@ require('./routes/media-objects.route.js')(app);
 require('./routes/event-series.route.js')(app);
 
 app.get('*', (req, res) => {
-  console.log('ERROR: Resource not found ('+req.originalUrl+')');
-  res.status(errors.notFound.status);
-  res.json(errors.createResponse(errors.notFound));
+  errors.handleError(errors.notFound, req, res);
 });
 
 app.listen(process.env.REF_SERVER_PORT, function () {
-  console.log('App listening at http://localhost:%s', this.address().port);
+  console.log('DestinationData API listening at %s', process.env.REF_SERVER_URL);
 })
