@@ -91,6 +91,26 @@ module.exports = {
 
     return serialize(resource, data);
   },
+  serializeTrails: (data, request, meta) => {
+    let resource = resources.getOptions('trails');
+
+    links.addPagination(resource, request, meta);
+    links.addSelf(resource, request);
+    links.addDataLinks(resource, request);
+    includes.add(resource, request);
+    fields.add(resource, request);
+
+    return serialize(resource, data);
+  },
+  serializeTrail: (data, request, meta) => {
+    let resource = resources.getOptions('trails');
+
+    links.addSelf(resource, request);
+    includes.add(resource, request);
+    fields.add(resource, request);
+
+    return serialize(resource, data);
+  },
   serializeSnowparks: (data, request, meta) => {
     let resource = resources.getOptions('snowparks');
 

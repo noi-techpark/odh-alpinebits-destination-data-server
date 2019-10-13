@@ -135,6 +135,20 @@ const LIFT = {
   relationships: ['multimediaDescriptions', 'connections']
 }
 
+const TRAIL = {
+  name: 'trails',
+  opts: {
+    ...DEFAULT_OPTS,
+    attributes: [...BASIC_ATTR,'category','length','minAltitude','maxAltitude','difficulty','connections','geometries','openingHours','address','howToArrive','multimediaDescriptions'],
+    multimediaDescriptions: MEDIA_OBJECT.opts,
+    address: ADDRESS.opts,
+    openingHours: HOURS.opts,
+    geometries: GEOMETRY.opts,
+    connections: {}
+  },
+  relationships: ['multimediaDescriptions', 'connections']
+}
+
 const SNOWPARK = {
   name: 'snowparks',
   opts: {
@@ -173,6 +187,8 @@ function typeForAttribute (attribute, data) {
       return PLACE.name;
     case 'Lift':
       return LIFT.name;
+    case 'Trail':
+      return TRAIL.name;
     case 'Snowpark':
       return SNOWPARK.name;
 
@@ -209,6 +225,7 @@ const resources = {
   'mediaObjects': MEDIA_OBJECT,
   'places': PLACE,
   'lifts': LIFT,
+  'trails': TRAIL,
   'snowparks': SNOWPARK
 }
 

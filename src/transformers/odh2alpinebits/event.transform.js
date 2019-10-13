@@ -33,7 +33,7 @@ module.exports = (object) => {
   // Media Objects
   target.multimediaDescriptions = []
   for (image of source.ImageGallery)
-    target.multimediaDescriptions.push(transformMediaObject(image));
+    target.multimediaDescriptions.push(util.transformMediaObject(image));
 
   return target;
 }
@@ -270,37 +270,4 @@ function transformVenue(source) {
   }
 
   return venue;
-}
-
-function transformMediaObject(mediaObject) {
-  let newMediaObject = templates.createObject('MediaObject');
-
-  const match = mediaObject.ImageUrl.match(/ID=(.*)/i);
-  newMediaObject.id = match.length>=2 ? match[1] : mediaObject.ImageUrl;
-
-  newMediaObject.contentType = 'image/jpeg'
-
-  // ['Width','width'], ['Height','height']
-  const imageFieldMapping = [ ['ImageUrl','url'], ['License','license'] ];
-
-  const imageValueMapping = {
-    License: {
-      'CC0': 'CC0-1.0',
-      'CC1': 'CC1-1.0'
-    }
-  }
-
-  utils.transformFields(mediaObject, newMediaObject, imageFieldMapping, imageValueMapping);
-
-  // ['ImageTitle', 'name']
-  const imageMultilingualFieldMapping = [ ['ImageDesc', 'description'] ];
-
-  utils.transformMultilingualFields(mediaObject, newMediaObject, imageMultilingualFieldMapping, utils.languageMapping, true);
-
-  const owner = templates.createObject('Agent');
-  owner.name.ita = owner.name.deu = owner.name.eng = mediaObject.CopyRight;
-  owner.id = shajs('sha256').update(mediaObject.CopyRight).digest('hex');
-  newMediaObject.copyrightOwner = owner;
-
-  return newMediaObject;
 }

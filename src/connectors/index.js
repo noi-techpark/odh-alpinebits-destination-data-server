@@ -76,6 +76,15 @@ module.exports = {
   getLiftById: (request) => {
     return handleRequest(request, odhConnector.fetchLiftById, validator.validateLift, serializer.serializeLift)
   },
+  getTrails: (request) => {
+    return handleRequest(request, odhConnector.fetchTrails, validator.validateTrailArray, serializer.serializeTrails)
+  },
+  getTrailById: (request) => {
+    return handleRequest(request, odhConnector.fetchTrailById, validator.validateTrail, serializer.serializeTrail)
+  },
+  getTrailMedia: (request) => {
+    return handleRequest(request, odhConnector.fetchTrailMediaObjects, validator.validateMediaObjectArray, serializer.serializeMediaObjects)
+  },
   getSnowparks: (request) => {
     return handleRequest(request, odhConnector.fetchSnowparks, validator.validateSnowparkArray, serializer.serializeSnowparks)
   },
