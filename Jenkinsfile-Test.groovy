@@ -11,6 +11,7 @@ pipeline {
         DOCKER_SERVER_DIRECTORY = "/var/docker/alpinebits-destination-data-server"
         DOCKER_SERVER_PORT = "1007"
         REF_SERVER_CORS_ORIGIN = "*"
+        REF_SERVER_URL = "https://destinationdata.alpinebits.opendatahub.testingmachine.eu"
         ODH_BASE_URL = "https://tourism.opendatahub.bz.it/api/"
         ODH_TIMEOUT = "60000"
     }
@@ -24,6 +25,7 @@ pipeline {
 
                 sh 'sed -i -e "s%\\(DOCKER_SERVER_PORT\\s*=\\).*\\$%\\1${DOCKER_SERVER_PORT}%" .env'
                 sh 'sed -i -e "s%\\(REF_SERVER_CORS_ORIGIN\\s*=\\).*\\$%\\1${REF_SERVER_CORS_ORIGIN}%" .env'
+                sh 'sed -i -e "s%\\(REF_SERVER_URL\\s*=\\).*\\$%\\1${REF_SERVER_URL}%" .env'
                 sh 'sed -i -e "s%\\(ODH_BASE_URL\\s*=\\).*\\$%\\1${ODH_BASE_URL}%" .env'
                 sh 'sed -i -e "s%\\(ODH_TIMEOUT\\s*=\\).*\\$%\\1${ODH_TIMEOUT}%" .env'
             }
