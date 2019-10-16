@@ -8,6 +8,7 @@ USED:
   * Type
   * GpsInfo
   * OperationSchedule
+  * ImageGallery (always [])
 
 PARTIALLY USED :
   * Detail: Title, BaseText, GetThereText
@@ -22,7 +23,6 @@ IGNORED:
   * BikeTransport: can tourists carry their bikes on it
 
 > Out of scope or "useless" field (e.g. always null, [], false...)
-  * ImageGallery (always [])
   * Difficulty (always 0)
   * AltitudeLowestPoint (always 0)
   * AltitudeHighestPoint (always 0)
@@ -89,9 +89,6 @@ module.exports = (object) => {
 
   target.category = categoryMapping[source.SubType];
 
-  const geometry = utils.transformGeometry(source.GpsInfo, ['Talstation','Mittelstation','Bergstation'], source.GpsPoints, source.GpsTrack);
-  if(geometry) target.geometries.push(geometry);
-
   target.length = source.DistanceLength>0 ? source.DistanceLength : null;
 
   target.howToArrive = utils.transformHowToArrive(source.Detail);
@@ -101,6 +98,13 @@ module.exports = (object) => {
   target.openingHours = utils.transformOperationSchedule(source.OperationSchedule);
 
   target.address = utils.transformAddress(source.ContactInfos, ['city','country','zipcode']);
+
+  const geometry = utils.transformGeometry(source.GpsInfo, ['Talstation','Mittelstation','Bergstation'], source.GpsPoints, source.GpsTrack);
+  if(geometry) target.geometries.push(geometry);
+
+  target.multimediaDescriptions = []
+  for (image of source.ImageGallery)
+    target.multimediaDescriptions.push(utils.transformMediaObject(image));
 
   return target;
 }

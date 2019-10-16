@@ -33,7 +33,7 @@ module.exports = (object) => {
   // Media Objects
   target.multimediaDescriptions = []
   for (image of source.ImageGallery)
-    target.multimediaDescriptions.push(util.transformMediaObject(image));
+    target.multimediaDescriptions.push(utils.transformMediaObject(image));
 
   return target;
 }
@@ -129,7 +129,7 @@ function transformOrganizer(organizer, contact) {
   let newOrganizer = templates.createObject('Agent');
 
   const organizerMapping = [['Url','url']];
-  utils.transformMultilingualFields(organizer, newOrganizer, organizerMapping, utils.languageMapping, false, true);
+  utils.transformMultilingualFields(organizer, newOrganizer, organizerMapping, false, true);
 
   let newContact = templates.createObject('ContactPoint');
   newOrganizer.contacts = [newContact];
@@ -138,7 +138,7 @@ function transformOrganizer(organizer, contact) {
   newContact.address = newAddress;
 
   const addressMapping = [['Address','street'], ['City','city'], ['ZipCode','zipcode']];
-  utils.transformMultilingualFields(organizer, newAddress, addressMapping, utils.languageMapping, false);
+  utils.transformMultilingualFields(organizer, newAddress, addressMapping, false);
   newAddress.zipcode = newAddress.zipcode.ita || newAddress.zipcode.eng || newAddress.zipcode.deu;
 
   let inferredType = {
@@ -200,19 +200,11 @@ function transformOrganizer(organizer, contact) {
 
   //If email and telephone number are not specified in organizer, try to get it from the ContactInfos field.
   // TODO: improve this part of the code. Too many duplicates...
-  if(!newOrganizer.email) {
-    const deEmail = utils.safeGet(['de','Email'],contact);
-    const itEmail = utils.safeGet(['it','Email'],contact);
-    const enEmail = utils.safeGet(['en','Email'],contact);
-    newOrganizer.email = deEmail || itEmail || enEmail;
-  }
+  if(!newOrganizer.email)
+    newOrganizer.email = utils.safeGetOne([['de','Email'],['it','Email'],['en','Email']], contact);
 
-  if(!newOrganizer.telephone) {
-    const deTelephone = utils.safeGet(['de','Phonenumber'],contact);
-    const itTelephone = utils.safeGet(['it','Phonenumber'],contact);
-    const enTelephone = utils.safeGet(['en','Phonenumber'],contact);
-    newOrganizer.telephone = deTelephone || itTelephone || enTelephone;
-  }
+  if(!newOrganizer.telephone)
+    newOrganizer.telephone = utils.safeGetOne([['de','Phonenumber'],['it','Phonenumber'],['en','Phonenumber']], contact);
 
   if(!newOrganizer.id)
     console.log('NO ID!');
@@ -225,7 +217,7 @@ function transformVenue(source) {
   venue.id = source.Id+'+location';
 
   const venueMapping = [ ['Location', 'name'] ];
-  utils.transformMultilingualFields(source.EventAdditionalInfos, venue, venueMapping, utils.languageMapping, false);
+  utils.transformMultilingualFields(source.EventAdditionalInfos, venue, venueMapping, false);
 
   let address = templates.createObject('Address');
   venue.address = address;
@@ -236,7 +228,7 @@ function transformVenue(source) {
       ['City', 'city'],
       ['ZipCode', 'zipcode'],
     ];
-    utils.transformMultilingualFields(source.ContactInfos, address, venueAddressMapping, utils.languageMapping, false);
+    utils.transformMultilingualFields(source.ContactInfos, address, venueAddressMapping, false);
 
     address.zipcode = address.zipcode.ita || address.zipcode.eng || address.zipcode.deu;
   }

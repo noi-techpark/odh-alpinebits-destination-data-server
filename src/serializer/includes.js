@@ -36,7 +36,8 @@ module.exports.add = function (resource, request) {
           self: getIncludedLink(resource, request)
         },
         relationshipLinks: {
-          self: getSelfRelationshipLink(resource, request, field),
+          // TODO: add this line below if we implement the routes
+          // self: getSelfRelationshipLink(resource, request, field),
           related: getRelatedRelationshipLink(resource, request, field)
         }
       });

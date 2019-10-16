@@ -1,6 +1,6 @@
-const serializer = require('../serializer');
-const validator = require('../validator');
-const odhConnector = require('./odh-connector');
+const ser = require('../serializer');
+const val = require('../validator');
+const odhCon = require('./odh-connector');
 const errors = require('../errors');
 
 /*
@@ -15,12 +15,12 @@ serialize(alpineBitsObject): a function to serialize an AlpineBits object follow
   output: an JSON:API compliant object
 */
 
-async function handleRequest(request, fetch, validate, serialize) {
+async function handleRequest(req, fetch, validate, serialize) {
   let response;
 
   try {
-    console.log('> Dispatching request to OpenDataHub connector...');
-    response = await fetch(request);
+    console.log('> Dispatching req to OpenDataHub connector...');
+    response = await fetch(req);
     console.log('OK: Request completed.\n');
   }
   catch (error) {
@@ -40,7 +40,7 @@ async function handleRequest(request, fetch, validate, serialize) {
 
   try {
     console.log('> Serializing objects in JSON:API format...');
-    const dataJsonApi = serialize(response.data, request, response.meta);
+    const dataJsonApi = serialize(response.data, req, response.meta);
     console.log('OK: Sucessfully serialized objects.\n');
     return dataJsonApi;
   }
@@ -52,43 +52,28 @@ async function handleRequest(request, fetch, validate, serialize) {
 }
 
 module.exports = {
-  getEvents: (request) => {
-    return handleRequest(request, odhConnector.fetchEvents, validator.validateEventArray, serializer.serializeEvents)
-  },
-  getEventById: (request) => {
-    return handleRequest(request, odhConnector.fetchEventById, validator.validateEvent, serializer.serializeEvent)
-  },
-  getEventMedia: (request) => {
-    return handleRequest(request, odhConnector.fetchEventMediaObjects, validator.validateMediaObjectArray, serializer.serializeMediaObjects)
-  },
-  getEventPublisher: (request) => {
-    return handleRequest(request, odhConnector.fetchEventPublisher, validator.validateAgent, serializer.serializePublisher)
-  },
-  getEventOrganizers: (request) => {
-    return handleRequest(request, odhConnector.fetchEventOrganizers, validator.validateAgentArray, serializer.serializeOrganizers)
-  },
-  getEventVenues: (request) => {
-    return handleRequest(request, odhConnector.fetchEventVenues, validator.validateVenueArray, serializer.serializeVenues)
-  },
-  getLifts: (request) => {
-    return handleRequest(request, odhConnector.fetchLifts, validator.validateLiftArray, serializer.serializeLifts)
-  },
-  getLiftById: (request) => {
-    return handleRequest(request, odhConnector.fetchLiftById, validator.validateLift, serializer.serializeLift)
-  },
-  getTrails: (request) => {
-    return handleRequest(request, odhConnector.fetchTrails, validator.validateTrailArray, serializer.serializeTrails)
-  },
-  getTrailById: (request) => {
-    return handleRequest(request, odhConnector.fetchTrailById, validator.validateTrail, serializer.serializeTrail)
-  },
-  getTrailMedia: (request) => {
-    return handleRequest(request, odhConnector.fetchTrailMediaObjects, validator.validateMediaObjectArray, serializer.serializeMediaObjects)
-  },
-  getSnowparks: (request) => {
-    return handleRequest(request, odhConnector.fetchSnowparks, validator.validateSnowparkArray, serializer.serializeSnowparks)
-  },
-  getSnowparkById: (request) => {
-    return handleRequest(request, odhConnector.fetchSnowparkById, validator.validateSnowpark, serializer.serializeSnowpark)
-  }
+  getEvents: req => handleRequest(req, odhCon.fetchEvents, val.validateEventArray, ser.serializeEventArray),
+  getEventById: req => handleRequest(req, odhCon.fetchEventById, val.validateEvent, ser.serializeEvent),
+  getEventMedia: req => handleRequest(req, odhCon.fetchEventMediaObjects, val.validateMediaObjectArray, ser.serializeMediaObjectArray),
+  getEventPublisher: req => handleRequest(req, odhCon.fetchEventPublisher, val.validateAgent, ser.serializeAgent),
+  getEventOrganizers: req => handleRequest(req, odhCon.fetchEventOrganizers, val.validateAgentArray, ser.serializeAgentArray),
+  getEventVenues: req => handleRequest(req, odhCon.fetchEventVenues, val.validateVenueArray, ser.serializeVenueArray),
+  getLifts: req => handleRequest(req, odhCon.fetchLifts, val.validateLiftArray, ser.serializeLiftArray),
+  getLiftById: req => handleRequest(req, odhCon.fetchLiftById, val.validateLift, ser.serializeLift),
+  getTrails: req => handleRequest(req, odhCon.fetchTrails, val.validateTrailArray, ser.serializeTrailArray),
+  getTrailById: req => handleRequest(req, odhCon.fetchTrailById, val.validateTrail, ser.serializeTrail),
+  getTrailMedia: req => handleRequest(req, odhCon.fetchTrailMediaObjects, val.validateMediaObjectArray, ser.serializeMediaObjectArray),
+  getSnowparks: req => handleRequest(req, odhCon.fetchSnowparks, val.validateSnowparkArray, ser.serializeSnowparkArray),
+  getSnowparkById: req => handleRequest(req, odhCon.fetchSnowparkById, val.validateSnowpark, ser.serializeSnowpark),
+  getMountainAreas: req => handleRequest(req, odhCon.fetchMountainAreas, val.validateMountainAreaArray, ser.serializeMountainAreaArray),
+  getMountainAreaById: req => handleRequest(req, odhCon.fetchMountainAreaById, val.validateMountainArea, ser.serializeMountainArea),
+  getMountainAreaMedia: req => handleRequest(req, odhCon.fetchMountainAreaMedia, val.validateMediaObjectArray, ser.serializeMediaObjectArray),
+  getMountainAreaOwner: req => handleRequest(req, odhCon.fetchMountainAreaOwner, val.validateAgent, ser.serializeAgent),
+  getMountainAreaLifts: req => handleRequest(req, odhCon.fetchMountainAreaLifts, val.validateLiftArray, ser.serializeLiftArray),
+  getMountainAreaTrails: req => handleRequest(req, odhCon.fetchMountainAreaTrails, val.validateTrailArray, ser.serializeTrailArray),
+  getMountainAreaSnowparks: req => handleRequest(req, odhCon.fetchMountainAreaSnowparks, val.validateSnowparkArray, ser.serializeSnowparkArray),
+  getEventSeries: (req) => handleRequest(req, odhCon.fetchEventSeries, val.validateEventSeriesArray, ser.serializeEventSeriesArray),
+  getEventSeriesById: (req) => handleRequest(req, odhCon.fetchEventSeriesById, val.validateEventSeries, ser.serializeEventSeries),
+  getSnowReports: (req) => handleRequest(req, odhCon.fetchSnowReports, val.validateSnowReportArray, ser.serializeSnowReports),
+  getSnowReportById: (req) => handleRequest(req, odhCon.fetchSnowReportById, val.validateSnowReport, ser.serializeSnowReport),
 }

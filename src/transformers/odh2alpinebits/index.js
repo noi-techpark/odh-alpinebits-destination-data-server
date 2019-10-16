@@ -2,50 +2,29 @@ const transformEvent = require('./event.transform');
 const transformLift = require('./lift.transform');
 const transformTrail = require('./trail.transform');
 const transformSnowpark = require('./snowpark.transform');
+const transformMountainArea = require('./mountainarea.transform');
+const transformEventSeries = require('./event-series.transform');
+
+function transformArray(data, transformFn) {
+  let result = [];
+
+  for (object of data.Items)
+    result.push(transformFn(object));
+
+  return result;
+}
 
 module.exports = {
-  transformEventArray: function(data) {
-    let result = [];
-
-    for (object of data.Items)
-      result.push(transformEvent(object));
-
-    return result;
-  },
-  transformEvent: function(data) {
-    return transformEvent(data);
-  },
-  transformLiftArray: function(data) {
-    let result = [];
-
-    for (object of data.Items)
-      result.push(transformLift(object));
-
-    return result;
-  },
-  transformLift: function(data) {
-    return transformLift(data);
-  },
-  transformTrailArray: function(data) {
-    let result = [];
-
-    for (object of data.Items)
-    result.push(transformTrail(object));
-
-    return result;
-  },
-  transformTrail: function(data) {
-    return transformTrail(data);
-  },
-  transformSnowparkArray: function(data) {
-    let result = [];
-
-    for (object of data.Items)
-      result.push(transformSnowpark(object));
-
-    return result;
-  },
-  transformSnowpark: function(data) {
-    return transformSnowpark(data);
-  },
+  transformEventArray: data => transformArray(data, transformEvent),
+  transformEvent: data => transformEvent(data),
+  transformLiftArray: data => transformArray(data, transformLift),
+  transformLift: data => transformLift(data),
+  transformTrailArray: data => transformArray(data, transformTrail),
+  transformTrail: data => transformTrail(data),
+  transformSnowparkArray: data => transformArray(data, transformSnowpark),
+  transformSnowpark: data => transformSnowpark(data),
+  transformMountainAreaArray: data => transformArray(data, transformMountainArea),
+  transformMountainArea: data => transformMountainArea(data),
+  transformEventSeriesArray: data => transformArray(data, transformEventSeries),
+  transformEventSeries: data => transformEventSeries(data),
 }

@@ -27,7 +27,6 @@ IGNORED:
   * RunToValley
   * LocationInfo
 
-
 > Out of scope or "useless" field (e.g. always null, [], false...)
   * Active (always true)
   * AreaId (unkown IDs)

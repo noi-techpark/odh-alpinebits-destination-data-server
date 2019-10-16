@@ -13,6 +13,7 @@ USED:
   * GpsInfo
   * GpsPoints
   * GpsTrack
+  * ImageGallery: always []
 
 PARTIALLY USED :
   * Detail: Title, BaseText
@@ -26,7 +27,6 @@ IGNORED:
   * DistanceDuration: always 0
   * Exposition: values 'NO' and 'O' (exposure?)
   * HasRentals: true and false
-  * ImageGallery: always []
   * IsPrepared: true and false, meaning unclear
   * IsWithLigth: always false, meaning unclear
   * LiftAvailable: always false
@@ -92,6 +92,10 @@ module.exports = (object) => {
 
   const geometry = utils.transformGeometry(source.GpsInfo, ['Startpunkt', 'Endpunkt'], source.GpsPoints, source.GpsTrack);
   if(geometry) target.geometries.push(geometry);
+
+  target.multimediaDescriptions = []
+  for (image of source.ImageGallery)
+    target.multimediaDescriptions.push(utils.transformMediaObject(image));
 
   return target;
 }

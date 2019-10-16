@@ -1,30 +1,30 @@
 const templates = {
   Event: {
-    "@type": "Event",
-    dataProvider: "",
-    lastUpdate: "",
-    id: "",
+    '@type': 'Event',
+    dataProvider: '',
+    lastUpdate: '',
+    id: '',
     name: {
-      deu: "",
-      eng: "",
-      ita: ""
+      deu: '',
+      eng: '',
+      ita: ''
     },
     shortName: {
-      deu: "",
-      eng: "",
-      ita: ""
+      deu: '',
+      eng: '',
+      ita: ''
     },
     description: {
-      deu: "",
-      eng: "",
-      ita: ""
+      deu: '',
+      eng: '',
+      ita: ''
     },
     abstract: {
-      deu: "",
-      eng: "",
-      ita: ""
+      deu: '',
+      eng: '',
+      ita: ''
     },
-    structure: "simple",
+    structure: 'simple',
     startDate: null,
     endDate: null,
     venues: [],
@@ -36,67 +36,71 @@ const templates = {
     // subEvents: [],
   },
   Agent: {
-    "@type": "Agent",
-    id: "123456",
+    '@type': 'Agent',
+    id: '123456',
     name: {}
   },
   MediaObject: {
-    "@type": "MediaObject",
+    '@type': 'MediaObject',
     // name: {},
     description: {},
-    url: "",
-    contentType: "",
+    url: '',
+    contentType: '',
     // height: 0,
     // width: 0,
-    license: "",
+    license: '',
     copyrightOwner: {}
   },
   Address: {
-    "@type": "Address",
+    '@type': 'Address',
     street: {},
     city: {},
     region: {
-      deu: "BZ",
-      eng: "BZ",
-      ita: "BZ",
+      deu: 'BZ',
+      eng: 'BZ',
+      ita: 'BZ',
     },
-    country: "IT",
+    country: 'IT',
     zipcode: null,
     complement: {},
   },
   Point:  {
-    "@type": "Geometry",
-    category: "Point",
+    '@type': 'Geometry',
+    category: 'Point',
     coordinates: []
   },
   LineString:  {
-    "@type": "Geometry",
-    category: "LineString",
+    '@type': 'Geometry',
+    category: 'LineString',
     coordinates: []
   },
+  Polygon: {
+    '@type': 'Polygon',
+    coordinates: [ [] ]
+  },
   Venue: {
-    "@type": "Venue",
-    id: "",
+    '@type': 'Venue',
+    id: '',
     name: {},
-    // description: {},
+    description: {},
     address: {},
     geometries: [],
     openingHours: [],
     multimediaDescriptions: []
   },
   ContactPoint: {
-    "@type": "ContactPoint",
+    '@type': 'ContactPoint',
     address: {}
   },
   HoursSpecification: {
-    "@type": "HoursSpecification",
+    '@type': 'HoursSpecification',
     hours: [],
     validFrom: null,
     validTo: null
   },
   Lift: {
-    "@type": "Lift",
-    id: "",
+    '@type': 'Lift',
+    id: '',
     name: {},
     shortName: {},
     description: {},
@@ -116,8 +120,8 @@ const templates = {
     howToArrive: {}
   },
   Trail: {
-    "@type": "Trail",
-    id: "",
+    '@type': 'Trail',
+    id: '',
     name: {},
     description: {},
     shortName: {},
@@ -136,8 +140,8 @@ const templates = {
     howToArrive: {}
   },
   Snowpark: {
-    "@type": "Snowpark",
-    id: "",
+    '@type': 'Snowpark',
+    id: '',
     name: {},
     shortName: {},
     description: {},
@@ -155,7 +159,51 @@ const templates = {
     difficulty: null,
     features: [],
     openingHours: []
-  }
+  },
+  MountainArea: {
+    '@type': 'MountainArea',
+    id: '',
+    name: {},
+    shortName: {},
+    description: {},
+    abstract: {},
+    url: null,
+    address: {},
+    geometries: [],
+    howToArrive: {},
+    openingHours: [],
+    area: null,
+    minAltitude: null,
+    maxAltitude: null,
+    totalTrailLength: null,
+    totalParkArea: null,
+    multimediaDescriptions: [],
+    areaOwner: {},
+    connections: [],
+    lifts: [],
+    snowparks: [],
+    trails: [],
+    subAreas: [],
+  },
+  EventSeries: {
+    '@type':  'EventSeries',
+    id: '',
+    name: {},
+    abstract: {},
+    description: {},
+    url: {},
+    multimediaDescriptions: [],
+    frequency: '',
+  },
+  SnowReport: {
+    '@type':  'SnowReport',
+    dataProvider: {},
+    lastUpdate: '',
+    areaId: '',
+    trails: [],
+    snowparks: [],
+    subAreas: [],
+  },
 }
 
 // Function to create empty objects. It is better to have fields with null values than to have missing fields.

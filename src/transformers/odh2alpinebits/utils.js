@@ -15,7 +15,7 @@ const htmlSanitizeOpts = {
 
 // isLanguageNested: true => object.property.it
 // isLanguageNested: false => object.it.property
-function transformMultilingualFields (source, target, fieldMapping, languageMapping, isLanguageNested, ignoreNullValues) {
+function transformMultilingualFields(source, target, fieldMapping, isLanguageNested, ignoreNullValues) {
   for (fieldEntry of fieldMapping) {
     let [sourceField, targetField] = fieldEntry;
 
@@ -62,6 +62,15 @@ function safeGet (path, object) {
   return value;
 }
 
+function safeGetOne(paths, object){
+  for (path of paths){
+    let value = safeGet(path, object);
+
+    if(value)
+      return value;
+  }
+}
+
 function transformBasicProperties(source) {
   let target = {};
   let fieldMapping = [['Id','id']]
@@ -69,13 +78,13 @@ function transformBasicProperties(source) {
 
   // Basic textual descriptions
   if(source.Detail) {
-    fieldMapping = [['Title','name'],['BaseText','description']];
-    transformMultilingualFields(source.Detail, target, fieldMapping, languageMapping, false, true);
+    fieldMapping = [['Title','name'],['BaseText','description'],['Header','shortName'],['SubHeader','abstract']];
+    transformMultilingualFields(source.Detail, target, fieldMapping, false, true);
   }
 
   if(source.ContactInfos) {
     fieldMapping = [['Url', 'url']];
-    transformMultilingualFields(source.ContactInfos, target, fieldMapping, languageMapping, false, true);
+    transformMultilingualFields(source.ContactInfos, target, fieldMapping, false, true);
   }
 
   return target;
@@ -131,6 +140,13 @@ function transformHowToArrive(detail) {
 function transformAddress(contactInfo, fields){
   let address = templates.createObject('Address');
 
+  if(fields.includes('street'))
+    address.street = {
+      deu: safeGet(['de','Address'], contactInfo),
+      ita: safeGet(['it','Address'], contactInfo),
+      eng: safeGet(['en','Address'], contactInfo)
+    };
+
   if(fields.includes('city'))
     address.city = {
       deu: safeGet(['de','City'], contactInfo),
@@ -139,12 +155,10 @@ function transformAddress(contactInfo, fields){
     };
 
   if(fields.includes('country'))
-    address.country = safeGet(['de','CountryCode'], contactInfo) ||
-      safeGet(['it','CountryCode'], contactInfo) || safeGet(['en','CountryCode'], contactInfo);
+    address.country = safeGetOne([['de','CountryCode'],['it','CountryCode'],['en','CountryCode']], contactInfo);
 
   if(fields.includes('zipcode'))
-    address.zipcode = safeGet(['de','ZipCode'], contactInfo) ||
-      safeGet(['it','ZipCode'], contactInfo) || safeGet(['en','ZipCode'], contactInfo);
+    address.zipcode = safeGetOne([['de','ZipCode'],['it','ZipCode'],['en','ZipCode']], contactInfo);
 
   address.region = {}
 
@@ -181,12 +195,12 @@ function transformGeometry(gpsInfo, infoKeys, gpsPoints, gpsTrack){
     }
   }
   else if(gpsPoints && Object.keys(gpsPoints)) {
-    console.log('Has GpsPoints:', Object.keys(gpsPoints).length);
-    return geometry;
+    // console.log('Has GpsPoints:', Object.keys(gpsPoints).length);
+    return null;
   }
   else if(gpsTrack && gpsTrack.length>=1) {
-    console.log('Has GpsTrack:', gpsTrack.length);
-    return geometry;
+    // console.log('Has GpsTrack:', gpsTrack.length);
+    return null;
   }
 
   return geometry;
@@ -215,7 +229,7 @@ function transformMediaObject(mediaObject) {
   // ['ImageTitle', 'name']
   const imageMultilingualFieldMapping = [ ['ImageDesc', 'description'] ];
 
-  transformMultilingualFields(mediaObject, newMediaObject, imageMultilingualFieldMapping, languageMapping, true);
+  transformMultilingualFields(mediaObject, newMediaObject, imageMultilingualFieldMapping, true);
 
   const owner = templates.createObject('Agent');
   owner.name.ita = owner.name.deu = owner.name.eng = mediaObject.CopyRight;
@@ -225,9 +239,21 @@ function transformMediaObject(mediaObject) {
   return newMediaObject;
 }
 
+function isClockwise(poly) {
+    var sum = 0
+    for (var i=0; i<poly.length-1; i++) {
+        var cur = poly[i],
+            next = poly[i+1]
+        sum += (next[0] - cur[0]) * (next[1] + cur[1])
+    }
+    return sum > 0
+}
+
 module.exports = {
   languageMapping,
   safeGet,
+  safeGetOne,
+  isClockwise,
   transformMultilingualFields,
   transformFields,
   transformArrayFields,
@@ -237,5 +263,5 @@ module.exports = {
   transformHowToArrive,
   transformAddress,
   transformGeometry,
-  transformMediaObject,
+  transformMediaObject
 }

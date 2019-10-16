@@ -9,8 +9,11 @@ function getHomeResponse(request, response) {
       self: getSelfUrl(request),
       resources: {
         events: getBaseUrl(request)+'/events',
+        eventSeries: getBaseUrl(request)+'/eventSeries',
         lifts: getBaseUrl(request)+'/lifts',
-        snowparks: getBaseUrl(request)+'/snowparks'
+        trails: getBaseUrl(request)+'/trails',
+        snowparks: getBaseUrl(request)+'/snowparks',
+        mountainAreas: getBaseUrl(request)+'/mountainAreas'
       }
     },
     data: []

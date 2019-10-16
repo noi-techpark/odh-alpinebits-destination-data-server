@@ -167,7 +167,6 @@ module.exports.basicResourceRouteTests = (opts) => {
         }
         else {
           expect(rel.links).toBeDefined();
-          expect(rel.links.self).toBeDefined();
           expect(rel.links.related).toBeDefined();
           promises.push(axios.get(rel.links.related));
         }
