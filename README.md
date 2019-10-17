@@ -12,12 +12,23 @@ The current version of the server accepts HTTP GET requests on the following rou
 * /events/:id/venues
 * /events/:id/publisher
 * /events/:id/organizers
+* /eventSeries\*
+* /eventSeries/:id\*
 * /lifts
 * /lifts/:id
+* /trails
+* /trails/:id
 * /snowparks
 * /snowparks/:id
+* /mountainAreas
+* /mountainAreas/:id
+* /mountainAreas/:id/lifts
+* /mountainAreas/:id/trails
+* /mountainAreas/:id/snowparks
+* /mountainAreas/:id/areaOwner
+* /mountainAreas/:id/multimediaDescriptions
 
-
+\* These routes return dummy data, as they are not currently available on the OpenDataHub API.
 
 ### Install
 
