@@ -177,6 +177,7 @@ const MOUNTAIN_AREA = {
       'multimediaDescriptions','areaOwner','connections','lifts','snowparks','trails','subAreas'],
     address: ADDRESS.opts,
     geometries: GEOMETRY.opts,
+    openingHours: HOURS.opts,
     areaOwner: AGENT.opts,
     multimediaDescriptions: MEDIA_OBJECT.opts,
     lifts: LIFT.opts,

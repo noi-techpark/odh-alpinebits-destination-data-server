@@ -203,6 +203,21 @@ module.exports.basicRouteTests = (opts) => {
         })
     })
   })
+
+  describe(`Resource serialization at /${opts.route}`, () => {
+
+    test(`/${opts.route}: no @type fields`, () => {
+      data.forEach( object => {
+        let attrs = object.attributes;
+        Object.keys(attrs).forEach( key => {
+          expect(key).not.toBe('@type');
+          if(attrs[key] && typeof attrs[key]==='object')
+            expect('@type' in attrs[key]).toBe(false)
+        })
+      })
+    })
+
+  })
 }
 
 // just to avoid warning, that no tests in test file
