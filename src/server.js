@@ -1,7 +1,8 @@
 const express = require('express');
-const cors = require('cors');
+const https = require('https')
 const basicAuth = require('express-basic-auth');
-
+const cors = require('cors');
+const fs = require('fs');
 const errors = require('./errors');
 require('custom-env').env();
 
@@ -58,6 +59,10 @@ app.get('*', (req, res) => {
   errors.handleError(errors.notFound, req, res);
 });
 
-app.listen(process.env.REF_SERVER_PORT, function () {
+const privateKey  = fs.readFileSync(process.env.SSL_KEY_FILE, 'utf8');
+const certificate = fs.readFileSync(process.env.SSL_CERT_FILE, 'utf8');
+const options = {key: privateKey, cert: certificate};
+
+https.createServer(options,app).listen(process.env.REF_SERVER_PORT, function () {
   console.log('DestinationData API listening at %s', process.env.REF_SERVER_URL);
 })

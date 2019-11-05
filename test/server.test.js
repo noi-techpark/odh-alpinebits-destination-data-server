@@ -1,5 +1,13 @@
 const utils = require('./utils');
-const axios = require('axios');
+const https = require('https');
+require('custom-env').env();
+const REJECT_UNAUTHORIZED_REQUESTS = JSON.parse(process.env.SSL_REJECT_UNAUTHORIZED);
+const axios = require('axios').create({
+  httpsAgent: new https.Agent({
+    rejectUnauthorized: REJECT_UNAUTHORIZED_REQUESTS,
+    keepAlive: true,
+  }),
+});
 
 describe(`Testing unknown route`, () => {
   test('Unknown route returns 404 NOT FOUND', () => {
