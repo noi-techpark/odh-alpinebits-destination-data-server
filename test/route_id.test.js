@@ -1,5 +1,4 @@
 module.exports.basicResourceRouteTests = (opts) => {
-  const axios = require('axios');
   const utils = require('./utils');
 
   describe(`API tests for 404 requests to /${opts.route}/:id`, () => {
@@ -151,7 +150,7 @@ module.exports.basicResourceRouteTests = (opts) => {
     })
 
     test(`/${opts.route}/:id: self link returns the same object`, () => {
-      return axios.get(links.self).then( res => {
+      return utils.get(links.self).then( res => {
         expect(res.data.data).toEqual(data);
         expect(res.data.links).toEqual(links);
       })
@@ -168,7 +167,7 @@ module.exports.basicResourceRouteTests = (opts) => {
         else {
           expect(rel.links).toBeDefined();
           expect(rel.links.related).toBeDefined();
-          promises.push(axios.get(rel.links.related));
+          promises.push(utils.get(rel.links.related));
         }
       });
 

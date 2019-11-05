@@ -1,5 +1,7 @@
 const express = require('express');
 const cors = require('cors');
+const basicAuth = require('express-basic-auth');
+
 const errors = require('./errors');
 require('custom-env').env();
 
@@ -18,6 +20,20 @@ app.use( (req, res, next) => {
   console.log('> Request received: ' + process.env.REF_SERVER_URL + req.originalUrl);
   next();
 });
+
+app.use(basicAuth({
+    authorizer: (username, password) => {
+      const userMatches = basicAuth.safeCompare(username, process.env.USERNAME);
+      const passwordMatches = basicAuth.safeCompare(password, process.env.PASSWORD);
+      return userMatches & passwordMatches;
+    },
+    unauthorizedResponse: (req, res) => {
+      console.log('Unauthorized request ' + process.env.REF_SERVER_URL + req.originalUrl);
+      return req.auth
+        ? errors.createJSON(errors.credentialsRejected)
+        : errors.createJSON(errors.noCredentials)
+    }
+}))
 
 app.use( (req, res, next) => {
   res.setHeader('Content-Type', 'application/vnd.api+json');

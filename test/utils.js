@@ -1,11 +1,19 @@
 const axios = require('axios');
 require('custom-env').env();
 
+const TIMEOUT = 300000;
+const AUTH = {
+  username: process.env.USERNAME,
+  password: process.env.PASSWORD
+}
+
 const axiosInstance = axios.create({
   baseURL: process.env.REF_SERVER_URL,
-  timeout: 300000,
+  timeout: TIMEOUT,
+  auth: AUTH
 });
 
 module.exports = {
-  axiosInstance
+  axiosInstance,
+  get: url => axios.get(url, { timeout: TIMEOUT, auth: AUTH })
 };

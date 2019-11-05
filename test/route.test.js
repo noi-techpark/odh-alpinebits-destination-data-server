@@ -1,5 +1,4 @@
 module.exports.basicRouteTests = (opts) => {
-  const axios = require('axios');
   const utils = require('./utils');
 
   let headers, status, meta, data, links;
@@ -106,23 +105,23 @@ module.exports.basicRouteTests = (opts) => {
     })
 
     test(`/${opts.route}: pagination 'next' link works`, () => {
-      return axios.get(links.next).then( res => expect(res.data.data).toBeDefined())
+      return utils.get(links.next).then( res => expect(res.data.data).toBeDefined())
     });
 
     test(`/${opts.route}: pagination 'prev' link works`, () => {
-      return axios.get(links.prev).then( res => expect(res.data.data).toBeDefined())
+      return utils.get(links.prev).then( res => expect(res.data.data).toBeDefined())
     });
 
     test(`/${opts.route}: pagination 'first' link works`, () => {
-      return axios.get(links.first).then( res => expect(res.data.data).toBeDefined())
+      return utils.get(links.first).then( res => expect(res.data.data).toBeDefined())
     });
 
     test(`/${opts.route}: pagination 'last' link works`, () => {
-      return axios.get(links.last).then( res => expect(res.data.data).toBeDefined())
+      return utils.get(links.last).then( res => expect(res.data.data).toBeDefined())
     });
 
     test(`/${opts.route}: 'self' link works`, () => {
-      return axios.get(links.self).then( res => {
+      return utils.get(links.self).then( res => {
         expect(res.data.data).toBeDefined()
         expect(res.data.data).toEqual(data);
         expect(res.data.links).toEqual(links);
@@ -134,7 +133,7 @@ module.exports.basicRouteTests = (opts) => {
       let i = 0;
 
       while(i<=3 && i<data.length-1){
-        promises.push(axios.get(data[i].links.self));
+        promises.push(utils.get(data[i].links.self));
         i++;
       }
 
