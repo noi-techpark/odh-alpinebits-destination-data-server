@@ -5,7 +5,7 @@ module.exports.basicResourceRouteTests = (opts) => {
     let status, data;
 
     beforeAll( () => {
-      return utils.axiosInstance.get(`/api/v1/${opts.route}/i-dont-exist`)
+      return utils.axiosInstance.get(`/api/1.0/${opts.route}/i-dont-exist`)
         .catch( res => {
           ({status, data} = res.response);
         })
@@ -27,10 +27,10 @@ module.exports.basicResourceRouteTests = (opts) => {
     let id, baseUrl,headers, status, data, links;
 
     beforeAll( () => {
-      return utils.axiosInstance.get(`/api/v1/${opts.route}?page[size]=1`)
+      return utils.axiosInstance.get(`/api/1.0/${opts.route}?page[size]=1`)
         .then( response => {
           id = response.data.data[0].id;
-          baseUrl = `/api/v1/${opts.route}/${id}`;
+          baseUrl = `/api/1.0/${opts.route}/${id}`;
           return utils.axiosInstance.get(baseUrl);
         })
         .then( response => {

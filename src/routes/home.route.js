@@ -5,15 +5,20 @@ function getHomeResponse(request, response) {
     jsonapi: {
       version: "1.0"
     },
+    destinationData: {
+      versions: [ "1.0" ]
+    },
     links: {
       self: getSelfUrl(request),
       resources: {
-        events: getBaseUrl(request)+'/events',
-        eventSeries: getBaseUrl(request)+'/eventSeries',
-        lifts: getBaseUrl(request)+'/lifts',
-        trails: getBaseUrl(request)+'/trails',
-        snowparks: getBaseUrl(request)+'/snowparks',
-        mountainAreas: getBaseUrl(request)+'/mountainAreas'
+        "1.0": {
+          events: getBaseUrl(request)+'/events',
+          eventSeries: getBaseUrl(request)+'/eventSeries',
+          lifts: getBaseUrl(request)+'/lifts',
+          trails: getBaseUrl(request)+'/trails',
+          snowparks: getBaseUrl(request)+'/snowparks',
+          mountainAreas: getBaseUrl(request)+'/mountainAreas'
+        }
       }
     },
     data: []
@@ -26,5 +31,5 @@ function getHomeResponse(request, response) {
 module.exports = function(app) {
   app.get('/', getHomeResponse);
   app.get('/api', getHomeResponse);
-  app.get('/api/v1', getHomeResponse);
+  app.get('/api/1.0', getHomeResponse);
 }
