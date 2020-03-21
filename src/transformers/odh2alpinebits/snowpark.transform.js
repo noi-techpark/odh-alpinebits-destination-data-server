@@ -64,38 +64,73 @@ IGNORED:
 
 const utils = require('./utils');
 const templates = require('./templates');
+const { transformMediaObject } = require('./media-object.transform');
 
-module.exports = (object) => {
-  const source = JSON.parse(JSON.stringify(object));
+module.exports = (originalObject, included = {}, request) => {
+  const source = JSON.parse(JSON.stringify(originalObject));
   let target = templates.createObject('Snowpark');
 
-  Object.assign(target, utils.transformMetadata(source));
-  Object.assign(target, utils.transformBasicProperties(source));
+  target.id = source.Id;
 
-  target.minAltitude = source.AltitudeLowestPoint;
-  target.maxAltitude = source.AltitudeHighestPoint;
+  let meta = target.meta;
+  Object.assign(meta, utils.transformMetadata(source));
+
+  let links = target.links;
+  Object.assign(links, utils.createSelfLink(target, request));
+
+   /**
+   * 
+   *  ATTRIBUTES
+   * 
+   */
+
+  let attributes = target.attributes;
+  Object.assign(attributes, utils.transformBasicProperties(source));
+
+  attributes.minAltitude = source.AltitudeLowestPoint || null;
+  attributes.maxAltitude = source.AltitudeHighestPoint || null;
+
+  let categories = [];
+  source.SmgTags.forEach(tag => 
+    categories.push("odh/"+ tag.replace(/[\/|\s]/g,'-').toLowerCase())
+  );
+
+  if(categories.length>0)
+    attributes.categories = categories;
 
   const difficultyMapping = {
-    '2': 'alpinebits/easy',
-    '4': 'alpinebits/medium',
-    '6': 'alpinebits/hard'
+    '2': 'beginner',
+    '4': 'intermediate',
+    '6': 'advanced'
   }
-  target.difficulty = difficultyMapping[source.Difficulty];
+  attributes.difficulty = difficultyMapping[source.Difficulty];
 
-  target.length = source.DistanceLength > 0 ? source.DistanceLength : null;
+  attributes.length = source.DistanceLength > 0 ? source.DistanceLength : null;
 
-  target.howToArrive = utils.transformHowToArrive(source.Detail);
+  attributes.howToArrive = utils.transformHowToArrive(source.Detail);
 
-  target.openingHours = utils.transformOperationSchedule(source.OperationSchedule);
+  attributes.openingHours = utils.transformOperationSchedule(source.OperationSchedule);
 
-  target.address = utils.transformAddress(source.ContactInfos, ['city','country','zipcode']);
+  attributes.address = utils.transformAddress(source.ContactInfos, ['city','country','zipcode']);
 
   const geometry = utils.transformGeometry(source.GpsInfo, ['Startpunkt', 'Endpunkt'], source.GpsPoints, source.GpsTrack);
-  if(geometry) target.geometries.push(geometry);
+  if(geometry) 
+    attributes.geometries = [geometry];
 
-  target.multimediaDescriptions = []
-  for (image of source.ImageGallery)
-    target.multimediaDescriptions.push(utils.transformMediaObject(image));
+  /**
+   * 
+   *  RELATIONSHIPS
+   * 
+   */
+
+  let relationships = target.relationships;
+
+  for (image of source.ImageGallery){
+    const { mediaObject, copyrightOwner } = transformMediaObject(image, links, request);
+    utils.addRelationshipToMany(relationships, 'multimediaDescriptions', mediaObject, links.self);
+    utils.addIncludedResource(included, mediaObject);
+    utils.addIncludedResource(included, copyrightOwner);
+  }
 
   return target;
 }

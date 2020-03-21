@@ -5,7 +5,7 @@ module.exports.basicResourceRouteTests = (opts) => {
     let status, data;
 
     beforeAll( () => {
-      return utils.axiosInstance.get(`/api/1.0/${opts.route}/i-dont-exist`)
+      return utils.axiosInstance.get(`/1.0/${opts.route}/i-dont-exist`)
         .catch( res => {
           ({status, data} = res.response);
         })
@@ -27,10 +27,10 @@ module.exports.basicResourceRouteTests = (opts) => {
     let id, baseUrl,headers, status, data, links;
 
     beforeAll( () => {
-      return utils.axiosInstance.get(`/api/1.0/${opts.route}?page[size]=1`)
+      return utils.axiosInstance.get(`/1.0/${opts.route}?page[size]=1`)
         .then( response => {
           id = response.data.data[0].id;
-          baseUrl = `/api/1.0/${opts.route}/${id}`;
+          baseUrl = `/1.0/${opts.route}/${id}`;
           return utils.axiosInstance.get(baseUrl);
         })
         .then( response => {
@@ -70,7 +70,7 @@ module.exports.basicResourceRouteTests = (opts) => {
       const url = `${baseUrl}?fields[${opts.resourceType}]=${opts.sampleAttributes.join(',')}`;
 
       return utils.axiosInstance.get(url)
-        .then( res => expect(Object.keys(res.data.data.attributes)).toEqual(opts.sampleAttributes) )
+        .then( res => expect(Object.keys(res.data.data.attributes).sort()).toEqual(opts.sampleAttributes.sort()))
     })
 
     test(`/${opts.route}/:id: multi-attribute and multi-relationship selection`, () => {
@@ -79,8 +79,8 @@ module.exports.basicResourceRouteTests = (opts) => {
 
       return utils.axiosInstance.get(url)
         .then( res => {
-          expect(Object.keys(res.data.data.attributes)).toEqual(opts.sampleAttributes);
-          expect(Object.keys(res.data.data.relationships)).toEqual(opts.sampleRelationships);
+          expect(Object.keys(res.data.data.attributes).sort()).toEqual(opts.sampleAttributes.sort());
+          expect(Object.keys(res.data.data.relationships).sort()).toEqual(opts.sampleRelationships.sort());
         })
     })
 
@@ -121,7 +121,7 @@ module.exports.basicResourceRouteTests = (opts) => {
           expect(res.data.included).toBeDefined();
           res.data.included.forEach( object => {
             expect(object.type).toEqual(opts.selectInclude.resourceType);
-            expect(Object.keys(object.attributes)).toEqual([opts.selectInclude.attribute]);
+            expect(Object.keys(object.attributes).sort()).toEqual([opts.selectInclude.attribute].sort());
           })
         })
     })
@@ -144,7 +144,7 @@ module.exports.basicResourceRouteTests = (opts) => {
           expect(res.data.included).toBeDefined();
           res.data.included.forEach( object => {
             expect(resourceTypes).toContain(object.type)
-            expect(Object.keys(object.attributes)).toEqual(expectedAttributesPerType[object.type]);
+            expect(Object.keys(object.attributes).sort()).toEqual(expectedAttributesPerType[object.type].sort());
           })
         })
     })
@@ -161,14 +161,21 @@ module.exports.basicResourceRouteTests = (opts) => {
 
       Object.keys(data.relationships).forEach( key => {
         let rel = data.relationships[key];
-        if(!rel.data || (Array.isArray(rel.data) && rel.data.length===0)){
-          expect(rel.links).not.toBeDefined();
-        }
-        else {
-          expect(rel.links).toBeDefined();
-          expect(rel.links.related).toBeDefined();
+        
+        if(!rel)
+          return;
+        
+        expect(rel.data).toBeDefined();
+
+        if(Array.isArray(rel.data))
+          expect(rel.data.length).not.toEqual(0);
+
+        expect(rel.links).toBeDefined();
+        expect(rel.links.related).toBeDefined();
+        
+        //TODO: check this later
+        if(rel.links.related)
           promises.push(utils.get(rel.links.related));
-        }
       });
 
       return Promise.all(promises).then( resArray => {

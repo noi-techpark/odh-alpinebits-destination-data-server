@@ -1,17 +1,21 @@
 const utils = require('./utils');
 
-let headers, status, meta, data, links;
+let headers, status, data, links;
 
 beforeAll( () => {
   return utils.axiosInstance.get('/')
     .then( (response) => {
       ({headers, status} = response);
-      ({meta, data, links} = response.data);
+      ({data, links} = response.data);
     })
 })
 
-test('Home route exists', () => {
-  expect(data).toBeDefined();
+test('Home route returns correct body', () => {
+  expect(data).toEqual(null);
+  expect(links).toBeDefined();
+  expect(links["self"]).toBeDefined();
+  expect(links["1.0"]).toBeDefined();
+  
 });
 
 test('Home route returns content-type "application/vnd.api+json"', () => {

@@ -10,9 +10,10 @@
     "type": "git",
     "url": "git+https://github.com/tgoprince/odh-alpinebits-destination-data-server.git"
   },
-  "author": [
-    "Tiago Prince Sales",
-    "Claudenir M. Fonseca"
+  "author": "Tiago Prince Sales <tiago.princesales@unibz.it>",
+  "contributors": [
+    "Tiago Prince Sales <tiago.princesales@unibz.it>",
+    "Claudenir Morais Fonseca <cmoraisfonseca@unibz.it>"
   ],
   "bugs": {
     "url": "https://github.com/tgoprince/odh-alpinebits-destination-data-server/issues"
