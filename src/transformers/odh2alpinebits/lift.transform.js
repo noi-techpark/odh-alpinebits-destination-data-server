@@ -63,48 +63,78 @@ IGNORED:
 
 const utils = require('./utils');
 const templates = require('./templates');
+const { transformMediaObject } = require('./media-object.transform');
 
-module.exports = (object) => {
-  const source = JSON.parse(JSON.stringify(object));
+module.exports = (originalObject, included = {}, request) => {
+  const source = JSON.parse(JSON.stringify(originalObject));
   let target = templates.createObject('Lift');
 
-  Object.assign(target, utils.transformMetadata(source));
-  Object.assign(target, utils.transformBasicProperties(source));
+  target.id = source.Id;
 
+  let meta = target.meta;
+  Object.assign(meta, utils.transformMetadata(source));
+
+  let links = target.links;
+  Object.assign(links, utils.createSelfLink(target, request));
+
+  /**
+   * 
+   *  ATTRIBUTES
+   * 
+   */
+  
+  let attributes = target.attributes;
+  Object.assign(attributes, utils.transformBasicProperties(source));
+
+  // Lift categories
   const categoryMapping = {
-    'Sessellift': 'alpinebits/chairlift',
-    'Seilbahn': 'alpinebits/funicular',
-    'Skibus': 'alpinebits/skibus',
-    'Förderband': 'alpinebits/conveyor-belt',
-    'Telemix': 'alpinebits/telemix',
-    'Standseilbahn/Zahnradbahn': 'alpinebits/cable-railway ',
+    'Sessellift': [ 'alpinebits/chairlift' ],
+    'Seilbahn': [ 'alpinebits/funicular' ],
+    'Skibus': [ 'odh/skibus' ],
+    'Förderband': [ 'odh/conveyor-belt' ],
+    'Telemix': [ 'odh/telemix' ],
+    'Standseilbahn/Zahnradbahn': [ 'odh/cable-railway' ],
     'no Subtype': null,
-    'Zug': 'alpinebits/train',
-    'Kabinenbahn': 'alpinebits/gondola',
-    'Schrägaufzug': 'alpinebits/inclined-lift',
-    'Umlaufbahn': 'alpinebits/detachable-gondola',
-    'Unterirdische Bahn': 'alpinebits/underground-ropeway',
-    'Skilift': 'alpinebits/skilift',
+    'Zug': [ 'odh/train' ],
+    'Kabinenbahn': [ 'alpinebits/gondola' ],
+    'Schrägaufzug': [ 'odh/inclined-lift' ],
+    'Umlaufbahn': [ 'alpinebits/gondola', 'odh/detachable-gondola'],
+    'Unterirdische Bahn': [ 'alpinebits/funicular', 'odh/underground-ropeway' ],
+    'Skilift': [ 'alpinebits/skilift'] ,
   }
 
-  target.category = categoryMapping[source.SubType];
+  attributes.categories = categoryMapping[source.SubType];
+  attributes.categories.push("odh/"+ source.SubType.replace(/\s/g, '-'));
 
-  target.length = source.DistanceLength>0 ? source.DistanceLength : null;
+  attributes.length = source.DistanceLength>0 ? source.DistanceLength : null;
 
-  target.howToArrive = utils.transformHowToArrive(source.Detail);
+  attributes.howToArrive = utils.transformHowToArrive(source.Detail);
+  
+  let ppc = parseInt(source.PoiType, 10);
+  attributes.personsPerChair =  ppc ? ppc : null;
 
-  target.personsPerChair = parseInt(source.PoiType, 10);
+  attributes.openingHours = utils.transformOperationSchedule(source.OperationSchedule);
 
-  target.openingHours = utils.transformOperationSchedule(source.OperationSchedule);
-
-  target.address = utils.transformAddress(source.ContactInfos, ['city','country','zipcode']);
+  attributes.address = utils.transformAddress(source.ContactInfos, ['city','country','zipcode']);
 
   const geometry = utils.transformGeometry(source.GpsInfo, ['Talstation','Mittelstation','Bergstation'], source.GpsPoints, source.GpsTrack);
-  if(geometry) target.geometries.push(geometry);
+  if(geometry) 
+    attributes.geometries = [ geometry ];
 
-  target.multimediaDescriptions = []
-  for (image of source.ImageGallery)
-    target.multimediaDescriptions.push(utils.transformMediaObject(image));
+  /**
+   * 
+   *  RELATIONSHIPS
+   * 
+   */
+
+  let relationships = target.relationships;
+
+  for (image of source.ImageGallery){
+    const { mediaObject, copyrightOwner } = transformMediaObject(image, links, request);
+    utils.addRelationshipToMany(relationships, 'multimediaDescriptions', mediaObject, links.self);
+    utils.addIncludedResource(included, mediaObject);
+    utils.addIncludedResource(included, copyrightOwner);
+  }
 
   return target;
 }

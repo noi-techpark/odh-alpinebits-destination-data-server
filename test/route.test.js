@@ -8,7 +8,7 @@ module.exports.basicRouteTests = (opts) => {
 
   beforeAll( () => {
 
-    return utils.axiosInstance.get(`/api/1.0/${opts.route}?${pageParam}`)
+    return utils.axiosInstance.get(`/1.0/${opts.route}?${pageParam}`)
       .then( (response) => {
         ({headers, status} = response);
         ({meta, data, links} = response.data);
@@ -54,7 +54,7 @@ module.exports.basicRouteTests = (opts) => {
 
     test(`/${opts.route}: page size works`, () => {
       const customPageSize = 3;
-      return utils.axiosInstance.get(`/api/1.0/${opts.route}?page[size]=${customPageSize}`)
+      return utils.axiosInstance.get(`/1.0/${opts.route}?page[size]=${customPageSize}`)
         .then( (res) => {
           let {pages, count} = res.data.meta;
 
@@ -68,38 +68,38 @@ module.exports.basicRouteTests = (opts) => {
     })
 
     test(`/${opts.route}: page number works`, () => {
-      return utils.axiosInstance.get(`/api/1.0/${opts.route}?page[size]=1&page[number]=2`)
+      return utils.axiosInstance.get(`/1.0/${opts.route}?page[size]=1&page[number]=2`)
         .then( (res) => {
           expect(data[1].id).toEqual(res.data.data[0].id);
         })
     })
 
     test(`/${opts.route}: single attribute selection`, () => {
-      return utils.axiosInstance.get(`/api/1.0/${opts.route}?${pageParam}&fields[${opts.resourceType}]=${opts.sampleAttributes[0]}`)
+      return utils.axiosInstance.get(`/1.0/${opts.route}?${pageParam}&fields[${opts.resourceType}]=${opts.sampleAttributes[0]}`)
         .then( (res) => {
           res.data.data.forEach( object => {
-            expect(Object.keys(object.attributes)).toEqual([opts.sampleAttributes[0]])
+            expect(Object.keys(object.attributes).sort()).toEqual([opts.sampleAttributes[0]])
           })
         })
     })
 
     test(`/${opts.route}: multi-attribute selection`, () => {
       const fields = opts.sampleAttributes;
-      return utils.axiosInstance.get(`/api/1.0/${opts.route}?${pageParam}&fields[${opts.resourceType}]=${fields.join(',')}`)
+      return utils.axiosInstance.get(`/1.0/${opts.route}?${pageParam}&fields[${opts.resourceType}]=${fields.join(',')}`)
         .then( (res) => {
           res.data.data.forEach( object => {
-            expect(Object.keys(object.attributes)).toEqual(fields)
+            expect(Object.keys(object.attributes).sort()).toEqual(fields.sort())
           })
         })
     })
 
     test(`/${opts.route}: attribute and relationship selection`, () => {
       const fields = [...opts.sampleAttributes, ...opts.sampleRelationships];
-      return utils.axiosInstance.get(`/api/1.0/${opts.route}?${pageParam}&fields[${opts.resourceType}]=`+fields.join(','))
+      return utils.axiosInstance.get(`/1.0/${opts.route}?${pageParam}&fields[${opts.resourceType}]=`+fields.join(','))
         .then( (res) => {
           res.data.data.forEach( object => {
-            expect(Object.keys(object.attributes)).toEqual(opts.sampleAttributes);
-            expect(Object.keys(object.relationships)).toEqual(opts.sampleRelationships);
+            expect(Object.keys(object.attributes).sort()).toEqual(opts.sampleAttributes.sort());
+            expect(Object.keys(object.relationships).sort()).toEqual(opts.sampleRelationships.sort());
           })
         })
     })
@@ -147,7 +147,7 @@ module.exports.basicRouteTests = (opts) => {
       if(!opts.include)
         return;
 
-      return utils.axiosInstance.get(`/api/1.0/${opts.route}?${pageParam}&include=${opts.include.relationship}`)
+      return utils.axiosInstance.get(`/1.0/${opts.route}?${pageParam}&include=${opts.include.relationship}`)
         .then( (res) => {
           expect(res.data.included).toBeDefined();
           res.data.included.forEach( object => expect(object.type).toEqual(opts.include.resourceType) )
@@ -158,7 +158,7 @@ module.exports.basicRouteTests = (opts) => {
       if(!opts.multiInclude)
         return;
 
-      return utils.axiosInstance.get(`/api/1.0/${opts.route}?${pageParam}&include=${opts.multiInclude.relationships.join(',')}`)
+      return utils.axiosInstance.get(`/1.0/${opts.route}?${pageParam}&include=${opts.multiInclude.relationships.join(',')}`)
         .then( (res) => {
           expect(res.data.included).toBeDefined();
           res.data.included.forEach( object =>  expect(opts.multiInclude.resourceTypes).toContain(object.type) )
@@ -169,12 +169,12 @@ module.exports.basicRouteTests = (opts) => {
       if(!opts.selectInclude)
         return;
 
-      return utils.axiosInstance.get(`/api/1.0/${opts.route}?${pageParam}&include=${opts.selectInclude.relationship}&fields[${opts.selectInclude.resourceType}]=${opts.selectInclude.attribute}`)
+      return utils.axiosInstance.get(`/1.0/${opts.route}?${pageParam}&include=${opts.selectInclude.relationship}&fields[${opts.selectInclude.resourceType}]=${opts.selectInclude.attribute}`)
         .then( (res) => {
           expect(res.data.included).toBeDefined();
           res.data.included.forEach( object => {
             expect(object.type).toEqual(opts.selectInclude.resourceType);
-            expect(Object.keys(object.attributes)).toEqual([opts.selectInclude.attribute]);
+            expect(Object.keys(object.attributes).sort()).toEqual([opts.selectInclude.attribute].sort());
           })
         })
     })
@@ -192,31 +192,17 @@ module.exports.basicRouteTests = (opts) => {
 
       let resourceTypes = Object.keys(expectedAttributesPerType);
 
-      return utils.axiosInstance.get(`/api/1.0/${opts.route}?${params}`)
+      return utils.axiosInstance.get(`/1.0/${opts.route}?${params}`)
         .then( (res) => {
           expect(res.data.included).toBeDefined();
           res.data.included.forEach( object => {
             expect(resourceTypes).toContain(object.type)
-            expect(Object.keys(object.attributes)).toEqual(expectedAttributesPerType[object.type]);
+            expect(Object.keys(object.attributes).sort()).toEqual(expectedAttributesPerType[object.type].sort());
           })
         })
     })
   })
 
-  describe(`Resource serialization at /${opts.route}`, () => {
-
-    test(`/${opts.route}: no @type fields`, () => {
-      data.forEach( object => {
-        let attrs = object.attributes;
-        Object.keys(attrs).forEach( key => {
-          expect(key).not.toBe('@type');
-          if(attrs[key] && typeof attrs[key]==='object')
-            expect('@type' in attrs[key]).toBe(false)
-        })
-      })
-    })
-
-  })
 }
 
 // just to avoid warning, that no tests in test file

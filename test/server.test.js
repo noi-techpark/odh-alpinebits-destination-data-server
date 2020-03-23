@@ -23,7 +23,7 @@ describe(`Refuse request without authentication`, () => {
   let status, data;
 
   beforeAll( () => {
-    return axios.get(process.env.REF_SERVER_URL+'/api/v1/events')
+    return axios.get(process.env.REF_SERVER_URL+'/1.0/events')
       .catch( res =>  ({data, status} = res.response) );
   });
 
@@ -41,7 +41,7 @@ describe(`Refuse request with invalid username and password`, () => {
   let status, message;
 
   beforeAll( () => {
-    return axios.get(process.env.REF_SERVER_URL+'/api/v1/events', { auth: { username: 'me', password: 'mypassword' }})
+    return axios.get(process.env.REF_SERVER_URL+'/1.0/events', { auth: { username: 'me', password: 'mypassword' }})
       .catch( res =>  ({data, status} = res.response) );
   });
 

@@ -16,8 +16,6 @@ app.use(cors(corsOptions));
 app.use(express.json());
 
 app.use( (req, res, next) => {
-  //TODO: Add security layer
-  //TODO: Add header/url/query validation layer
   console.log('> Request received: ' + process.env.REF_SERVER_URL + req.originalUrl);
   next();
 });
@@ -49,9 +47,8 @@ require('./routes/trails.route.js')(app);
 require('./routes/snowparks.route.js')(app);
 require('./routes/mountain-areas.route.js')(app);
 require('./routes/event-series.route.js')(app);
-require('./routes/snow-reports.route.js')(app);
 
-require('./routes/places.route.js')(app);
+require('./routes/venues.route.js')(app);
 require('./routes/agents.route.js')(app);
 require('./routes/media-objects.route.js')(app);
 

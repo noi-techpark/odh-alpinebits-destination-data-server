@@ -1,17 +1,24 @@
+const utils = require('./utils');
 
-module.exports = (object) => {
-  const source = JSON.parse(JSON.stringify(object));
+module.exports = (originalObject, included = {}, request) => {
+  const eventSeries = JSON.parse(JSON.stringify(originalObject));
 
-  let target = {
-    '@type':  'EventSeries',
-    id: source.id ? source.id : '',
-    name: source.name ? source.name: {},
-    abstract: source.abstract ? source.abstract: {},
-    description: source.description ? source.description: {},
-    url: source.url ? source.url: {},
-    multimediaDescriptions: source.multimediaDescriptions ? source.multimediaDescriptions: [],
-    frequency: source.frequency ? source.frequency: '',
-  };
+  let links = eventSeries.links;
+  Object.assign(links, utils.createSelfLink(eventSeries, request));
 
-  return target;
+  let multimedia = eventSeries.relationships.multimediaDescriptions;
+  if(multimedia && multimedia.data && multimedia.data.length > 0)
+    multimedia.links.related = encodeURI(links.self + "/multimediaDescriptions");
+
+  let editions = eventSeries.relationships.editions;
+  if(editions && editions.data && editions.data.length > 0)
+    editions.links.related = encodeURI(links.self + "/editions");
+
+  eventSeries.included.forEach(relatedResource => {
+    utils.addIncludedResource(included, relatedResource);
+  });
+
+  delete eventSeries.included;
+
+  return eventSeries;
 }

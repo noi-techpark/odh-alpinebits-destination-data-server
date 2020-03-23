@@ -1,5 +1,8 @@
 const { basicRouteTests } = require('./route.test');
 const { basicResourceRouteTests } = require('./route_id.test');
+const { basicSchemaTests } = require('./route.schema.test');
+const arraySchema = require('../src/validator/schemas/events.array.schema.json');
+const resourceSchema = require('../src/validator/schemas/events.schema.json');
 
 let opts = {
   route: 'events',
@@ -12,7 +15,7 @@ let opts = {
   },
   multiInclude: {
     relationships: ['organizers','venues','multimediaDescriptions'],
-    resourceTypes: ['agents','places','mediaObjects']
+    resourceTypes: ['agents','venues','mediaObjects']
   },
   selectInclude: {
     attribute: 'name',
@@ -21,17 +24,25 @@ let opts = {
   },
   multiSelectInclude: [
     {
-      attributes: ['name','category'],
+      attributes: ['name','categories'],
       relationship: 'organizers',
       resourceType: 'agents'
     },
     {
       attributes: ['name','address'],
       relationship: 'venues',
-      resourceType: 'places'
+      resourceType: 'venues'
     }
-  ]
+  ],
+  schema: {
+    resourceSchema,
+    arraySchema,
+    pageStart: 1,
+    pageEnd: 10,
+    pageSize: 50
+  }
 }
 
 basicRouteTests(opts);
 basicResourceRouteTests(opts);
+basicSchemaTests(opts);

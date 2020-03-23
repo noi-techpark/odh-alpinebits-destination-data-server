@@ -1,0 +1,31 @@
+{
+  "type": "object",
+  "properties": {
+    "jsonapi": {
+      "type": "object",
+      "properties": {
+        "version": {
+          "const": "1.0"
+        }
+      },
+      "required": [
+        "version"
+      ],
+      "additionalProperties": false
+    },
+    "links": {
+      "type": "object",
+      "required": [
+        "self"
+      ]
+    },
+    "data": {
+      "type": "null"
+    }
+  },
+  "required": [
+    "jsonapi",
+    "data",
+    "links"
+  ]
+}
