@@ -6,27 +6,32 @@ The server exposes data from the [OpenDataHub API](http://tourism.opendatahub.bz
 
 The current version of the server accepts HTTP GET requests on the following routes:
 
-* /events
-* /events/:id
-* /events/:id/multimediaDescriptions
-* /events/:id/venues
-* /events/:id/publisher
-* /events/:id/organizers
-* /eventSeries\*
-* /eventSeries/:id\*
-* /lifts
-* /lifts/:id
-* /trails
-* /trails/:id
-* /snowparks
-* /snowparks/:id
-* /mountainAreas
-* /mountainAreas/:id
-* /mountainAreas/:id/lifts
-* /mountainAreas/:id/trails
-* /mountainAreas/:id/snowparks
-* /mountainAreas/:id/areaOwner
-* /mountainAreas/:id/multimediaDescriptions
+* /
+* /1.0
+* /1.0/events
+* /1.0/events/:id
+* /1.0/events/:id/multimediaDescriptions
+* /1.0/events/:id/venues
+* /1.0/events/:id/publisher
+* /1.0/events/:id/organizers
+* /1.0/eventSeries\*
+* /1.0/eventSeries/:id\*
+* /1.0/lifts
+* /1.0/lifts/:id
+* /1.0/lifts/:id/multimediaDescriptions
+* /1.0/trails
+* /1.0/trails/:id
+* /1.0/trails/:id/multimediaDescriptions
+* /1.0/snowparks
+* /1.0/snowparks/:id
+* /1.0/snowparks/:id/multimediaDescriptions
+* /1.0/mountainAreas
+* /1.0/mountainAreas/:id
+* /1.0/mountainAreas/:id/lifts
+* /1.0/mountainAreas/:id/trails
+* /1.0/mountainAreas/:id/snowparks
+* /1.0/mountainAreas/:id/areaOwner
+* /1.0/mountainAreas/:id/multimediaDescriptions
 
 \* These routes return dummy data, as they are not currently available on the OpenDataHub API.
 

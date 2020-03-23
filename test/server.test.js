@@ -1,13 +1,7 @@
 const utils = require('./utils');
-const https = require('https');
+const axiosInstance = require('axios').create();
+
 require('custom-env').env();
-const REJECT_UNAUTHORIZED_REQUESTS = JSON.parse(process.env.SSL_REJECT_UNAUTHORIZED);
-const axios = require('axios').create({
-  httpsAgent: new https.Agent({
-    rejectUnauthorized: REJECT_UNAUTHORIZED_REQUESTS,
-    keepAlive: true,
-  }),
-});
 
 describe(`Testing unknown route`, () => {
   test('Unknown route returns 404 NOT FOUND', () => {
@@ -23,7 +17,7 @@ describe(`Refuse request without authentication`, () => {
   let status, data;
 
   beforeAll( () => {
-    return axios.get(process.env.REF_SERVER_URL+'/1.0/events')
+    return axiosInstance.get(process.env.REF_SERVER_URL+'/1.0/events')
       .catch( res =>  ({data, status} = res.response) );
   });
 
@@ -41,7 +35,7 @@ describe(`Refuse request with invalid username and password`, () => {
   let status, message;
 
   beforeAll( () => {
-    return axios.get(process.env.REF_SERVER_URL+'/1.0/events', { auth: { username: 'me', password: 'mypassword' }})
+    return axiosInstance.get(process.env.REF_SERVER_URL+'/1.0/events', { auth: { username: 'me', password: 'mypassword' }})
       .catch( res =>  ({data, status} = res.response) );
   });
 
