@@ -8,6 +8,7 @@ USED:
   * Type
   * GpsInfo
   * OperationSchedule
+  * ImageGallery (always [])
 
 PARTIALLY USED :
   * Detail: Title, BaseText, GetThereText
@@ -22,7 +23,6 @@ IGNORED:
   * BikeTransport: can tourists carry their bikes on it
 
 > Out of scope or "useless" field (e.g. always null, [], false...)
-  * ImageGallery (always [])
   * Difficulty (always 0)
   * AltitudeLowestPoint (always 0)
   * AltitudeHighestPoint (always 0)
@@ -63,44 +63,78 @@ IGNORED:
 
 const utils = require('./utils');
 const templates = require('./templates');
+const { transformMediaObject } = require('./media-object.transform');
 
-module.exports = (object) => {
-  const source = JSON.parse(JSON.stringify(object));
+module.exports = (originalObject, included = {}, request) => {
+  const source = JSON.parse(JSON.stringify(originalObject));
   let target = templates.createObject('Lift');
 
-  Object.assign(target, utils.transformMetadata(source));
-  Object.assign(target, utils.transformBasicProperties(source));
+  target.id = source.Id;
 
+  let meta = target.meta;
+  Object.assign(meta, utils.transformMetadata(source));
+
+  let links = target.links;
+  Object.assign(links, utils.createSelfLink(target, request));
+
+  /**
+   * 
+   *  ATTRIBUTES
+   * 
+   */
+  
+  let attributes = target.attributes;
+  Object.assign(attributes, utils.transformBasicProperties(source));
+
+  // Lift categories
   const categoryMapping = {
-    'Sessellift': 'alpinebits/chairlift',
-    'Seilbahn': 'alpinebits/funicular',
-    'Skibus': 'alpinebits/skibus',
-    'Förderband': 'alpinebits/conveyor-belt',
-    'Telemix': 'alpinebits/telemix',
-    'Standseilbahn/Zahnradbahn': 'alpinebits/cable-railway ',
+    'Sessellift': [ 'alpinebits/chairlift' ],
+    'Seilbahn': [ 'alpinebits/funicular' ],
+    'Skibus': [ 'odh/skibus' ],
+    'Förderband': [ 'odh/conveyor-belt' ],
+    'Telemix': [ 'odh/telemix' ],
+    'Standseilbahn/Zahnradbahn': [ 'odh/cable-railway' ],
     'no Subtype': null,
-    'Zug': 'alpinebits/train',
-    'Kabinenbahn': 'alpinebits/gondola',
-    'Schrägaufzug': 'alpinebits/inclined-lift',
-    'Umlaufbahn': 'alpinebits/detachable-gondola',
-    'Unterirdische Bahn': 'alpinebits/underground-ropeway',
-    'Skilift': 'alpinebits/skilift',
+    'Zug': [ 'odh/train' ],
+    'Kabinenbahn': [ 'alpinebits/gondola' ],
+    'Schrägaufzug': [ 'odh/inclined-lift' ],
+    'Umlaufbahn': [ 'alpinebits/gondola', 'odh/detachable-gondola'],
+    'Unterirdische Bahn': [ 'alpinebits/funicular', 'odh/underground-ropeway' ],
+    'Skilift': [ 'alpinebits/skilift'] ,
   }
 
-  target.category = categoryMapping[source.SubType];
+  attributes.categories = categoryMapping[source.SubType];
+  attributes.categories.push("odh/"+ source.SubType.replace(/\s/g, '-'));
+
+  attributes.length = source.DistanceLength>0 ? source.DistanceLength : null;
+
+  attributes.howToArrive = utils.transformHowToArrive(source.Detail);
+  
+  let ppc = parseInt(source.PoiType, 10);
+  attributes.personsPerChair =  ppc ? ppc : null;
+
+  attributes.openingHours = utils.transformOperationSchedule(source.OperationSchedule);
+
+  attributes.address = utils.transformAddress(source.ContactInfos, ['city','country','zipcode']);
 
   const geometry = utils.transformGeometry(source.GpsInfo, ['Talstation','Mittelstation','Bergstation'], source.GpsPoints, source.GpsTrack);
-  if(geometry) target.geometries.push(geometry);
+  if(geometry) 
+    attributes.geometries = [ geometry ];
 
-  target.length = source.DistanceLength>0 ? source.DistanceLength : null;
+  /**
+   * 
+   *  RELATIONSHIPS
+   * 
+   */
 
-  target.howToArrive = utils.transformHowToArrive(source.Detail);
+  let relationships = target.relationships;
 
-  target.personsPerChair = parseInt(source.PoiType, 10);
-
-  target.openingHours = utils.transformOperationSchedule(source.OperationSchedule);
-
-  target.address = utils.transformAddress(source.ContactInfos, ['city','country','zipcode']);
+  for (image of source.ImageGallery){
+    const { mediaObject, copyrightOwner } = transformMediaObject(image, links, request);
+    utils.addRelationshipToMany(relationships, 'multimediaDescriptions', mediaObject, links.self);
+    utils.addIncludedResource(included, mediaObject);
+    utils.addIncludedResource(included, copyrightOwner);
+  }
 
   return target;
 }

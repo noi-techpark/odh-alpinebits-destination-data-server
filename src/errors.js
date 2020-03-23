@@ -1,4 +1,12 @@
 const types = {
+  noCredentials: {
+    title: "No credentials were provided.",
+    status: 401
+  },
+  credentialsRejected: {
+    title: "Credentials rejected.",
+    status: 401
+  },
   notFound: {
     title: "Resource(s) not found.",
     status: 404
@@ -43,6 +51,10 @@ function handleError(err, req, res ){
   res.json({ errors: [ err ] });
 }
 
+function createJSON(err) {
+  return ({ errors: [ err ] });
+}
+
 function handleNotImplemented(req, res){
   handleError(types.notImplemented, req, res);
 }
@@ -50,5 +62,6 @@ function handleNotImplemented(req, res){
 module.exports = {
   ...types,
   handleError,
-  handleNotImplemented
+  handleNotImplemented,
+  createJSON
 }
