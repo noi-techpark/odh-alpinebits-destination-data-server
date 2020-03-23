@@ -1,0 +1,2701 @@
+{
+  "type": "object",
+  "properties": {
+    "data": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "oneOf": [
+              {
+                "$ref": "#/definitions/trails"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "included": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "anyOf": [
+              {
+                "if": {
+                  "properties": {
+                    "type": {
+                      "const": "lifts"
+                    }
+                  }
+                },
+                "then": {
+                  "allOf": [
+                    {
+                      "$ref": "#/definitions/lifts"
+                    }
+                  ]
+                }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "type": {
+                      "const": "mediaObjects"
+                    }
+                  }
+                },
+                "then": {
+                  "allOf": [
+                    {
+                      "$ref": "#/definitions/mediaObjects"
+                    }
+                  ]
+                }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "type": {
+                      "const": "mountainAreas"
+                    }
+                  }
+                },
+                "then": {
+                  "allOf": [
+                    {
+                      "$ref": "#/definitions/mountainAreas"
+                    }
+                  ]
+                }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "type": {
+                      "const": "snowparks"
+                    }
+                  }
+                },
+                "then": {
+                  "allOf": [
+                    {
+                      "$ref": "#/definitions/snowparks"
+                    }
+                  ]
+                }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "type": {
+                      "const": "trails"
+                    }
+                  }
+                },
+                "then": {
+                  "allOf": [
+                    {
+                      "$ref": "#/definitions/trails"
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "links": {
+      "type": "object",
+      "required": [
+        "self"
+      ]
+    },
+    "jsonapi": {
+      "type": "object",
+      "properties": {
+        "version": {
+          "const": "1.0"
+        }
+      },
+      "required": [
+        "version"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "definitions": {
+    "abstract": {
+      "$ref": "#/definitions/text"
+    },
+    "basicAttributes": {
+      "type": "object",
+      "properties": {
+        "abstract": {
+          "$ref": "#/definitions/abstract"
+        },
+        "categories": {
+          "$ref": "#/definitions/categories"
+        },
+        "description": {
+          "$ref": "#/definitions/description"
+        },
+        "name": {
+          "$ref": "#/definitions/name"
+        },
+        "shortName": {
+          "$ref": "#/definitions/shortName"
+        },
+        "url": {
+          "$ref": "#/definitions/url"
+        }
+      }
+    },
+    "categories": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/definitions/categoryString"
+          }
+        }
+      ]
+    },
+    "description": {
+      "$ref": "#/definitions/text"
+    },
+    "name": {
+      "$ref": "#/definitions/text"
+    },
+    "shortName": {
+      "$ref": "#/definitions/text"
+    },
+    "url": {
+      "$ref": "#/definitions/urlDatatype"
+    },
+    "basicMeta": {
+      "type": "object",
+      "properties": {
+        "dataProvider": {
+          "$ref": "#/definitions/dataProvider"
+        },
+        "lastUpdate": {
+          "$ref": "#/definitions/lastUpdate"
+        }
+      },
+      "required": [
+        "dataProvider",
+        "lastUpdate"
+      ]
+    },
+    "dataProvider": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "string",
+          "format": "uri"
+        }
+      ]
+    },
+    "lastUpdate": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "string",
+          "format": "date-time"
+        }
+      ]
+    },
+    "allowedTypes": {
+      "type": "string",
+      "minLength": 1
+    },
+    "basicRelationships": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "object",
+          "additionalProperties": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/definitions/relationshipToOne"
+              },
+              {
+                "$ref": "#/definitions/relationshipToMany"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "link": {
+      "type": "object",
+      "additionalProperties": {
+        "oneOf": [
+          {
+            "type": "null"
+          },
+          {
+            "type": "string",
+            "format": "uri"
+          }
+        ]
+      }
+    },
+    "links": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "object",
+          "additionalProperties": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "type": "string",
+                "format": "uri"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "relationshipToMany": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "data": {
+              "$ref": "#/definitions/referenceArray"
+            },
+            "links": {
+              "$ref": "#/definitions/links"
+            }
+          },
+          "required": [
+            "data",
+            "links"
+          ]
+        }
+      ]
+    },
+    "referenceObject": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "type": {
+              "$ref": "#/definitions/allowedTypes"
+            },
+            "id": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "required": [
+            "type",
+            "id"
+          ]
+        }
+      ]
+    },
+    "referenceArray": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/definitions/referenceObject"
+          }
+        }
+      ]
+    },
+    "relationshipToOne": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "data": {
+              "$ref": "#/definitions/referenceObject"
+            },
+            "links": {
+              "$ref": "#/definitions/links"
+            }
+          },
+          "required": [
+            "data",
+            "links"
+          ]
+        }
+      ]
+    },
+    "address": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "categories": {
+              "oneOf": [
+                {
+                  "type": "null"
+                },
+                {
+                  "type": "array",
+                  "minItems": 1,
+                  "items": {
+                    "$ref": "#/definitions/categoryString"
+                  }
+                }
+              ]
+            },
+            "city": {
+              "$ref": "#/definitions/text"
+            },
+            "complement": {
+              "$ref": "#/definitions/text"
+            },
+            "country": {
+              "$ref": "#/definitions/countryCodes"
+            },
+            "region": {
+              "$ref": "#/definitions/text"
+            },
+            "street": {
+              "$ref": "#/definitions/text"
+            },
+            "zipcode": {
+              "oneOf": [
+                {
+                  "type": "null"
+                },
+                {
+                  "type": "string",
+                  "minLength": 1
+                }
+              ]
+            }
+          },
+          "required": [
+            "categories",
+            "city",
+            "complement",
+            "country",
+            "region",
+            "street",
+            "zipcode"
+          ],
+          "not": {
+            "properties": {
+              "city": {
+                "type": "null"
+              },
+              "country": {
+                "type": "null"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "contactPoint": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "address": {
+              "$ref": "#/definitions/address"
+            },
+            "availableHours": {
+              "$ref": "#/definitions/hoursSpecifications"
+            },
+            "email": {
+              "type": "string",
+              "format": "email"
+            },
+            "telephone": {
+              "oneOf": [
+                {
+                  "type": "null"
+                },
+                {
+                  "type": "string",
+                  "minLength": 1
+                }
+              ]
+            }
+          },
+          "required": [
+            "address",
+            "availableHours",
+            "email",
+            "telephone"
+          ],
+          "anyOf": [
+            {
+              "not": {
+                "properties": {
+                  "address": {
+                    "type": "null"
+                  }
+                }
+              }
+            },
+            {
+              "not": {
+                "properties": {
+                  "email": {
+                    "type": "null"
+                  }
+                }
+              }
+            },
+            {
+              "not": {
+                "properties": {
+                  "telephone": {
+                    "type": "null"
+                  }
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "countryCodes": {
+      "type": "string",
+      "pattern": "[A-Z]{2}"
+    },
+    "geometry": {
+      "oneOf": [
+        {
+          "$ref": "#/definitions/geometryPoint"
+        },
+        {
+          "$ref": "#/definitions/geometryMultiPoint"
+        },
+        {
+          "$ref": "#/definitions/geometryLineString"
+        },
+        {
+          "$ref": "#/definitions/geometryMultiLineString"
+        },
+        {
+          "$ref": "#/definitions/geometryPolygon"
+        },
+        {
+          "$ref": "#/definitions/geometryMultiPolygon"
+        }
+      ]
+    },
+    "geometryPoint": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "const": "Point"
+        },
+        "coordinates": {
+          "type": "array",
+          "minItems": 2,
+          "items": {
+            "type": "number"
+          }
+        }
+      },
+      "required": [
+        "type",
+        "coordinates"
+      ]
+    },
+    "geometryMultiPoint": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "const": "MultiPoint"
+        },
+        "coordinates": {
+          "type": "array",
+          "items": {
+            "type": "array",
+            "minItems": 2,
+            "items": {
+              "type": "number"
+            }
+          }
+        }
+      },
+      "required": [
+        "type",
+        "coordinates"
+      ]
+    },
+    "geometryLineString": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "const": "LineString"
+        },
+        "coordinates": {
+          "type": "array",
+          "minItems": 2,
+          "items": {
+            "type": "array",
+            "minItems": 2,
+            "items": {
+              "type": "number"
+            }
+          }
+        }
+      },
+      "required": [
+        "type",
+        "coordinates"
+      ]
+    },
+    "geometryMultiLineString": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "const": "MultiLineString"
+        },
+        "coordinates": {
+          "type": "array",
+          "items": {
+            "type": "array",
+            "minItems": 2,
+            "items": {
+              "type": "array",
+              "minItems": 2,
+              "items": {
+                "type": "number"
+              }
+            }
+          }
+        }
+      },
+      "required": [
+        "type",
+        "coordinates"
+      ]
+    },
+    "geometryPolygon": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "const": "Polygon"
+        },
+        "coordinates": {
+          "type": "array",
+          "items": {
+            "type": "array",
+            "minItems": 4,
+            "items": {
+              "type": "array",
+              "minItems": 2,
+              "items": {
+                "type": "number"
+              }
+            }
+          }
+        }
+      },
+      "required": [
+        "type",
+        "coordinates"
+      ]
+    },
+    "geometryMultiPolygon": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "const": "MultiPolygon"
+        },
+        "coordinates": {
+          "type": "array",
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "array",
+              "minItems": 4,
+              "items": {
+                "type": "array",
+                "minItems": 2,
+                "items": {
+                  "type": "number"
+                }
+              }
+            }
+          }
+        }
+      },
+      "required": [
+        "type",
+        "coordinates"
+      ]
+    },
+    "optionalGeometries": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/definitions/geometry"
+          }
+        }
+      ]
+    },
+    "hoursSpecifications": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "object"
+        },
+        {
+          "type": "array"
+        }
+      ]
+    },
+    "languageCodes": {
+      "type": "string",
+      "pattern": "[a-z]{3}"
+    },
+    "snowCondition": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "baseSnow": {
+              "type": "integer"
+            },
+            "baseSnowRange": {
+              "oneOf": [
+                {
+                  "type": "null"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "lower": {
+                      "type": "integer"
+                    },
+                    "upper": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              ]
+            },
+            "groomed": {
+              "oneOf": [
+                {
+                  "type": "null"
+                },
+                {
+                  "type": "boolean"
+                }
+              ]
+            },
+            "latestStorm": {
+              "oneOf": [
+                {
+                  "type": "null"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "obtainedIn": {
+              "oneOf": [
+                {
+                  "type": "null"
+                },
+                {
+                  "type": "string",
+                  "format": "date"
+                },
+                {
+                  "type": "string",
+                  "format": "date-time"
+                }
+              ]
+            },
+            "primarySurface": {
+              "$ref": "#/definitions/categoryString"
+            },
+            "secondarySurface": {
+              "$ref": "#/definitions/categoryString"
+            },
+            "snowMaking": {
+              "oneOf": [
+                {
+                  "type": "null"
+                },
+                {
+                  "type": "boolean"
+                }
+              ]
+            },
+            "snowOverNight": {
+              "oneOf": [
+                {
+                  "type": "null"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            }
+          },
+          "required": [
+            "baseSnow",
+            "baseSnowRange",
+            "groomed",
+            "latestStorm",
+            "obtainedIn",
+            "primarySurface",
+            "secondarySurface",
+            "snowMaking",
+            "snowOverNight"
+          ]
+        }
+      ]
+    },
+    "text": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "object",
+          "minProperties": 1,
+          "propertyNames": {
+            "$ref": "#/definitions/languageCodes"
+          },
+          "additionalProperties": {
+            "type": "string"
+          }
+        }
+      ]
+    },
+    "categoryString": {
+      "type": "string",
+      "regex": "^([a-z]|[A-Z]|[0-9])+/([a-z]|[A-Z]|[0-9])+$"
+    },
+    "urlDatatype": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "string",
+          "format": "uri"
+        },
+        {
+          "type": "object",
+          "propertyNames": {
+            "$ref": "#/definitions/languageCodes"
+          },
+          "additionalProperties": {
+            "type": "string"
+          }
+        }
+      ]
+    },
+    "snowparkDifficulty": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "string",
+          "enum": [
+            "beginner",
+            "intermediate",
+            "advanced",
+            "expert"
+          ]
+        }
+      ]
+    },
+    "snowparkFeatures": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "enum": [
+              "jump",
+              "jib",
+              "pipe",
+              "rail"
+            ]
+          }
+        }
+      ]
+    },
+    "trailDifficulty": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "eu": {
+              "oneOf": [
+                {
+                  "type": "null"
+                },
+                {
+                  "type": "string",
+                  "enum": [
+                    "novice",
+                    "beginner",
+                    "intermediate",
+                    "expert"
+                  ]
+                }
+              ]
+            },
+            "us": {
+              "oneOf": [
+                {
+                  "type": "null"
+                },
+                {
+                  "type": "string",
+                  "enum": [
+                    "beginner",
+                    "beginner-intermediate",
+                    "intermediate",
+                    "intermediate-advanced",
+                    "expert"
+                  ]
+                }
+              ]
+            }
+          },
+          "additionalProperties": false,
+          "if": {
+            "anyOf": [
+              {
+                "properties": {
+                  "eu": {
+                    "type": "null"
+                  }
+                }
+              },
+              {
+                "properties": {
+                  "us": {
+                    "type": "null"
+                  }
+                }
+              }
+            ]
+          },
+          "then": {
+            "anyOf": [
+              {
+                "properties": {
+                  "eu": {
+                    "not": {
+                      "type": "null"
+                    }
+                  }
+                }
+              },
+              {
+                "properties": {
+                  "us": {
+                    "not": {
+                      "type": "null"
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "optionalPositiveInteger": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "integer",
+          "minimum": 0
+        }
+      ]
+    },
+    "optionalNonZeroPositiveInteger": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "integer",
+          "minimum": 1
+        }
+      ]
+    },
+    "optionalNonEmptyString": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "string",
+          "minLength": 1
+        }
+      ]
+    },
+    "optionalDateOrDateTime": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "string",
+          "format": "date"
+        },
+        {
+          "type": "string",
+          "format": "date-time"
+        }
+      ]
+    },
+    "openingSpecification": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "opens": {
+              "type": "string",
+              "format": "time"
+            },
+            "closes": {
+              "type": "string",
+              "format": "time"
+            }
+          },
+          "required": [
+            "opens",
+            "closes"
+          ],
+          "additionalProperties": false
+        }
+      ]
+    },
+    "openingSpecificationArray": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "allOf": [
+              {
+                "type": "object"
+              },
+              {
+                "$ref": "#/definitions/openingSpecification"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "dailyHoursSpecification": {
+      "type": "object",
+      "propertyNames": {
+        "type": "string",
+        "format": "date"
+      },
+      "additionalProperties": {
+        "$ref": "#/definitions/openingSpecificationArray"
+      }
+    },
+    "weeklyHoursSpecification": {
+      "type": "object",
+      "properties": {
+        "validFrom": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "string",
+              "format": "date"
+            }
+          ]
+        },
+        "validTo": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "string",
+              "format": "date"
+            }
+          ]
+        },
+        "sunday": {
+          "$ref": "#/definitions/openingSpecificationArray"
+        },
+        "monday": {
+          "$ref": "#/definitions/openingSpecificationArray"
+        },
+        "tuesday": {
+          "$ref": "#/definitions/openingSpecificationArray"
+        },
+        "wednesday": {
+          "$ref": "#/definitions/openingSpecificationArray"
+        },
+        "thursday": {
+          "$ref": "#/definitions/openingSpecificationArray"
+        },
+        "friday": {
+          "$ref": "#/definitions/openingSpecificationArray"
+        },
+        "saturday": {
+          "$ref": "#/definitions/openingSpecificationArray"
+        }
+      },
+      "required": [
+        "validFrom",
+        "validTo",
+        "sunday",
+        "monday",
+        "tuesday",
+        "wednesday",
+        "thursday",
+        "friday",
+        "saturday"
+      ],
+      "additionalProperties": false
+    },
+    "openingHoursDaily": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "$ref": "#/definitions/dailyHoursSpecification"
+        }
+      ]
+    },
+    "openingHoursWeekly": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/definitions/weeklyHoursSpecification"
+          }
+        }
+      ]
+    },
+    "trails": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "const": "trails"
+        },
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "meta": {
+          "allOf": [
+            {
+              "$ref": "#/definitions/basicMeta"
+            }
+          ]
+        },
+        "links": {
+          "allOf": [
+            {
+              "$ref": "#/definitions/links"
+            },
+            {
+              "type": "object",
+              "required": [
+                "self"
+              ]
+            }
+          ]
+        },
+        "attributes": {
+          "allOf": [
+            {
+              "$ref": "#/definitions/basicAttributes"
+            },
+            {
+              "patternProperties": {
+                "name": {
+                  "type": "object"
+                }
+              }
+            },
+            {
+              "type": "object",
+              "properties": {
+                "address": {
+                  "$ref": "#/definitions/address"
+                },
+                "difficulty": {
+                  "$ref": "#/definitions/trailDifficulty"
+                },
+                "geometries": {
+                  "$ref": "#/definitions/optionalGeometries"
+                },
+                "howToArrive": {
+                  "$ref": "#/definitions/text"
+                },
+                "length": {
+                  "$ref": "#/definitions/optionalNonZeroPositiveInteger"
+                },
+                "maxAltitude": {
+                  "$ref": "#/definitions/optionalPositiveInteger"
+                },
+                "minAltitude": {
+                  "$ref": "#/definitions/optionalPositiveInteger"
+                },
+                "openingHours": {
+                  "$ref": "#/definitions/hoursSpecifications"
+                },
+                "snowCondition": {
+                  "$ref": "#/definitions/snowCondition"
+                }
+              }
+            }
+          ]
+        },
+        "relationships": {
+          "type": "object",
+          "properties": {
+            "connections": {
+              "oneOf": [
+                {
+                  "type": "null"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "oneOf": [
+                        {
+                          "type": "null"
+                        },
+                        {
+                          "type": "array",
+                          "minItems": 1,
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "minLength": 1
+                              },
+                              "type": {
+                                "type": "string",
+                                "enum": [
+                                  "lifts",
+                                  "mountainAreas",
+                                  "snowparks",
+                                  "trails"
+                                ]
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "type"
+                            ],
+                            "additionalProperties": false
+                          }
+                        }
+                      ]
+                    },
+                    "links": {
+                      "oneOf": [
+                        {
+                          "type": "null"
+                        },
+                        {
+                          "type": "object",
+                          "additionalProperties": {
+                            "oneOf": [
+                              {
+                                "type": "null"
+                              },
+                              {
+                                "type": "string",
+                                "format": "uri"
+                              }
+                            ]
+                          },
+                          "required": [
+                            "related"
+                          ]
+                        }
+                      ]
+                    }
+                  },
+                  "required": [
+                    "data",
+                    "links"
+                  ]
+                }
+              ]
+            },
+            "multimediaDescriptions": {
+              "oneOf": [
+                {
+                  "type": "null"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "oneOf": [
+                        {
+                          "type": "null"
+                        },
+                        {
+                          "type": "array",
+                          "minItems": 1,
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "minLength": 1
+                              },
+                              "type": {
+                                "type": "string",
+                                "enum": [
+                                  "mediaObjects"
+                                ]
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "type"
+                            ],
+                            "additionalProperties": false
+                          }
+                        }
+                      ]
+                    },
+                    "links": {
+                      "oneOf": [
+                        {
+                          "type": "null"
+                        },
+                        {
+                          "type": "object",
+                          "additionalProperties": {
+                            "oneOf": [
+                              {
+                                "type": "null"
+                              },
+                              {
+                                "type": "string",
+                                "format": "uri"
+                              }
+                            ]
+                          },
+                          "required": [
+                            "related"
+                          ]
+                        }
+                      ]
+                    }
+                  },
+                  "required": [
+                    "data",
+                    "links"
+                  ]
+                }
+              ]
+            }
+          },
+          "additionalProperties": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/definitions/relationshipToOne"
+              },
+              {
+                "$ref": "#/definitions/relationshipToMany"
+              }
+            ]
+          },
+          "required": []
+        }
+      }
+    },
+    "lifts": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "const": "lifts"
+        },
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "meta": {
+          "allOf": [
+            {
+              "$ref": "#/definitions/basicMeta"
+            }
+          ]
+        },
+        "links": {
+          "allOf": [
+            {
+              "$ref": "#/definitions/links"
+            },
+            {
+              "type": "object",
+              "required": [
+                "self"
+              ]
+            }
+          ]
+        },
+        "attributes": {
+          "allOf": [
+            {
+              "$ref": "#/definitions/basicAttributes"
+            },
+            {
+              "patternProperties": {
+                "name": {
+                  "type": "object"
+                }
+              }
+            },
+            {
+              "type": "object",
+              "properties": {
+                "address": {
+                  "$ref": "#/definitions/address"
+                },
+                "capacity": {
+                  "$ref": "#/definitions/optionalNonZeroPositiveInteger"
+                },
+                "geometries": {
+                  "$ref": "#/definitions/optionalGeometries"
+                },
+                "howToArrive": {
+                  "$ref": "#/definitions/text"
+                },
+                "length": {
+                  "$ref": "#/definitions/optionalNonZeroPositiveInteger"
+                },
+                "maxAltitude": {
+                  "$ref": "#/definitions/optionalNonZeroPositiveInteger"
+                },
+                "minAltitude": {
+                  "$ref": "#/definitions/optionalNonZeroPositiveInteger"
+                },
+                "openingHours": {
+                  "$ref": "#/definitions/hoursSpecifications"
+                },
+                "personsPerChair": {
+                  "$ref": "#/definitions/optionalNonZeroPositiveInteger"
+                }
+              }
+            }
+          ]
+        },
+        "relationships": {
+          "type": "object",
+          "properties": {
+            "connections": {
+              "oneOf": [
+                {
+                  "type": "null"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "oneOf": [
+                        {
+                          "type": "null"
+                        },
+                        {
+                          "type": "array",
+                          "minItems": 1,
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "minLength": 1
+                              },
+                              "type": {
+                                "type": "string",
+                                "enum": [
+                                  "lifts",
+                                  "mountainAreas",
+                                  "snowparks",
+                                  "trails"
+                                ]
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "type"
+                            ],
+                            "additionalProperties": false
+                          }
+                        }
+                      ]
+                    },
+                    "links": {
+                      "oneOf": [
+                        {
+                          "type": "null"
+                        },
+                        {
+                          "type": "object",
+                          "additionalProperties": {
+                            "oneOf": [
+                              {
+                                "type": "null"
+                              },
+                              {
+                                "type": "string",
+                                "format": "uri"
+                              }
+                            ]
+                          },
+                          "required": [
+                            "related"
+                          ]
+                        }
+                      ]
+                    }
+                  },
+                  "required": [
+                    "data",
+                    "links"
+                  ]
+                }
+              ]
+            },
+            "multimediaDescriptions": {
+              "oneOf": [
+                {
+                  "type": "null"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "oneOf": [
+                        {
+                          "type": "null"
+                        },
+                        {
+                          "type": "array",
+                          "minItems": 1,
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "minLength": 1
+                              },
+                              "type": {
+                                "type": "string",
+                                "enum": [
+                                  "mediaObjects"
+                                ]
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "type"
+                            ],
+                            "additionalProperties": false
+                          }
+                        }
+                      ]
+                    },
+                    "links": {
+                      "oneOf": [
+                        {
+                          "type": "null"
+                        },
+                        {
+                          "type": "object",
+                          "additionalProperties": {
+                            "oneOf": [
+                              {
+                                "type": "null"
+                              },
+                              {
+                                "type": "string",
+                                "format": "uri"
+                              }
+                            ]
+                          },
+                          "required": [
+                            "related"
+                          ]
+                        }
+                      ]
+                    }
+                  },
+                  "required": [
+                    "data",
+                    "links"
+                  ]
+                }
+              ]
+            }
+          },
+          "additionalProperties": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/definitions/relationshipToOne"
+              },
+              {
+                "$ref": "#/definitions/relationshipToMany"
+              }
+            ]
+          },
+          "required": []
+        }
+      }
+    },
+    "mediaObjects": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "const": "mediaObjects"
+        },
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "meta": {
+          "allOf": [
+            {
+              "$ref": "#/definitions/basicMeta"
+            }
+          ]
+        },
+        "links": {
+          "allOf": [
+            {
+              "$ref": "#/definitions/links"
+            },
+            {
+              "type": "object",
+              "required": [
+                "self"
+              ]
+            }
+          ]
+        },
+        "attributes": {
+          "allOf": [
+            {
+              "$ref": "#/definitions/basicAttributes"
+            },
+            {
+              "patternProperties": {
+                "url": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "object"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "type": "object",
+              "properties": {
+                "contentType": {
+                  "type": "string",
+                  "pattern": "^(application|audio|font|example|image|message|model|multipart|text|video)/[a-zA-Z0-9-.+]+$"
+                },
+                "duration": {
+                  "$ref": "#/definitions/optionalNonZeroPositiveInteger"
+                },
+                "height": {
+                  "$ref": "#/definitions/optionalNonZeroPositiveInteger"
+                },
+                "license": {
+                  "$ref": "#/definitions/optionalNonEmptyString"
+                },
+                "width": {
+                  "$ref": "#/definitions/optionalNonZeroPositiveInteger"
+                }
+              },
+              "allOf": [
+                {
+                  "if": {
+                    "properties": {
+                      "contentType": {
+                        "type": "string",
+                        "pattern": "^(application|font|example|image|message|model|multipart|text)/[a-zA-Z0-9-.+]+$"
+                      }
+                    }
+                  },
+                  "then": {
+                    "properties": {
+                      "duration": {
+                        "type": "null"
+                      }
+                    }
+                  }
+                },
+                {
+                  "if": {
+                    "properties": {
+                      "contentType": {
+                        "type": "string",
+                        "pattern": "^(application|audio|font|example|message|model|multipart|text)/[a-zA-Z0-9-.+]+$"
+                      }
+                    }
+                  },
+                  "then": {
+                    "properties": {
+                      "height": {
+                        "type": "null"
+                      },
+                      "width": {
+                        "type": "null"
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        "relationships": {
+          "type": "object",
+          "properties": {
+            "copyrightOwner": {
+              "oneOf": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "oneOf": [
+                        {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "type": "string",
+                              "minLength": 1
+                            },
+                            "type": {
+                              "type": "string",
+                              "enum": [
+                                "agents"
+                              ]
+                            }
+                          },
+                          "required": [
+                            "id",
+                            "type"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "links": {
+                      "oneOf": [
+                        {
+                          "type": "null"
+                        },
+                        {
+                          "type": "object",
+                          "additionalProperties": {
+                            "oneOf": [
+                              {
+                                "type": "null"
+                              },
+                              {
+                                "type": "string",
+                                "format": "uri"
+                              }
+                            ]
+                          },
+                          "required": [
+                            "related"
+                          ]
+                        }
+                      ]
+                    }
+                  },
+                  "required": [
+                    "data",
+                    "links"
+                  ]
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            }
+          },
+          "additionalProperties": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/definitions/relationshipToOne"
+              },
+              {
+                "$ref": "#/definitions/relationshipToMany"
+              }
+            ]
+          },
+          "required": []
+        }
+      }
+    },
+    "mountainAreas": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "const": "mountainAreas"
+        },
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "meta": {
+          "allOf": [
+            {
+              "$ref": "#/definitions/basicMeta"
+            }
+          ]
+        },
+        "links": {
+          "allOf": [
+            {
+              "$ref": "#/definitions/links"
+            },
+            {
+              "type": "object",
+              "required": [
+                "self"
+              ]
+            }
+          ]
+        },
+        "attributes": {
+          "allOf": [
+            {
+              "$ref": "#/definitions/basicAttributes"
+            },
+            {
+              "patternProperties": {
+                "name": {
+                  "type": "object"
+                }
+              }
+            },
+            {
+              "type": "object",
+              "properties": {
+                "address": {
+                  "$ref": "#/definitions/address"
+                },
+                "area": {
+                  "$ref": "#/definitions/optionalNonZeroPositiveInteger"
+                },
+                "geometries": {
+                  "$ref": "#/definitions/optionalGeometries"
+                },
+                "howToArrive": {
+                  "$ref": "#/definitions/text"
+                },
+                "maxAltitude": {
+                  "$ref": "#/definitions/optionalPositiveInteger"
+                },
+                "minAltitude": {
+                  "$ref": "#/definitions/optionalPositiveInteger"
+                },
+                "openingHours": {
+                  "$ref": "#/definitions/hoursSpecifications"
+                },
+                "snowCondition": {
+                  "$ref": "#/definitions/snowCondition"
+                },
+                "totalParkLength": {
+                  "$ref": "#/definitions/optionalNonZeroPositiveInteger"
+                },
+                "totalTrailLength": {
+                  "$ref": "#/definitions/optionalNonZeroPositiveInteger"
+                }
+              }
+            }
+          ]
+        },
+        "relationships": {
+          "type": "object",
+          "properties": {
+            "areaOwner": {
+              "oneOf": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "oneOf": [
+                        {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "type": "string",
+                              "minLength": 1
+                            },
+                            "type": {
+                              "type": "string",
+                              "enum": [
+                                "agents"
+                              ]
+                            }
+                          },
+                          "required": [
+                            "id",
+                            "type"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "links": {
+                      "oneOf": [
+                        {
+                          "type": "null"
+                        },
+                        {
+                          "type": "object",
+                          "additionalProperties": {
+                            "oneOf": [
+                              {
+                                "type": "null"
+                              },
+                              {
+                                "type": "string",
+                                "format": "uri"
+                              }
+                            ]
+                          },
+                          "required": [
+                            "related"
+                          ]
+                        }
+                      ]
+                    }
+                  },
+                  "required": [
+                    "data",
+                    "links"
+                  ]
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "connections": {
+              "oneOf": [
+                {
+                  "type": "null"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "oneOf": [
+                        {
+                          "type": "null"
+                        },
+                        {
+                          "type": "array",
+                          "minItems": 1,
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "minLength": 1
+                              },
+                              "type": {
+                                "type": "string",
+                                "enum": [
+                                  "lifts",
+                                  "mountainAreas",
+                                  "snowparks",
+                                  "trails"
+                                ]
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "type"
+                            ],
+                            "additionalProperties": false
+                          }
+                        }
+                      ]
+                    },
+                    "links": {
+                      "oneOf": [
+                        {
+                          "type": "null"
+                        },
+                        {
+                          "type": "object",
+                          "additionalProperties": {
+                            "oneOf": [
+                              {
+                                "type": "null"
+                              },
+                              {
+                                "type": "string",
+                                "format": "uri"
+                              }
+                            ]
+                          },
+                          "required": [
+                            "related"
+                          ]
+                        }
+                      ]
+                    }
+                  },
+                  "required": [
+                    "data",
+                    "links"
+                  ]
+                }
+              ]
+            },
+            "lifts": {
+              "oneOf": [
+                {
+                  "type": "null"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "oneOf": [
+                        {
+                          "type": "null"
+                        },
+                        {
+                          "type": "array",
+                          "minItems": 1,
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "minLength": 1
+                              },
+                              "type": {
+                                "type": "string",
+                                "enum": [
+                                  "lifts"
+                                ]
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "type"
+                            ],
+                            "additionalProperties": false
+                          }
+                        }
+                      ]
+                    },
+                    "links": {
+                      "oneOf": [
+                        {
+                          "type": "null"
+                        },
+                        {
+                          "type": "object",
+                          "additionalProperties": {
+                            "oneOf": [
+                              {
+                                "type": "null"
+                              },
+                              {
+                                "type": "string",
+                                "format": "uri"
+                              }
+                            ]
+                          },
+                          "required": [
+                            "related"
+                          ]
+                        }
+                      ]
+                    }
+                  },
+                  "required": [
+                    "data",
+                    "links"
+                  ]
+                }
+              ]
+            },
+            "multimediaDescriptions": {
+              "oneOf": [
+                {
+                  "type": "null"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "oneOf": [
+                        {
+                          "type": "null"
+                        },
+                        {
+                          "type": "array",
+                          "minItems": 1,
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "minLength": 1
+                              },
+                              "type": {
+                                "type": "string",
+                                "enum": [
+                                  "mediaObjects"
+                                ]
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "type"
+                            ],
+                            "additionalProperties": false
+                          }
+                        }
+                      ]
+                    },
+                    "links": {
+                      "oneOf": [
+                        {
+                          "type": "null"
+                        },
+                        {
+                          "type": "object",
+                          "additionalProperties": {
+                            "oneOf": [
+                              {
+                                "type": "null"
+                              },
+                              {
+                                "type": "string",
+                                "format": "uri"
+                              }
+                            ]
+                          },
+                          "required": [
+                            "related"
+                          ]
+                        }
+                      ]
+                    }
+                  },
+                  "required": [
+                    "data",
+                    "links"
+                  ]
+                }
+              ]
+            },
+            "snowparks": {
+              "oneOf": [
+                {
+                  "type": "null"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "oneOf": [
+                        {
+                          "type": "null"
+                        },
+                        {
+                          "type": "array",
+                          "minItems": 1,
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "minLength": 1
+                              },
+                              "type": {
+                                "type": "string",
+                                "enum": [
+                                  "snowparks"
+                                ]
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "type"
+                            ],
+                            "additionalProperties": false
+                          }
+                        }
+                      ]
+                    },
+                    "links": {
+                      "oneOf": [
+                        {
+                          "type": "null"
+                        },
+                        {
+                          "type": "object",
+                          "additionalProperties": {
+                            "oneOf": [
+                              {
+                                "type": "null"
+                              },
+                              {
+                                "type": "string",
+                                "format": "uri"
+                              }
+                            ]
+                          },
+                          "required": [
+                            "related"
+                          ]
+                        }
+                      ]
+                    }
+                  },
+                  "required": [
+                    "data",
+                    "links"
+                  ]
+                }
+              ]
+            },
+            "subAreas": {
+              "oneOf": [
+                {
+                  "type": "null"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "oneOf": [
+                        {
+                          "type": "null"
+                        },
+                        {
+                          "type": "array",
+                          "minItems": 1,
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "minLength": 1
+                              },
+                              "type": {
+                                "type": "string",
+                                "enum": [
+                                  "mountainAreas"
+                                ]
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "type"
+                            ],
+                            "additionalProperties": false
+                          }
+                        }
+                      ]
+                    },
+                    "links": {
+                      "oneOf": [
+                        {
+                          "type": "null"
+                        },
+                        {
+                          "type": "object",
+                          "additionalProperties": {
+                            "oneOf": [
+                              {
+                                "type": "null"
+                              },
+                              {
+                                "type": "string",
+                                "format": "uri"
+                              }
+                            ]
+                          },
+                          "required": [
+                            "related"
+                          ]
+                        }
+                      ]
+                    }
+                  },
+                  "required": [
+                    "data",
+                    "links"
+                  ]
+                }
+              ]
+            },
+            "trails": {
+              "oneOf": [
+                {
+                  "type": "null"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "oneOf": [
+                        {
+                          "type": "null"
+                        },
+                        {
+                          "type": "array",
+                          "minItems": 1,
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "minLength": 1
+                              },
+                              "type": {
+                                "type": "string",
+                                "enum": [
+                                  "trails"
+                                ]
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "type"
+                            ],
+                            "additionalProperties": false
+                          }
+                        }
+                      ]
+                    },
+                    "links": {
+                      "oneOf": [
+                        {
+                          "type": "null"
+                        },
+                        {
+                          "type": "object",
+                          "additionalProperties": {
+                            "oneOf": [
+                              {
+                                "type": "null"
+                              },
+                              {
+                                "type": "string",
+                                "format": "uri"
+                              }
+                            ]
+                          },
+                          "required": [
+                            "related"
+                          ]
+                        }
+                      ]
+                    }
+                  },
+                  "required": [
+                    "data",
+                    "links"
+                  ]
+                }
+              ]
+            }
+          },
+          "additionalProperties": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/definitions/relationshipToOne"
+              },
+              {
+                "$ref": "#/definitions/relationshipToMany"
+              }
+            ]
+          },
+          "required": []
+        }
+      }
+    },
+    "snowparks": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "const": "snowparks"
+        },
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "meta": {
+          "allOf": [
+            {
+              "$ref": "#/definitions/basicMeta"
+            }
+          ]
+        },
+        "links": {
+          "allOf": [
+            {
+              "$ref": "#/definitions/links"
+            },
+            {
+              "type": "object",
+              "required": [
+                "self"
+              ]
+            }
+          ]
+        },
+        "attributes": {
+          "allOf": [
+            {
+              "$ref": "#/definitions/basicAttributes"
+            },
+            {
+              "patternProperties": {
+                "name": {
+                  "type": "object"
+                }
+              }
+            },
+            {
+              "type": "object",
+              "properties": {
+                "address": {
+                  "$ref": "#/definitions/address"
+                },
+                "difficulty": {
+                  "$ref": "#/definitions/snowparkDifficulty"
+                },
+                "features": {
+                  "$ref": "#/definitions/categories"
+                },
+                "geometries": {
+                  "$ref": "#/definitions/optionalGeometries"
+                },
+                "howToArrive": {
+                  "$ref": "#/definitions/text"
+                },
+                "length": {
+                  "$ref": "#/definitions/optionalNonZeroPositiveInteger"
+                },
+                "maxAltitude": {
+                  "$ref": "#/definitions/optionalPositiveInteger"
+                },
+                "minAltitude": {
+                  "$ref": "#/definitions/optionalPositiveInteger"
+                },
+                "openingHours": {
+                  "$ref": "#/definitions/hoursSpecifications"
+                },
+                "snowCondition": {
+                  "$ref": "#/definitions/snowCondition"
+                }
+              }
+            }
+          ]
+        },
+        "relationships": {
+          "type": "object",
+          "properties": {
+            "connections": {
+              "oneOf": [
+                {
+                  "type": "null"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "oneOf": [
+                        {
+                          "type": "null"
+                        },
+                        {
+                          "type": "array",
+                          "minItems": 1,
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "minLength": 1
+                              },
+                              "type": {
+                                "type": "string",
+                                "enum": [
+                                  "lifts",
+                                  "mountainAreas",
+                                  "snowparks",
+                                  "trails"
+                                ]
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "type"
+                            ],
+                            "additionalProperties": false
+                          }
+                        }
+                      ]
+                    },
+                    "links": {
+                      "oneOf": [
+                        {
+                          "type": "null"
+                        },
+                        {
+                          "type": "object",
+                          "additionalProperties": {
+                            "oneOf": [
+                              {
+                                "type": "null"
+                              },
+                              {
+                                "type": "string",
+                                "format": "uri"
+                              }
+                            ]
+                          },
+                          "required": [
+                            "related"
+                          ]
+                        }
+                      ]
+                    }
+                  },
+                  "required": [
+                    "data",
+                    "links"
+                  ]
+                }
+              ]
+            },
+            "multimediaDescriptions": {
+              "oneOf": [
+                {
+                  "type": "null"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "oneOf": [
+                        {
+                          "type": "null"
+                        },
+                        {
+                          "type": "array",
+                          "minItems": 1,
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "minLength": 1
+                              },
+                              "type": {
+                                "type": "string",
+                                "enum": [
+                                  "mediaObjects"
+                                ]
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "type"
+                            ],
+                            "additionalProperties": false
+                          }
+                        }
+                      ]
+                    },
+                    "links": {
+                      "oneOf": [
+                        {
+                          "type": "null"
+                        },
+                        {
+                          "type": "object",
+                          "additionalProperties": {
+                            "oneOf": [
+                              {
+                                "type": "null"
+                              },
+                              {
+                                "type": "string",
+                                "format": "uri"
+                              }
+                            ]
+                          },
+                          "required": [
+                            "related"
+                          ]
+                        }
+                      ]
+                    }
+                  },
+                  "required": [
+                    "data",
+                    "links"
+                  ]
+                }
+              ]
+            }
+          },
+          "additionalProperties": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/definitions/relationshipToOne"
+              },
+              {
+                "$ref": "#/definitions/relationshipToMany"
+              }
+            ]
+          },
+          "required": []
+        }
+      }
+    }
+  },
+  "required": [
+    "data",
+    "links",
+    "jsonapi"
+  ]
+}

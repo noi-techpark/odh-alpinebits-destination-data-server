@@ -1,5 +1,5 @@
 function getBaseUrl(req) {
-  return process.env.REF_SERVER_URL + '/api/v1';
+  return process.env.REF_SERVER_URL + '/1.0';
 }
 
 function getSelfUrl(req) {

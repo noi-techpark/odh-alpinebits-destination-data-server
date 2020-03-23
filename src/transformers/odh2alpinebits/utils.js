@@ -1,3 +1,4 @@
+const shajs = require('sha.js')
 const sanitizeHtml = require('sanitize-html');
 const templates = require('./templates');
 
@@ -14,20 +15,44 @@ const htmlSanitizeOpts = {
 
 // isLanguageNested: true => object.property.it
 // isLanguageNested: false => object.it.property
-function transformMultilingualFields (source, target, fieldMapping, languageMapping, isLanguageNested, ignoreNullValues) {
+function transformMultilingualFields(source, target, fieldMapping, isLanguageNested, ignoreNullValues) {
   for (fieldEntry of fieldMapping) {
     let [sourceField, targetField] = fieldEntry;
 
     for (languageEntry of languageMapping) {
       let [sourceLanguage, targetLanguage] = languageEntry;
 
-      if(!target[targetField])
-        target[targetField] = {}
+      if(isLanguageNested && source[sourceField] && (!ignoreNullValues || source[sourceField][sourceLanguage])){
+        let value = sanitizeHtml(source[sourceField][sourceLanguage], htmlSanitizeOpts);
+        
+        if(typeof value === 'string' || value instanceof String){
+          value = value.trim();
+        
+          if(value==="")
+            continue;
+        }
 
-      if(isLanguageNested && source[sourceField] && (!ignoreNullValues || source[sourceField][sourceLanguage]))
-        target[targetField][targetLanguage] = sanitizeHtml(source[sourceField][sourceLanguage], htmlSanitizeOpts);
-      else if (!isLanguageNested && source[sourceLanguage] && (!ignoreNullValues || source[sourceLanguage][sourceField]))
-        target[targetField][targetLanguage] = sanitizeHtml(source[sourceLanguage][sourceField], htmlSanitizeOpts);
+        if(value===null)
+          continue
+          
+        target[targetField] = safeAdd(target[targetField], targetLanguage, value)
+      }
+        
+      else if (!isLanguageNested && source[sourceLanguage] && (!ignoreNullValues || source[sourceLanguage][sourceField])){
+        let value = sanitizeHtml(source[sourceLanguage][sourceField], htmlSanitizeOpts)
+
+        if(typeof value === 'string' || value instanceof String){
+          value = value.trim();
+        
+          if(value==="")
+            continue;
+        }
+
+        if(value===null)
+          continue
+
+        target[targetField] = safeAdd(target[targetField], targetLanguage, value)
+      }
     }
   }
 }
@@ -51,6 +76,20 @@ function transformArrayFields (source, target, fieldMapping, valueMapping = {}) 
     }
   }
 }
+function safeGetString(path, object) {
+  let value = path.reduce( (xs, x) => (xs && xs[x]) ? xs[x] : null, object );
+
+  if(typeof value === 'string' || value instanceof String){
+    value = value.trim();
+    
+    if(!value)
+      return null;
+    
+    return value;
+  }
+  
+  return null;
+}
 
 function safeGet (path, object) {
   let value = path.reduce( (xs, x) => (xs && xs[x]) ? xs[x] : null, object );
@@ -61,37 +100,99 @@ function safeGet (path, object) {
   return value;
 }
 
+function safeGetOne(paths, object){
+  for (path of paths){
+    let value = safeGet(path, object);
+
+    if(value)
+      return value;
+  }
+
+  return null;
+}
+
+function safePush(array, value){
+  if (value===null || (typeof value==="string" && value.trim().length===0))
+    return array;
+
+  if(!array)
+    array = [];
+
+  array.push(value);
+
+  return array;
+}
+
+function safeAdd(object, field, value){
+  if(!object)
+    object = {}
+
+  object[field] = value;
+  return object;
+}
+
+function addRelationshipToMany(relationships, relationshipName, resource, selfLink){
+  if(!relationships[relationshipName]){
+    relationships[relationshipName] = {
+      data: [],
+      links: {
+        related: encodeURI(selfLink + "/" + relationshipName)
+      }
+    }
+  }
+  
+  const relationship = { 
+    type: resource.type, 
+    id: resource.id 
+  };
+
+  relationships[relationshipName].data.push(relationship);
+}
+
+function addRelationshipToOne(relationships, relationshipName, resource, selfLink){
+  relationships[relationshipName] = {
+    data: { 
+      type: resource.type, 
+      id: resource.id 
+    },
+    links: {
+      related: encodeURI(selfLink + "/" + relationshipName)
+    }
+  }
+}
+
 function transformBasicProperties(source) {
   let target = {};
-  let fieldMapping = [['Id','id']]
-  transformFields(source, target, fieldMapping);
 
   // Basic textual descriptions
   if(source.Detail) {
-    fieldMapping = [['Title','name'],['BaseText','description']];
-    transformMultilingualFields(source.Detail, target, fieldMapping, languageMapping, false, true);
+    fieldMapping = [['Title','name'],['BaseText','description'],['Header','shortName'],['SubHeader','abstract']];
+    transformMultilingualFields(source.Detail, target, fieldMapping, false, true);
   }
 
   if(source.ContactInfos) {
     fieldMapping = [['Url', 'url']];
-    transformMultilingualFields(source.ContactInfos, target, fieldMapping, languageMapping, false, true);
+    transformMultilingualFields(source.ContactInfos, target, fieldMapping, false, true);
   }
 
   return target;
 }
 
 function transformMetadata(source) {
-  target = {};
-  target.lastUpdate = source.LastChange+'+02:00';
-  target.dataProvider = "http://tourism.opendatahub.bz.it/";
-  return target;
+  meta = {};
+  
+  if(typeof source.LastChange === 'string' || source.LastChange instanceof String){
+    meta.lastUpdate = source.LastChange.replace(/Z/g,'')+'+01:00';
+  }
+  meta.dataProvider = "http://tourism.opendatahub.bz.it/";
+  return meta;
 }
 
 function transformOperationSchedule(operationSchedule) {
-  let openingHours = []
-
   if(!operationSchedule)
-    return openingHours;
+    return null;
+
+  let openingHours = [];
 
   operationSchedule.forEach( entry => {
     let newEntry = templates.createObject('HoursSpecification');
@@ -101,52 +202,103 @@ function transformOperationSchedule(operationSchedule) {
     newEntry.validFrom = entry.Start.replace(/T.*/,'');
     newEntry.validTo = entry.Stop.replace(/T.*/,'');
 
-    if(entry.OperationScheduleTime)
-      entry.OperationScheduleTime.forEach( hours =>
-        newEntry.hours.push({ opens: hours.Start, closes: hours.End})
-      );
+    if(Array.isArray(entry.OperationScheduleTime) && entry.OperationScheduleTime.length>0) {
+
+      entry.OperationScheduleTime.forEach( hours => {
+        newEntry.hours = safePush(newEntry.hours, { opens: hours.Start, closes: hours.End });
+        newEntry.daysOfWeek = []
+
+        if(hours.Sunday)
+          newEntry.daysOfWeek.push('sunday');
+        if(hours.Monday)
+          newEntry.daysOfWeek.push('monday');
+        if(hours.Tuesday)
+          newEntry.daysOfWeek.push('tuesday');
+        if(hours.Wednesday)
+          newEntry.daysOfWeek.push('wednesday');
+        if(hours.Thuresday)
+          newEntry.daysOfWeek.push('thursday');
+        if(hours.Friday)
+          newEntry.daysOfWeek.push('friday');
+        if(hours.Saturday)
+          newEntry.daysOfWeek.push('saturday');
+      });
+
+      if(newEntry.daysOfWeek.length===0)
+        newEntry.daysOfWeek = null;
+    }
   })
 
   return openingHours;
 }
 
 function transformHowToArrive(detail) {
-  let howToArrive = {};
 
   const deGetThere = safeGet(['de','GetThereText'], detail);
   const itGetThere = safeGet(['it','GetThereText'], detail);
   const enGetThere = safeGet(['en','GetThereText'], detail);
 
   if(deGetThere || itGetThere || enGetThere)
-    howToArrive = {
+    return ({
       deu: sanitizeHtml(deGetThere, htmlSanitizeOpts),
       ita: sanitizeHtml(itGetThere, htmlSanitizeOpts),
       eng: sanitizeHtml(enGetThere, htmlSanitizeOpts)
-    };
+    });
 
-  return howToArrive;
+  return null;
 }
 
 function transformAddress(contactInfo, fields){
   let address = templates.createObject('Address');
 
-  if(fields.includes('city'))
-    address.city = {
-      deu: safeGet(['de','City'], contactInfo),
-      ita: safeGet(['it','City'], contactInfo),
-      eng: safeGet(['en','City'], contactInfo)
-    };
+  if(fields.includes('street')) {
+    address.street = {};
+
+    let deu = safeGet(['de','Address'], contactInfo)
+    if(deu)
+      address.street.deu = deu;
+
+    let ita = safeGet(['it','Address'], contactInfo)
+    if(ita)
+      address.street.ita = ita;
+
+    let eng = safeGet(['en','Address'], contactInfo)
+    if(eng)
+      address.street.eng = eng;
+    
+    if(!address.street.deu && !address.street.eng && !address.street.ita)
+      address.street = null;
+  }
+  
+
+  if(fields.includes('city')){
+    address.city = {};
+
+    let deu = safeGet(['de','City'], contactInfo)
+    if(deu)
+      address.city.deu = deu;
+
+    let ita = safeGet(['it','City'], contactInfo)
+    if(ita)
+      address.city.ita = ita;
+
+    let eng = safeGet(['en','City'], contactInfo)
+    if(eng)
+      address.city.eng = eng;
+    
+    if(!address.city.deu && !address.city.eng && !address.city.ita)
+      address.city = null;
+  }
 
   if(fields.includes('country'))
-    address.country = safeGet(['de','CountryCode'], contactInfo) ||
-      safeGet(['it','CountryCode'], contactInfo) || safeGet(['en','CountryCode'], contactInfo);
+    address.country = safeGetOne([['de','CountryCode'],['it','CountryCode'],['en','CountryCode']], contactInfo);
 
   if(fields.includes('zipcode'))
-    address.zipcode = safeGet(['de','ZipCode'], contactInfo) ||
-      safeGet(['it','ZipCode'], contactInfo) || safeGet(['en','ZipCode'], contactInfo);
-
-  address.region = {}
-
+    address.zipcode = safeGetOne([['de','ZipCode'],['it','ZipCode'],['en','ZipCode']], contactInfo);
+  
+  if(!address.city || !address.country)
+    return null;
+  
   return address;
 }
 
@@ -180,20 +332,52 @@ function transformGeometry(gpsInfo, infoKeys, gpsPoints, gpsTrack){
     }
   }
   else if(gpsPoints && Object.keys(gpsPoints)) {
-    console.log('Has GpsPoints:', Object.keys(gpsPoints).length);
-    return geometry;
+    // console.log('Has GpsPoints:', Object.keys(gpsPoints).length);
+    return null;
   }
   else if(gpsTrack && gpsTrack.length>=1) {
-    console.log('Has GpsTrack:', gpsTrack.length);
-    return geometry;
+    // console.log('Has GpsTrack:', gpsTrack.length);
+    return null;
   }
 
   return geometry;
 }
 
+function isClockwise(poly) {
+    var sum = 0
+    for (var i=0; i<poly.length-1; i++) {
+        var cur = poly[i],
+            next = poly[i+1]
+        sum += (next[0] - cur[0]) * (next[1] + cur[1])
+    }
+    return sum > 0
+}
+
+function addIncludedResource(included, resource) {
+  if(!included[resource.type])
+    included[resource.type] = {};
+  
+  included[resource.type][resource.id] = resource;
+}
+
+function createSelfLink(resource, request){
+  const link = encodeURI(request.baseUrl + '/' + resource.type + '/' + resource.id);
+  return ({ self: link });
+}
+
+
 module.exports = {
   languageMapping,
   safeGet,
+  safeGetString,
+  safeGetOne,
+  safeAdd,
+  safePush,
+  addIncludedResource,
+  addRelationshipToMany,
+  addRelationshipToOne,
+  createSelfLink,
+  isClockwise,
   transformMultilingualFields,
   transformFields,
   transformArrayFields,

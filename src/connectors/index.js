@@ -1,6 +1,5 @@
-const serializer = require('../serializer');
-const validator = require('../validator');
-const odhConnector = require('./odh-connector');
+const val = require('../validator');
+const odhCon = require('./odh-connector');
 const errors = require('../errors');
 
 /*
@@ -15,12 +14,12 @@ serialize(alpineBitsObject): a function to serialize an AlpineBits object follow
   output: an JSON:API compliant object
 */
 
-async function handleRequest(request, fetch, validate, serialize) {
+async function handleRequest(req, fetchFn, validateFn) {
   let response;
 
   try {
-    console.log('> Dispatching request to OpenDataHub connector...');
-    response = await fetch(request);
+    console.log('> Dispatching request to the OpenDataHub connector...');
+    data = await fetchFn(req);
     console.log('OK: Request completed.\n');
   }
   catch (error) {
@@ -28,58 +27,50 @@ async function handleRequest(request, fetch, validate, serialize) {
   }
 
   try {
-    console.log('> Validating AlpineBits objects...');
-    const validation = validate(response.data);
-    console.log('OK: Objects validated (valid:'+validation.valid.length+', invalid: '+validation.invalid.length+')\n');
+    console.log('> Validating generated message...');
+    validateFn(data);
+    return data;
   }
   catch (error) {
     console.log('ERROR: Failed to validate data!');
     console.log(error);
     throw errors.cantValidate;
   }
-
-  try {
-    console.log('> Serializing objects in JSON:API format...');
-    const dataJsonApi = serialize(response.data, request, response.meta);
-    console.log('OK: Sucessfully serialized objects.\n');
-    return dataJsonApi;
-  }
-  catch (error) {
-    console.log('ERROR: Failed to serialize response data!');
-    console.log(error);
-    throw errors.cantSerialize;
-  }
 }
 
 module.exports = {
-  getEvents: (request) => {
-    return handleRequest(request, odhConnector.fetchEvents, validator.validateEventArray, serializer.serializeEvents)
-  },
-  getEventById: (request) => {
-    return handleRequest(request, odhConnector.fetchEventById, validator.validateEvent, serializer.serializeEvent)
-  },
-  getEventMedia: (request) => {
-    return handleRequest(request, odhConnector.fetchEventMediaObjects, validator.validateMediaObjectArray, serializer.serializeMediaObjects)
-  },
-  getEventPublisher: (request) => {
-    return handleRequest(request, odhConnector.fetchEventPublisher, validator.validateAgent, serializer.serializePublisher)
-  },
-  getEventOrganizers: (request) => {
-    return handleRequest(request, odhConnector.fetchEventOrganizers, validator.validateAgentArray, serializer.serializeOrganizers)
-  },
-  getEventVenues: (request) => {
-    return handleRequest(request, odhConnector.fetchEventVenues, validator.validateVenueArray, serializer.serializeVenues)
-  },
-  getLifts: (request) => {
-    return handleRequest(request, odhConnector.fetchLifts, validator.validateLiftArray, serializer.serializeLifts)
-  },
-  getLiftById: (request) => {
-    return handleRequest(request, odhConnector.fetchLiftById, validator.validateLift, serializer.serializeLift)
-  },
-  getSnowparks: (request) => {
-    return handleRequest(request, odhConnector.fetchSnowparks, validator.validateSnowparkArray, serializer.serializeSnowparks)
-  },
-  getSnowparkById: (request) => {
-    return handleRequest(request, odhConnector.fetchSnowparkById, validator.validateSnowpark, serializer.serializeSnowpark)
-  }
+  getEvents: req => handleRequest(req, odhCon.fetchEvents, val.validateEventArray),
+  getEventById: req => handleRequest(req, odhCon.fetchEventById, val.validateEvent),
+  getEventMedia: req => handleRequest(req, odhCon.fetchEventMediaObjects, val.validateMediaObjectArray),
+  getEventPublisher: req => handleRequest(req, odhCon.fetchEventPublisher, val.validateAgent),
+  getEventOrganizers: req => handleRequest(req, odhCon.fetchEventOrganizers, val.validateAgentNoPagesArray),
+  getEventVenues: req => handleRequest(req, odhCon.fetchEventVenues, val.validateVenueNoPagesArray),
+  getLifts: req => handleRequest(req, odhCon.fetchLifts, val.validateLiftArray),
+  getLiftById: req => handleRequest(req, odhCon.fetchLiftById, val.validateLift),
+  getLiftMedia: req => handleRequest(req, odhCon.fetchLiftMediaObjects, val.validateMediaObjectNoPagesArray),
+  getTrails: req => handleRequest(req, odhCon.fetchTrails, val.validateTrailArray),
+  getTrailById: req => handleRequest(req, odhCon.fetchTrailById, val.validateTrail),
+  getTrailMedia: req => handleRequest(req, odhCon.fetchTrailMediaObjects, val.validateMediaObjectNoPagesArray),
+  getSnowparks: req => handleRequest(req, odhCon.fetchSnowparks, val.validateSnowparkArray),
+  getSnowparkById: req => handleRequest(req, odhCon.fetchSnowparkById, val.validateSnowpark),
+  getSnowparkMedia: req => handleRequest(req, odhCon.fetchSnowparkMediaObjects, val.validateMediaObjectNoPagesArray),
+  getMountainAreas: req => handleRequest(req, odhCon.fetchMountainAreas, val.validateMountainAreaArray),
+  getMountainAreaById: req => handleRequest(req, odhCon.fetchMountainAreaById, val.validateMountainArea),
+  getMountainAreaMedia: req => handleRequest(req, odhCon.fetchMountainAreaMedia, val.validateMediaObjectNoPagesArray),
+  getMountainAreaOwner: req => handleRequest(req, odhCon.fetchMountainAreaOwner, val.validateAgent),
+  getMountainAreaLifts: req => handleRequest(req, odhCon.fetchMountainAreaLifts, val.validateLiftNoPagesArray),
+  getMountainAreaTrails: req => handleRequest(req, odhCon.fetchMountainAreaTrails, val.validateTrailNoPagesArray),
+  getMountainAreaSnowparks: req => handleRequest(req, odhCon.fetchMountainAreaSnowparks, val.validateSnowparkNoPagesArray),
+  getEventSeries: (req) => handleRequest(req, odhCon.fetchEventSeries, val.validateEventSeriesArray),
+  getEventSeriesById: (req) => handleRequest(req, odhCon.fetchEventSeriesById, val.validateEventSeries),
+  getEventSeriesMedia: req => handleRequest(req, odhCon.fetchEventSeriesMedia, val.validateMediaObjectNoPagesArray),
 }
+
+// validateAgentNoPagesArray
+// validateEventNoPagesArray
+// validateLiftNoPagesArray
+// validateMediaObjectNoPagesArray
+// validateVenueNoPagesArray
+// validateTrailNoPagesArray
+// validateSnowparkNoPagesArray
+// validateMountainAreaNoPagesArray
