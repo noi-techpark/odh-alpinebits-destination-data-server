@@ -1,5 +1,5 @@
 const axios = require('axios');
-require('custom-env').env();
+require('custom-env').env('test');
 
 const TIMEOUT = 300000;
 const AUTH = {

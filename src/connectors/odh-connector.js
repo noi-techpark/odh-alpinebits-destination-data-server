@@ -19,6 +19,7 @@ const EVENT_SERIES_PATH = '../../data/event-series.data';
 const axiosOpts = {
   baseURL: process.env.ODH_BASE_URL,
   timeout: process.env.ODH_TIMEOUT,
+  headers: { 'Accept': 'application/json' }
 }
 
 function fetchEvents (request) {
@@ -149,8 +150,11 @@ async function fetch(path, request, transformFn) {
   let res;
 
   try {
-    console.log(`\n> Fetching data from ${process.env.ODH_BASE_URL+path}...`);
+    console.log(`\n> Fetching data from ${process.env.ODH_BASE_URL+path}`);
     res = await instance.get(path);
+
+    if(typeof res.data === 'string')
+      res.data = JSON.parse(res.data);
   }
   catch(error){
     handleConnectionError(error);
@@ -185,6 +189,12 @@ async function fetchMountainArea(request, field) {
     let areaPath = areaId ? SKIAREA_PATH+'/'+areaId : SKIAREA_PATH;
     let regionPath = areaId ? SKIAREGION_PATH+'/'+areaId : SKIAREGION_PATH;
     [ areaRes, regionRes] = await Promise.all([instance.get(areaPath), instance.get(regionPath)]);
+
+    if(typeof areaRes.data === 'string')
+      areaRes.data = JSON.parse(areaRes.data);
+
+    if(typeof regionRes.data === 'string')
+      regionRes.data = JSON.parse(regionRes.data);
   }
   catch(error) {
     handleConnectionError(error);
@@ -267,6 +277,9 @@ function fetchMountainSubResources(request, area, opts) {
     console.log(`> Fetching ${relationship} from ${process.env.ODH_BASE_URL+path}...`);
     return instance.get(path)
       .then( res => {
+        if(typeof res.data === 'string')
+          res.data = JSON.parse(res.data);
+
         if(res.status!==200 || !res.data)
           area[relationship] = [];
         else if('Items' in res.data)
