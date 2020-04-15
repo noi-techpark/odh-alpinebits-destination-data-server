@@ -19,19 +19,25 @@ app.use( (req, res, next) => {
   next();
 });
 
-app.use(basicAuth({
-    authorizer: (username, password) => {
-      const userMatches = basicAuth.safeCompare(username, process.env.USERNAME);
-      const passwordMatches = basicAuth.safeCompare(password, process.env.PASSWORD);
-      return userMatches & passwordMatches;
-    },
-    unauthorizedResponse: (req, res) => {
-      console.log('Unauthorized request ' + process.env.REF_SERVER_URL + req.originalUrl);
-      return req.auth
-        ? errors.createJSON(errors.credentialsRejected)
-        : errors.createJSON(errors.noCredentials)
-    }
-}))
+if(process.env.AUTH_METHOD==='basic-auth') {
+  console.log("Server will run with BasicAuth enabled.")
+  app.use(basicAuth({
+      authorizer: (username, password) => {
+        const userMatches = basicAuth.safeCompare(username, process.env.USERNAME);
+        const passwordMatches = basicAuth.safeCompare(password, process.env.PASSWORD);
+        return userMatches & passwordMatches;
+      },
+      unauthorizedResponse: (req, res) => {
+        console.log('Unauthorized request ' + process.env.REF_SERVER_URL + req.originalUrl);
+        return req.auth
+          ? errors.createJSON(errors.credentialsRejected)
+          : errors.createJSON(errors.noCredentials)
+      }
+  }))
+}
+else{
+  console.log("Server will run without an authentication method.")
+}
 
 app.use( (req, res, next) => {
   res.setHeader('Content-Type', 'application/vnd.api+json');
@@ -56,5 +62,5 @@ app.get('*', (req, res) => {
 });
 
 http.createServer(app).listen(process.env.REF_SERVER_PORT, function () {
-  console.log('DestinationData API listening at %s', process.env.REF_SERVER_URL);
+  console.log('DestinationData server listening at %s', process.env.REF_SERVER_URL);
 })
