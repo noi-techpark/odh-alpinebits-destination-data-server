@@ -7,4 +7,4 @@ services:
     restart: unless-stopped
     env_file: .env
     ports:
-      - "${DOCKER_SERVER_PORT}:${REF_SERVER_PORT}"
+      - "${SERVER_PORT}:${REF_SERVER_PORT}"

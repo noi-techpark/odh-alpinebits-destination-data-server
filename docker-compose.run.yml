@@ -2,8 +2,8 @@ version: '3.4'
 
 services:
   app:
-    image: ${DOCKER_IMAGE_APP}:${DOCKER_TAG_APP}
+    image: ${DOCKER_IMAGE}:${DOCKER_TAG}
     restart: unless-stopped
     env_file: .env
     ports:
-      - "${DOCKER_SERVER_PORT}:${REF_SERVER_PORT}"
+      - "${SERVER_PORT}:${REF_SERVER_PORT}"
