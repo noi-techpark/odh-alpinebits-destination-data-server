@@ -192,45 +192,73 @@ function transformOperationSchedule(operationSchedule) {
   if(!operationSchedule)
     return null;
 
-  let openingHours = [];
+  let openingHours = templates.createObject('HoursSpecification');
 
   operationSchedule.forEach( entry => {
-    let newEntry = templates.createObject('HoursSpecification');
+    if(entry.Start===entry.Stop) {
+      
+      let key = entry.Start;
+      if(!key)
+        return;
+      
+      let found = key.match(/\d{4}-\d{2}-\d{2}/i);
+      if(!found)
+        return;
 
-    openingHours.push(newEntry);
+      key = found[0];
+      
+      if(!openingHours.dailySchedule)
+        openingHours.dailySchedules = {};
+      
+      let hoursArray = entry.OperationScheduleTime;
+      
+      if(Array.isArray(hoursArray)) {
+        openingHours.dailySchedules[key] = hoursArray.map( hours => {
+          return ({
+            opens: hours.Start, 
+            closes: hours.End
+          }); 
+        });
+      }
+      else {
+        openingHours.dailySchedules[key] = null;
+      }
 
-    newEntry.validFrom = entry.Start.replace(/T.*/,'');
-    newEntry.validTo = entry.Stop.replace(/T.*/,'');
-
-    if(Array.isArray(entry.OperationScheduleTime) && entry.OperationScheduleTime.length>0) {
-
-      entry.OperationScheduleTime.forEach( hours => {
-        newEntry.hours = safePush(newEntry.hours, { opens: hours.Start, closes: hours.End });
-        newEntry.daysOfWeek = []
-
-        if(hours.Sunday)
-          newEntry.daysOfWeek.push('sunday');
-        if(hours.Monday)
-          newEntry.daysOfWeek.push('monday');
-        if(hours.Tuesday)
-          newEntry.daysOfWeek.push('tuesday');
-        if(hours.Wednesday)
-          newEntry.daysOfWeek.push('wednesday');
-        if(hours.Thuresday)
-          newEntry.daysOfWeek.push('thursday');
-        if(hours.Friday)
-          newEntry.daysOfWeek.push('friday');
-        if(hours.Saturday)
-          newEntry.daysOfWeek.push('saturday');
-      });
-
-      if(newEntry.daysOfWeek.length===0)
-        newEntry.daysOfWeek = null;
+      console.log(openingHours.dailySchedules[key]);
+      
     }
+    else {
+      if(!openingHours.weeklySchedules)
+        openingHours.weeklySchedules = [];
+      
+      let newEntry = templates.createObject('Weekly');
+      openingHours.weeklySchedules.push(newEntry);
+
+      newEntry.validFrom = entry.Start.replace(/T.*/,'');
+      newEntry.validTo = entry.Stop.replace(/T.*/,'');
+
+      let hoursArray = entry.OperationScheduleTime;
+      
+      if(Array.isArray(hoursArray)) {
+
+        hoursArray.forEach( hours => {
+          let openClose = { opens: hours.Start, closes: hours.End };
+          newEntry.sunday = hours.Sunday ? safePush(newEntry.sunday, openClose) : newEntry.sunday;
+          newEntry.monday = hours.Monday ? safePush(newEntry.monday, openClose) : newEntry.monday;
+          newEntry.tuesday = hours.Tuesday ? safePush(newEntry.tuesday, openClose) : newEntry.tuesday;
+          newEntry.wednesday = hours.Wednesday ? safePush(newEntry.wednesday, openClose) : newEntry.wednesday;
+          newEntry.thursday = hours.Thuresday ? safePush(newEntry.thursday, openClose) : newEntry.thursday;
+          newEntry.friday = hours.Friday ? safePush(newEntry.friday, openClose) : newEntry.friday;
+          newEntry.saturday = hours.Saturday ? safePush(newEntry.saturday, openClose) : newEntry.saturday;
+        });
+      }
+    }  
   })
 
   return openingHours;
 }
+
+
 
 function transformHowToArrive(detail) {
 
