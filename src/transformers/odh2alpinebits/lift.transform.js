@@ -89,22 +89,29 @@ module.exports = (originalObject, included = {}, request) => {
   // Lift categories
   const categoryMapping = {
     'Sessellift': [ 'alpinebits/chairlift' ],
-    'Seilbahn': [ 'alpinebits/funicular' ],
-    'Skibus': [ 'odh/skibus' ],
-    'Förderband': [ 'odh/conveyor-belt' ],
-    'Telemix': [ 'odh/telemix' ],
-    'Standseilbahn/Zahnradbahn': [ 'odh/cable-railway' ],
-    'no Subtype': null,
-    'Zug': [ 'odh/train' ],
+    'Telemix': [ 'alpinebits/chairlift',],
     'Kabinenbahn': [ 'alpinebits/gondola' ],
-    'Schrägaufzug': [ 'odh/inclined-lift' ],
-    'Umlaufbahn': [ 'alpinebits/gondola', 'odh/detachable-gondola'],
-    'Unterirdische Bahn': [ 'alpinebits/funicular', 'odh/underground-ropeway' ],
-    'Skilift': [ 'alpinebits/skilift'] ,
+    'Umlaufbahn': [ 'alpinebits/gondola' ],
+    'Skilift': [ 'alpinebits/skilift' ] ,
+    'Seilbahn': [ 'alpinebits/cablecar' ],
+    'Standseilbahn/Zahnradbahn': [ 'alpinebits/funicular' ],
+    'Schrägaufzug': [ 'alpinebits/funicular' ],
+    'Unterirdische Bahn': [ 'alpinebits/funicular' ],
+    'Förderband': [ 'alpinebits/magic-carpet' ],
+    'Skibus': [ 'alpinebits/skibus'],
+    'Zug': [ 'alpinebits/train'],
+    'no Subtype': null,
   }
 
   attributes.categories = categoryMapping[source.SubType];
-  attributes.categories.push("odh/"+ source.SubType.replace(/\s/g, '-'));
+
+  let odhCategory = "odh/" + source.SubType
+                      .replace(/[\s\/]/g, '-')
+                      .replace(/ö/g, 'o')
+                      .replace(/ä/g, 'a')
+                      .toLowerCase();
+
+  attributes.categories.push(odhCategory);
 
   attributes.length = source.DistanceLength>0 ? source.DistanceLength : null;
 
