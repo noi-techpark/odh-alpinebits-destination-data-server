@@ -43,6 +43,18 @@ To install the required dependencies, execute:
 npm install
 ```
 
+### Setup
+
+The server requires an `.env` file from which it loads general configurations.
+
+You can reuse `.env.example` or create your own.
+
+To use `.env.example` simply do:
+
+```
+cp .evn.example .env
+```
+
 ### Run
 
 To run the server, execute:
