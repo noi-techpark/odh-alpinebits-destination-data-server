@@ -4,12 +4,12 @@ pipeline {
     environment {
         DOCKER_PROJECT_NAME = "alpinebits-destination-data-server"
         DOCKER_IMAGE = "755952719952.dkr.ecr.eu-west-1.amazonaws.com/alpinebits-destination-data-server"
-        DOCKER_TAG = "test-$BUILD_NUMBER"
+        DOCKER_TAG = "prod-$BUILD_NUMBER"
         
         SERVER_PORT = "1003"
         
         REF_SERVER_CORS_ORIGIN = "*"
-        REF_SERVER_URL = "https://destinationdata.alpinebits.opendatahub.testingmachine.eu"
+        REF_SERVER_URL = "https://destinationdata.alpinebits.opendatahub.bz.it"
         ODH_BASE_URL = "https://tourism.opendatahub.bz.it/api/"
         ODH_TIMEOUT = "60000"
     }
@@ -47,7 +47,7 @@ pipeline {
                sshagent(['jenkins-ssh-key']) {
                     sh """
                         ansible-galaxy install --force -r ansible/requirements.yml
-                        ansible-playbook --limit=test ansible/deploy.yml --extra-vars "build_number=${BUILD_NUMBER}"
+                        ansible-playbook --limit=prod ansible/deploy.yml --extra-vars "build_number=${BUILD_NUMBER}"
                     """
                 }
             }
