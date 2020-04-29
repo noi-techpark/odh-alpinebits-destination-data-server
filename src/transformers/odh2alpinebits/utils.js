@@ -213,19 +213,17 @@ function transformOperationSchedule(operationSchedule) {
       let hoursArray = entry.OperationScheduleTime;
       
       if(Array.isArray(hoursArray)) {
-        openingHours.dailySchedules[key] = hoursArray.map( hours => {
-          return ({
-            opens: hours.Start, 
-            closes: hours.End
-          }); 
+        let dailyHours = []
+        openingHours.dailySchedules[key] = dailyHours;
+        
+        hoursArray.forEach( hours => {
+          let openClose = { opens: hours.Start, closes: hours.End };
+          dailyHours = safePushUniqueHours(dailyHours, openClose);
         });
       }
       else {
         openingHours.dailySchedules[key] = null;
       }
-
-      console.log(openingHours.dailySchedules[key]);
-      
     }
     else {
       if(!openingHours.weeklySchedules)
@@ -243,19 +241,36 @@ function transformOperationSchedule(operationSchedule) {
 
         hoursArray.forEach( hours => {
           let openClose = { opens: hours.Start, closes: hours.End };
-          newEntry.sunday = hours.Sunday ? safePush(newEntry.sunday, openClose) : newEntry.sunday;
-          newEntry.monday = hours.Monday ? safePush(newEntry.monday, openClose) : newEntry.monday;
-          newEntry.tuesday = hours.Tuesday ? safePush(newEntry.tuesday, openClose) : newEntry.tuesday;
-          newEntry.wednesday = hours.Wednesday ? safePush(newEntry.wednesday, openClose) : newEntry.wednesday;
-          newEntry.thursday = hours.Thuresday ? safePush(newEntry.thursday, openClose) : newEntry.thursday;
-          newEntry.friday = hours.Friday ? safePush(newEntry.friday, openClose) : newEntry.friday;
-          newEntry.saturday = hours.Saturday ? safePush(newEntry.saturday, openClose) : newEntry.saturday;
+          newEntry.sunday = hours.Sunday ? safePushUniqueHours(newEntry.sunday, openClose) : newEntry.sunday;
+          newEntry.monday = hours.Monday ? safePushUniqueHours(newEntry.monday, openClose) : newEntry.monday;
+          newEntry.tuesday = hours.Tuesday ? safePushUniqueHours(newEntry.tuesday, openClose) : newEntry.tuesday;
+          newEntry.wednesday = hours.Wednesday ? safePushUniqueHours(newEntry.wednesday, openClose) : newEntry.wednesday;
+          newEntry.thursday = hours.Thuresday ? safePushUniqueHours(newEntry.thursday, openClose) : newEntry.thursday;
+          newEntry.friday = hours.Friday ? safePushUniqueHours(newEntry.friday, openClose) : newEntry.friday;
+          newEntry.saturday = hours.Saturday ? safePushUniqueHours(newEntry.saturday, openClose) : newEntry.saturday;
         });
       }
     }  
   })
 
+
+
   return openingHours;
+}
+
+function safePushUniqueHours(array, value){
+  if (value===null || (typeof value==="string" && value.trim().length===0))
+    return array;
+
+  if(!array)
+    array = [];
+
+  let found = array.find( entry => entry.opens===value.opens && entry.closes===value.closes)
+  
+  if(!found)
+    array.push(value);
+
+  return array;
 }
 
 
