@@ -7,15 +7,7 @@
           "type": "null"
         },
         {
-          "type": "array",
-          "minItems": 1,
-          "items": {
-            "oneOf": [
-              {
-                "$ref": "#/definitions/lifts"
-              }
-            ]
-          }
+          "$ref": "#/definitions/lifts"
         }
       ]
     },
@@ -114,30 +106,9 @@
         }
       ]
     },
-    "meta": {
-      "type": "object",
-      "properties": {
-        "count": {
-          "type": "integer",
-          "minimum": 0
-        },
-        "pages": {
-          "type": "integer",
-          "minimum": 0
-        }
-      },
-      "required": [
-        "count",
-        "pages"
-      ]
-    },
     "links": {
       "type": "object",
       "required": [
-        "first",
-        "last",
-        "next",
-        "prev",
         "self"
       ]
     },
