@@ -14,9 +14,10 @@ module.exports = (originalObject, included = {}, request) => {
   if(editions && editions.data && editions.data.length > 0)
     editions.links.related = encodeURI(links.self + "/editions");
 
-  eventSeries.included.forEach(relatedResource => {
-    utils.addIncludedResource(included, relatedResource);
-  });
+  if(eventSeries.included && eventSeries.included.length>0)
+    eventSeries.included.forEach(relatedResource => {
+      utils.addIncludedResource(included, relatedResource);
+    });
 
   delete eventSeries.included;
 

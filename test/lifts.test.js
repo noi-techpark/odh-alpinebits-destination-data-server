@@ -2,8 +2,8 @@ const { basicResourceRouteTests } = require('./route_id.test');
 const { basicRouteTests } = require('./route.test');
 const { basicSchemaTests } = require('./route.schema.test');
 
-const arraySchema = require('../src/validator/schemas/lifts.array.schema.json');
-const resourceSchema = require('../src/validator/schemas/lifts.schema.json');
+const arraySchema = require('../src/validator/schemas/lifts.schema.json');
+const resourceSchema = require('../src/validator/schemas/lifts.id.schema.json');
 
 let opts = {
   route: 'lifts',

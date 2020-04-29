@@ -30,35 +30,50 @@ module.exports = (originalObject, included = {}, request) => {
 
   attributes.status = 'published';
 
-  // // Event categories
-  // const categoryMapping = {
-  //   'Gastronomie/Typische Produkte': 'odh/gastronomy',
-  //   'Musik/Tanz': 'odh/music',
-  //   'Volksfeste/Festivals': 'odh/festival',
-  //   'Sport': 'odh/sports',
-  //   'Führungen/Besichtigungen': 'odh/tourism',
-  //   'Theater/Vorführungen': 'odh/theather',
-  //   'Kurse/Bildung': 'odh/education',
-  //   'Tagungen Vorträge': 'odh/conference',
-  //   'Familie': 'odh/family',
-  //   'Handwerk/Brauchtum': 'odh/handicrafts',
-  //   'Messen/Märkte': 'odh/market',
-  //   'Wanderungen/Ausflüge': 'odh/hike',
-  //   'Ausstellungen/Kunst': 'odh/art',
-  // }
-  let categories = [];
-  
-  sourceEvent.Topics.forEach(topic => {
+  if(sourceEvent.Topics && sourceEvent.Topics.length>0){
+    // Event categories
+    const categoryMapping = {
+      'Gastronomie/Typische Produkte': 'schema/FoodEvent',
+      'Musik/Tanz': 'schema/MusicEvent',
+      'Volksfeste/Festivals': 'schema/Festival',
+      'Sport': 'schema/SportsEvent',
+      'Führungen/Besichtigungen': null,
+      'Theater/Vorführungen': 'schema/TheatherEvent',
+      'Kurse/Bildung': 'schema/EducationEvent',
+      'Tagungen Vorträge': 'schema/BusinessEvent',
+      'Familie': 'schema/ChildrensEvent',
+      'Handwerk/Brauchtum': null,
+      'Messen/Märkte': null,
+      'Wanderungen/Ausflüge': null,
+      'Ausstellungen/Kunst': 'schema/VisualArts',
+    }
     
-    // if(categoryMapping[tag])
-    //   categories.push(categoryMapping[tag]);
-    
-    if(topic && topic.TopicInfo)
-      categories.push("odh/"+ topic.TopicInfo.replace(/[\/|\s]/g,'-').toLowerCase());
-  })
+    let schemaCategories = [];
+    let odhCategories = [];
 
-  if(categories.length>0)
-    attributes.categories = categories;
+    sourceEvent.Topics.forEach(topic => {
+      if(!topic || !topic.TopicInfo)
+        return;
+
+      let type = topic.TopicInfo;
+      
+      if(categoryMapping[type])
+        schemaCategories.push(categoryMapping[type]);
+      
+      let odhCategory = "odh/" + type
+                          .replace(/[\/|\s]/g,'-')
+                          .replace(/ö/g, 'o')
+                          .replace(/ä/g, 'a')
+                          .toLowerCase();
+
+      odhCategories.push(odhCategory);
+    })
+
+    let categories = schemaCategories.concat(odhCategories);
+
+    if(categories.length>0)
+      attributes.categories = categories;
+  }
 
   /**
    * 

@@ -37,10 +37,22 @@ The current version of the server accepts HTTP GET requests on the following rou
 
 ### Install
 
-To install the required dependencies, execute:
+To install the required dependencies, run:
 
 ```
 npm install
+```
+
+### Setup
+
+The server requires an `.env` file from which it loads general configurations.
+
+You can reuse `.env.example` or create your own.
+
+To use `.env.example`, run:
+
+```
+cp .evn.example .env
 ```
 
 ### Run
@@ -55,14 +67,14 @@ We set up the server to listen to HTTP request on the port 8080.
 
 ### Test
 
-To run the **end-to-end** tests, execute:
+To run the **end-to-end** tests, run:
 ```
 npm run test
 ```
 
 ### Server Deployment
 
-To deploy the server with Docker, execute:
+To deploy the server with Docker, run:
 ```
 docker-compose build
 docker-compose start

@@ -137,9 +137,10 @@ function transformMountainArea(originalObject, included = {}, request) {
   }
 
   let categories = [];
-  source.OdhTags.forEach(tag => {
-    categories.push("odh/"+ tag.Id.replace(/[\/|\s]/g,'-').toLowerCase());
-  })
+  if(source.OdhTags)
+    source.OdhTags.forEach(tag => {
+      categories.push("odh/"+ tag.Id.replace(/[\/|\s]/g,'-').toLowerCase());
+    })
 
   if(categories.length>0)
     attributes.categories = categories;
@@ -174,14 +175,14 @@ function transformMountainArea(originalObject, included = {}, request) {
   if(ownerLogo)
     utils.addIncludedResource(included, ownerLogo);
 
-  if(source.lifts)
+  if(source.lifts && source.lifts.length>0)
     source.lifts.forEach( lift => {
       let newLift = conditionalTransform(lift, included, request, 'lifts', transformLift);
       utils.addRelationshipToMany(relationships, 'lifts', newLift, links.self);
       utils.addIncludedResource(included, newLift);
     });
 
-  if(source.trails){
+  if(source.trails && source.trails.length>0){
     source.trails.forEach( trail => {
       let newTrail = conditionalTransform(trail, included, request, 'trails', transformTrail);
       utils.addRelationshipToMany(relationships, 'trails', newTrail, links.self);
@@ -189,7 +190,7 @@ function transformMountainArea(originalObject, included = {}, request) {
     });
   }
 
-  if(source.snowparks){
+  if(source.snowparks && source.snowparks.length>0){
     source.snowparks.forEach( snowpark => {
       let newSnowpark = conditionalTransform(snowpark, included, request, 'snowparks', transformSnowpark);
       utils.addRelationshipToMany(relationships, 'snowparks', newSnowpark, links.self);

@@ -12,7 +12,7 @@
           "items": {
             "oneOf": [
               {
-                "$ref": "#/definitions/eventSeries"
+                "$ref": "#/definitions/mediaObjects"
               }
             ]
           }
@@ -33,30 +33,14 @@
                 "if": {
                   "properties": {
                     "type": {
-                      "const": "events"
+                      "const": "agents"
                     }
                   }
                 },
                 "then": {
                   "allOf": [
                     {
-                      "$ref": "#/definitions/events"
-                    }
-                  ]
-                }
-              },
-              {
-                "if": {
-                  "properties": {
-                    "type": {
-                      "const": "mediaObjects"
-                    }
-                  }
-                },
-                "then": {
-                  "allOf": [
-                    {
-                      "$ref": "#/definitions/mediaObjects"
+                      "$ref": "#/definitions/agents"
                     }
                   ]
                 }
@@ -66,30 +50,9 @@
         }
       ]
     },
-    "meta": {
-      "type": "object",
-      "properties": {
-        "count": {
-          "type": "integer",
-          "minimum": 0
-        },
-        "pages": {
-          "type": "integer",
-          "minimum": 0
-        }
-      },
-      "required": [
-        "count",
-        "pages"
-      ]
-    },
     "links": {
       "type": "object",
       "required": [
-        "first",
-        "last",
-        "next",
-        "prev",
         "self"
       ]
     },
@@ -1131,935 +1094,6 @@
         }
       ]
     },
-    "eventSeries": {
-      "type": "object",
-      "properties": {
-        "type": {
-          "const": "eventSeries"
-        },
-        "id": {
-          "type": "string",
-          "minLength": 1
-        },
-        "meta": {
-          "allOf": [
-            {
-              "$ref": "#/definitions/basicMeta"
-            }
-          ]
-        },
-        "links": {
-          "allOf": [
-            {
-              "$ref": "#/definitions/links"
-            },
-            {
-              "type": "object",
-              "required": [
-                "self"
-              ]
-            }
-          ]
-        },
-        "attributes": {
-          "allOf": [
-            {
-              "$ref": "#/definitions/basicAttributes"
-            },
-            {
-              "patternProperties": {
-                "name": {
-                  "type": "object"
-                }
-              }
-            },
-            {
-              "type": "object",
-              "properties": {
-                "frequency": {
-                  "oneOf": [
-                    {
-                      "type": "null"
-                    },
-                    {
-                      "type": "string",
-                      "enum": [
-                        "daily",
-                        "weekly",
-                        "monthly",
-                        "bimonthly",
-                        "quarterly",
-                        "annual",
-                        "biennial",
-                        "triennial"
-                      ]
-                    }
-                  ]
-                }
-              }
-            }
-          ]
-        },
-        "relationships": {
-          "type": "object",
-          "properties": {
-            "editions": {
-              "oneOf": [
-                {
-                  "type": "null"
-                },
-                {
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "oneOf": [
-                        {
-                          "type": "null"
-                        },
-                        {
-                          "type": "array",
-                          "minItems": 1,
-                          "items": {
-                            "type": "object",
-                            "properties": {
-                              "id": {
-                                "type": "string",
-                                "minLength": 1
-                              },
-                              "type": {
-                                "type": "string",
-                                "enum": [
-                                  "events"
-                                ]
-                              }
-                            },
-                            "required": [
-                              "id",
-                              "type"
-                            ],
-                            "additionalProperties": false
-                          }
-                        }
-                      ]
-                    },
-                    "links": {
-                      "oneOf": [
-                        {
-                          "type": "null"
-                        },
-                        {
-                          "type": "object",
-                          "additionalProperties": {
-                            "oneOf": [
-                              {
-                                "type": "null"
-                              },
-                              {
-                                "type": "string",
-                                "format": "uri"
-                              }
-                            ]
-                          },
-                          "required": [
-                            "related"
-                          ]
-                        }
-                      ]
-                    }
-                  },
-                  "required": [
-                    "data",
-                    "links"
-                  ]
-                }
-              ]
-            },
-            "multimediaDescriptions": {
-              "oneOf": [
-                {
-                  "type": "null"
-                },
-                {
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "oneOf": [
-                        {
-                          "type": "null"
-                        },
-                        {
-                          "type": "array",
-                          "minItems": 1,
-                          "items": {
-                            "type": "object",
-                            "properties": {
-                              "id": {
-                                "type": "string",
-                                "minLength": 1
-                              },
-                              "type": {
-                                "type": "string",
-                                "enum": [
-                                  "mediaObjects"
-                                ]
-                              }
-                            },
-                            "required": [
-                              "id",
-                              "type"
-                            ],
-                            "additionalProperties": false
-                          }
-                        }
-                      ]
-                    },
-                    "links": {
-                      "oneOf": [
-                        {
-                          "type": "null"
-                        },
-                        {
-                          "type": "object",
-                          "additionalProperties": {
-                            "oneOf": [
-                              {
-                                "type": "null"
-                              },
-                              {
-                                "type": "string",
-                                "format": "uri"
-                              }
-                            ]
-                          },
-                          "required": [
-                            "related"
-                          ]
-                        }
-                      ]
-                    }
-                  },
-                  "required": [
-                    "data",
-                    "links"
-                  ]
-                }
-              ]
-            }
-          },
-          "additionalProperties": {
-            "oneOf": [
-              {
-                "type": "null"
-              },
-              {
-                "$ref": "#/definitions/relationshipToOne"
-              },
-              {
-                "$ref": "#/definitions/relationshipToMany"
-              }
-            ]
-          },
-          "required": []
-        }
-      }
-    },
-    "events": {
-      "type": "object",
-      "properties": {
-        "type": {
-          "const": "events"
-        },
-        "id": {
-          "type": "string",
-          "minLength": 1
-        },
-        "meta": {
-          "allOf": [
-            {
-              "$ref": "#/definitions/basicMeta"
-            }
-          ]
-        },
-        "links": {
-          "allOf": [
-            {
-              "$ref": "#/definitions/links"
-            },
-            {
-              "type": "object",
-              "required": [
-                "self"
-              ]
-            }
-          ]
-        },
-        "attributes": {
-          "allOf": [
-            {
-              "$ref": "#/definitions/basicAttributes"
-            },
-            {
-              "patternProperties": {
-                "name": {
-                  "type": "object"
-                }
-              }
-            },
-            {
-              "type": "object",
-              "properties": {
-                "capacity": {
-                  "$ref": "#/definitions/optionalNonZeroPositiveInteger"
-                },
-                "endDate": {
-                  "$ref": "#/definitions/optionalDateOrDateTime"
-                },
-                "startDate": {
-                  "$ref": "#/definitions/optionalDateOrDateTime"
-                },
-                "status": {
-                  "oneOf": [
-                    {
-                      "type": "null"
-                    },
-                    {
-                      "type": "string",
-                      "enum": [
-                        "canceled",
-                        "published"
-                      ]
-                    }
-                  ]
-                }
-              },
-              "if": {
-                "allOf": [
-                  {
-                    "properties": {
-                      "startDate": {
-                        "anyOf": [
-                          {
-                            "type": "null"
-                          },
-                          {
-                            "type": "string"
-                          }
-                        ]
-                      },
-                      "endDate": {
-                        "anyOf": [
-                          {
-                            "type": "null"
-                          },
-                          {
-                            "type": "string"
-                          }
-                        ]
-                      }
-                    }
-                  }
-                ]
-              },
-              "then": {
-                "anyOf": [
-                  {
-                    "properties": {
-                      "startDate": {
-                        "not": {
-                          "type": "null"
-                        }
-                      }
-                    }
-                  },
-                  {
-                    "properties": {
-                      "endDate": {
-                        "not": {
-                          "type": "null"
-                        }
-                      }
-                    }
-                  }
-                ]
-              }
-            }
-          ]
-        },
-        "relationships": {
-          "type": "object",
-          "properties": {
-            "contributors": {
-              "oneOf": [
-                {
-                  "type": "null"
-                },
-                {
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "oneOf": [
-                        {
-                          "type": "null"
-                        },
-                        {
-                          "type": "array",
-                          "minItems": 1,
-                          "items": {
-                            "type": "object",
-                            "properties": {
-                              "id": {
-                                "type": "string",
-                                "minLength": 1
-                              },
-                              "type": {
-                                "type": "string",
-                                "enum": [
-                                  "agents"
-                                ]
-                              }
-                            },
-                            "required": [
-                              "id",
-                              "type"
-                            ],
-                            "additionalProperties": false
-                          }
-                        }
-                      ]
-                    },
-                    "links": {
-                      "oneOf": [
-                        {
-                          "type": "null"
-                        },
-                        {
-                          "type": "object",
-                          "additionalProperties": {
-                            "oneOf": [
-                              {
-                                "type": "null"
-                              },
-                              {
-                                "type": "string",
-                                "format": "uri"
-                              }
-                            ]
-                          },
-                          "required": [
-                            "related"
-                          ]
-                        }
-                      ]
-                    }
-                  },
-                  "required": [
-                    "data",
-                    "links"
-                  ]
-                }
-              ]
-            },
-            "multimediaDescriptions": {
-              "oneOf": [
-                {
-                  "type": "null"
-                },
-                {
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "oneOf": [
-                        {
-                          "type": "null"
-                        },
-                        {
-                          "type": "array",
-                          "minItems": 1,
-                          "items": {
-                            "type": "object",
-                            "properties": {
-                              "id": {
-                                "type": "string",
-                                "minLength": 1
-                              },
-                              "type": {
-                                "type": "string",
-                                "enum": [
-                                  "mediaObjects"
-                                ]
-                              }
-                            },
-                            "required": [
-                              "id",
-                              "type"
-                            ],
-                            "additionalProperties": false
-                          }
-                        }
-                      ]
-                    },
-                    "links": {
-                      "oneOf": [
-                        {
-                          "type": "null"
-                        },
-                        {
-                          "type": "object",
-                          "additionalProperties": {
-                            "oneOf": [
-                              {
-                                "type": "null"
-                              },
-                              {
-                                "type": "string",
-                                "format": "uri"
-                              }
-                            ]
-                          },
-                          "required": [
-                            "related"
-                          ]
-                        }
-                      ]
-                    }
-                  },
-                  "required": [
-                    "data",
-                    "links"
-                  ]
-                }
-              ]
-            },
-            "organizers": {
-              "oneOf": [
-                {
-                  "type": "null"
-                },
-                {
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "oneOf": [
-                        {
-                          "type": "null"
-                        },
-                        {
-                          "type": "array",
-                          "minItems": 1,
-                          "items": {
-                            "type": "object",
-                            "properties": {
-                              "id": {
-                                "type": "string",
-                                "minLength": 1
-                              },
-                              "type": {
-                                "type": "string",
-                                "enum": [
-                                  "agents"
-                                ]
-                              }
-                            },
-                            "required": [
-                              "id",
-                              "type"
-                            ],
-                            "additionalProperties": false
-                          }
-                        }
-                      ]
-                    },
-                    "links": {
-                      "oneOf": [
-                        {
-                          "type": "null"
-                        },
-                        {
-                          "type": "object",
-                          "additionalProperties": {
-                            "oneOf": [
-                              {
-                                "type": "null"
-                              },
-                              {
-                                "type": "string",
-                                "format": "uri"
-                              }
-                            ]
-                          },
-                          "required": [
-                            "related"
-                          ]
-                        }
-                      ]
-                    }
-                  },
-                  "required": [
-                    "data",
-                    "links"
-                  ]
-                }
-              ]
-            },
-            "publisher": {
-              "oneOf": [
-                {
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "oneOf": [
-                        {
-                          "type": "object",
-                          "properties": {
-                            "id": {
-                              "type": "string",
-                              "minLength": 1
-                            },
-                            "type": {
-                              "type": "string",
-                              "enum": [
-                                "agents"
-                              ]
-                            }
-                          },
-                          "required": [
-                            "id",
-                            "type"
-                          ],
-                          "additionalProperties": false
-                        }
-                      ]
-                    },
-                    "links": {
-                      "oneOf": [
-                        {
-                          "type": "null"
-                        },
-                        {
-                          "type": "object",
-                          "additionalProperties": {
-                            "oneOf": [
-                              {
-                                "type": "null"
-                              },
-                              {
-                                "type": "string",
-                                "format": "uri"
-                              }
-                            ]
-                          },
-                          "required": [
-                            "related"
-                          ]
-                        }
-                      ]
-                    }
-                  },
-                  "required": [
-                    "data",
-                    "links"
-                  ]
-                }
-              ]
-            },
-            "series": {
-              "oneOf": [
-                {
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "oneOf": [
-                        {
-                          "type": "object",
-                          "properties": {
-                            "id": {
-                              "type": "string",
-                              "minLength": 1
-                            },
-                            "type": {
-                              "type": "string",
-                              "enum": [
-                                "eventSeries"
-                              ]
-                            }
-                          },
-                          "required": [
-                            "id",
-                            "type"
-                          ],
-                          "additionalProperties": false
-                        },
-                        {
-                          "type": "null"
-                        }
-                      ]
-                    },
-                    "links": {
-                      "oneOf": [
-                        {
-                          "type": "null"
-                        },
-                        {
-                          "type": "object",
-                          "additionalProperties": {
-                            "oneOf": [
-                              {
-                                "type": "null"
-                              },
-                              {
-                                "type": "string",
-                                "format": "uri"
-                              }
-                            ]
-                          },
-                          "required": [
-                            "related"
-                          ]
-                        }
-                      ]
-                    }
-                  },
-                  "required": [
-                    "data",
-                    "links"
-                  ]
-                },
-                {
-                  "type": "null"
-                }
-              ]
-            },
-            "sponsors": {
-              "oneOf": [
-                {
-                  "type": "null"
-                },
-                {
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "oneOf": [
-                        {
-                          "type": "null"
-                        },
-                        {
-                          "type": "array",
-                          "minItems": 1,
-                          "items": {
-                            "type": "object",
-                            "properties": {
-                              "id": {
-                                "type": "string",
-                                "minLength": 1
-                              },
-                              "type": {
-                                "type": "string",
-                                "enum": [
-                                  "agents"
-                                ]
-                              }
-                            },
-                            "required": [
-                              "id",
-                              "type"
-                            ],
-                            "additionalProperties": false
-                          }
-                        }
-                      ]
-                    },
-                    "links": {
-                      "oneOf": [
-                        {
-                          "type": "null"
-                        },
-                        {
-                          "type": "object",
-                          "additionalProperties": {
-                            "oneOf": [
-                              {
-                                "type": "null"
-                              },
-                              {
-                                "type": "string",
-                                "format": "uri"
-                              }
-                            ]
-                          },
-                          "required": [
-                            "related"
-                          ]
-                        }
-                      ]
-                    }
-                  },
-                  "required": [
-                    "data",
-                    "links"
-                  ]
-                }
-              ]
-            },
-            "subEvents": {
-              "oneOf": [
-                {
-                  "type": "null"
-                },
-                {
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "oneOf": [
-                        {
-                          "type": "null"
-                        },
-                        {
-                          "type": "array",
-                          "minItems": 1,
-                          "items": {
-                            "type": "object",
-                            "properties": {
-                              "id": {
-                                "type": "string",
-                                "minLength": 1
-                              },
-                              "type": {
-                                "type": "string",
-                                "enum": [
-                                  "events"
-                                ]
-                              }
-                            },
-                            "required": [
-                              "id",
-                              "type"
-                            ],
-                            "additionalProperties": false
-                          }
-                        }
-                      ]
-                    },
-                    "links": {
-                      "oneOf": [
-                        {
-                          "type": "null"
-                        },
-                        {
-                          "type": "object",
-                          "additionalProperties": {
-                            "oneOf": [
-                              {
-                                "type": "null"
-                              },
-                              {
-                                "type": "string",
-                                "format": "uri"
-                              }
-                            ]
-                          },
-                          "required": [
-                            "related"
-                          ]
-                        }
-                      ]
-                    }
-                  },
-                  "required": [
-                    "data",
-                    "links"
-                  ]
-                }
-              ]
-            },
-            "venues": {
-              "oneOf": [
-                {
-                  "type": "null"
-                },
-                {
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "oneOf": [
-                        {
-                          "type": "null"
-                        },
-                        {
-                          "type": "array",
-                          "minItems": 1,
-                          "items": {
-                            "type": "object",
-                            "properties": {
-                              "id": {
-                                "type": "string",
-                                "minLength": 1
-                              },
-                              "type": {
-                                "type": "string",
-                                "enum": [
-                                  "venues"
-                                ]
-                              }
-                            },
-                            "required": [
-                              "id",
-                              "type"
-                            ],
-                            "additionalProperties": false
-                          }
-                        }
-                      ]
-                    },
-                    "links": {
-                      "oneOf": [
-                        {
-                          "type": "null"
-                        },
-                        {
-                          "type": "object",
-                          "additionalProperties": {
-                            "oneOf": [
-                              {
-                                "type": "null"
-                              },
-                              {
-                                "type": "string",
-                                "format": "uri"
-                              }
-                            ]
-                          },
-                          "required": [
-                            "related"
-                          ]
-                        }
-                      ]
-                    }
-                  },
-                  "required": [
-                    "data",
-                    "links"
-                  ]
-                }
-              ]
-            }
-          },
-          "additionalProperties": {
-            "oneOf": [
-              {
-                "type": "null"
-              },
-              {
-                "$ref": "#/definitions/relationshipToOne"
-              },
-              {
-                "$ref": "#/definitions/relationshipToMany"
-              }
-            ]
-          },
-          "required": []
-        }
-      }
-    },
     "mediaObjects": {
       "type": "object",
       "properties": {
@@ -2238,6 +1272,142 @@
                 },
                 {
                   "type": "null"
+                }
+              ]
+            }
+          },
+          "additionalProperties": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/definitions/relationshipToOne"
+              },
+              {
+                "$ref": "#/definitions/relationshipToMany"
+              }
+            ]
+          },
+          "required": []
+        }
+      }
+    },
+    "agents": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "const": "agents"
+        },
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "meta": {
+          "allOf": [
+            {
+              "$ref": "#/definitions/basicMeta"
+            }
+          ]
+        },
+        "links": {
+          "allOf": [
+            {
+              "$ref": "#/definitions/links"
+            },
+            {
+              "type": "object",
+              "required": [
+                "self"
+              ]
+            }
+          ]
+        },
+        "attributes": {
+          "allOf": [
+            {
+              "$ref": "#/definitions/basicAttributes"
+            },
+            {
+              "patternProperties": {
+                "name": {
+                  "type": "object"
+                }
+              }
+            }
+          ]
+        },
+        "relationships": {
+          "type": "object",
+          "properties": {
+            "multimediaDescriptions": {
+              "oneOf": [
+                {
+                  "type": "null"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "oneOf": [
+                        {
+                          "type": "null"
+                        },
+                        {
+                          "type": "array",
+                          "minItems": 1,
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "minLength": 1
+                              },
+                              "type": {
+                                "type": "string",
+                                "enum": [
+                                  "mediaObjects"
+                                ]
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "type"
+                            ],
+                            "additionalProperties": false
+                          }
+                        }
+                      ]
+                    },
+                    "links": {
+                      "oneOf": [
+                        {
+                          "type": "null"
+                        },
+                        {
+                          "type": "object",
+                          "additionalProperties": {
+                            "oneOf": [
+                              {
+                                "type": "null"
+                              },
+                              {
+                                "type": "string",
+                                "format": "uri"
+                              }
+                            ]
+                          },
+                          "required": [
+                            "related"
+                          ]
+                        }
+                      ]
+                    }
+                  },
+                  "required": [
+                    "data",
+                    "links"
+                  ]
                 }
               ]
             }

@@ -90,13 +90,17 @@ module.exports = (originalObject, included = {}, request) => {
     'loipen': 'alpinebits/cross-country',
   };
 
-  let categories = [];
+  let schemaCategories = [];
+  let odhCategories = [];
+  
   source.SmgTags.forEach(tag => {
     if(categoryMapping[tag])
-      categories.push(categoryMapping[tag]);
+      schemaCategories.push(categoryMapping[tag]);
     
-    categories.push("odh/"+ tag.replace(/[\/|\s]/g,'-').toLowerCase());
+    odhCategories.push("odh/"+ tag.replace(/[\/|\s]/g,'-').toLowerCase());
   })
+  
+  let categories = schemaCategories.concat(odhCategories);
 
   if(categories.length>0)
     attributes.categories = categories;
