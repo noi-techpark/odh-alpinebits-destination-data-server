@@ -117,21 +117,27 @@
       "type": "object",
       "properties": {
         "abstract": {
+          "description": "A text object containing a short textual description of the resource.",
           "$ref": "#/definitions/abstract"
         },
         "categories": {
+          "description": "An array of category strings identifying the types instantiated by the resource.",
           "$ref": "#/definitions/categories"
         },
         "description": {
+          "description": "A text object containing the complete textual description of the resource.",
           "$ref": "#/definitions/description"
         },
         "name": {
+          "description": "A text object containing the complete name of the resource.",
           "$ref": "#/definitions/name"
         },
         "shortName": {
+          "description": "A text object containing a short name of the resource.",
           "$ref": "#/definitions/shortName"
         },
         "url": {
+          "description": "A url string or a multilingual url object containing language-specific url strings.",
           "$ref": "#/definitions/url"
         }
       }
@@ -165,11 +171,14 @@
     },
     "basicMeta": {
       "type": "object",
+      "description": "An object containing metadata of the resource (e.g., the URL representing the resource's data provider or a date-time string of the instant of the resource's last update).",
       "properties": {
         "dataProvider": {
+          "description": "A url string that identifies the organization responsible for the data about a resource and who can be contacted in case of questions or issues regarding it.",
           "$ref": "#/definitions/dataProvider"
         },
         "lastUpdate": {
+          "description": "A date-time string that identifies when a resource was last modified in the server.",
           "$ref": "#/definitions/lastUpdate"
         }
       },
@@ -242,6 +251,7 @@
       }
     },
     "links": {
+      "description": "An object containing the links related to access related resources (e.g., a link to the agent resources representing organizers and sponsors of an event, a link to the media object resources representing multimedia descriptions of a mountain area resource, or a link to the resource itself, also referred to as `self`).",
       "oneOf": [
         {
           "type": "null"
@@ -259,28 +269,6 @@
               }
             ]
           }
-        }
-      ]
-    },
-    "relationshipToMany": {
-      "oneOf": [
-        {
-          "type": "null"
-        },
-        {
-          "type": "object",
-          "properties": {
-            "data": {
-              "$ref": "#/definitions/referenceArray"
-            },
-            "links": {
-              "$ref": "#/definitions/links"
-            }
-          },
-          "required": [
-            "data",
-            "links"
-          ]
         }
       ]
     },
@@ -322,6 +310,28 @@
         }
       ]
     },
+    "relationshipToMany": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "data": {
+              "$ref": "#/definitions/referenceArray"
+            },
+            "links": {
+              "$ref": "#/definitions/links"
+            }
+          },
+          "required": [
+            "data",
+            "links"
+          ]
+        }
+      ]
+    },
     "relationshipToOne": {
       "oneOf": [
         {
@@ -345,6 +355,7 @@
       ]
     },
     "address": {
+      "description": "An object that represents an address.",
       "oneOf": [
         {
           "type": "null"
@@ -416,70 +427,79 @@
       ]
     },
     "contactPoint": {
+      "type": "object",
+      "properties": {
+        "address": {
+          "$ref": "#/definitions/address"
+        },
+        "availableHours": {
+          "$ref": "#/definitions/hoursSpecifications"
+        },
+        "email": {
+          "type": "string",
+          "format": "email"
+        },
+        "telephone": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "string",
+              "minLength": 1
+            }
+          ]
+        }
+      },
+      "required": [
+        "address",
+        "availableHours",
+        "email",
+        "telephone"
+      ],
+      "anyOf": [
+        {
+          "not": {
+            "properties": {
+              "address": {
+                "type": "null"
+              }
+            }
+          }
+        },
+        {
+          "not": {
+            "properties": {
+              "email": {
+                "type": "null"
+              }
+            }
+          }
+        },
+        {
+          "not": {
+            "properties": {
+              "telephone": {
+                "type": "null"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "contactPoints": {
+      "description": "A contact point array contains data that one can use to contact an agent resource.",
       "oneOf": [
         {
           "type": "null"
         },
         {
-          "type": "object",
-          "properties": {
-            "address": {
-              "$ref": "#/definitions/address"
-            },
-            "availableHours": {
-              "$ref": "#/definitions/hoursSpecifications"
-            },
-            "email": {
-              "type": "string",
-              "format": "email"
-            },
-            "telephone": {
-              "oneOf": [
-                {
-                  "type": "null"
-                },
-                {
-                  "type": "string",
-                  "minLength": 1
-                }
-              ]
-            }
-          },
-          "required": [
-            "address",
-            "availableHours",
-            "email",
-            "telephone"
-          ],
-          "anyOf": [
-            {
-              "not": {
-                "properties": {
-                  "address": {
-                    "type": "null"
-                  }
-                }
-              }
-            },
-            {
-              "not": {
-                "properties": {
-                  "email": {
-                    "type": "null"
-                  }
-                }
-              }
-            },
-            {
-              "not": {
-                "properties": {
-                  "telephone": {
-                    "type": "null"
-                  }
-                }
-              }
-            }
-          ]
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/definitions/contactPoint"
+          }
         }
       ]
     },
@@ -488,6 +508,7 @@
       "pattern": "[A-Z]{2}"
     },
     "geometry": {
+      "description": "The representation of geographic data structures in this standard is borrowed from the GeoJSON standard specification.",
       "oneOf": [
         {
           "$ref": "#/definitions/geometryPoint"
@@ -511,6 +532,7 @@
     },
     "geometryPoint": {
       "type": "object",
+      "description": "The coordinates member is a single position.",
       "properties": {
         "type": {
           "const": "Point"
@@ -530,6 +552,7 @@
     },
     "geometryMultiPoint": {
       "type": "object",
+      "description": "The coordinates member is an array of positions.",
       "properties": {
         "type": {
           "const": "MultiPoint"
@@ -552,6 +575,7 @@
     },
     "geometryLineString": {
       "type": "object",
+      "description": "The coordinates member is an array of two or more positions.",
       "properties": {
         "type": {
           "const": "LineString"
@@ -575,6 +599,7 @@
     },
     "geometryMultiLineString": {
       "type": "object",
+      "description": "The coordinates member is an array of LineString coordinate arrays.",
       "properties": {
         "type": {
           "const": "MultiLineString"
@@ -601,6 +626,7 @@
     },
     "geometryPolygon": {
       "type": "object",
+      "description": "The coordinates member is an array different coordinate arrays forming a polygon.",
       "properties": {
         "type": {
           "const": "Polygon"
@@ -627,6 +653,7 @@
     },
     "geometryMultiPolygon": {
       "type": "object",
+      "description": "The coordinates member is an array of Polygon coordinate arrays",
       "properties": {
         "type": {
           "const": "MultiPolygon"
@@ -673,6 +700,7 @@
       "pattern": "[a-z]{3}"
     },
     "snowCondition": {
+      "description": "A snow condition object allows the representation of the conditions of a trail, snowpark or a mountain area at a given moment in time.",
       "oneOf": [
         {
           "type": "null"
@@ -778,6 +806,7 @@
       ]
     },
     "text": {
+      "description": "An object that allows exchange of textual data (e.g. name, description) using multiple languages.",
       "oneOf": [
         {
           "type": "null"
@@ -1093,6 +1122,7 @@
       "additionalProperties": false
     },
     "hoursSpecifications": {
+      "description": "An hours specification object allows the representations of schedules over periods of time.",
       "oneOf": [
         {
           "type": "null"
@@ -1136,11 +1166,14 @@
     },
     "events": {
       "type": "object",
+      "description": "A resource representing an event, something that is planned to happen at a particular place and time, organized by an agent for a particular purpose, and is of interest to a general audience.",
       "properties": {
         "type": {
+          "description": "A string that identifies the resource's type.",
           "const": "events"
         },
         "id": {
+          "description": "A string that uniquely and persistently identifies the resource within a server.",
           "type": "string",
           "minLength": 1
         },
@@ -1180,15 +1213,19 @@
               "type": "object",
               "properties": {
                 "capacity": {
+                  "description": "An integer representing the total number of individuals that can attend the event.",
                   "$ref": "#/definitions/optionalNonZeroPositiveInteger"
                 },
                 "endDate": {
+                  "description": "A string, formatted as a date or date-time string, representing when the event is supposed to end.",
                   "$ref": "#/definitions/optionalDateOrDateTime"
                 },
                 "startDate": {
+                  "description": "A string, formatted as a date or date-time string, representing when the event is supposed to start.",
                   "$ref": "#/definitions/optionalDateOrDateTime"
                 },
                 "status": {
+                  "description": "A string representing the current status of the event.",
                   "oneOf": [
                     {
                       "type": "null"
@@ -1258,20 +1295,16 @@
         },
         "relationships": {
           "type": "object",
+          "description": "An object containing the resource's data referring to other resources (e.g. the organizers of an event, the trails within a mountain area).",
           "properties": {
             "contributors": {
+              "description": "An object representing references to agent resources, which identifies the agents expected to participate in the event, such as a speaker who will give a talk or a musician who will perform at a concert.",
               "oneOf": [
-                {
-                  "type": "null"
-                },
                 {
                   "type": "object",
                   "properties": {
                     "data": {
                       "oneOf": [
-                        {
-                          "type": "null"
-                        },
                         {
                           "type": "array",
                           "minItems": 1,
@@ -1295,6 +1328,9 @@
                             ],
                             "additionalProperties": false
                           }
+                        },
+                        {
+                          "type": "null"
                         }
                       ]
                     },
@@ -1327,22 +1363,20 @@
                     "data",
                     "links"
                   ]
+                },
+                {
+                  "type": "null"
                 }
               ]
             },
             "multimediaDescriptions": {
+              "description": "An object representing a reference towards media objects that describe the event.",
               "oneOf": [
-                {
-                  "type": "null"
-                },
                 {
                   "type": "object",
                   "properties": {
                     "data": {
                       "oneOf": [
-                        {
-                          "type": "null"
-                        },
                         {
                           "type": "array",
                           "minItems": 1,
@@ -1366,6 +1400,9 @@
                             ],
                             "additionalProperties": false
                           }
+                        },
+                        {
+                          "type": "null"
                         }
                       ]
                     },
@@ -1398,22 +1435,20 @@
                     "data",
                     "links"
                   ]
+                },
+                {
+                  "type": "null"
                 }
               ]
             },
             "organizers": {
+              "description": "An object representing references to agent resources identifying the persons or organizations responsible for organizing the event.",
               "oneOf": [
-                {
-                  "type": "null"
-                },
                 {
                   "type": "object",
                   "properties": {
                     "data": {
                       "oneOf": [
-                        {
-                          "type": "null"
-                        },
                         {
                           "type": "array",
                           "minItems": 1,
@@ -1473,6 +1508,7 @@
               ]
             },
             "publisher": {
+              "description": "An object representing a reference to an agent resource who originally provided the data about the event. The publisher is not the organization who manages the system where the data was originally inserted, but the organization actually provided the data.",
               "oneOf": [
                 {
                   "type": "object",
@@ -1534,6 +1570,7 @@
               ]
             },
             "series": {
+              "description": "An object representing a reference to an event series resource of which the event is an edition of.",
               "oneOf": [
                 {
                   "type": "object",
@@ -1601,18 +1638,13 @@
               ]
             },
             "sponsors": {
+              "description": "An object representing references to agent resources identifying the persons or organizations who are sponsoring the event.",
               "oneOf": [
-                {
-                  "type": "null"
-                },
                 {
                   "type": "object",
                   "properties": {
                     "data": {
                       "oneOf": [
-                        {
-                          "type": "null"
-                        },
                         {
                           "type": "array",
                           "minItems": 1,
@@ -1636,6 +1668,9 @@
                             ],
                             "additionalProperties": false
                           }
+                        },
+                        {
+                          "type": "null"
                         }
                       ]
                     },
@@ -1668,22 +1703,20 @@
                     "data",
                     "links"
                   ]
+                },
+                {
+                  "type": "null"
                 }
               ]
             },
             "subEvents": {
+              "description": "An object representing references to event resources identifying the parts of the event.",
               "oneOf": [
-                {
-                  "type": "null"
-                },
                 {
                   "type": "object",
                   "properties": {
                     "data": {
                       "oneOf": [
-                        {
-                          "type": "null"
-                        },
                         {
                           "type": "array",
                           "minItems": 1,
@@ -1707,6 +1740,9 @@
                             ],
                             "additionalProperties": false
                           }
+                        },
+                        {
+                          "type": "null"
                         }
                       ]
                     },
@@ -1739,22 +1775,20 @@
                     "data",
                     "links"
                   ]
+                },
+                {
+                  "type": "null"
                 }
               ]
             },
             "venues": {
+              "description": "An object representing references to venue resources identifying where the event will happen.",
               "oneOf": [
-                {
-                  "type": "null"
-                },
                 {
                   "type": "object",
                   "properties": {
                     "data": {
                       "oneOf": [
-                        {
-                          "type": "null"
-                        },
                         {
                           "type": "array",
                           "minItems": 1,
@@ -1833,11 +1867,14 @@
     },
     "agents": {
       "type": "object",
+      "description": "A resource representing an individual who bears mental attitudes and is capable of performing actions and perceiving events.",
       "properties": {
         "type": {
+          "description": "A string that identifies the resource's type.",
           "const": "agents"
         },
         "id": {
+          "description": "A string that uniquely and persistently identifies the resource within a server.",
           "type": "string",
           "minLength": 1
         },
@@ -1872,25 +1909,30 @@
                   "type": "object"
                 }
               }
+            },
+            {
+              "type": "object",
+              "properties": {
+                "contactPoints": {
+                  "description": "An array of contact point objects.",
+                  "$ref": "#/definitions/contactPoints"
+                }
+              }
             }
           ]
         },
         "relationships": {
           "type": "object",
+          "description": "An object containing the resource's data referring to other resources (e.g. the organizers of an event, the trails within a mountain area).",
           "properties": {
             "multimediaDescriptions": {
+              "description": "An object representing a reference towards media objects that describe the agent.",
               "oneOf": [
-                {
-                  "type": "null"
-                },
                 {
                   "type": "object",
                   "properties": {
                     "data": {
                       "oneOf": [
-                        {
-                          "type": "null"
-                        },
                         {
                           "type": "array",
                           "minItems": 1,
@@ -1914,6 +1956,9 @@
                             ],
                             "additionalProperties": false
                           }
+                        },
+                        {
+                          "type": "null"
                         }
                       ]
                     },
@@ -1946,6 +1991,9 @@
                     "data",
                     "links"
                   ]
+                },
+                {
+                  "type": "null"
                 }
               ]
             }
@@ -1969,11 +2017,14 @@
     },
     "eventSeries": {
       "type": "object",
+      "description": "A resource representing a series of event recurrent in time.",
       "properties": {
         "type": {
+          "description": "A string that identifies the resource's type.",
           "const": "eventSeries"
         },
         "id": {
+          "description": "A string that uniquely and persistently identifies the resource within a server.",
           "type": "string",
           "minLength": 1
         },
@@ -2013,6 +2064,7 @@
               "type": "object",
               "properties": {
                 "frequency": {
+                  "description": "A string representing how often editions of the event series are organized according to an enumeration of possible values.",
                   "oneOf": [
                     {
                       "type": "null"
@@ -2038,20 +2090,16 @@
         },
         "relationships": {
           "type": "object",
+          "description": "An object containing the resource's data referring to other resources (e.g. the organizers of an event, the trails within a mountain area).",
           "properties": {
             "editions": {
+              "description": "An object representing references to the event resources that are editions of the event series.",
               "oneOf": [
-                {
-                  "type": "null"
-                },
                 {
                   "type": "object",
                   "properties": {
                     "data": {
                       "oneOf": [
-                        {
-                          "type": "null"
-                        },
                         {
                           "type": "array",
                           "minItems": 1,
@@ -2075,6 +2123,9 @@
                             ],
                             "additionalProperties": false
                           }
+                        },
+                        {
+                          "type": "null"
                         }
                       ]
                     },
@@ -2107,22 +2158,20 @@
                     "data",
                     "links"
                   ]
+                },
+                {
+                  "type": "null"
                 }
               ]
             },
             "multimediaDescriptions": {
+              "description": "An object representing a reference towards media objects that describe the event series.",
               "oneOf": [
-                {
-                  "type": "null"
-                },
                 {
                   "type": "object",
                   "properties": {
                     "data": {
                       "oneOf": [
-                        {
-                          "type": "null"
-                        },
                         {
                           "type": "array",
                           "minItems": 1,
@@ -2146,6 +2195,9 @@
                             ],
                             "additionalProperties": false
                           }
+                        },
+                        {
+                          "type": "null"
                         }
                       ]
                     },
@@ -2178,6 +2230,9 @@
                     "data",
                     "links"
                   ]
+                },
+                {
+                  "type": "null"
                 }
               ]
             }
@@ -2201,11 +2256,14 @@
     },
     "mediaObjects": {
       "type": "object",
+      "description": "A resource representing an object that materializes creative works into a digital format to enable processing and sharing.",
       "properties": {
         "type": {
+          "description": "A string that identifies the resource's type.",
           "const": "mediaObjects"
         },
         "id": {
+          "description": "A string that uniquely and persistently identifies the resource within a server.",
           "type": "string",
           "minLength": 1
         },
@@ -2252,19 +2310,24 @@
               "type": "object",
               "properties": {
                 "contentType": {
+                  "description": "A string that represents the media type (formerly known as MIME type) of the media object.",
                   "type": "string",
                   "pattern": "^(application|audio|font|example|image|message|model|multipart|text|video)/[a-zA-Z0-9-.+]+$"
                 },
                 "duration": {
+                  "description": "A number representing the duration of an audio or a video in seconds.",
                   "$ref": "#/definitions/optionalNonZeroPositiveInteger"
                 },
                 "height": {
+                  "description": "A number representing the height of an image or a video in pixels.",
                   "$ref": "#/definitions/optionalNonZeroPositiveInteger"
                 },
                 "license": {
+                  "description": "A string that represents the license applied to the media object.",
                   "$ref": "#/definitions/optionalNonEmptyString"
                 },
                 "width": {
+                  "description": "A number representing the width of an image or a video in pixels.",
                   "$ref": "#/definitions/optionalNonZeroPositiveInteger"
                 }
               },
@@ -2312,8 +2375,10 @@
         },
         "relationships": {
           "type": "object",
+          "description": "An object containing the resource's data referring to other resources (e.g. the organizers of an event, the trails within a mountain area).",
           "properties": {
             "copyrightOwner": {
+              "description": "An object representing a reference towards an agent resource who owns the rights over the media object.",
               "oneOf": [
                 {
                   "type": "object",
@@ -2400,11 +2465,14 @@
     },
     "venues": {
       "type": "object",
+      "description": "A resource representing a venue, a place that may host an event.",
       "properties": {
         "type": {
+          "description": "A string that identifies the resource's type.",
           "const": "venues"
         },
         "id": {
+          "description": "A string that uniquely and persistently identifies the resource within a server.",
           "type": "string",
           "minLength": 1
         },
@@ -2444,12 +2512,15 @@
               "type": "object",
               "properties": {
                 "address": {
+                  "description": "An address object representing the address of the venue.",
                   "$ref": "#/definitions/address"
                 },
                 "geometries": {
+                  "description": "An array of geometry objects each of which represents the location of the venue in terms of GPS coordinates.",
                   "$ref": "#/definitions/optionalGeometries"
                 },
                 "howToArrive": {
+                  "description": "A text object containing instructions on how to arrive at the venue.",
                   "$ref": "#/definitions/text"
                 }
               }
@@ -2458,20 +2529,16 @@
         },
         "relationships": {
           "type": "object",
+          "description": "An object containing the resource's data referring to other resources (e.g. the organizers of an event, the trails within a mountain area).",
           "properties": {
             "multimediaDescriptions": {
+              "description": "An object representing a reference towards media objects that describe the venue.",
               "oneOf": [
-                {
-                  "type": "null"
-                },
                 {
                   "type": "object",
                   "properties": {
                     "data": {
                       "oneOf": [
-                        {
-                          "type": "null"
-                        },
                         {
                           "type": "array",
                           "minItems": 1,
@@ -2495,6 +2562,9 @@
                             ],
                             "additionalProperties": false
                           }
+                        },
+                        {
+                          "type": "null"
                         }
                       ]
                     },
@@ -2527,6 +2597,9 @@
                     "data",
                     "links"
                   ]
+                },
+                {
+                  "type": "null"
                 }
               ]
             }
