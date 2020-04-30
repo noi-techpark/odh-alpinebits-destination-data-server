@@ -258,7 +258,6 @@ const resources = {
       shortName: null,
       description: null,
       url: null,
-      address: null,
       geometries: null,
       howToArrive: null,
       openingHours: null,
