@@ -1,6 +1,6 @@
-# AlpineBits DestinationData: Examples
+# AlpineBits DestinationData: Schemas
 
-This repository contains a list of JSON files containing [JSON Schemas](https://json-schema.org/) for each endpoint on an AlpineBits Destination data server.
+This folder contains a list of JSON files containing [JSON Schemas](https://json-schema.org/) for each endpoint on an AlpineBits Destination data server.
 
 The name of each file refer to the endpoints they apply to, for instance:
 
