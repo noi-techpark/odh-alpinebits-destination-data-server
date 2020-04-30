@@ -36,10 +36,23 @@ const datatypes = {
     availableHours: null
   },
   HoursSpecification: {
-    hours: null,
+    dailySchedules: null,
+    weeklySchedules: null
+  },
+  OpensCloses: {
+    opens: null,
+    closes: null
+  },
+  Weekly: {
     validFrom: null,
     validTo: null,
-    daysOfWeek: null
+    monday: null,
+    tuesday: null,
+    wednesday: null,
+    thursday: null,
+    friday: null,
+    saturday: null,
+    sunday: null
   }
 }
 

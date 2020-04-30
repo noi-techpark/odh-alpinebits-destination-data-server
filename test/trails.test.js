@@ -2,8 +2,8 @@ const { basicResourceRouteTests } = require('./route_id.test');
 const { basicRouteTests } = require('./route.test');
 const { basicSchemaTests } = require('./route.schema.test');
 
-const arraySchema = require('../src/validator/schemas/trails.array.schema.json');
-const resourceSchema = require('../src/validator/schemas/trails.schema.json');
+const arraySchema = require('../src/validator/schemas/trails.schema.json');
+const resourceSchema = require('../src/validator/schemas/trails.id.schema.json');
 
 let opts = {
   route: 'trails',

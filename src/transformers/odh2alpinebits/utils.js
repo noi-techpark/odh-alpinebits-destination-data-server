@@ -192,45 +192,88 @@ function transformOperationSchedule(operationSchedule) {
   if(!operationSchedule)
     return null;
 
-  let openingHours = [];
+  let openingHours = templates.createObject('HoursSpecification');
 
   operationSchedule.forEach( entry => {
-    let newEntry = templates.createObject('HoursSpecification');
+    if(entry.Start===entry.Stop) {
+      
+      let key = entry.Start;
+      if(!key)
+        return;
+      
+      let found = key.match(/\d{4}-\d{2}-\d{2}/i);
+      if(!found)
+        return;
 
-    openingHours.push(newEntry);
-
-    newEntry.validFrom = entry.Start.replace(/T.*/,'');
-    newEntry.validTo = entry.Stop.replace(/T.*/,'');
-
-    if(Array.isArray(entry.OperationScheduleTime) && entry.OperationScheduleTime.length>0) {
-
-      entry.OperationScheduleTime.forEach( hours => {
-        newEntry.hours = safePush(newEntry.hours, { opens: hours.Start, closes: hours.End });
-        newEntry.daysOfWeek = []
-
-        if(hours.Sunday)
-          newEntry.daysOfWeek.push('sunday');
-        if(hours.Monday)
-          newEntry.daysOfWeek.push('monday');
-        if(hours.Tuesday)
-          newEntry.daysOfWeek.push('tuesday');
-        if(hours.Wednesday)
-          newEntry.daysOfWeek.push('wednesday');
-        if(hours.Thuresday)
-          newEntry.daysOfWeek.push('thursday');
-        if(hours.Friday)
-          newEntry.daysOfWeek.push('friday');
-        if(hours.Saturday)
-          newEntry.daysOfWeek.push('saturday');
-      });
-
-      if(newEntry.daysOfWeek.length===0)
-        newEntry.daysOfWeek = null;
+      key = found[0];
+      
+      if(!openingHours.dailySchedule)
+        openingHours.dailySchedules = {};
+      
+      let hoursArray = entry.OperationScheduleTime;
+      
+      if(Array.isArray(hoursArray)) {
+        let dailyHours = []
+        openingHours.dailySchedules[key] = dailyHours;
+        
+        hoursArray.forEach( hours => {
+          let openClose = { opens: hours.Start, closes: hours.End };
+          dailyHours = safePushUniqueHours(dailyHours, openClose);
+        });
+      }
+      else {
+        openingHours.dailySchedules[key] = null;
+      }
     }
+    else {
+      if(!openingHours.weeklySchedules)
+        openingHours.weeklySchedules = [];
+      
+      let newEntry = templates.createObject('Weekly');
+      openingHours.weeklySchedules.push(newEntry);
+
+      newEntry.validFrom = entry.Start.replace(/T.*/,'');
+      newEntry.validTo = entry.Stop.replace(/T.*/,'');
+
+      let hoursArray = entry.OperationScheduleTime;
+      
+      if(Array.isArray(hoursArray)) {
+
+        hoursArray.forEach( hours => {
+          let openClose = { opens: hours.Start, closes: hours.End };
+          newEntry.sunday = hours.Sunday ? safePushUniqueHours(newEntry.sunday, openClose) : newEntry.sunday;
+          newEntry.monday = hours.Monday ? safePushUniqueHours(newEntry.monday, openClose) : newEntry.monday;
+          newEntry.tuesday = hours.Tuesday ? safePushUniqueHours(newEntry.tuesday, openClose) : newEntry.tuesday;
+          newEntry.wednesday = hours.Wednesday ? safePushUniqueHours(newEntry.wednesday, openClose) : newEntry.wednesday;
+          newEntry.thursday = hours.Thuresday ? safePushUniqueHours(newEntry.thursday, openClose) : newEntry.thursday;
+          newEntry.friday = hours.Friday ? safePushUniqueHours(newEntry.friday, openClose) : newEntry.friday;
+          newEntry.saturday = hours.Saturday ? safePushUniqueHours(newEntry.saturday, openClose) : newEntry.saturday;
+        });
+      }
+    }  
   })
+
+
 
   return openingHours;
 }
+
+function safePushUniqueHours(array, value){
+  if (value===null || (typeof value==="string" && value.trim().length===0))
+    return array;
+
+  if(!array)
+    array = [];
+
+  let found = array.find( entry => entry.opens===value.opens && entry.closes===value.closes)
+  
+  if(!found)
+    array.push(value);
+
+  return array;
+}
+
+
 
 function transformHowToArrive(detail) {
 
