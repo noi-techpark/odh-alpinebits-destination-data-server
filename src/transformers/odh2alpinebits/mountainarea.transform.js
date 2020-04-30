@@ -100,7 +100,6 @@ function transformMountainArea(originalObject, included = {}, request) {
   Object.assign(attributes, utils.transformBasicProperties(source));
 
   attributes.howToArrive = utils.transformHowToArrive(source.Detail);
-  attributes.address = utils.transformAddress(source.ContactInfos, ['city','country','zipcode']);
 
   attributes.minAltitude = source.AltitudeFrom || null;
   attributes.maxAltitude = source.AltitudeTo || null;

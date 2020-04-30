@@ -157,21 +157,27 @@
       "type": "object",
       "properties": {
         "abstract": {
+          "description": "A text object containing a short textual description of the resource.",
           "$ref": "#/definitions/abstract"
         },
         "categories": {
+          "description": "An array of category strings identifying the types instantiated by the resource.",
           "$ref": "#/definitions/categories"
         },
         "description": {
+          "description": "A text object containing the complete textual description of the resource.",
           "$ref": "#/definitions/description"
         },
         "name": {
+          "description": "A text object containing the complete name of the resource.",
           "$ref": "#/definitions/name"
         },
         "shortName": {
+          "description": "A text object containing a short name of the resource.",
           "$ref": "#/definitions/shortName"
         },
         "url": {
+          "description": "A url string or a multilingual url object containing language-specific url strings.",
           "$ref": "#/definitions/url"
         }
       }
@@ -205,11 +211,14 @@
     },
     "basicMeta": {
       "type": "object",
+      "description": "An object containing metadata of the resource (e.g., the URL representing the resource's data provider or a date-time string of the instant of the resource's last update).",
       "properties": {
         "dataProvider": {
+          "description": "A url string that identifies the organization responsible for the data about a resource and who can be contacted in case of questions or issues regarding it.",
           "$ref": "#/definitions/dataProvider"
         },
         "lastUpdate": {
+          "description": "A date-time string that identifies when a resource was last modified in the server.",
           "$ref": "#/definitions/lastUpdate"
         }
       },
@@ -282,6 +291,7 @@
       }
     },
     "links": {
+      "description": "An object containing the links related to access related resources (e.g., a link to the agent resources representing organizers and sponsors of an event, a link to the media object resources representing multimedia descriptions of a mountain area resource, or a link to the resource itself, also referred to as `self`).",
       "oneOf": [
         {
           "type": "null"
@@ -299,28 +309,6 @@
               }
             ]
           }
-        }
-      ]
-    },
-    "relationshipToMany": {
-      "oneOf": [
-        {
-          "type": "null"
-        },
-        {
-          "type": "object",
-          "properties": {
-            "data": {
-              "$ref": "#/definitions/referenceArray"
-            },
-            "links": {
-              "$ref": "#/definitions/links"
-            }
-          },
-          "required": [
-            "data",
-            "links"
-          ]
         }
       ]
     },
@@ -362,6 +350,28 @@
         }
       ]
     },
+    "relationshipToMany": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "data": {
+              "$ref": "#/definitions/referenceArray"
+            },
+            "links": {
+              "$ref": "#/definitions/links"
+            }
+          },
+          "required": [
+            "data",
+            "links"
+          ]
+        }
+      ]
+    },
     "relationshipToOne": {
       "oneOf": [
         {
@@ -385,6 +395,7 @@
       ]
     },
     "address": {
+      "description": "An object that represents an address.",
       "oneOf": [
         {
           "type": "null"
@@ -456,70 +467,79 @@
       ]
     },
     "contactPoint": {
+      "type": "object",
+      "properties": {
+        "address": {
+          "$ref": "#/definitions/address"
+        },
+        "availableHours": {
+          "$ref": "#/definitions/hoursSpecifications"
+        },
+        "email": {
+          "type": "string",
+          "format": "email"
+        },
+        "telephone": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "string",
+              "minLength": 1
+            }
+          ]
+        }
+      },
+      "required": [
+        "address",
+        "availableHours",
+        "email",
+        "telephone"
+      ],
+      "anyOf": [
+        {
+          "not": {
+            "properties": {
+              "address": {
+                "type": "null"
+              }
+            }
+          }
+        },
+        {
+          "not": {
+            "properties": {
+              "email": {
+                "type": "null"
+              }
+            }
+          }
+        },
+        {
+          "not": {
+            "properties": {
+              "telephone": {
+                "type": "null"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "contactPoints": {
+      "description": "A contact point array contains data that one can use to contact an agent resource.",
       "oneOf": [
         {
           "type": "null"
         },
         {
-          "type": "object",
-          "properties": {
-            "address": {
-              "$ref": "#/definitions/address"
-            },
-            "availableHours": {
-              "$ref": "#/definitions/hoursSpecifications"
-            },
-            "email": {
-              "type": "string",
-              "format": "email"
-            },
-            "telephone": {
-              "oneOf": [
-                {
-                  "type": "null"
-                },
-                {
-                  "type": "string",
-                  "minLength": 1
-                }
-              ]
-            }
-          },
-          "required": [
-            "address",
-            "availableHours",
-            "email",
-            "telephone"
-          ],
-          "anyOf": [
-            {
-              "not": {
-                "properties": {
-                  "address": {
-                    "type": "null"
-                  }
-                }
-              }
-            },
-            {
-              "not": {
-                "properties": {
-                  "email": {
-                    "type": "null"
-                  }
-                }
-              }
-            },
-            {
-              "not": {
-                "properties": {
-                  "telephone": {
-                    "type": "null"
-                  }
-                }
-              }
-            }
-          ]
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/definitions/contactPoint"
+          }
         }
       ]
     },
@@ -528,6 +548,7 @@
       "pattern": "[A-Z]{2}"
     },
     "geometry": {
+      "description": "The representation of geographic data structures in this standard is borrowed from the GeoJSON standard specification.",
       "oneOf": [
         {
           "$ref": "#/definitions/geometryPoint"
@@ -551,6 +572,7 @@
     },
     "geometryPoint": {
       "type": "object",
+      "description": "The coordinates member is a single position.",
       "properties": {
         "type": {
           "const": "Point"
@@ -570,6 +592,7 @@
     },
     "geometryMultiPoint": {
       "type": "object",
+      "description": "The coordinates member is an array of positions.",
       "properties": {
         "type": {
           "const": "MultiPoint"
@@ -592,6 +615,7 @@
     },
     "geometryLineString": {
       "type": "object",
+      "description": "The coordinates member is an array of two or more positions.",
       "properties": {
         "type": {
           "const": "LineString"
@@ -615,6 +639,7 @@
     },
     "geometryMultiLineString": {
       "type": "object",
+      "description": "The coordinates member is an array of LineString coordinate arrays.",
       "properties": {
         "type": {
           "const": "MultiLineString"
@@ -641,6 +666,7 @@
     },
     "geometryPolygon": {
       "type": "object",
+      "description": "The coordinates member is an array different coordinate arrays forming a polygon.",
       "properties": {
         "type": {
           "const": "Polygon"
@@ -667,6 +693,7 @@
     },
     "geometryMultiPolygon": {
       "type": "object",
+      "description": "The coordinates member is an array of Polygon coordinate arrays",
       "properties": {
         "type": {
           "const": "MultiPolygon"
@@ -713,6 +740,7 @@
       "pattern": "[a-z]{3}"
     },
     "snowCondition": {
+      "description": "A snow condition object allows the representation of the conditions of a trail, snowpark or a mountain area at a given moment in time.",
       "oneOf": [
         {
           "type": "null"
@@ -818,6 +846,7 @@
       ]
     },
     "text": {
+      "description": "An object that allows exchange of textual data (e.g. name, description) using multiple languages.",
       "oneOf": [
         {
           "type": "null"
@@ -1133,6 +1162,7 @@
       "additionalProperties": false
     },
     "hoursSpecifications": {
+      "description": "An hours specification object allows the representations of schedules over periods of time.",
       "oneOf": [
         {
           "type": "null"
@@ -1176,11 +1206,14 @@
     },
     "mountainAreas": {
       "type": "object",
+      "description": "A resource representing a mountain area, a geographical region in which alpine sports and activities can be performed, such as skiing, snowboarding, climbing, and hiking.",
       "properties": {
         "type": {
+          "description": "A string that identifies the resource's type.",
           "const": "mountainAreas"
         },
         "id": {
+          "description": "A string that uniquely and persistently identifies the resource within a server.",
           "type": "string",
           "minLength": 1
         },
@@ -1220,30 +1253,39 @@
               "type": "object",
               "properties": {
                 "area": {
+                  "description": "A number representing the total area, in square meters, of the mountain area.",
                   "$ref": "#/definitions/optionalNonZeroPositiveInteger"
                 },
                 "geometries": {
+                  "description": "An array of geometry objects each of which represents the location of the mountain area in terms of GPS coordinates.",
                   "$ref": "#/definitions/optionalGeometries"
                 },
                 "howToArrive": {
+                  "description": "A text object containing instructions on how to arrive at the mountain area.",
                   "$ref": "#/definitions/text"
                 },
                 "maxAltitude": {
+                  "description": "A number representing the highest elevation point of the mountain area in meters above sea level.",
                   "$ref": "#/definitions/optionalPositiveInteger"
                 },
                 "minAltitude": {
+                  "description": "A number representing the lowest elevation point of the mountain area in meters above sea level.",
                   "$ref": "#/definitions/optionalPositiveInteger"
                 },
                 "openingHours": {
+                  "description": "An array of hours specification objects representing the hours in which the mountain area is open to the public.",
                   "$ref": "#/definitions/hoursSpecifications"
                 },
                 "snowCondition": {
+                  "description": "A snow condition object containing the latest reported condition of the snow in the mountain area.",
                   "$ref": "#/definitions/snowCondition"
                 },
                 "totalParkLength": {
+                  "description": "An integer representing the total length, in meters, of all snowparks located within the mountain area.",
                   "$ref": "#/definitions/optionalNonZeroPositiveInteger"
                 },
                 "totalTrailLength": {
+                  "description": "An integer representing the total length, in meters, of all trails located within the mountain area.",
                   "$ref": "#/definitions/optionalNonZeroPositiveInteger"
                 }
               }
@@ -1252,8 +1294,10 @@
         },
         "relationships": {
           "type": "object",
+          "description": "An object containing the resource's data referring to other resources (e.g. the organizers of an event, the trails within a mountain area).",
           "properties": {
             "areaOwner": {
+              "description": "An object representing references to an agent resource who owns the mountain area.",
               "oneOf": [
                 {
                   "type": "object",
@@ -1321,18 +1365,13 @@
               ]
             },
             "connections": {
+              "description": "An object representing references to place resources that identify the places that are physically accessible from the mountain area, which may include mountain areas, other lifts, snowparks, and trails.",
               "oneOf": [
-                {
-                  "type": "null"
-                },
                 {
                   "type": "object",
                   "properties": {
                     "data": {
                       "oneOf": [
-                        {
-                          "type": "null"
-                        },
                         {
                           "type": "array",
                           "minItems": 1,
@@ -1359,6 +1398,9 @@
                             ],
                             "additionalProperties": false
                           }
+                        },
+                        {
+                          "type": "null"
                         }
                       ]
                     },
@@ -1391,22 +1433,20 @@
                     "data",
                     "links"
                   ]
+                },
+                {
+                  "type": "null"
                 }
               ]
             },
             "lifts": {
+              "description": "An object representing references to lift resources that identify the lifts located within the mountain area.",
               "oneOf": [
-                {
-                  "type": "null"
-                },
                 {
                   "type": "object",
                   "properties": {
                     "data": {
                       "oneOf": [
-                        {
-                          "type": "null"
-                        },
                         {
                           "type": "array",
                           "minItems": 1,
@@ -1430,6 +1470,9 @@
                             ],
                             "additionalProperties": false
                           }
+                        },
+                        {
+                          "type": "null"
                         }
                       ]
                     },
@@ -1462,22 +1505,20 @@
                     "data",
                     "links"
                   ]
+                },
+                {
+                  "type": "null"
                 }
               ]
             },
             "multimediaDescriptions": {
+              "description": "An object representing a reference towards media objects that describe the mountain area.",
               "oneOf": [
-                {
-                  "type": "null"
-                },
                 {
                   "type": "object",
                   "properties": {
                     "data": {
                       "oneOf": [
-                        {
-                          "type": "null"
-                        },
                         {
                           "type": "array",
                           "minItems": 1,
@@ -1501,6 +1542,9 @@
                             ],
                             "additionalProperties": false
                           }
+                        },
+                        {
+                          "type": "null"
                         }
                       ]
                     },
@@ -1533,22 +1577,20 @@
                     "data",
                     "links"
                   ]
+                },
+                {
+                  "type": "null"
                 }
               ]
             },
             "snowparks": {
+              "description": "An object representing references to snowpark resources that identify the snowparks located within the mountain area.",
               "oneOf": [
-                {
-                  "type": "null"
-                },
                 {
                   "type": "object",
                   "properties": {
                     "data": {
                       "oneOf": [
-                        {
-                          "type": "null"
-                        },
                         {
                           "type": "array",
                           "minItems": 1,
@@ -1572,6 +1614,9 @@
                             ],
                             "additionalProperties": false
                           }
+                        },
+                        {
+                          "type": "null"
                         }
                       ]
                     },
@@ -1604,22 +1649,20 @@
                     "data",
                     "links"
                   ]
+                },
+                {
+                  "type": "null"
                 }
               ]
             },
             "subAreas": {
+              "description": "An object representing references to mountain area resources that identify the mountain areas located within the mountain area.",
               "oneOf": [
-                {
-                  "type": "null"
-                },
                 {
                   "type": "object",
                   "properties": {
                     "data": {
                       "oneOf": [
-                        {
-                          "type": "null"
-                        },
                         {
                           "type": "array",
                           "minItems": 1,
@@ -1643,6 +1686,9 @@
                             ],
                             "additionalProperties": false
                           }
+                        },
+                        {
+                          "type": "null"
                         }
                       ]
                     },
@@ -1675,22 +1721,20 @@
                     "data",
                     "links"
                   ]
+                },
+                {
+                  "type": "null"
                 }
               ]
             },
             "trails": {
+              "description": "An object representing references to trail resources that identify the trails located within the mountain area.",
               "oneOf": [
-                {
-                  "type": "null"
-                },
                 {
                   "type": "object",
                   "properties": {
                     "data": {
                       "oneOf": [
-                        {
-                          "type": "null"
-                        },
                         {
                           "type": "array",
                           "minItems": 1,
@@ -1714,6 +1758,9 @@
                             ],
                             "additionalProperties": false
                           }
+                        },
+                        {
+                          "type": "null"
                         }
                       ]
                     },
@@ -1746,6 +1793,9 @@
                     "data",
                     "links"
                   ]
+                },
+                {
+                  "type": "null"
                 }
               ]
             }
@@ -1769,11 +1819,14 @@
     },
     "agents": {
       "type": "object",
+      "description": "A resource representing an individual who bears mental attitudes and is capable of performing actions and perceiving events.",
       "properties": {
         "type": {
+          "description": "A string that identifies the resource's type.",
           "const": "agents"
         },
         "id": {
+          "description": "A string that uniquely and persistently identifies the resource within a server.",
           "type": "string",
           "minLength": 1
         },
@@ -1808,25 +1861,30 @@
                   "type": "object"
                 }
               }
+            },
+            {
+              "type": "object",
+              "properties": {
+                "contactPoints": {
+                  "description": "An array of contact point objects.",
+                  "$ref": "#/definitions/contactPoints"
+                }
+              }
             }
           ]
         },
         "relationships": {
           "type": "object",
+          "description": "An object containing the resource's data referring to other resources (e.g. the organizers of an event, the trails within a mountain area).",
           "properties": {
             "multimediaDescriptions": {
+              "description": "An object representing a reference towards media objects that describe the agent.",
               "oneOf": [
-                {
-                  "type": "null"
-                },
                 {
                   "type": "object",
                   "properties": {
                     "data": {
                       "oneOf": [
-                        {
-                          "type": "null"
-                        },
                         {
                           "type": "array",
                           "minItems": 1,
@@ -1850,6 +1908,9 @@
                             ],
                             "additionalProperties": false
                           }
+                        },
+                        {
+                          "type": "null"
                         }
                       ]
                     },
@@ -1882,6 +1943,9 @@
                     "data",
                     "links"
                   ]
+                },
+                {
+                  "type": "null"
                 }
               ]
             }
@@ -1905,11 +1969,14 @@
     },
     "lifts": {
       "type": "object",
+      "description": "A resource representing a lift, a machine designed to transport people uphill, being often used to transport skiers in mountain areas.",
       "properties": {
         "type": {
+          "description": "A string that identifies the resource's type.",
           "const": "lifts"
         },
         "id": {
+          "description": "A string that uniquely and persistently identifies the resource within a server.",
           "type": "string",
           "minLength": 1
         },
@@ -1949,30 +2016,39 @@
               "type": "object",
               "properties": {
                 "address": {
+                  "description": "An address object representing the address of the lift.",
                   "$ref": "#/definitions/address"
                 },
                 "capacity": {
+                  "description": "A number representing how many persons the lift can transport hourly on average.",
                   "$ref": "#/definitions/optionalNonZeroPositiveInteger"
                 },
                 "geometries": {
+                  "description": "An array of geometry objects each of which represents the location of the lift in terms of GPS coordinates.",
                   "$ref": "#/definitions/optionalGeometries"
                 },
                 "howToArrive": {
+                  "description": "A text object containing instructions on how to arrive at the lift.",
                   "$ref": "#/definitions/text"
                 },
                 "length": {
+                  "description": "A number representing the length of the lift in meters.",
                   "$ref": "#/definitions/optionalNonZeroPositiveInteger"
                 },
                 "maxAltitude": {
+                  "description": "A number representing the highest elevation point of the lift in meters above sea level.",
                   "$ref": "#/definitions/optionalNonZeroPositiveInteger"
                 },
                 "minAltitude": {
+                  "description": "A number representing the lowest elevation point of the lift in meters above sea level.",
                   "$ref": "#/definitions/optionalNonZeroPositiveInteger"
                 },
                 "openingHours": {
+                  "description": "An array of hours specification objects representing the hours in which the lift is open to the public.",
                   "$ref": "#/definitions/hoursSpecifications"
                 },
                 "personsPerChair": {
+                  "description": "An integer representing the number of persons that fit in a single chair/cabin of a lift.",
                   "$ref": "#/definitions/optionalNonZeroPositiveInteger"
                 }
               }
@@ -1981,20 +2057,16 @@
         },
         "relationships": {
           "type": "object",
+          "description": "An object containing the resource's data referring to other resources (e.g. the organizers of an event, the trails within a mountain area).",
           "properties": {
             "connections": {
+              "description": "An object representing references to place resources that identify the places that are physically accessible from the lift, which may include mountain areas, other lifts, snowparks, and trails.",
               "oneOf": [
-                {
-                  "type": "null"
-                },
                 {
                   "type": "object",
                   "properties": {
                     "data": {
                       "oneOf": [
-                        {
-                          "type": "null"
-                        },
                         {
                           "type": "array",
                           "minItems": 1,
@@ -2021,6 +2093,9 @@
                             ],
                             "additionalProperties": false
                           }
+                        },
+                        {
+                          "type": "null"
                         }
                       ]
                     },
@@ -2053,22 +2128,20 @@
                     "data",
                     "links"
                   ]
+                },
+                {
+                  "type": "null"
                 }
               ]
             },
             "multimediaDescriptions": {
+              "description": "An object representing a reference towards media objects that describe the lifts.",
               "oneOf": [
-                {
-                  "type": "null"
-                },
                 {
                   "type": "object",
                   "properties": {
                     "data": {
                       "oneOf": [
-                        {
-                          "type": "null"
-                        },
                         {
                           "type": "array",
                           "minItems": 1,
@@ -2092,6 +2165,9 @@
                             ],
                             "additionalProperties": false
                           }
+                        },
+                        {
+                          "type": "null"
                         }
                       ]
                     },
@@ -2124,6 +2200,9 @@
                     "data",
                     "links"
                   ]
+                },
+                {
+                  "type": "null"
                 }
               ]
             }
@@ -2147,11 +2226,14 @@
     },
     "mediaObjects": {
       "type": "object",
+      "description": "A resource representing an object that materializes creative works into a digital format to enable processing and sharing.",
       "properties": {
         "type": {
+          "description": "A string that identifies the resource's type.",
           "const": "mediaObjects"
         },
         "id": {
+          "description": "A string that uniquely and persistently identifies the resource within a server.",
           "type": "string",
           "minLength": 1
         },
@@ -2198,19 +2280,24 @@
               "type": "object",
               "properties": {
                 "contentType": {
+                  "description": "A string that represents the media type (formerly known as MIME type) of the media object.",
                   "type": "string",
                   "pattern": "^(application|audio|font|example|image|message|model|multipart|text|video)/[a-zA-Z0-9-.+]+$"
                 },
                 "duration": {
+                  "description": "A number representing the duration of an audio or a video in seconds.",
                   "$ref": "#/definitions/optionalNonZeroPositiveInteger"
                 },
                 "height": {
+                  "description": "A number representing the height of an image or a video in pixels.",
                   "$ref": "#/definitions/optionalNonZeroPositiveInteger"
                 },
                 "license": {
+                  "description": "A string that represents the license applied to the media object.",
                   "$ref": "#/definitions/optionalNonEmptyString"
                 },
                 "width": {
+                  "description": "A number representing the width of an image or a video in pixels.",
                   "$ref": "#/definitions/optionalNonZeroPositiveInteger"
                 }
               },
@@ -2258,8 +2345,10 @@
         },
         "relationships": {
           "type": "object",
+          "description": "An object containing the resource's data referring to other resources (e.g. the organizers of an event, the trails within a mountain area).",
           "properties": {
             "copyrightOwner": {
+              "description": "An object representing a reference towards an agent resource who owns the rights over the media object.",
               "oneOf": [
                 {
                   "type": "object",
@@ -2346,11 +2435,14 @@
     },
     "snowparks": {
       "type": "object",
+      "description": "A resource representing a snowpark, a particular type of trail that is designed to allow skiers and snowboarders to perform free-style tricks by providing them with special features, such as jumps and rails. ",
       "properties": {
         "type": {
+          "description": "A string that identifies the resource's type.",
           "const": "snowparks"
         },
         "id": {
+          "description": "A string that uniquely and persistently identifies the resource within a server.",
           "type": "string",
           "minLength": 1
         },
@@ -2390,33 +2482,43 @@
               "type": "object",
               "properties": {
                 "address": {
+                  "description": "An address object representing the address of the snowpark.",
                   "$ref": "#/definitions/address"
                 },
                 "difficulty": {
+                  "description": "A string describing the difficulty level of a snowpark.",
                   "$ref": "#/definitions/snowparkDifficulty"
                 },
                 "features": {
+                  "description": "An array of category strings that informs the types of features available within the snowpark, such as a jump or a rail.",
                   "$ref": "#/definitions/categories"
                 },
                 "geometries": {
+                  "description": "An array of geometry objects each of which represents the location of the snowpark in terms of GPS coordinates.",
                   "$ref": "#/definitions/optionalGeometries"
                 },
                 "howToArrive": {
+                  "description": "A text object containing instructions on how to arrive at the snowpark.",
                   "$ref": "#/definitions/text"
                 },
                 "length": {
+                  "description": "A number representing the length of the snowpark in meters.",
                   "$ref": "#/definitions/optionalNonZeroPositiveInteger"
                 },
                 "maxAltitude": {
+                  "description": "A number representing the highest elevation point of the snowpark in meters above sea level.",
                   "$ref": "#/definitions/optionalPositiveInteger"
                 },
                 "minAltitude": {
+                  "description": "A number representing the lowest elevation point of the snowpark in meters above sea level.",
                   "$ref": "#/definitions/optionalPositiveInteger"
                 },
                 "openingHours": {
+                  "description": "An array of hours specification objects representing the hours in which the snowpark is open to the public.",
                   "$ref": "#/definitions/hoursSpecifications"
                 },
                 "snowCondition": {
+                  "description": "A snow condition object containing the latest reported condition of the snow in the snowpark.",
                   "$ref": "#/definitions/snowCondition"
                 }
               }
@@ -2425,20 +2527,16 @@
         },
         "relationships": {
           "type": "object",
+          "description": "An object containing the resource's data referring to other resources (e.g. the organizers of an event, the trails within a mountain area).",
           "properties": {
             "connections": {
+              "description": "An object representing references to place resources that identify the places that are physically accessible from the snowpark, which may include mountain areas, other lifts, snowparks, and trails.",
               "oneOf": [
-                {
-                  "type": "null"
-                },
                 {
                   "type": "object",
                   "properties": {
                     "data": {
                       "oneOf": [
-                        {
-                          "type": "null"
-                        },
                         {
                           "type": "array",
                           "minItems": 1,
@@ -2465,6 +2563,9 @@
                             ],
                             "additionalProperties": false
                           }
+                        },
+                        {
+                          "type": "null"
                         }
                       ]
                     },
@@ -2497,22 +2598,20 @@
                     "data",
                     "links"
                   ]
+                },
+                {
+                  "type": "null"
                 }
               ]
             },
             "multimediaDescriptions": {
+              "description": "An object representing a reference towards media objects that describe the snowpark.",
               "oneOf": [
-                {
-                  "type": "null"
-                },
                 {
                   "type": "object",
                   "properties": {
                     "data": {
                       "oneOf": [
-                        {
-                          "type": "null"
-                        },
                         {
                           "type": "array",
                           "minItems": 1,
@@ -2536,6 +2635,9 @@
                             ],
                             "additionalProperties": false
                           }
+                        },
+                        {
+                          "type": "null"
                         }
                       ]
                     },
@@ -2568,6 +2670,9 @@
                     "data",
                     "links"
                   ]
+                },
+                {
+                  "type": "null"
                 }
               ]
             }
@@ -2591,11 +2696,14 @@
     },
     "trails": {
       "type": "object",
+      "description": "A resource representing a trail, a physical path that supports the practice of some type of sport activity.",
       "properties": {
         "type": {
+          "description": "A string that identifies the resource's type.",
           "const": "trails"
         },
         "id": {
+          "description": "A string that uniquely and persistently identifies the resource within a server.",
           "type": "string",
           "minLength": 1
         },
@@ -2635,30 +2743,39 @@
               "type": "object",
               "properties": {
                 "address": {
+                  "description": "An address object representing the address of the trail.",
                   "$ref": "#/definitions/address"
                 },
                 "difficulty": {
+                  "description": "An object containing the difficulty level of a ski slope.",
                   "$ref": "#/definitions/trailDifficulty"
                 },
                 "geometries": {
+                  "description": "An array of geometry objects each of which represents the location of the trail in terms of GPS coordinates.",
                   "$ref": "#/definitions/optionalGeometries"
                 },
                 "howToArrive": {
+                  "description": "A text object containing instructions on how to arrive at the trail.",
                   "$ref": "#/definitions/text"
                 },
                 "length": {
+                  "description": "A number representing the length of the trail in meters.",
                   "$ref": "#/definitions/optionalNonZeroPositiveInteger"
                 },
                 "maxAltitude": {
+                  "description": "A number representing the highest elevation point of the trail in meters above sea level.",
                   "$ref": "#/definitions/optionalPositiveInteger"
                 },
                 "minAltitude": {
+                  "description": "A number representing the lowest elevation point of the trail in meters above sea level.",
                   "$ref": "#/definitions/optionalPositiveInteger"
                 },
                 "openingHours": {
+                  "description": "An array of hours specification objects representing the hours in which the trail is open to the public.",
                   "$ref": "#/definitions/hoursSpecifications"
                 },
                 "snowCondition": {
+                  "description": "A snow condition object containing the latest reported condition of the snow in the trail.",
                   "$ref": "#/definitions/snowCondition"
                 }
               }
@@ -2667,20 +2784,16 @@
         },
         "relationships": {
           "type": "object",
+          "description": "An object containing the resource's data referring to other resources (e.g. the organizers of an event, the trails within a mountain area).",
           "properties": {
             "connections": {
+              "description": "An object representing references to place resources that identify the places that are physically accessible from the trail, which may include mountain areas, other lifts, snowparks, and trails.",
               "oneOf": [
-                {
-                  "type": "null"
-                },
                 {
                   "type": "object",
                   "properties": {
                     "data": {
                       "oneOf": [
-                        {
-                          "type": "null"
-                        },
                         {
                           "type": "array",
                           "minItems": 1,
@@ -2707,6 +2820,9 @@
                             ],
                             "additionalProperties": false
                           }
+                        },
+                        {
+                          "type": "null"
                         }
                       ]
                     },
@@ -2739,22 +2855,20 @@
                     "data",
                     "links"
                   ]
+                },
+                {
+                  "type": "null"
                 }
               ]
             },
             "multimediaDescriptions": {
+              "description": "An object representing a reference towards media objects that describe the trail.",
               "oneOf": [
-                {
-                  "type": "null"
-                },
                 {
                   "type": "object",
                   "properties": {
                     "data": {
                       "oneOf": [
-                        {
-                          "type": "null"
-                        },
                         {
                           "type": "array",
                           "minItems": 1,
@@ -2778,6 +2892,9 @@
                             ],
                             "additionalProperties": false
                           }
+                        },
+                        {
+                          "type": "null"
                         }
                       ]
                     },
@@ -2810,6 +2927,9 @@
                     "data",
                     "links"
                   ]
+                },
+                {
+                  "type": "null"
                 }
               ]
             }
