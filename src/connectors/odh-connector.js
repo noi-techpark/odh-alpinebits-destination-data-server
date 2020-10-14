@@ -1,4 +1,8 @@
 const axios = require('axios');
+const { getEventFilterQuery } = require('./filters/event-filters');
+const { getLiftFilterQuery } = require('./filters/lift-filters');
+const { getSnowparkFilterQuery } = require('./filters/snowpark-filters');
+const { getTrailFilterQuery } = require('./filters/trail-filters');
 const odh2ab = require ('../transformers/odh2alpinebits');
 const errors = require ('../errors');
 require('custom-env').env();
@@ -23,35 +27,49 @@ const axiosOpts = {
 }
 
 function fetchEvents (request) {
-  let path = EVENT_PATH;
-  let queryArray = getPaginationQuery(request);
-
-  if(queryArray.length)
-    path+='?'+queryArray.join('&');
+  const paginationQuery = getPaginationQuery(request);
+  const filtersQuery = getEventFilterQuery(request);
+  const sortQuery = getEventSortQuery(request);
+  const searchQuery = getSearchQuery(request);
+  const queryArray = [ ...paginationQuery, ...filtersQuery, ...sortQuery, ...searchQuery];
+  
+  const path = EVENT_PATH+'?'+queryArray.join('&');
 
   return fetch(path, request, odh2ab.transformEventArray)
 }
 
 function fetchLifts (request) {
-  let queryArray = getPaginationQuery(request);
+  const pageQuery = getPaginationQuery(request);
+  const filterQuery = getLiftFilterQuery(request);
+  const searchQuery = getSearchQuery(request);
+  const queryArray = [ ...pageQuery, ...filterQuery, ...searchQuery ];
+
   queryArray.push('odhtagfilter=aufstiegsanlagen')
 
-  let path = ACTIVITY_PATH+'?'+queryArray.join('&');
+  const path = ACTIVITY_PATH+'?'+queryArray.join('&');
 
   return fetch(path, request, odh2ab.transformLiftArray)
 }
 
 function fetchTrails (request) {
-  let queryArray = getPaginationQuery(request);
+  const pageQuery = getPaginationQuery(request);
+  const filterQuery = getTrailFilterQuery(request);
+  const searchQuery = getSearchQuery(request);
+  const queryArray = [ ...pageQuery, ...filterQuery, ...searchQuery ];
+
   queryArray.push('odhtagfilter=ski alpin,ski alpin (rundkurs),rodelbahnen,loipen')
 
-  let path = ACTIVITY_PATH+"?"+queryArray.join("&");
+  const path = ACTIVITY_PATH+"?"+queryArray.join("&");
 
   return fetch(path, request, odh2ab.transformTrailArray)
 }
 
 function fetchSnowparks (request) {
-  let queryArray = getPaginationQuery(request);
+  const pageQuery = getPaginationQuery(request);
+  const filterQuery = getSnowparkFilterQuery(request);
+  const searchQuery = getSearchQuery(request);
+  const queryArray = [ ...pageQuery, ...filterQuery, ...searchQuery ];
+
   queryArray.push('odhtagfilter=snowpark')
 
   let path = ACTIVITY_PATH+'?'+queryArray.join('&');
@@ -60,7 +78,7 @@ function fetchSnowparks (request) {
 }
 
 function fechMockData (request, filePath, transformFn) {
-  res = loadMockDataFromFile(request, filePath);
+  let res = loadMockDataFromFile(request, filePath);
 
   if(!res.data || res.status!==200){
     console.log('ERROR: Resource not found!');
@@ -188,7 +206,7 @@ async function fetchMountainArea(request, field) {
     console.log(`\n> Fetching mountain area(s) from ${process.env.ODH_BASE_URL}...`);
     let areaPath = areaId ? SKIAREA_PATH+'/'+areaId : SKIAREA_PATH;
     let regionPath = areaId ? SKIAREGION_PATH+'/'+areaId : SKIAREGION_PATH;
-    [ areaRes, regionRes] = await Promise.all([instance.get(areaPath), instance.get(regionPath)]);
+    [ areaRes, regionRes] = await Promise.all([instance.get(areaPath), instance.get(regionPath)]); // TODO: insert filters here
 
     if(typeof areaRes.data === 'string')
       areaRes.data = JSON.parse(areaRes.data);
@@ -351,23 +369,68 @@ function getPaginationQuery(request) {
   return pageArray;
 }
 
+function getSearchQuery(request) {
+  const { _search } = request.query;
+  let result = [];
+
+  if(!_search || typeof _search === 'string') {
+    // At the moment, we only support name searches
+    return result;
+  }
+
+  Object.keys(_search).forEach(searchedField => {
+    switch(searchedField) {
+      case 'name':
+        result.push(`searchfilter=${_search.name}`);
+      default:
+        // At the moment, we only support name searches
+    }
+  })
+
+  return result;
+}
+
+function getEventSortQuery(request) {
+  const { sort } = request.query;
+  let sortArray = [];
+
+  if (typeof sort === 'string') {
+    switch (sort) {
+      case "startDate":
+        sortArray.push("sort=asc");
+        break;
+      case "-startDate":
+        sortArray.push("sort=desc");
+        break;
+      default:
+        // at the moment, other sorting options are not supported
+        sortArray.push("sort=desc");
+        break;
+    }
+  } else {
+    sortArray.push("sort=desc");
+  }
+  
+  return sortArray;
+}
+
 module.exports = {
-  fetchEvents,
+  fetchEvents, // TODO: support events filters
   fetchEventById: fetchResourceById(EVENT_PATH, odh2ab.transformEvent),
   fetchEventPublisher: fetchResourceById(EVENT_PATH, odh2ab.transformPublisherRelationship),
   fetchEventMediaObjects: fetchResourceById(EVENT_PATH, odh2ab.transformMultimediaDescriptionsRelationship),
   fetchEventOrganizers: fetchResourceById(EVENT_PATH, odh2ab.transformOrganizersRelationship),
   fetchEventVenues: fetchResourceById(EVENT_PATH, odh2ab.transformVenuesRelationship),
-  fetchLifts,
+  fetchLifts, // TODO: support lifts filters
   fetchLiftById: fetchResourceById(ACTIVITY_PATH, odh2ab.transformLift),
   fetchLiftMediaObjects: fetchResourceById(ACTIVITY_PATH, odh2ab.transformMultimediaDescriptionsRelationship),
-  fetchTrails,
+  fetchTrails, // TODO: support trails filters
   fetchTrailById: fetchResourceById(ACTIVITY_PATH, odh2ab.transformTrail),
   fetchTrailMediaObjects: fetchResourceById(ACTIVITY_PATH, odh2ab.transformMultimediaDescriptionsRelationship),
-  fetchSnowparks,
+  fetchSnowparks, // TODO: support snowparks filters
   fetchSnowparkById: fetchResourceById(ACTIVITY_PATH, odh2ab.transformSnowpark),
   fetchSnowparkMediaObjects: fetchResourceById(ACTIVITY_PATH, odh2ab.transformMultimediaDescriptionsRelationship),
-  fetchMountainAreas: request => fetchMountainArea(request, null),
+  fetchMountainAreas: request => fetchMountainArea(request, null), // TODO: support mountain areas filters
   fetchMountainAreaById: request => fetchMountainArea(request, null),
   fetchMountainAreaMedia: request => fetchMountainAreaDependentRelationship(request, odh2ab.transformAreaMultimedDescriptionsRelationship),
   fetchMountainAreaOwner: request => fetchMountainAreaDependentRelationship(request, odh2ab.transformAreaOwnerRelationship),

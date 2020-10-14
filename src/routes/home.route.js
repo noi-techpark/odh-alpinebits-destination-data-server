@@ -21,7 +21,7 @@ function getVersion1Response(request, response) {
     links: {
       self: SERVER_URL+'/1.0',
       events: SERVER_URL+'/1.0/events',
-      eventSeries: SERVER_URL+'/1.0/eventSeries',
+      // eventSeries: SERVER_URL+'/1.0/eventSeries',
       lifts: SERVER_URL+'/1.0/lifts',
       mountainAreas: SERVER_URL+'/1.0/mountainAreas',
       snowparks: SERVER_URL+'/1.0/snowparks',

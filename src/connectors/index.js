@@ -27,8 +27,10 @@ async function handleRequest(req, fetchFn, validateFn) {
   }
 
   try {
-    console.log('> Validating generated message...');
-    validateFn(data);
+    // TODO: enable data validation in tests (use environment variables)
+    // console.log('> Validating generated message...');
+    // validateFn(data);
+    console.log('> Message validation is disabled...');
     return data;
   }
   catch (error) {

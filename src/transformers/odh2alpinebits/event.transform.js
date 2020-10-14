@@ -38,7 +38,7 @@ module.exports = (originalObject, included = {}, request) => {
       'Volksfeste/Festivals': 'schema/Festival',
       'Sport': 'schema/SportsEvent',
       'Führungen/Besichtigungen': null,
-      'Theater/Vorführungen': 'schema/TheatherEvent',
+      'Theater/Vorführungen': 'schema/TheaterEvent',
       'Kurse/Bildung': 'schema/EducationEvent',
       'Tagungen Vorträge': 'schema/BusinessEvent',
       'Familie': 'schema/ChildrensEvent',

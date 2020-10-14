@@ -26,6 +26,7 @@
     "custom-env": "^1.0.2",
     "express": "^4.17.1",
     "express-basic-auth": "^1.2.0",
+    "iso-639-3": "^2.2.0",
     "jsonapi-serializer": "^3.6.5",
     "sanitize-html": "^1.20.1",
     "sha.js": "^2.4.11"

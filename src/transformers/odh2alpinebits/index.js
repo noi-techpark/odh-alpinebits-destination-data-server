@@ -146,7 +146,7 @@ function createPaginationObjects (odhData, request) {
   let pageQueryStr = 'page[number]='
 
   if(!selfUrl.match(regex)){
-    regexParams = /page|include|fields/
+    regexParams = /page|include|fields|filter|sort|search/
     hasParams = !!selfUrl.match(regexParams);
 
     links = {
