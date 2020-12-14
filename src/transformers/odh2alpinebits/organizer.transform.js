@@ -24,6 +24,10 @@ function transformOrganizer(originalObject, included, request) {
     return null;
 
   let organizer = templates.createObject('Agent');
+
+  // Prevents no id when there is no "Organizer Info" data
+  organizer.id = sourceOrganizerID
+  
   let attributes = organizer.attributes;
 
   const organizerMapping = [['Url','url']];
