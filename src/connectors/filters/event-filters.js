@@ -1,6 +1,5 @@
 const {
   parseDateString,
-  getLangInIso6391,
   parsePointDistance,
   parseLanguageFilter,
   parseLastUpdateFilter,

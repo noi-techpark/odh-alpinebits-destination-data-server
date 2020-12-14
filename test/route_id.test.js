@@ -134,8 +134,6 @@ module.exports.basicResourceRouteTests = (opts) => {
       let fields = opts.multiSelectInclude.map(entry => `fields[${entry.resourceType}]=${entry.attributes.join(',')}`)
       let url = `${baseUrl}?${[include, ...fields].join('&')}`
 
-      console.log(url);
-
       let expectedAttributesPerType = {};
       opts.multiSelectInclude.forEach( entry => expectedAttributesPerType[entry.resourceType]=entry.attributes)
 
