@@ -1,17 +1,39 @@
-const shajs = require('sha.js')
+const iso6393to6391 = require('iso-639-3/to-1.json') // TODO: update languageMapping
 const sanitizeHtml = require('sanitize-html');
 const templates = require('./templates');
 
-const languageMapping = [
-  ['it','ita'],
-  ['en','eng'],
-  ['de','deu']
-]
+const iso6391to6393 = Object.entries(iso6393to6391).reduce((invertedMap, entry) => {
+  const threeLetterCode = entry[0];
+  const twoLetterCode = entry[1];
+
+  if(invertedMap) {
+    invertedMap[twoLetterCode] = threeLetterCode;
+    return invertedMap;
+  } else {
+    return { twoLetterCode: threeLetterCode };
+  }
+})
+
+const languageMapping = []
 
 const htmlSanitizeOpts = {
   allowedTags: [],
   allowedAttributes: {}
 };
+
+const mappedLanguages = new Set();
+
+// TODO: replace this function by updating transformMultilingualFields() to access the ISO-639 mappings directly, instead of the languageMapping array
+function loadLanguageMappings(source) {
+  if(Array.isArray(source.HasLanguage)) {
+    source.HasLanguage.forEach(twoLetterCode => {
+      if(!mappedLanguages.has(twoLetterCode)) {
+        mappedLanguages.add(twoLetterCode);
+        languageMapping.push([twoLetterCode, iso6391to6393[twoLetterCode]]);
+      }
+    })
+  }
+}
 
 // isLanguageNested: true => object.property.it
 // isLanguageNested: false => object.it.property
@@ -162,6 +184,7 @@ function addRelationshipToOne(relationships, relationshipName, resource, selfLin
 }
 
 function transformBasicProperties(source) {
+  loadLanguageMappings(source);
   let target = {};
 
   // Basic textual descriptions

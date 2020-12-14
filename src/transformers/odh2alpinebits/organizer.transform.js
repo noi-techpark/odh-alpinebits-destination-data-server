@@ -17,6 +17,8 @@ function transformOrganizer(originalObject, included, request) {
 
   let sourceOrganizer = sourceEvent.OrganizerInfos;
   let sourceContact = sourceEvent.ContactInfos;
+  // TODO: Test organizer ID
+  let sourceOrganizerID = sourceEvent.OrgRID;
 
   if(!sourceOrganizer)
     return null;
@@ -56,7 +58,7 @@ function transformOrganizer(originalObject, included, request) {
       const email = utils.safeGetString(['Email'], sourceEventOrganizer);
       newContact.email = newContact.email || email;
 
-      const orgId =  utils.safeGetString(['Tax'], sourceEventOrganizer) ||  utils.safeGetString(['Vat'], sourceEventOrganizer) || email;
+      const orgId =  sourceOrganizerID || utils.safeGetString(['Tax'], sourceEventOrganizer) ||  utils.safeGetString(['Vat'], sourceEventOrganizer) || email;
       organizer.id = organizer.id || orgId;
 
       // const ignoreValues = ['Undefiniert','!','-','.','sonstige'];
