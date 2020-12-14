@@ -1,46 +1,16 @@
 const {
-  parseDateString,
-  getLangInIso6391,
-  parsePointDistance,
+  parseLanguageFilter,
+  parseLastUpdateFilter,
+  parseGeometriesFilter,
 } = require("./common");
 
 function getTrailFilterQuery(request) {
   const { filter } = request.query;
   let filtersArray = [];
 
-  if (filter) {
-    for (let filterName of Object.getOwnPropertyNames(filter)) {
-      switch (filterName) {
-        case "lang": // langfilter
-          filtersArray.push("langfilter=" + getLangInIso6391(filter.lang));
-          break;
-        case "nearTo": {
-          // latitude, longitude, and radius
-          const { lat, lng, rad } = parsePointDistance(filter.nearTo);
-          if (lat && lng && rad) {
-            filtersArray.push("latitude=" + lat);
-            filtersArray.push("longitude=" + lng);
-            filtersArray.push("radius=" + rad);
-          }
-          break;
-        }
-        case "categories": // disabled: multiple usage of odhtagfilter
-        //   filtersArray.push(
-        //     "odhtagfilter=" + getMappedCategories(filter.categories)
-        //   );
-          break;
-        case "updatedAfter": // updatefrom
-          filtersArray.push(
-            "updatefrom=" + parseDateString(filter.updatedAfter)
-          );
-          break;
-        // distancefilter - does not work
-        // altitudefilter - does not work
-        // durationfilter - does not work
-        // difficultyfilter - does not work
-      }
-    }
-  }
+  parseLanguageFilter(filter, filtersArray);
+  parseLastUpdateFilter(filter, filtersArray);
+  parseGeometriesFilter(filter, filtersArray);
 
   return filtersArray;
 }

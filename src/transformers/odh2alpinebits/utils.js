@@ -1,5 +1,4 @@
 const iso6393to6391 = require('iso-639-3/to-1.json') // TODO: update languageMapping
-const shajs = require('sha.js')
 const sanitizeHtml = require('sanitize-html');
 const templates = require('./templates');
 
@@ -15,14 +14,7 @@ const iso6391to6393 = Object.entries(iso6393to6391).reduce((invertedMap, entry) 
   }
 })
 
-const languageMapping = [
-  // ['it','ita'],
-  // ['en','eng'],
-  // ['de','deu'],
-  // ['fr','fra'],
-  // ['pl','pol'],
-  // ['ce','che'],
-]
+const languageMapping = []
 
 const htmlSanitizeOpts = {
   allowedTags: [],

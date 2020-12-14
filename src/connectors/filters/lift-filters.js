@@ -1,49 +1,26 @@
 const {
-  parseDateString,
-  getLangInIso6391,
-  parsePointDistance,
+  parseLanguageFilter,
+  parseLastUpdateFilter,
+  parseGeometriesFilter,
 } = require("./common");
 
 function getLiftFilterQuery(request) {
   const { filter } = request.query;
   let filtersArray = [];
 
-  if (filter) {
-    for (let filterName of Object.getOwnPropertyNames(filter)) {
-      switch (filterName) {
-        case "lang": // langfilter
-          filtersArray.push("langfilter=" + getLangInIso6391(filter.lang));
-          break;
-        case "nearTo": {
-          // latitude, longitude, and radius
-          const { lat, lng, rad } = parsePointDistance(filter.nearTo);
-          if (lat && lng && rad) {
-            filtersArray.push("latitude=" + lat);
-            filtersArray.push("longitude=" + lng);
-            filtersArray.push("radius=" + rad);
-          }
-          break;
-        }
-        case "categories": // subtype
-          // The filter won't work without filtering as well (activitytype=512)
-          filtersArray.push(
-            "activitytype=512&subtype=" + getCategoriesAsBitmask(filter.categories)
-          );
-          break;
-        case "updatedAfter": // updatefrom
-          filtersArray.push(
-            "updatefrom=" + parseDateString(filter.updatedAfter)
-          );
-          break;
-        // distancefilter - does not work
-        // altitudefilter - does not work
-        // durationfilter - does not work
-        // difficultyfilter - does not work
-      }
-    }
-  }
+  parseLanguageFilter(filter, filtersArray);
+  parseCategoriesFilter(filter, filtersArray);
+  parseLastUpdateFilter(filter, filtersArray);
+  parseGeometriesFilter(filter, filtersArray);
 
   return filtersArray;
+}
+
+function parseCategoriesFilter(filter, filtersArray) {
+  if (filter.categories && filter.categories.any) {
+    const categories = filter.categories.any.split(",");
+    filtersArray.push("activitytype=512&subtype=" + getCategoriesAsBitmask(categories));
+  }
 }
 
 function getCategoriesAsBitmask(categories) {

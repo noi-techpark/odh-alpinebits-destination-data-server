@@ -30,8 +30,8 @@ if(process.env.AUTH_METHOD==='basic-auth') {
       unauthorizedResponse: (req, res) => {
         console.log('Unauthorized request ' + process.env.REF_SERVER_URL + req.originalUrl);
         return req.auth
-          ? errors.createJSON(errors.credentialsRejected)
-          : errors.createJSON(errors.noCredentials)
+          ? errors.createJSON(errors.credentialsRejected,req)
+          : errors.createJSON(errors.noCredentials,req)
       }
   }))
 }

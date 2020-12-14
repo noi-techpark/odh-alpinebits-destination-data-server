@@ -2,59 +2,60 @@ const {
   parseDateString,
   getLangInIso6391,
   parsePointDistance,
+  parseLanguageFilter,
+  parseLastUpdateFilter,
 } = require("./common");
 
 function getEventFilterQuery(request) {
   const { filter } = request.query;
   let filtersArray = [];
 
-  if (filter) {
-    for (let filterName of Object.getOwnPropertyNames(filter)) {
-      switch (filterName) {
-        case "lang": // langfilter
-          filtersArray.push("langfilter=" + getLangInIso6391(filter.lang));
-          break;
-        case "nearTo": {
-          // latitude, longitude, and radius
-          const { lat, lng, rad } = parsePointDistance(filter.nearTo);
-          if (lat && lng && rad) {
-            filtersArray.push("latitude=" + lat);
-            filtersArray.push("longitude=" + lng);
-            filtersArray.push("radius=" + rad);
-          }
-          break;
-        }
-        case "categories": // topicfilter
-          filtersArray.push(
-            "topicfilter=" + getCategoriesAsBitmask(filter.categories)
-          );
-          break;
-        case "happeningBefore": // enddate
-          filtersArray.push("enddate=" + parseDateString(filter.happeningBefore));
-          break;
-        case "happeningAfter": // begindate
-          filtersArray.push("begindate=" + parseDateString(filter.happeningAfter));
-          break;
-        case "happeningBetween": {
-          let limits = Array.isArray(filter.happeningBetween) ? filter.happeningBetween : []
-          limits = limits.map(parseDateString)
-
-          if(limits[0] && limits[1]) {
-            filtersArray.push(`begindate=${limits[0]}&enddate=${limits[1]}`);
-          }
-          break;
-        }
-        case "updatedAfter": // updatefrom
-          filtersArray.push(
-            "updatefrom=" + parseDateString(filter.updatedAfter)
-          );
-          break;
-        // Possible to be supported: orgfilter, odhtagfilter, searchfilter (requires better integration)
-      }
-    }
-  }
+  parseLanguageFilter(filter, filtersArray);
+  parseCategoriesFilter(filter, filtersArray);
+  parseStartDateFilter(filter, filtersArray);
+  parseEndDateFilter(filter, filtersArray);
+  parseLastUpdateFilter(filter, filtersArray);
+  parseOrganizersFilter(filter, filtersArray);
+  parseVenuesNearFilter(filter, filtersArray);
 
   return filtersArray;
+}
+
+function parseCategoriesFilter(filter, filtersArray) {
+  if (filter.categories && filter.categories.any) {
+    const categories = filter.categories.any.split(",");
+    filtersArray.push("topicfilter=" + getCategoriesAsBitmask(categories));
+  }
+}
+
+function parseStartDateFilter(filter, filtersArray) {
+  if (filter.startDate && filter.startDate.lte) {
+    filtersArray.push("begindate=" + parseDateString(filter.startDate.lte));
+  }
+}
+
+function parseEndDateFilter(filter, filtersArray) {
+  if (filter.endDate && filter.endDate.gte) {
+    filtersArray.push("enddate=" + parseDateString(filter.endDate.gte));
+  }
+}
+
+function parseOrganizersFilter(filter, filtersArray) {
+  if (filter.organizers && filter.organizers.eq) {
+    filtersArray.push("orgfilter=" + filter.organizers.eq);
+  }
+}
+
+function parseVenuesNearFilter(filter, filtersArray) {
+  if (filter.venues && filter.venues.near) {
+    const location = filter.venues.near.split(",");
+    const { lat, lng, rad } = parsePointDistance(location);
+    if (lat && lng && rad) {
+      filtersArray.push("latitude=" + lat);
+      filtersArray.push("longitude=" + lng);
+      filtersArray.push("radius=" + rad);
+    }
+  }
 }
 
 const eventCategoryMask = {

@@ -1,8 +1,7 @@
 const { basicResourceRouteTests } = require('./route_id.test');
 const { basicRouteTests } = require('./route.test');
 const { basicSchemaTests } = require('./route.schema.test');
-const { basicFilterTests } = require("./filter.test");
-const { basicSearchTests } = require("./search.test");
+const { basicQueriesTest } = require("./queries.test");
 
 const arraySchema = require('../src/validator/schemas/lifts.schema.json');
 const resourceSchema = require('../src/validator/schemas/lifts.id.schema.json');
@@ -19,24 +18,26 @@ let opts = {
     pageEnd: 10,
     pageSize: 50
   },
-  filters: [
+  queries: [
     {
-      name: "updatedAfter",
-      value: "2020-09-01",
+      query: 'filter[lang]=eng',
+      expectStatus: 200
     },
     {
-      name: "categories",
-      value: "alpinebits/skilift,odh/sessellift",
+      query: 'filter[categories][any]=alpinebits/skilift,odh/sessellift',
+      expectStatus: 200
     },
     {
-      name: "nearTo",
-      value: "11.309245,46.862025,10000",
+      query: 'filter[geometries][near]=11.309245,46.862025,10000',
+      expectStatus: 200
     },
-  ],
-  searches: [
     {
-      name: "name",
-      value: "renon",
+      query: 'filter[lastUpdate][gt]=2020-10-01',
+      expectStatus: 200
+    },
+    {
+      query: 'search[name]=renon',
+      expectStatus: 200
     },
   ],
 }
@@ -44,5 +45,4 @@ let opts = {
 basicRouteTests(opts);
 basicResourceRouteTests(opts);
 basicSchemaTests(opts);
-basicFilterTests(opts);
-basicSearchTests(opts);
+basicQueriesTest(opts);

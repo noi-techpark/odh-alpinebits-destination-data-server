@@ -5,6 +5,7 @@ const { getSnowparkFilterQuery } = require('./filters/snowpark-filters');
 const { getTrailFilterQuery } = require('./filters/trail-filters');
 const odh2ab = require ('../transformers/odh2alpinebits');
 const errors = require ('../errors');
+const { handleError } = require('../errors');
 require('custom-env').env();
 
 const EVENT_PATH = 'Event';
@@ -30,8 +31,9 @@ function fetchEvents (request) {
   const paginationQuery = getPaginationQuery(request);
   const filtersQuery = getEventFilterQuery(request);
   const sortQuery = getEventSortQuery(request);
+  const randomQuery = getRandomQuery(request);
   const searchQuery = getSearchQuery(request);
-  const queryArray = [ ...paginationQuery, ...filtersQuery, ...sortQuery, ...searchQuery];
+  const queryArray = [ ...paginationQuery, ...filtersQuery, ...sortQuery, ...searchQuery, ...randomQuery];
   
   const path = EVENT_PATH+'?'+queryArray.join('&');
 
@@ -88,7 +90,7 @@ function fechMockData (request, filePath, transformFn) {
   try {
     console.log('> Transforming data to the AlpineBits format...');
     const data = transformFn(res.data, request);
-    console.log('OK: Sucessfully transformed data.\n');
+    console.log('OK: Successfully transformed data.\n');
 
     return data;
   }
@@ -160,7 +162,7 @@ function fetchResourceById(resource, transform) {
 /*
 transform(openDataHubObject): a function to transform an OpenDataHub response into the AlpineBits format
   input: an object retrieved from the OpenDataHub API
-  output: an obejct following the AlpineBits format
+  output: an object following the AlpineBits format
 */
 
 async function fetch(path, request, transformFn) {
@@ -351,9 +353,13 @@ function handleConnectionError(error) {
 }
 
 function handleTransformationError(error) {
-  console.log(error);
-  console.log('ERROR: Failed to transform the input data!');
-  throw errors.cantTransform;
+  if(!error.status) {
+    console.log(error);
+    console.log('ERROR: Failed to transform the input data!');
+    throw errors.cantTransform;
+  } else {
+    throw error
+  }
 }
 
 function getPaginationQuery(request) {
@@ -370,18 +376,18 @@ function getPaginationQuery(request) {
 }
 
 function getSearchQuery(request) {
-  const { _search } = request.query;
+  const { search } = request.query;
   let result = [];
 
-  if(!_search || typeof _search === 'string') {
+  if(!search || typeof search === 'string') {
     // At the moment, we only support name searches
     return result;
   }
 
-  Object.keys(_search).forEach(searchedField => {
+  Object.keys(search).forEach(searchedField => {
     switch(searchedField) {
       case 'name':
-        result.push(`searchfilter=${_search.name}`);
+        result.push(`searchfilter=${search.name}`);
       default:
         // At the moment, we only support name searches
     }
@@ -407,11 +413,29 @@ function getEventSortQuery(request) {
         sortArray.push("sort=desc");
         break;
     }
-  } else {
+  } else if(!request.query.random) {
     sortArray.push("sort=desc");
   }
   
   return sortArray;
+}
+
+function getRandomInt(min, max) {
+  min = Math.ceil(min);
+  max = Math.floor(max);
+  return Math.floor(Math.random() * (max - min)) + min;
+}
+
+function getRandomQuery(request) {
+  let random = Number(request.query.random);
+
+  if(isNaN(random)) {
+    return [];
+  }
+  
+  random = random === 0 ? getRandomInt(1,50) : random;
+  
+  return [ `seed=${random}` ];
 }
 
 module.exports = {

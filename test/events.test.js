@@ -1,8 +1,7 @@
 const { basicRouteTests } = require("./route.test");
 const { basicResourceRouteTests } = require("./route_id.test");
 const { basicSchemaTests } = require("./route.schema.test");
-const { basicFilterTests } = require("./filter.test");
-const { basicSearchTests } = require("./search.test");
+const { basicQueriesTest } = require("./queries.test");
 const arraySchema = require("../src/validator/schemas/events.schema.json");
 const resourceSchema = require("../src/validator/schemas/events.id.schema.json");
 
@@ -43,40 +42,46 @@ let opts = {
     pageEnd: 10,
     pageSize: 50,
   },
-  filters: [
+  queries: [
     {
-      name: "updatedAfter",
-      value: "2020-09-01",
+      query: 'filter[lang]=eng',
+      expectStatus: 200
     },
     {
-      name: "lang",
-      value: "fra",
+      query: 'filter[venues][near]=11.309245,46.862025,10000',
+      expectStatus: 200
     },
     {
-      name: "categories",
-      value: "schema/VisualArts,odh/messen-markte",
+      query: 'filter[startDate][lte]=2020-10-01',
+      expectStatus: 200
     },
     {
-      name: "nearTo",
-      value: "11.309245,46.862025,10000",
+      query: 'filter[endDate][gte]=2020-10-10',
+      expectStatus: 200
     },
     {
-      name: "happeningAfter",
-      value: "2020-10-01",
+      query: 'filter[lastUpdate][gt]=2020-10-01',
+      expectStatus: 200
     },
     {
-      name: "happeningBefore",
-      value: "2020-10-30",
+      query: 'filter[categories][any]=schema/VisualArts,odh/messen-markte',
+      expectStatus: 200
     },
     {
-      name: "happeningBetween",
-      value: "2020-10-01,2020-11-01",
+      query: 'filter[organizers][eq]=22C0A7135D3341A481BECEC0DCDB373F',
+      expectStatus: 200
     },
-  ],
-  searches: [
     {
-      name: "name",
-      value: "bolz",
+      query: 'search[name]=bolz',
+      expectStatus: 200
+    },
+    {
+      query: 'sort=-startDate',
+      expectStatus: 200
+    },
+    {
+      query: 'random=1',
+      expectStatus: 200
     },
   ],
 };
@@ -117,6 +122,5 @@ function eventSortingTest() {
 basicRouteTests(opts);
 basicResourceRouteTests(opts);
 basicSchemaTests(opts);
-basicFilterTests(opts);
-basicSearchTests(opts);
+basicQueriesTest(opts);
 eventSortingTest();

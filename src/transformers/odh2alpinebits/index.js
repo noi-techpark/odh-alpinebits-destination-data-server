@@ -1,3 +1,5 @@
+const errors = require("../../errors");
+
 const transformEvent = require('./event.transform');
 const { transformOrganizersRelationship } = require('./organizer.transform');
 const { transformPublisherRelationship } = require('./publisher.transform');
@@ -116,57 +118,66 @@ function getIncludedOnResource(resource, request, includedMap, filteredMap) {
   })
 }
 
-function createPaginationObjects (odhData, request) {
+function createPaginationObjects(odhData, request) {
   const { selfUrl } = request;
 
   let count = parseInt(odhData.TotalResults);
   let current = parseInt(odhData.CurrentPage);
-  let last = pages = parseInt(odhData.TotalPages);
-  let next = (current < last) ? current+1 : last;
+  let last = (pages = parseInt(odhData.TotalPages) || 1);
+  let next = current < last ? current + 1 : last;
   let first = 1;
   let prev = 1;
 
-  if(current > 1) {
-    if(current <= last)
-      prev = current-1;
-    else
-      prev = last;
+  if (current > 1) {
+    if (current <= last) prev = current - 1;
+    else prev = last;
   }
-  
+
   let meta;
-  
-  if(!request.params.id)
+
+  if (!request.params.id)
     meta = {
       count,
-      pages
+      pages,
     };
 
   let links;
-  let regex = /page\[number\]=[0-9]+/
-  let pageQueryStr = 'page[number]='
+  let regex = /page\[number\]=[0-9]+/;
+  let pageQueryStr = "page[number]=";
 
-  if(!selfUrl.match(regex)){
-    regexParams = /page|include|fields|filter|sort|search/
+  if (!selfUrl.match(regex)) {
+    regexParams = /page|include|fields|filter|sort|search|random/;
     hasParams = !!selfUrl.match(regexParams);
 
+    // TODO: double-check; removed appending question mark on <first: selfUrl + (hasParams ? "&" : "?") + pageQueryStr + first,>
     links = {
-      first: selfUrl + (hasParams ? '&' : '?') + pageQueryStr + first,
-      last: selfUrl + (hasParams ? '&' : '?') + pageQueryStr + last,
-      next: selfUrl + (hasParams ? '&' : '?') + pageQueryStr + next,
-      prev: selfUrl + (hasParams ? '&' : '?') + pageQueryStr + prev,
-      self: selfUrl + (hasParams ? '&' : '?') + pageQueryStr + current,
-    }
-  }
-  else
+      first: selfUrl + (hasParams ? "&" : "") + pageQueryStr + first,
+      last: selfUrl + (hasParams ? "&" : "") + pageQueryStr + last,
+      next: selfUrl + (hasParams ? "&" : "") + pageQueryStr + next,
+      prev: selfUrl + (hasParams ? "&" : "") + pageQueryStr + prev,
+      self: selfUrl + (hasParams ? "&" : "") + pageQueryStr + current,
+    };
+  } else
     links = {
       first: selfUrl.replace(regex, pageQueryStr + first),
       last: selfUrl.replace(regex, pageQueryStr + last),
       next: selfUrl.replace(regex, pageQueryStr + next),
       prev: selfUrl.replace(regex, pageQueryStr + prev),
       self: selfUrl.replace(regex, pageQueryStr + current),
-    }
+    };
 
-  return { meta, links} ;
+  if (current > last && count > 0) {
+    throw { 
+      ...errors.pageNotFound,
+      links: {
+        first: links.first,
+        last: links.last,
+      },
+      meta
+    };
+  }
+
+  return { meta, links };
 }
 
 function selectFields(data, request){
