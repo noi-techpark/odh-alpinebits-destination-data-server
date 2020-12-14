@@ -1,48 +1,126 @@
-const { basicRouteTests } = require('./route.test');
-const { basicResourceRouteTests } = require('./route_id.test');
-const { basicSchemaTests } = require('./route.schema.test');
-const arraySchema = require('../src/validator/schemas/events.schema.json');
-const resourceSchema = require('../src/validator/schemas/events.id.schema.json');
+const { basicRouteTests } = require("./route.test");
+const { basicResourceRouteTests } = require("./route_id.test");
+const { basicSchemaTests } = require("./route.schema.test");
+const { basicQueriesTest } = require("./queries.test");
+const arraySchema = require("../src/validator/schemas/events.schema.json");
+const resourceSchema = require("../src/validator/schemas/events.id.schema.json");
 
 let opts = {
-  route: 'events',
-  resourceType: 'events',
-  sampleAttributes: ['name','startDate','endDate','categories'],
-  sampleRelationships: ['organizers','venues','multimediaDescriptions'],
+  route: "events",
+  resourceType: "events",
+  sampleAttributes: ["name", "startDate", "endDate", "categories"],
+  sampleRelationships: ["organizers", "venues", "multimediaDescriptions"],
   include: {
-    relationship: 'organizers',
-    resourceType: 'agents'
+    relationship: "organizers",
+    resourceType: "agents",
   },
   multiInclude: {
-    relationships: ['organizers','venues','multimediaDescriptions'],
-    resourceTypes: ['agents','venues','mediaObjects']
+    relationships: ["organizers", "venues", "multimediaDescriptions"],
+    resourceTypes: ["agents", "venues", "mediaObjects"],
   },
   selectInclude: {
-    attribute: 'name',
-    relationship: 'organizers',
-    resourceType: 'agents'
+    attribute: "name",
+    relationship: "organizers",
+    resourceType: "agents",
   },
   multiSelectInclude: [
     {
-      attributes: ['name','categories'],
-      relationship: 'organizers',
-      resourceType: 'agents'
+      attributes: ["name", "categories"],
+      relationship: "organizers",
+      resourceType: "agents",
     },
     {
-      attributes: ['name','address'],
-      relationship: 'venues',
-      resourceType: 'venues'
-    }
+      attributes: ["name", "address"],
+      relationship: "venues",
+      resourceType: "venues",
+    },
   ],
   schema: {
     resourceSchema,
     arraySchema,
     pageStart: 1,
     pageEnd: 10,
-    pageSize: 50
-  }
+    pageSize: 50,
+  },
+  queries: [
+    {
+      query: 'filter[lang]=eng',
+      expectStatus: 200
+    },
+    {
+      query: 'filter[venues][near]=11.309245,46.862025,10000',
+      expectStatus: 200
+    },
+    {
+      query: 'filter[startDate][lte]=2020-10-01',
+      expectStatus: 200
+    },
+    {
+      query: 'filter[endDate][gte]=2020-10-10',
+      expectStatus: 200
+    },
+    {
+      query: 'filter[lastUpdate][gt]=2020-10-01',
+      expectStatus: 200
+    },
+    {
+      query: 'filter[categories][any]=schema/VisualArts,odh/messen-markte',
+      expectStatus: 200
+    },
+    {
+      query: 'filter[organizers][eq]=22C0A7135D3341A481BECEC0DCDB373F',
+      expectStatus: 200
+    },
+    {
+      query: 'search[name]=bolz',
+      expectStatus: 200
+    },
+    {
+      query: 'sort=-startDate',
+      expectStatus: 200
+    },
+    {
+      query: 'random=1',
+      expectStatus: 200
+    },
+  ],
+};
+
+function eventSortingTest() {
+  const utils = require("./utils");
+
+  describe(`Event sorting tests`, () => {
+    let unsortedData;
+
+    beforeAll(() => {
+      return utils.axiosInstance.get(`/1.0/events`).then((res) => {
+        ({ data: unsortedData } = res.data);
+      });
+    });
+
+    test(`Test events on ascending order of startDate`, () => {
+      return utils.axiosInstance
+        .get(`/1.0/events?sort=-startDate`)
+        .then((res) => {
+          let { data } = res.data;
+          let isInAscendingOrder = true;
+
+          data = data.map((event) => new Date(event.attributes.startDate));
+
+          for (let index = 1; index < data.length; index++) {
+            if (data[0] > data[1]) {
+              isInAscendingOrder = false;
+            }
+          }
+
+          expect(isInAscendingOrder).toBe(true);
+        });
+    });
+  });
 }
 
 basicRouteTests(opts);
 basicResourceRouteTests(opts);
 basicSchemaTests(opts);
+basicQueriesTest(opts);
+eventSortingTest();

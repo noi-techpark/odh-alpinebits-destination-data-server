@@ -26,3 +26,5 @@ yarn-error.log*
 
 # VS Code 
 /.vscode
+
+__requests__/

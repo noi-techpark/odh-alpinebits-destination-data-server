@@ -1,4 +1,18 @@
+// TODO: add about link to OpenAPI documentation on syntactical errors
+// TODO: add detail to syntactical errors
 const types = {
+  unknownQuery: {
+    title: "Query parameter is not supported in the given endpoint",
+    status: 400
+  },
+  badQuery: {
+    title: "Query parameter does not have valid values",
+    status: 400
+  },
+  queryConflict: {
+    title: "Request contains conflicting queries",
+    status: 400
+  },
   noCredentials: {
     title: "No credentials were provided.",
     status: 401
@@ -9,6 +23,10 @@ const types = {
   },
   notFound: {
     title: "Resource(s) not found.",
+    status: 404
+  },
+  pageNotFound: {
+    title: "Page not found",
     status: 404
   },
   serverFailed: {
@@ -45,14 +63,51 @@ const types = {
   }
 }
 
-function handleError(err, req, res ){
-  console.log(err);
-  res.status(err.status || 500);
-  res.json({ errors: [ err ] });
+function throwUnknownQuery(description) {
+  const newError = Object.assign({ description }, types.unknownQuery)
+  throw newError
 }
 
-function createJSON(err) {
-  return ({ errors: [ err ] });
+function throwBadQuery(description) {
+  const newError = Object.assign({ description }, types.badQuery)
+  throw newError
+}
+
+function throwQueryConflict(description) {
+  const newError = Object.assign({ description }, types.queryConflict)
+  throw newError
+}
+
+function throwPageNotFound(description) {
+  const newError = Object.assign({ description }, types.pageNotFound)
+  throw newError
+}
+
+function getSelfUrl(request) {
+  if (request.selfUrl) {
+    return request.selfUrl;
+  } else {
+    return process.env.REF_SERVER_URL + request.originalUrl;
+  }
+}
+
+function handleError(err, req, res) {
+  const errorMessage = {
+    errors: [err],
+    links: getSelfUrl(req) ? { self: getSelfUrl(req) } : undefined,
+  };
+
+  res.status(err.status || 500);
+  res.json(errorMessage);
+}
+
+function createJSON(err, req) {
+  const errorMessage = {
+    errors: [err],
+    links: getSelfUrl(req) ? { self: getSelfUrl(req) } : undefined,
+  };
+
+  return errorMessage;
 }
 
 function handleNotImplemented(req, res){
@@ -63,5 +118,9 @@ module.exports = {
   ...types,
   handleError,
   handleNotImplemented,
-  createJSON
-}
+  createJSON,
+  throwUnknownQuery,
+  throwBadQuery,
+  throwQueryConflict,
+  throwPageNotFound,
+};;;;
