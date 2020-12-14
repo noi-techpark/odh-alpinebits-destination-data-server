@@ -45,8 +45,8 @@ function parseLanguageFilter(filter, filtersArray) {
   }
 }
 function parseLastUpdateFilter(filter, filtersArray) {
-  if (filter.lastUpdate && filter.lastUpdate.gte) {
-    filtersArray.push("updatefrom=" + parseDateString(filter.lastUpdate.gte));
+  if (filter.lastUpdate && filter.lastUpdate.gt) {
+    filtersArray.push("updatefrom=" + parseDateString(filter.lastUpdate.gt));
   }
 }
 function parseGeometriesFilter(filter, filtersArray) {
