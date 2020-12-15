@@ -48,6 +48,10 @@ let opts = {
       expectStatus: 200
     },
     {
+      query: 'filter[lang]=eng,fra',
+      expectStatus: 200
+    },
+    {
       query: 'filter[venues][near]=11.309245,46.862025,10000',
       expectStatus: 200
     },
@@ -81,6 +85,10 @@ let opts = {
     },
     {
       query: 'random=1',
+      expectStatus: 200
+    },
+    {
+      query: 'filter[lang]=eng,fra&filter[venues][near]=11.309245,46.862025,10000&filter[startDate][lte]=2020-10-01&filter[endDate][gte]=2020-10-10&filter[lastUpdate][gt]=2020-10-01&filter[categories][any]=schema/VisualArts,odh/messen-markte&filter[organizers][eq]=22C0A7135D3341A481BECEC0DCDB373F&search[name]=bolz&sort=-startDate',
       expectStatus: 200
     },
   ],

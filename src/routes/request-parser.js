@@ -8,7 +8,8 @@ const langValidation = (languageCodes) => {
       (code) => !Array.isArray(code) || !!iso6393to6391[code]
     );
   } else {
-    return !!iso6393to6391[languageCodes];
+    languageCodes = languageCodes.split(",")
+    return languageCodes.every(languageCode => !!iso6393to6391[languageCode]);
   }
 };
 
