@@ -1,0 +1,156 @@
+events:
+  get:
+    description: Retrieves a list of `events` resources.
+    tags:
+      - Events
+    parameters:
+      - $ref: ../parameters/events.params.yml#/parameters/include
+      - $ref: ../parameters/index.yml#/parameters/fields
+      - $ref: ../parameters/events.params.yml#/parameters/filter
+      - $ref: ../parameters/events.params.yml#/parameters/random
+      - $ref: ../parameters/events.params.yml#/parameters/sort
+      - $ref: ../parameters/index.yml#/parameters/search
+    responses:
+      '200':
+        description: OK
+        content:
+            application/vnd.api+json:
+              example:
+                $ref: ../examples/events.examples.yml#/events
+eventsId:
+  get:
+    description: Retrieves a single `events` resource.
+    tags:
+      - Events
+    parameters:
+      - $ref: ../parameters/index.yml#/parameters/id
+      - $ref: ../parameters/events.params.yml#/parameters/include
+      - $ref: ../parameters/index.yml#/parameters/fields
+    responses:
+      '200':
+        description: OK
+        content:
+            application/vnd.api+json:
+              example:
+                $ref: ../examples/events.examples.yml#/eventsId
+eventsIdContributors:
+  get:
+    description: Retrieves all contributors of the event
+    tags:
+      - Events
+    parameters:
+      # TODO: check whether we should support include on relationship endpoints
+      - $ref: ../parameters/index.yml#/parameters/id
+      - $ref: ../parameters/index.yml#/parameters/fields
+    responses:
+      '501':
+        description: Not Implemented
+        content:
+            application/vnd.api+json:
+              example:
+                $ref: ../examples/events.examples.yml#/eventsIdContributors
+eventsIdMultimediaDescriptions:
+  get:
+    description: Retrieves all multimediaDescriptions of the event
+    tags:
+      - Events
+    parameters:
+      - $ref: ../parameters/index.yml#/parameters/id
+      - $ref: ../parameters/index.yml#/parameters/fields
+    responses:
+      '200':
+        description: OK
+        content:
+            application/vnd.api+json:
+              example:
+                $ref: ../examples/events.examples.yml#/eventsIdMultimediaDescriptions
+eventsIdOrganizers:
+  get:
+    description: Retrieves all organizers of the event
+    tags:
+      - Events
+    parameters:
+      - $ref: ../parameters/index.yml#/parameters/id
+      - $ref: ../parameters/index.yml#/parameters/fields
+    responses:
+      '200':
+        description: OK
+        content:
+            application/vnd.api+json:
+              example:
+                $ref: ../examples/events.examples.yml#/eventsIdOrganizers
+eventsIdPublisher:
+  get:
+    description: Retrieves all publisher of the event
+    tags:
+      - Events
+    parameters:
+      - $ref: ../parameters/index.yml#/parameters/id
+      - $ref: ../parameters/index.yml#/parameters/fields
+    responses:
+      '200':
+        description: OK
+        content:
+            application/vnd.api+json:
+              example:
+                $ref: ../examples/events.examples.yml#/eventsIdPublisher
+eventsIdSeries:
+  get:
+    description: Retrieves all series of the event
+    tags:
+      - Events
+    parameters:
+      - $ref: ../parameters/index.yml#/parameters/id
+      - $ref: ../parameters/index.yml#/parameters/fields
+    responses:
+      '501':
+        description: Not Implemented
+        content:
+            application/vnd.api+json:
+              example:
+                $ref: ../examples/events.examples.yml#/eventsIdSeries
+eventsIdSponsors:
+  get:
+    description: Retrieves all sponsors of the event
+    tags:
+      - Events
+    parameters:
+      - $ref: ../parameters/index.yml#/parameters/id
+      - $ref: ../parameters/index.yml#/parameters/fields
+    responses:
+      '501':
+        description: Not Implemented
+        content:
+            application/vnd.api+json:
+              example:
+                $ref: ../examples/events.examples.yml#/eventsIdSponsors
+eventsIdSubEvents:
+  get:
+    description: Retrieves all subEvents of the event
+    tags:
+      - Events
+    parameters:
+      - $ref: ../parameters/index.yml#/parameters/id
+      - $ref: ../parameters/index.yml#/parameters/fields
+    responses:
+      '501':
+        description: Not Implemented
+        content:
+            application/vnd.api+json:
+              example:
+                $ref: ../examples/events.examples.yml#/eventsIdSubEvents
+eventsIdVenues:
+  get:
+    description: Retrieves all venues of the event
+    tags:
+      - Events
+    parameters:
+      - $ref: ../parameters/index.yml#/parameters/id
+      - $ref: ../parameters/index.yml#/parameters/fields
+    responses:
+      '200':
+        description: OK
+        content:
+            application/vnd.api+json:
+              example:
+                $ref: ../examples/events.examples.yml#/eventsIdVenues

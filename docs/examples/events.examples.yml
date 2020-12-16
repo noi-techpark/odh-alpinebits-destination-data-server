@@ -1,0 +1,1064 @@
+events: {
+    "jsonapi": {
+        "version": "1.0"
+    },
+    "meta": {
+        "count": 24572,
+        "pages": 2458
+    },
+    "links": {
+        "first": "http://localhost:8080/1.0/eventspage[number]=1",
+        "last": "http://localhost:8080/1.0/eventspage[number]=2458",
+        "next": "http://localhost:8080/1.0/eventspage[number]=2",
+        "prev": "http://localhost:8080/1.0/eventspage[number]=1",
+        "self": "http://localhost:8080/1.0/eventspage[number]=1"
+    },
+    "data": [
+        {
+            "type": "events",
+            "id": "FD7DC58E68A9447FB987460138FB3C85",
+            "meta": {
+                "lastUpdate": "2017-05-23T00:05:21.5158375+01:00",
+                "dataProvider": "http://tourism.opendatahub.bz.it/"
+            },
+            "links": {
+                "self": "http://localhost:8080/1.0/events/FD7DC58E68A9447FB987460138FB3C85"
+            },
+            "attributes": {
+                "abstract": null,
+                "capacity": null,
+                "categories": [
+                    "schema/SportsEvent",
+                    "odh/sport"
+                ],
+                "description": {
+                    "deu": "★ 100. Giro d'Italia ★\n\nIn Innichen ist dieses Jahr Start der 19. Etappe des  Giro d’Italia. Die Fahrradelite trifft sich zur historischen 100. Ausgabe dieses Klassikers in den Dolomiten. Am Freitag 26. Mai 2017 kämpfen sich Radsportprofis der ganzen Welt von Innichen nach Sexten und über den Kreuzbergpass nach Sappada, Sella Chianzutan bis sie nach 191 Kilometern im 1290 m hoch liegenden Piancavallo eintreffen.\n\n08:30 Uhr Eröffnung Giro Village\n\n10:30 Uhr Präsentation Athleten",
+                    "ita": "★ 100° Giro d'Italia ★\n\nSan Candido e la bicicletta… una storia d’amore infinita!\n\nDa molti anni San Candido ha un forte legame con il ciclismo. Molti turisti adorano i numerosi percorsi per mountain-bike e le ciclabili che passano tra le possenti montagne. I ciclisti qui si sentono a casa anche grazie alla calorosa ospitalità della popolazione.\n\nDunque non c’è da meravigliarsi se il nostro paesino sarà il punto di partenza della 19a tappa della 100a edizione del Giro d’Italia. L’élite del ciclismo si radunerà nelle Dolomiti per affrontare le tappe più difficili della 100a edizione di questo grande classico. Dalla Val di Fassa, passando da Ortisei fino ad arrivare da noi a San Candido!\n\nVenerdì, 26 maggio 2017 i ciclisti provenienti da tutto il mondo pedaleranno da San Candido verso Sesto, passeranno da Passo Monte Croce, Sella Chianzutan e raggiungeranno il traguardo dopo 191 km di fatica a Piancavallo, ad un’altitudine di 1290 m.\n\nIl paese si tinge di rosa! Non perdetevi la partenza di questa tappa spettacolare che attraverserà le Dolomiti.\n\nOre 08:30: Apertura Giro Village\n\nOre 10:30: Presentazione atleti",
+                    "eng": "★ 100th Giro d'Italia ★\n\nIn San Candido starts the 19th stage of the Giro d'Italia 2017:\nSan Candido/Innichen - Piancavallo (191km)\n\n8.30 a.m.: Opening Giro Village\n\n10.30 a.m.: Athletes Präsentation"
+                },
+                "endDate": "2017-05-26T14:00:00+01:00",
+                "name": {
+                    "deu": "100. Giro d'Italia: Start der 19. Etappe Innichen - Piancavallo",
+                    "ita": "100° Giro d'Italia: partenza della 19° tappa San Candido - Piancavallo",
+                    "eng": "100th Giro d'Italia: start of the 19th stage San Candido - Piancavallo"
+                },
+                "shortName": null,
+                "startDate": "2017-05-26T11:30:00+01:00",
+                "status": "published",
+                "url": {
+                    "deu": "http://www.giroditalia.it/",
+                    "ita": "http://www.giroditalia.it/",
+                    "eng": "http://www.giroditalia.it/"
+                }
+            },
+            "relationships": {
+                "contributors": null,
+                "multimediaDescriptions": null,
+                "organizers": {
+                    "data": [
+                        {
+                            "type": "agents",
+                            "id": "522822DA51CA11D18F1400A02427D15E"
+                        }
+                    ],
+                    "links": {
+                        "related": "http://localhost:8080/1.0/events/FD7DC58E68A9447FB987460138FB3C85/organizers"
+                    }
+                },
+                "publisher": {
+                    "data": {
+                        "type": "agents",
+                        "id": "2315397aa84e34057cef4b466c1a75068ba65931ef2640b829ea783ac768ecf3"
+                    },
+                    "links": {
+                        "related": "http://localhost:8080/1.0/events/FD7DC58E68A9447FB987460138FB3C85/publisher"
+                    }
+                },
+                "series": null,
+                "sponsors": null,
+                "subEvents": null,
+                "venues": {
+                    "data": [
+                        {
+                            "type": "venues",
+                            "id": "FD7DC58E68A9447FB987460138FB3C85+location"
+                        }
+                    ],
+                    "links": {
+                        "related": "http://localhost:8080/1.0/events/FD7DC58E68A9447FB987460138FB3C85/venues"
+                    }
+                }
+            }
+        },
+        {
+            "type": "events",
+            "id": "4231E17139FA49D0BA4C0503DB34E86B",
+            "meta": {
+                "lastUpdate": "2019-09-25T11:30:04.4242563+01:00",
+                "dataProvider": "http://tourism.opendatahub.bz.it/"
+            },
+            "links": {
+                "self": "http://localhost:8080/1.0/events/4231E17139FA49D0BA4C0503DB34E86B"
+            },
+            "attributes": {
+                "abstract": null,
+                "capacity": null,
+                "categories": [
+                    "schema/FoodEvent",
+                    "schema/MusicEvent",
+                    "schema/Festival",
+                    "odh/gastronomie-typische-produkte",
+                    "odh/musik-tanz",
+                    "odh/volksfeste-festivals"
+                ],
+                "description": {
+                    "deu": "Bereits seit 100 Jahren gibt es im Marmordorf Laas einen Imkerverein. Dieses Jubiläum wird im Juli gefeiert!\n\n10 Uhr Feierlicher Gottesdienst in der Pfarrkirche St. Johannes, mit Segnung der Vereinsfahne\nAnschließend Umzug mit der Laaser Böhmischen zum Festplatz beim Ausserloretzhof.\n\nBegrüßung durch den Vereins-Obmann Günther Tappeiner und Kurzbericht über das Vereinsgeschehen. \n\nFür Speis und Getränke wird bestens gesorgt. \nZur musikalischen Unterhaltung spielen die \"Laaser Böhmische\" und \nab 15 Uhr \"Die Tengler\" auf.",
+                    "ita": "Già da 100 anni esiste un'associazione di apicoltori nel villaggio di marmo Lasa. Questo anniversario sarà celebrato a luglio!\n\nore 10 Santa messa nella chiesa parrocchiale (in lingua tedesca), \ncon benedizione della bandiera dell'associazione\nPoi sfilata con la banda \"Laaser Böhmische\" fino alla piazza di festa all'Ausserloretzhof.\n\nFesta con cibo e bevande e\nintrattenimento musicale con il gruppo \"Laaser Böhmische\" e \ndalle ore 15 con il gruppo \"Die Tengler\".",
+                    "eng": "Already for 100 years there is a beekeeper association in the marble village Lasa. This anniversary will be celebrated in July!\n\n10 am Holy mass in the parish church of St. John, with blessing of the club flag (in German language)\nThen parade with the group \"Laaser Böhmische\" to the fairground at the Ausserloretzhof.\n\nFestival with food and drinks as well as \nmusical entertainment with the group \"Laaser Böhmische\" and\nfrom 3 pm with the group \"Die Tengler\"."
+                },
+                "endDate": "2018-07-15T00:00:00+01:00",
+                "name": {
+                    "deu": "100 Jahre Imkerverein Laas",
+                    "ita": "100 anni associazione di apicoltura Lasa",
+                    "eng": "100 years association of beekeeping Laas"
+                },
+                "shortName": null,
+                "startDate": "2018-07-15T10:00:00+01:00",
+                "status": "published",
+                "url": null
+            },
+            "relationships": {
+                "contributors": null,
+                "multimediaDescriptions": null,
+                "organizers": {
+                    "data": [
+                        {
+                            "type": "agents",
+                            "id": "8D1F1A26CAE64903844EE0CBC20A65DC"
+                        }
+                    ],
+                    "links": {
+                        "related": "http://localhost:8080/1.0/events/4231E17139FA49D0BA4C0503DB34E86B/organizers"
+                    }
+                },
+                "publisher": {
+                    "data": {
+                        "type": "agents",
+                        "id": "2315397aa84e34057cef4b466c1a75068ba65931ef2640b829ea783ac768ecf3"
+                    },
+                    "links": {
+                        "related": "http://localhost:8080/1.0/events/4231E17139FA49D0BA4C0503DB34E86B/publisher"
+                    }
+                },
+                "series": null,
+                "sponsors": null,
+                "subEvents": null,
+                "venues": {
+                    "data": [
+                        {
+                            "type": "venues",
+                            "id": "4231E17139FA49D0BA4C0503DB34E86B+location"
+                        }
+                    ],
+                    "links": {
+                        "related": "http://localhost:8080/1.0/events/4231E17139FA49D0BA4C0503DB34E86B/venues"
+                    }
+                }
+            }
+        },
+        {
+            "type": "events",
+            "id": "8F118C2CCB854FF7A9B77C3AC19BCAFC",
+            "meta": {
+                "lastUpdate": "2018-06-26T00:05:12.1732568+01:00",
+                "dataProvider": "http://tourism.opendatahub.bz.it/"
+            },
+            "links": {
+                "self": "http://localhost:8080/1.0/events/8F118C2CCB854FF7A9B77C3AC19BCAFC"
+            },
+            "attributes": {
+                "abstract": null,
+                "capacity": null,
+                "categories": [
+                    "schema/Festival",
+                    "odh/volksfeste-festivals"
+                ],
+                "description": {
+                    "deu": "Die Kohlerer Seilbahn feiert 100 Jahre am 29. Juni 2018!\n\nAb 16 Uhr bei der Bergstation wird ein Stück Südtiroler Verkehrs- und Tourismusgeschichte mit einem Fest, Getränken und einem kleinen Imbiss gefeiert.\n\nAb 14 bis 22 Uhr ist die Fahrt mit der Bahn kostenlos!",
+                    "ita": "La funivia del Colle festeggia i suoi 100 anni il 29 giugno 2018!\n\nA partire dalle ore 16, presso la stazione a monte della funivia, si festeggia un pezzo di storia dei trasporti e del turismo in Alto Adige. I festeggiamenti saranno accompagnati da un rinfresco.\n\nDalle ore 14 alle ore 22 la funivia sará ad uso gratuito per tutti!",
+                    "eng": "The Colle-Kohlern cablecar celebrates its 100th anniversary on June 29th 2018!\n\nStarting at 4 pm, at the top station of the cable car, we will celebrate a piece of history of transport and tourism in South Tyrol. The celebration will be accompanied by refreshments.\n\nFree uso of the cable car from 2pm to 10pm."
+                },
+                "endDate": "2018-06-29T18:00:00+01:00",
+                "name": {
+                    "deu": "100 Jahre Kohlerer Bahn",
+                    "ita": "100 Anni Funivia del Colle",
+                    "eng": "100 Year Colle-Kohlern Cablecar"
+                },
+                "shortName": null,
+                "startDate": "2018-06-29T16:00:00+01:00",
+                "status": "published",
+                "url": {
+                    "deu": "http://www.kohlererbahn.it/",
+                    "ita": "http://www.kohlererbahn.it/",
+                    "eng": "http://www.kohlererbahn.it/"
+                }
+            },
+            "relationships": {
+                "contributors": null,
+                "multimediaDescriptions": null,
+                "organizers": {
+                    "data": [
+                        {
+                            "type": "agents",
+                            "id": "587998BC11CA4FA88D09B40566D43622"
+                        }
+                    ],
+                    "links": {
+                        "related": "http://localhost:8080/1.0/events/8F118C2CCB854FF7A9B77C3AC19BCAFC/organizers"
+                    }
+                },
+                "publisher": {
+                    "data": {
+                        "type": "agents",
+                        "id": "2315397aa84e34057cef4b466c1a75068ba65931ef2640b829ea783ac768ecf3"
+                    },
+                    "links": {
+                        "related": "http://localhost:8080/1.0/events/8F118C2CCB854FF7A9B77C3AC19BCAFC/publisher"
+                    }
+                },
+                "series": null,
+                "sponsors": null,
+                "subEvents": null,
+                "venues": {
+                    "data": [
+                        {
+                            "type": "venues",
+                            "id": "8F118C2CCB854FF7A9B77C3AC19BCAFC+location"
+                        }
+                    ],
+                    "links": {
+                        "related": "http://localhost:8080/1.0/events/8F118C2CCB854FF7A9B77C3AC19BCAFC/venues"
+                    }
+                }
+            }
+        },
+        {
+            "type": "events",
+            "id": "377ADD10E0F14C78988B9A86DAD1462F",
+            "meta": {
+                "lastUpdate": "2019-02-15T00:05:05.1702276+01:00",
+                "dataProvider": "http://tourism.opendatahub.bz.it/"
+            },
+            "links": {
+                "self": "http://localhost:8080/1.0/events/377ADD10E0F14C78988B9A86DAD1462F"
+            },
+            "attributes": {
+                "abstract": null,
+                "capacity": null,
+                "categories": [
+                    "schema/TheaterEvent",
+                    "odh/theater-vorführungen"
+                ],
+                "description": {
+                    "deu": "1919 – 2019: Südtirol  in den letzten 100 Jahren oder der Geburtstag einer Greisin (ein Stück für ein Volk)\nAus der naiven und bodenständigen Erzählperspektive eines Knechts, wird die Geschichte eines Gasthofs in einem südtiroler Bergdorf, vom Anschluss des Landes in Italien 1919 bis zur Gegenwart, als Familiensaga erzählt. Während die historischen Ereignisse als Rahmenhandlung dienen, geht es in dem Stück um den Drang nach Freiheit und seiner Diskrepanz zu einer tiefen Verwurzelung mit der Heimat, um Erbe und um die Liebe zweier Männer zu einer Frau. Vor dem Hintergrund historischer Ereignisse mischen sich absurde Komik und tragische Realität zu einem bitterbösen und gleichzeitig einfühlsamen Portrait eines einfachen und ebenso schwierigen Bergvolks.\nDietmar Gamper verwebt Elemente aus Kabarett, Geistergeschichte und Volksstück, um ein Kabinettstück zu schaffen, das etwas schier Unmögliches versucht: 100 Jahre Südtirol an einem Abend! \nRegie und Text: Dietmar Gamper\nEs spielen: Marlies Untersteiner, Josef Lanz, Peter Schorn, Eva Kuen, Freddy Redavid\nMusik: Simon Gamper"
+                },
+                "endDate": "2019-03-24T00:00:00+01:00",
+                "name": {
+                    "deu": "100 Jahre Südtirol von Dietmar Gamper"
+                },
+                "shortName": null,
+                "startDate": "2019-03-06T20:30:00+01:00",
+                "status": "published",
+                "url": {
+                    "deu": "https://http://www.dekadenz.it"
+                }
+            },
+            "relationships": {
+                "contributors": null,
+                "multimediaDescriptions": null,
+                "organizers": {
+                    "data": [
+                        {
+                            "type": "agents",
+                            "id": "02BF43DA765542B59D5A12FCEA552F99"
+                        }
+                    ],
+                    "links": {
+                        "related": "http://localhost:8080/1.0/events/377ADD10E0F14C78988B9A86DAD1462F/organizers"
+                    }
+                },
+                "publisher": {
+                    "data": {
+                        "type": "agents",
+                        "id": "2315397aa84e34057cef4b466c1a75068ba65931ef2640b829ea783ac768ecf3"
+                    },
+                    "links": {
+                        "related": "http://localhost:8080/1.0/events/377ADD10E0F14C78988B9A86DAD1462F/publisher"
+                    }
+                },
+                "series": null,
+                "sponsors": null,
+                "subEvents": null,
+                "venues": {
+                    "data": [
+                        {
+                            "type": "venues",
+                            "id": "377ADD10E0F14C78988B9A86DAD1462F+location"
+                        }
+                    ],
+                    "links": {
+                        "related": "http://localhost:8080/1.0/events/377ADD10E0F14C78988B9A86DAD1462F/venues"
+                    }
+                }
+            }
+        },
+        {
+            "type": "events",
+            "id": "1A2B6A30FB6E46BDB2644B6984D06C29",
+            "meta": {
+                "lastUpdate": "2020-08-28T00:04:15.9209552+01:00",
+                "dataProvider": "http://tourism.opendatahub.bz.it/"
+            },
+            "links": {
+                "self": "http://localhost:8080/1.0/events/1A2B6A30FB6E46BDB2644B6984D06C29"
+            },
+            "attributes": {
+                "abstract": null,
+                "capacity": null,
+                "categories": [
+                    "odh/führungen-besichtigungen"
+                ],
+                "description": {
+                    "deu": "Für Naturliebhaber gibt es nichts Schöneres als intensive Blütenfarben und herrliche Düfte. \nDiese Führung bietet Erlebnisse für alle Sinne: bunte Kräuterfelder, ätherische Öle, die in die Nase steigen, herrliche Aromen beim Verkosten und vollkommene Ruhe.\nWir starten mit einem Besuch im Kräutergarten, schauen in die Trocknungs- und Verarbeitungsräume, entdecken eine Vielzahl von Kräuterprodukten und beenden unseren Rundgang mit einer kleinen, aber feinen Produktverkostung aus frischem Tee, fruchtigem Sirup, würzigem Schnapsl.\nWer sich für Kräuter interessiert, wird sicherlich viel Wissenswertes über Anbau, Trocknung, Lagerung und Verwendung unserer Heil- und Gewürzpflanzen mit nach Hause nehmen.\n\nTreffpunkt: Kräutergärten Wipptal, Steirerhof, Hintere Gasse 152, Wiesen um 09.45 Uhr\nDauer: von 9.45 bis 11.45 Uhr\nZeitraum: 10. Juni bis 26. August\nTeilnehmeranzahl: min. 4 und max. 20 Personen\nKosten: Für activeCARD Inhaber kostenlos, ansonsten 10,00€ p.P.",
+                    "ita": "Per gli amanti della natura non c’è niente di più bello che vivere i colori e profumi dei fiori di stagione. Questa visita guidata offre un’esperienza per tutti i nostri sensi: campi colorati, oli essenziali profumati, aromi gustosi e una pace ineguagliabile.\nSi parte con una visita presso i giardini aromatici, si prosegue attraverso le stanze dove vengono essiccate e lavorate le erbe scoprendo la vastità dei prodotti che vengono elaborati e si conclude la visita con una piccola degustazione di tè fresco, succoso sciroppo, una grappa speziata.\nGli interessati al mondo delle erbe saranno sicuramente pienamente soddisfatti delle informazioni che riceveranno riguardo a tutti i processi di raccolta, essiccazione e utilizzo delle nostre piante.\n\nRitrovo e partenza: Giardini aromatici Wipptal, Steirerhof, Hintere Gasse 152, Prati ore 09.45 \nDurata: dalle ore 9.45 alle ore 11.45 \nPeriodo: dal 10 giugno al 26 agosto\nNumero di partecipanti: min. 4 e max. 20 persone\nCosti: per chi possiede l‘activeCARD é gratis, altrimenti 10,00€ a persona"
+                },
+                "endDate": "2020-08-27T11:45:00+01:00",
+                "name": {
+                    "deu": "100% Kräutergarten",
+                    "ita": "100% giardini aromatici"
+                },
+                "shortName": null,
+                "startDate": "2020-07-29T09:45:00+01:00",
+                "status": "published",
+                "url": {
+                    "deu": "https://tvratschings.guestnet.info/activity-calendar",
+                    "ita": "https://tvratschings.guestnet.info/it/activity-calendar"
+                }
+            },
+            "relationships": {
+                "contributors": null,
+                "multimediaDescriptions": null,
+                "organizers": {
+                    "data": [
+                        {
+                            "type": "agents",
+                            "id": "522822FF51CA11D18F1400A02427D15E"
+                        }
+                    ],
+                    "links": {
+                        "related": "http://localhost:8080/1.0/events/1A2B6A30FB6E46BDB2644B6984D06C29/organizers"
+                    }
+                },
+                "publisher": {
+                    "data": {
+                        "type": "agents",
+                        "id": "2315397aa84e34057cef4b466c1a75068ba65931ef2640b829ea783ac768ecf3"
+                    },
+                    "links": {
+                        "related": "http://localhost:8080/1.0/events/1A2B6A30FB6E46BDB2644B6984D06C29/publisher"
+                    }
+                },
+                "series": null,
+                "sponsors": null,
+                "subEvents": null,
+                "venues": {
+                    "data": [
+                        {
+                            "type": "venues",
+                            "id": "1A2B6A30FB6E46BDB2644B6984D06C29+location"
+                        }
+                    ],
+                    "links": {
+                        "related": "http://localhost:8080/1.0/events/1A2B6A30FB6E46BDB2644B6984D06C29/venues"
+                    }
+                }
+            }
+        },
+        {
+            "type": "events",
+            "id": "FCDEB65BAF22402380F06B977C91A54B",
+            "meta": {
+                "lastUpdate": "2018-07-11T00:05:24.4782477+01:00",
+                "dataProvider": "http://tourism.opendatahub.bz.it/"
+            },
+            "links": {
+                "self": "http://localhost:8080/1.0/events/FCDEB65BAF22402380F06B977C91A54B"
+            },
+            "attributes": {
+                "abstract": null,
+                "capacity": null,
+                "categories": [
+                    "schema/FoodEvent",
+                    "schema/MusicEvent",
+                    "schema/ChildrensEvent",
+                    "odh/gastronomie-typische-produkte",
+                    "odh/musik-tanz",
+                    "odh/familie"
+                ],
+                "description": {
+                    "deu": "Am Sonntag, 09. September findet in Saubach um 10:00 Uhr die heilige Messe statt. Anschließend beginnt das traditionelle Zwetschkenfest. Das Essen und die Getränke werden von den Bäuerinnen und Bauernjugend serviert. Für die musikalische Unterhaltung sorgen die Musikkapelle Barbian und die Carreras. Alle sind recht herzlich eingeladen. Auf Euer Kommen freuen sich die Bäuerinnen und die BJ-Barbian.",
+                    "ita": "Domenica, 9 settembre alle ore 10 si terrá la santa messa nella chiesa di San Ingenuino e di seguito iniza la tradizionale festa delle prugne. \nIntrattenimento musicale con la banda musicale di Barbiano e il gruppo \"Carreras\".\n\nI \"Bäuerinnen\" e il gruppo \"Bauernjugend\" di Barbiano sono lieti di darVi il benvenuto.",
+                    "eng": "Sunday, 9th September at 10 am with mass at the chruch at Saubach/S. Ingeniuno followedby the traditional festival of plum.\n\nEntertainment with the music band of Barbian and the Group \"Carreras\".\nThe \"Bäuerinnen\" and the group \"Bauernjugend\" of Barbian would be happy to have you as their guest."
+                },
+                "endDate": "2018-09-09T00:00:00+01:00",
+                "name": {
+                    "deu": "10. Barbianer Zwetschkenfest in Saubach",
+                    "ita": "10. Festa delle prugne di Barbiano a San Ingenuino",
+                    "eng": "10. Festival of plum from Barbian in Saubach"
+                },
+                "shortName": null,
+                "startDate": "2018-09-09T10:00:00+01:00",
+                "status": "published",
+                "url": {
+                    "deu": "http://http: www.barbian.it",
+                    "ita": "http://http: www.barbian.it",
+                    "eng": "http://http: www.barbian.it"
+                }
+            },
+            "relationships": {
+                "contributors": null,
+                "multimediaDescriptions": null,
+                "organizers": {
+                    "data": [
+                        {
+                            "type": "agents",
+                            "id": "48D0681F8F20405288685CE55DD1631B"
+                        }
+                    ],
+                    "links": {
+                        "related": "http://localhost:8080/1.0/events/FCDEB65BAF22402380F06B977C91A54B/organizers"
+                    }
+                },
+                "publisher": {
+                    "data": {
+                        "type": "agents",
+                        "id": "2315397aa84e34057cef4b466c1a75068ba65931ef2640b829ea783ac768ecf3"
+                    },
+                    "links": {
+                        "related": "http://localhost:8080/1.0/events/FCDEB65BAF22402380F06B977C91A54B/publisher"
+                    }
+                },
+                "series": null,
+                "sponsors": null,
+                "subEvents": null,
+                "venues": {
+                    "data": [
+                        {
+                            "type": "venues",
+                            "id": "FCDEB65BAF22402380F06B977C91A54B+location"
+                        }
+                    ],
+                    "links": {
+                        "related": "http://localhost:8080/1.0/events/FCDEB65BAF22402380F06B977C91A54B/venues"
+                    }
+                }
+            }
+        },
+        {
+            "type": "events",
+            "id": "20A30904BF8C43798E24B9ABEFCFF249",
+            "meta": {
+                "lastUpdate": "2019-11-07T00:05:10.7337971+01:00",
+                "dataProvider": "http://tourism.opendatahub.bz.it/"
+            },
+            "links": {
+                "self": "http://localhost:8080/1.0/events/20A30904BF8C43798E24B9ABEFCFF249"
+            },
+            "attributes": {
+                "abstract": null,
+                "capacity": null,
+                "categories": [
+                    "schema/FoodEvent",
+                    "schema/ChildrensEvent",
+                    "odh/gastronomie-typische-produkte",
+                    "odh/handwerk-brauchtum",
+                    "odh/familie"
+                ],
+                "description": {
+                    "deu": "Das Christkindlkomitee hat ein vielseitiges Programm vorbereitet, um Sie stimmungsvoll durch die wohl schönste Zeit des Jahres zu begleiten. \n\nAuf dem Rathausplatz in Leifers werden in adventlicher Atmosphäre einheimische Kunsthandwerker ihr Können zeigen und ihre Werke präsentieren. \nGenießen Sie bei weihnachtlichen Klängen die liebevoll zubereiteten Spezialitäten unserer Vereine, wie auch ein vielseitiges Kinderprogramm, eine Krippenausstellung mit Krippenweg und die lebende Krippe. Für besinnliche Momente sorgen zauberhafte Weihnachtskonzerte, die dem Christkindlmarkt einen besonderen Charakter verleihen.\n\nKommen Sie vorbei und genießen Sie die weihnachtliche Stimmung in Leifers!⭐️✨🎄🎅🏼",
+                    "ita": "Immergetevi nel magico mondo del Mercatino di Natale, fatto di luci, profumi, sapori e colori, un'atmosfera incantata che vi accompagnera durante il periodo delle feste natalizie. Sulla piazzetta Municipio i nostri artigiani presenteranno le loro meraviglie artistiche. Assaporate il delizioso profumo delle specialità proposte dalle varie associazioni locali, inoltre al mercatino troverete intrattenimento per bambini e molto altro.\n\nPassate e godetevi l'atmosfera natalizia a Laives!⭐️✨🎄🎅🏼"
+                },
+                "endDate": "2019-12-22T22:00:00+01:00",
+                "name": {
+                    "deu": "10. Christkindlmarkt in Leifers",
+                    "ita": "10° Mercatino di Natale a Laives"
+                },
+                "shortName": null,
+                "startDate": "2019-11-30T10:00:00+01:00",
+                "status": "published",
+                "url": {
+                    "deu": "https://www.suedtirols-sueden.info/de/leifers/die-ferienorte/top-events/christkindlmarkt.html",
+                    "ita": "https://www.bolzanodintorni.info/it/laives/le-localita-di-villeggiatura/eventi-da-non-perdere/mercatino-di-natale.html"
+                }
+            },
+            "relationships": {
+                "contributors": null,
+                "multimediaDescriptions": null,
+                "organizers": {
+                    "data": [
+                        {
+                            "type": "agents",
+                            "id": "522822B351CA11D18F1400A02427D15E"
+                        }
+                    ],
+                    "links": {
+                        "related": "http://localhost:8080/1.0/events/20A30904BF8C43798E24B9ABEFCFF249/organizers"
+                    }
+                },
+                "publisher": {
+                    "data": {
+                        "type": "agents",
+                        "id": "2315397aa84e34057cef4b466c1a75068ba65931ef2640b829ea783ac768ecf3"
+                    },
+                    "links": {
+                        "related": "http://localhost:8080/1.0/events/20A30904BF8C43798E24B9ABEFCFF249/publisher"
+                    }
+                },
+                "series": null,
+                "sponsors": null,
+                "subEvents": null,
+                "venues": {
+                    "data": [
+                        {
+                            "type": "venues",
+                            "id": "20A30904BF8C43798E24B9ABEFCFF249+location"
+                        }
+                    ],
+                    "links": {
+                        "related": "http://localhost:8080/1.0/events/20A30904BF8C43798E24B9ABEFCFF249/venues"
+                    }
+                }
+            }
+        },
+        {
+            "type": "events",
+            "id": "9FA3C0F97FD84F12957E6F73FCBB0389",
+            "meta": {
+                "lastUpdate": "2020-08-15T00:05:30.1498551+01:00",
+                "dataProvider": "http://tourism.opendatahub.bz.it/"
+            },
+            "links": {
+                "self": "http://localhost:8080/1.0/events/9FA3C0F97FD84F12957E6F73FCBB0389"
+            },
+            "attributes": {
+                "abstract": null,
+                "capacity": null,
+                "categories": [
+                    "schema/SportsEvent",
+                    "schema/MusicEvent",
+                    "schema/Festival",
+                    "odh/sport",
+                    "odh/musik-tanz",
+                    "odh/volksfeste-festivals"
+                ],
+                "description": {
+                    "deu": "10. Dolomiten Wandertag\nInfo: lia.ciambonfs@rolmail.net",
+                    "ita": "10. Giornata escursionistica nelle Dolomiti\nInfo: lia.ciambonfs@rolmail.net",
+                    "eng": "10th Walking day in the Dolomites\nInfo: lia.ciambonfs@rolmail.net"
+                },
+                "endDate": "2021-07-04T18:00:00+01:00",
+                "name": {
+                    "deu": "10. Dolomiten Wandertag",
+                    "ita": "10. Giornata escursionistica nelle Dolomiti",
+                    "eng": "10th Walking day in the Dolomites"
+                },
+                "shortName": null,
+                "startDate": "2021-07-04T09:00:00+01:00",
+                "status": "published",
+                "url": null
+            },
+            "relationships": {
+                "contributors": null,
+                "multimediaDescriptions": null,
+                "organizers": {
+                    "data": [
+                        {
+                            "type": "agents",
+                            "id": "B4F415D9102D4E75BEFDE925AC67A62D"
+                        }
+                    ],
+                    "links": {
+                        "related": "http://localhost:8080/1.0/events/9FA3C0F97FD84F12957E6F73FCBB0389/organizers"
+                    }
+                },
+                "publisher": {
+                    "data": {
+                        "type": "agents",
+                        "id": "2315397aa84e34057cef4b466c1a75068ba65931ef2640b829ea783ac768ecf3"
+                    },
+                    "links": {
+                        "related": "http://localhost:8080/1.0/events/9FA3C0F97FD84F12957E6F73FCBB0389/publisher"
+                    }
+                },
+                "series": null,
+                "sponsors": null,
+                "subEvents": null,
+                "venues": {
+                    "data": [
+                        {
+                            "type": "venues",
+                            "id": "9FA3C0F97FD84F12957E6F73FCBB0389+location"
+                        }
+                    ],
+                    "links": {
+                        "related": "http://localhost:8080/1.0/events/9FA3C0F97FD84F12957E6F73FCBB0389/venues"
+                    }
+                }
+            }
+        },
+        {
+            "type": "events",
+            "id": "A8F3E3A8522143448672AD80435A38BE",
+            "meta": {
+                "lastUpdate": "2015-11-27T10:02:39.533418+01:00",
+                "dataProvider": "http://tourism.opendatahub.bz.it/"
+            },
+            "links": {
+                "self": "http://localhost:8080/1.0/events/A8F3E3A8522143448672AD80435A38BE"
+            },
+            "attributes": {
+                "abstract": null,
+                "capacity": null,
+                "categories": [
+                    "schema/SportsEvent",
+                    "odh/sport"
+                ],
+                "description": {
+                    "deu": "Im Rahmen des Oldtimer-Klassikers führt eine Etappe auf das Rittern Sonnenpaletau.\nAnkunft der ersten Oldtimer beim Eisring der Arena Ritten in Klobenstein um 10.15 Uhr, anschließend Präzisionsbewerb im Zentrum von Klobenstein. Die Autos können im Zentrum von Klobenstein und am Parkplatz Zentral begutachtet werden.",
+                    "ita": "Una tappa del classico delle auto d'epoca porta sull'altipiano del Renon.\nArrivo delle auto d’epoca all’anello di ghiaccio dell’Arena Ritten a Collalbo alle ore 10.15 e successiva prova cronometrata di precisione nel centro di Collalbo. Le macchine vengono parcheggiate al parcheggio Zentral a Collalbo.",
+                    "eng": "A stage of the classic old-timer race stops at Ritten/Renon.\nArriving of the cars at Klobenstein/Collalbo at 10.15\nThe old-timers can be seen at Zentral parking"
+                },
+                "endDate": "2015-10-10T00:00:00+01:00",
+                "name": {
+                    "deu": "10. Eggentaler Herbst Classic",
+                    "ita": "10 Eggentaler Herbst Classic",
+                    "eng": "10 Eggentaler Herbst Classic"
+                },
+                "shortName": null,
+                "startDate": "2015-10-10T10:15:00+01:00",
+                "status": "published",
+                "url": {
+                    "deu": "http://www.eggentalclassic.it",
+                    "ita": "http://www.eggentalclassic.it",
+                    "eng": "http://www.eggentalclassic.it"
+                }
+            },
+            "relationships": {
+                "contributors": null,
+                "multimediaDescriptions": null,
+                "organizers": {
+                    "data": [
+                        {
+                            "type": "agents",
+                            "id": "A68B1B7BA9EF43198F36F6DF9C566A0E"
+                        }
+                    ],
+                    "links": {
+                        "related": "http://localhost:8080/1.0/events/A8F3E3A8522143448672AD80435A38BE/organizers"
+                    }
+                },
+                "publisher": {
+                    "data": {
+                        "type": "agents",
+                        "id": "2315397aa84e34057cef4b466c1a75068ba65931ef2640b829ea783ac768ecf3"
+                    },
+                    "links": {
+                        "related": "http://localhost:8080/1.0/events/A8F3E3A8522143448672AD80435A38BE/publisher"
+                    }
+                },
+                "series": null,
+                "sponsors": null,
+                "subEvents": null,
+                "venues": {
+                    "data": [
+                        {
+                            "type": "venues",
+                            "id": "A8F3E3A8522143448672AD80435A38BE+location"
+                        }
+                    ],
+                    "links": {
+                        "related": "http://localhost:8080/1.0/events/A8F3E3A8522143448672AD80435A38BE/venues"
+                    }
+                }
+            }
+        },
+        {
+            "type": "events",
+            "id": "0465D969FB9642DB98F49ABE952CA66F",
+            "meta": {
+                "lastUpdate": "2019-05-16T00:05:03.7124629+01:00",
+                "dataProvider": "http://tourism.opendatahub.bz.it/"
+            },
+            "links": {
+                "self": "http://localhost:8080/1.0/events/0465D969FB9642DB98F49ABE952CA66F"
+            },
+            "attributes": {
+                "abstract": null,
+                "capacity": null,
+                "categories": [
+                    "schema/MusicEvent",
+                    "odh/musik-tanz"
+                ],
+                "description": {
+                    "deu": "Man lernt nirgends so viel in so kurzer Zeit wie bei so einem Gitarrenworkshop.\nAlle Teilnehmer kriegen sozusagen Stoff für ein halbes Jahr und vieles an theoretischem Wissen – Wissen, das sie umsetzen können, nicht bloße Theorie. \nEs ist alles möglich: Liedbegleitung, Musikstile (Blues, Bossa usw.), Improvisation.   \nNach dem Motto: Ihr sagt, WAS ihr spielen &amp; lernen wollt   und Ossy sagt, WIE man es spielt. \nWorkshop 1: für Anfänger und leicht Fortgeschrittene\nWorkshop 2: für Fortgeschrittene"
+                },
+                "endDate": "2019-07-29T20:30:00+01:00",
+                "name": {
+                    "deu": "10. Gitarrentage Jenesien"
+                },
+                "shortName": null,
+                "startDate": "2019-07-28T09:00:00+01:00",
+                "status": "published",
+                "url": null
+            },
+            "relationships": {
+                "contributors": null,
+                "multimediaDescriptions": null,
+                "organizers": {
+                    "data": [
+                        {
+                            "type": "agents",
+                            "id": "FBBCDFF2AC854BD89C74115D7BE8A2F6"
+                        }
+                    ],
+                    "links": {
+                        "related": "http://localhost:8080/1.0/events/0465D969FB9642DB98F49ABE952CA66F/organizers"
+                    }
+                },
+                "publisher": {
+                    "data": {
+                        "type": "agents",
+                        "id": "2315397aa84e34057cef4b466c1a75068ba65931ef2640b829ea783ac768ecf3"
+                    },
+                    "links": {
+                        "related": "http://localhost:8080/1.0/events/0465D969FB9642DB98F49ABE952CA66F/publisher"
+                    }
+                },
+                "series": null,
+                "sponsors": null,
+                "subEvents": null,
+                "venues": {
+                    "data": [
+                        {
+                            "type": "venues",
+                            "id": "0465D969FB9642DB98F49ABE952CA66F+location"
+                        }
+                    ],
+                    "links": {
+                        "related": "http://localhost:8080/1.0/events/0465D969FB9642DB98F49ABE952CA66F/venues"
+                    }
+                }
+            }
+        }
+    ]
+}
+eventsId: {
+    "jsonapi": {
+        "version": "1.0"
+    },
+    "links": {
+        "self": "http://localhost:8080/1.0/events/FD7DC58E68A9447FB987460138FB3C85"
+    },
+    "data": {
+        "type": "events",
+        "id": "FD7DC58E68A9447FB987460138FB3C85",
+        "meta": {
+            "lastUpdate": "2017-05-23T00:05:21.5158375+01:00",
+            "dataProvider": "http://tourism.opendatahub.bz.it/"
+        },
+        "links": {
+            "self": "http://localhost:8080/1.0/events/FD7DC58E68A9447FB987460138FB3C85"
+        },
+        "attributes": {
+            "abstract": null,
+            "capacity": null,
+            "categories": [
+                "schema/SportsEvent",
+                "odh/sport"
+            ],
+            "description": {
+                "deu": "★ 100. Giro d'Italia ★\n\nIn Innichen ist dieses Jahr Start der 19. Etappe des  Giro d’Italia. Die Fahrradelite trifft sich zur historischen 100. Ausgabe dieses Klassikers in den Dolomiten. Am Freitag 26. Mai 2017 kämpfen sich Radsportprofis der ganzen Welt von Innichen nach Sexten und über den Kreuzbergpass nach Sappada, Sella Chianzutan bis sie nach 191 Kilometern im 1290 m hoch liegenden Piancavallo eintreffen.\n\n08:30 Uhr Eröffnung Giro Village\n\n10:30 Uhr Präsentation Athleten",
+                "ita": "★ 100° Giro d'Italia ★\n\nSan Candido e la bicicletta… una storia d’amore infinita!\n\nDa molti anni San Candido ha un forte legame con il ciclismo. Molti turisti adorano i numerosi percorsi per mountain-bike e le ciclabili che passano tra le possenti montagne. I ciclisti qui si sentono a casa anche grazie alla calorosa ospitalità della popolazione.\n\nDunque non c’è da meravigliarsi se il nostro paesino sarà il punto di partenza della 19a tappa della 100a edizione del Giro d’Italia. L’élite del ciclismo si radunerà nelle Dolomiti per affrontare le tappe più difficili della 100a edizione di questo grande classico. Dalla Val di Fassa, passando da Ortisei fino ad arrivare da noi a San Candido!\n\nVenerdì, 26 maggio 2017 i ciclisti provenienti da tutto il mondo pedaleranno da San Candido verso Sesto, passeranno da Passo Monte Croce, Sella Chianzutan e raggiungeranno il traguardo dopo 191 km di fatica a Piancavallo, ad un’altitudine di 1290 m.\n\nIl paese si tinge di rosa! Non perdetevi la partenza di questa tappa spettacolare che attraverserà le Dolomiti.\n\nOre 08:30: Apertura Giro Village\n\nOre 10:30: Presentazione atleti",
+                "eng": "★ 100th Giro d'Italia ★\n\nIn San Candido starts the 19th stage of the Giro d'Italia 2017:\nSan Candido/Innichen - Piancavallo (191km)\n\n8.30 a.m.: Opening Giro Village\n\n10.30 a.m.: Athletes Präsentation"
+            },
+            "endDate": "2017-05-26T14:00:00+01:00",
+            "name": {
+                "deu": "100. Giro d'Italia: Start der 19. Etappe Innichen - Piancavallo",
+                "ita": "100° Giro d'Italia: partenza della 19° tappa San Candido - Piancavallo",
+                "eng": "100th Giro d'Italia: start of the 19th stage San Candido - Piancavallo"
+            },
+            "shortName": null,
+            "startDate": "2017-05-26T11:30:00+01:00",
+            "status": "published",
+            "url": {
+                "deu": "http://www.giroditalia.it/",
+                "ita": "http://www.giroditalia.it/",
+                "eng": "http://www.giroditalia.it/"
+            }
+        },
+        "relationships": {
+            "contributors": null,
+            "multimediaDescriptions": null,
+            "organizers": {
+                "data": [
+                    {
+                        "type": "agents",
+                        "id": "522822DA51CA11D18F1400A02427D15E"
+                    }
+                ],
+                "links": {
+                    "related": "http://localhost:8080/1.0/events/FD7DC58E68A9447FB987460138FB3C85/organizers"
+                }
+            },
+            "publisher": {
+                "data": {
+                    "type": "agents",
+                    "id": "2315397aa84e34057cef4b466c1a75068ba65931ef2640b829ea783ac768ecf3"
+                },
+                "links": {
+                    "related": "http://localhost:8080/1.0/events/FD7DC58E68A9447FB987460138FB3C85/publisher"
+                }
+            },
+            "series": null,
+            "sponsors": null,
+            "subEvents": null,
+            "venues": {
+                "data": [
+                    {
+                        "type": "venues",
+                        "id": "FD7DC58E68A9447FB987460138FB3C85+location"
+                    }
+                ],
+                "links": {
+                    "related": "http://localhost:8080/1.0/events/FD7DC58E68A9447FB987460138FB3C85/venues"
+                }
+            }
+        }
+    }
+}
+eventsIdContributors: {
+    "errors": [
+        {
+            "title": "The route has not been implemented yet.",
+            "status": 501
+        }
+    ],
+    "links": {
+        "self": "http://localhost:8080/1.0/events/FD7DC58E68A9447FB987460138FB3C85/contributors"
+    }
+}
+eventsIdMultimediaDescriptions: {
+    "jsonapi": {
+        "version": "1.0"
+    },
+    "links": {
+        "self": "http://localhost:8080/1.0/events/FD7DC58E68A9447FB987460138FB3C85/multimediaDescriptions"
+    },
+    "data": null
+}
+eventsIdOrganizers: {
+    "jsonapi": {
+        "version": "1.0"
+    },
+    "links": {
+        "self": "http://localhost:8080/1.0/events/FD7DC58E68A9447FB987460138FB3C85/organizers"
+    },
+    "data": [
+        {
+            "type": "agents",
+            "id": "522822DA51CA11D18F1400A02427D15E",
+            "meta": {
+                "lastUpdate": null,
+                "dataProvider": null
+            },
+            "links": {
+                "self": "http://localhost:8080/1.0/agents/522822DA51CA11D18F1400A02427D15E"
+            },
+            "attributes": {
+                "abstract": null,
+                "categories": [
+                    "alpinebits/organization"
+                ],
+                "contactPoints": [
+                    {
+                        "email": "info@innichen.it",
+                        "telephone": "0474 913149",
+                        "address": {
+                            "street": {
+                                "deu": "Pflegplatz 1",
+                                "ita": "P.zza del Magistrato 1",
+                                "eng": "Pflegeplatz 1"
+                            },
+                            "city": {
+                                "deu": "Innichen",
+                                "ita": "San Candido",
+                                "eng": "Innichen"
+                            },
+                            "region": null,
+                            "country": "IT",
+                            "complement": null,
+                            "categories": null,
+                            "zipcode": "39038"
+                        },
+                        "availableHours": null
+                    }
+                ],
+                "description": null,
+                "name": {
+                    "deu": "Tourismusverein Innichen",
+                    "ita": "Associazione Turistica  S. Candido",
+                    "eng": "Tourist office  Innichen"
+                },
+                "shortName": null,
+                "url": {
+                    "deu": "http://www.sancandido.info",
+                    "ita": "http://www.sancandido.info",
+                    "eng": "http://www.sancandido.info"
+                }
+            },
+            "relationships": {
+                "multimediaDescriptions": null
+            }
+        }
+    ]
+}
+eventsIdPublisher: {
+    "jsonapi": {
+        "version": "1.0"
+    },
+    "links": {
+        "self": "http://localhost:8080/1.0/events/FD7DC58E68A9447FB987460138FB3C85/publisher"
+    },
+    "data": {
+        "type": "agents",
+        "id": "2315397aa84e34057cef4b466c1a75068ba65931ef2640b829ea783ac768ecf3",
+        "meta": {
+            "lastUpdate": null,
+            "dataProvider": null
+        },
+        "links": {
+            "self": "http://localhost:8080/1.0/agents/2315397aa84e34057cef4b466c1a75068ba65931ef2640b829ea783ac768ecf3"
+        },
+        "attributes": {
+            "abstract": null,
+            "categories": null,
+            "contactPoints": null,
+            "description": null,
+            "name": {
+                "deu": "LTS - Landesverband der Tourismusorganisationen Südtirols",
+                "eng": "LTS - Landesverband der Tourismusorganisationen Südtirols",
+                "ita": "LTS - Landesverband der Tourismusorganisationen Südtirols"
+            },
+            "shortName": null,
+            "url": "https://lts.it"
+        },
+        "relationships": {
+            "multimediaDescriptions": null
+        }
+    }
+}
+eventsIdSeries: {
+    "errors": [
+        {
+            "title": "The route has not been implemented yet.",
+            "status": 501
+        }
+    ],
+    "links": {
+        "self": "http://localhost:8080/1.0/events/FD7DC58E68A9447FB987460138FB3C85/series"
+    }
+}
+eventsIdSponsors: {
+    "errors": [
+        {
+            "title": "The route has not been implemented yet.",
+            "status": 501
+        }
+    ],
+    "links": {
+        "self": "http://localhost:8080/1.0/events/FD7DC58E68A9447FB987460138FB3C85/sponsors"
+    }
+}
+eventsIdSubEvents: {
+    "errors": [
+        {
+            "title": "The route has not been implemented yet.",
+            "status": 501
+        }
+    ],
+    "links": {
+        "self": "http://localhost:8080/1.0/events/FD7DC58E68A9447FB987460138FB3C85/subEvents"
+    }
+}
+eventsIdVenues: {
+    "jsonapi": {
+        "version": "1.0"
+    },
+    "links": {
+        "self": "http://localhost:8080/1.0/events/FD7DC58E68A9447FB987460138FB3C85/venues"
+    },
+    "data": [
+        {
+            "type": "venues",
+            "id": "FD7DC58E68A9447FB987460138FB3C85+location",
+            "meta": {
+                "lastUpdate": null,
+                "dataProvider": null
+            },
+            "links": {
+                "self": "http://localhost:8080/1.0/venues/FD7DC58E68A9447FB987460138FB3C85+location"
+            },
+            "attributes": {
+                "abstract": null,
+                "address": {
+                    "street": {
+                        "deu": "Dorfzentrum",
+                        "ita": "centro paese",
+                        "eng": "village center"
+                    },
+                    "city": {
+                        "deu": "Innichen",
+                        "ita": "San Candido",
+                        "eng": "San Candido / Innichen"
+                    },
+                    "region": null,
+                    "country": "IT",
+                    "complement": null,
+                    "categories": null,
+                    "zipcode": "39038"
+                },
+                "area": null,
+                "categories": null,
+                "description": null,
+                "geometries": [
+                    {
+                        "type": "Point",
+                        "coordinates": [
+                            46.7329,
+                            12.2815
+                        ]
+                    }
+                ],
+                "howToArrive": null,
+                "name": {
+                    "eng": "Unnamed venue"
+                },
+                "shortName": null,
+                "url": null
+            },
+            "relationships": {
+                "multimediaDescriptions": null
+            }
+        }
+    ]
+}

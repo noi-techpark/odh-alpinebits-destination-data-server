@@ -1,0 +1,47 @@
+trails:
+  get:
+    description: Retrieves a list of `trails` resources.
+    tags:
+      - Trails
+    parameters:
+      - $ref: ../parameters/index.yml#/parameters/fields
+      - $ref: ../parameters/trails.params.yml#/parameters/include
+      - $ref: ../parameters/trails.params.yml#/parameters/filter
+      - $ref: ../parameters/index.yml#/parameters/search
+    responses:
+      '200':
+        description: OK
+trailsId:
+  get:
+    description: Retrieves a single `trails` resource.
+    tags:
+      - Trails
+    parameters:
+      - $ref: ../parameters/index.yml#/parameters/id
+      - $ref: ../parameters/index.yml#/parameters/fields
+      - $ref: ../parameters/trails.params.yml#/parameters/include
+    responses:
+      '200':
+        description: OK
+trailsIdConnections:
+  get:
+    description: Retrieves all `connections` of the lift
+    tags:
+      - Trails
+    parameters:
+      - $ref: ../parameters/index.yml#/parameters/id
+      - $ref: ../parameters/index.yml#/parameters/fields
+    responses:
+      '200':
+        description: OK
+trailsIdMultimediaDescriptions:
+  get:
+    description: Retrieves all `multimediaDescriptions` of the lift
+    tags:
+      - Trails
+    parameters:
+      - $ref: ../parameters/index.yml#/parameters/id
+      - $ref: ../parameters/index.yml#/parameters/fields
+    responses:
+      '200':
+        description: OK

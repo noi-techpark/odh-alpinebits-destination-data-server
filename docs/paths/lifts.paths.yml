@@ -1,0 +1,48 @@
+lifts:
+  get:
+    description: Retrieves a list of `lifts` resources.
+    tags:
+      - Lifts
+    parameters:
+      - $ref: ../parameters/index.yml#/parameters/fields
+      - $ref: ../parameters/lifts.params.yml#/parameters/include
+      - $ref: ../parameters/lifts.params.yml#/parameters/filter
+      - $ref: ../parameters/index.yml#/parameters/search
+    responses:
+      '200':
+        description: OK
+liftsId:
+  get:
+    description: Retrieves a single `lifts` resource.
+    tags:
+      - Lifts
+    parameters:
+      - $ref: ../parameters/index.yml#/parameters/id
+      - $ref: ../parameters/index.yml#/parameters/fields
+      - $ref: ../parameters/lifts.params.yml#/parameters/include
+      - $ref: ../parameters/index.yml#/parameters/search
+    responses:
+      '200':
+        description: OK
+liftsIdConnections:
+  get:
+    description: Retrieves all `connections` of the lift
+    tags:
+      - Lifts
+    parameters:
+      - $ref: ../parameters/index.yml#/parameters/id
+      - $ref: ../parameters/index.yml#/parameters/fields
+    responses:
+      '200':
+        description: OK
+liftsIdMultimediaDescriptions:
+  get:
+    description: Retrieves all `multimediaDescriptions` of the lift
+    tags:
+      - Lifts
+    parameters:
+      - $ref: ../parameters/index.yml#/parameters/id
+      - $ref: ../parameters/index.yml#/parameters/fields
+    responses:
+      '200':
+        description: OK

@@ -1,0 +1,129 @@
+parameters:
+  include:
+    name: include
+    in: query
+    style: form
+    explode: false
+    description: The include query allows the inclusion of resources referenced
+      in the relationships in the response message. With this query, it is
+      possible to avoid additional requests to the server in order to retrieve
+      related resources.
+    schema:
+      $ref: "#/definitions/includeLifts"
+  filter:
+    name: filter
+    description: "Filters resources based on generic or simple filters. Generic
+    filters specify matches to fields of the resource based on some logical
+    operand. Simple filters may not be able to be expressed with generic filters
+    and use a unique name and no operand. For example, the request
+    `/1.0/events?filter[lastUpdate][gt]=2020-12-01` filters resources whose
+    field `lastUpdate` is greater than `2020-12-01` while the request
+    `/1.0/events?filter[lang]=eng,deu` filters resources containing text in
+    English or German.
+    <br/><br/>
+    The current list of operands, only applicable to specific fields at the
+    moment, is the following:
+    <br/><br/>
+    - `eq` (equals): matches resources whose field has a value equal to the one
+    specified in the query. Example: `/1.0/event?filter[organizers]=522822B351CA11D18F1400A02427D15E`.
+    Available for the following fields: `organizers`.
+    <br/><br/>
+    - `gt` (greater than): matches resources whose field has a value greater
+    than the one specified in the query. Example:
+    `/1.0/event?filter[lastUpdate][gt]=2020-10-12`. Available for the following
+    fields: `lastUpdate`.
+    <br/><br/>
+    - `gte` (greater than or equals to): matches resources whose field has a
+    value greater than or equals to the one specified in the query. Example:
+    `/1.0/event?filter[endDate][gte]=2020-10-12`. Available for the following
+    fields: `endDate`.
+    <br/><br/>
+    - `lte` (lower than or equals to): matches resources whose field has a value
+    lower than or equals to the one specified in the query. Example:
+    `/1.0/event?filter[startDate][lte]=2020-10-21`. Available for the following
+    fields: `startDate`.
+    <br/><br/>
+    - `any` (any of the following): matches resources whose field contains any
+    of the values specified in the query. Example:
+    `/1.0/event?filter[categories][any]=schema/MusicEvent,schema/SportsEvent`.
+    Available for the following fields: `categories`.
+    <br/><br/>    
+    - `near` (near location): matches resources whose field is related to a
+    geolocation set within a certain radius of the specified position. The
+    position/radius is specified as a comma-separated triple of longitude,
+    latitude, and distance (in meters). Example:
+    `/1.0/event?filter[venues][near]=46.491592,11.337202,10000`. Available for
+    the following fields: `venues`.
+    <br/><br/>
+    The current list of simple filters is the following:
+    <br/><br/>
+    - `lang` (language filter): Filters resources that contain text in any of
+    the languages specified. Languages are specified as comma-separated
+    three-letter language codes conforming to [ISO 639-3](https://iso639-3.sil.org/code_tables/639/).
+    For example, the filter for resources with text in English or German is
+    `/1.0/events?filter[lang]=eng,deu`
+    "
+    in: query
+    allowReserved: true
+    style: deepObject
+    explode: true
+    schema:
+      $ref: "#/definitions/filterLifts"
+definitions:
+  includeLifts:
+    type: array
+    items:
+      type: string
+      enum:
+        - connections
+        - multimediaDescriptions
+  filterLifts:
+    type: object
+    properties:
+      lang:
+        type: string
+        pattern: ^\w\w\w(,\w\w\w)*$
+        example: ita,eng
+      categories:
+        type: object
+        properties:
+          any:
+            type: string
+            pattern: ^(\w|-|_)+\/(\w|-|_)+(,((\w|-|_)+\/(\w|-|_)+))*$
+            example: schema/SportsEvent
+      lastUpdate:
+        type: object
+        properties:
+          gt:
+            type: string
+            format: date
+            example: "2020-12-01"
+      startDate:
+        type: object
+        properties:
+          lte:
+            type: string
+            format: date
+            example: "2020-12-01"
+      endDate:
+        type: object
+        properties:
+          gte:
+            type: string
+            format: date
+            example: "2020-12-10"
+      organizers:
+        type: object
+        properties:
+          eq:
+            type: string
+            minLength: 1
+            pattern: "[^,;]+"
+            example: 522822B351CA11D18F1400A02427D15E
+      venues:
+        type: object
+        properties:
+          near:
+            type: string
+            pattern: ^(-)?\d+(\.\d+)*,(-)?\d+(\.\d+)*,[1-9]\d*$
+            example: 46.491592,11.337202,10000

@@ -1,0 +1,100 @@
+mountainAreas:
+  get:
+    description: Retrieves a list of `mountainAreas` resources.
+    tags:
+      - Mountain Areas
+    parameters:
+      - $ref: ../parameters/index.yml#/parameters/fields
+      - $ref: ../parameters/mountainareas.params.yml#/parameters/include
+    responses:
+      '200':
+        description: OK
+mountainAreasId:
+  get:
+    description: Retrieves a single `mountainAreas` resource.
+    tags:
+      - Mountain Areas
+    parameters:
+      - $ref: ../parameters/index.yml#/parameters/id
+      - $ref: ../parameters/index.yml#/parameters/fields
+      - $ref: ../parameters/mountainareas.params.yml#/parameters/include
+    responses:
+      '200':
+        description: OK
+mountainAreasIdAreaOwner:
+  get:
+    description: Retrieves a single `mountainAreas` resource.
+    tags:
+      - Mountain Areas
+    parameters:
+      - $ref: ../parameters/index.yml#/parameters/id
+      - $ref: ../parameters/index.yml#/parameters/fields
+    responses:
+      '200':
+        description: OK
+mountainAreasIdConnections:
+  get:
+    description: Retrieves a single `mountainAreas` resource.
+    tags:
+      - Mountain Areas
+    parameters:
+      - $ref: ../parameters/index.yml#/parameters/id
+      - $ref: ../parameters/index.yml#/parameters/fields
+    responses:
+      '200':
+        description: OK
+mountainAreasIdLifts:
+  get:
+    description: Retrieves a single `mountainAreas` resource.
+    tags:
+      - Mountain Areas
+    parameters:
+      - $ref: ../parameters/index.yml#/parameters/id
+      - $ref: ../parameters/index.yml#/parameters/fields
+    responses:
+      '200':
+        description: OK
+mountainAreasIdMultimediaDescriptions:
+  get:
+    description: Retrieves a single `mountainAreas` resource.
+    tags:
+      - Mountain Areas
+    parameters:
+      - $ref: ../parameters/index.yml#/parameters/id
+      - $ref: ../parameters/index.yml#/parameters/fields
+    responses:
+      '200':
+        description: OK
+mountainAreasIdSnowparks:
+  get:
+    description: Retrieves a single `mountainAreas` resource.
+    tags:
+      - Mountain Areas
+    parameters:
+      - $ref: ../parameters/index.yml#/parameters/id
+      - $ref: ../parameters/index.yml#/parameters/fields
+    responses:
+      '200':
+        description: OK
+mountainAreasIdSubAreas:
+  get:
+    description: Retrieves a single `mountainAreas` resource.
+    tags:
+      - Mountain Areas
+    parameters:
+      - $ref: ../parameters/index.yml#/parameters/id
+      - $ref: ../parameters/index.yml#/parameters/fields
+    responses:
+      '200':
+        description: OK
+mountainAreasIdTrails:
+  get:
+    description: Retrieves a single `mountainAreas` resource.
+    tags:
+      - Mountain Areas
+    parameters:
+      - $ref: ../parameters/index.yml#/parameters/id
+      - $ref: ../parameters/index.yml#/parameters/fields
+    responses:
+      '200':
+        description: OK
