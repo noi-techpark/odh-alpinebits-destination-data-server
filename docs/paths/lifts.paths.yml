@@ -4,6 +4,7 @@ lifts:
     tags:
       - Lifts
     parameters:
+      - $ref: ../parameters/index.yml#/parameters/page
       - $ref: ../parameters/index.yml#/parameters/fields
       - $ref: ../parameters/lifts.params.yml#/parameters/include
       - $ref: ../parameters/lifts.params.yml#/parameters/filter
@@ -11,6 +12,10 @@ lifts:
     responses:
       '200':
         description: OK
+        content:
+            application/vnd.api+json:
+              example:
+                $ref: ../examples/lifts.examples.yml#/lifts
 liftsId:
   get:
     description: Retrieves a single `lifts` resource.
@@ -24,6 +29,10 @@ liftsId:
     responses:
       '200':
         description: OK
+        content:
+            application/vnd.api+json:
+              example:
+                $ref: ../examples/lifts.examples.yml#/liftsId
 liftsIdConnections:
   get:
     description: Retrieves all `connections` of the lift
@@ -33,8 +42,12 @@ liftsIdConnections:
       - $ref: ../parameters/index.yml#/parameters/id
       - $ref: ../parameters/index.yml#/parameters/fields
     responses:
-      '200':
-        description: OK
+      '501':
+        description: Not Implemented
+        content:
+            application/vnd.api+json:
+              example:
+                $ref: ../examples/lifts.examples.yml#/liftsIdConnections
 liftsIdMultimediaDescriptions:
   get:
     description: Retrieves all `multimediaDescriptions` of the lift
@@ -46,3 +59,7 @@ liftsIdMultimediaDescriptions:
     responses:
       '200':
         description: OK
+        content:
+            application/vnd.api+json:
+              example:
+                $ref: ../examples/lifts.examples.yml#/liftsIdMultimediaDescriptions

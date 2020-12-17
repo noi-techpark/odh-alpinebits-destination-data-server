@@ -1,10 +1,21 @@
 openapi: '3.0.2'
+externalDocs:
+  url: https://www.alpinebits.org/destinationdata/
 info:
   title: AlpineBits DestinationData Reference Server
   version: '1.0'
+  license:
+    name: GPLv3
   description: This page presents the documentation of the AlpineBits
-    DestinationData standard as implement by its reference server. 
+    DestinationData standard as implement by its reference server.
+  contact:
+    name: Claudenir M. Fonseca
+    email: cmoraisfonseca@unibz.it
 servers:
+  - url: https://destinationdata.alpinebits.opendatahub.testingmachine.eu/
+    description: OpenDataHub Test Server
+  - url: https://destinationdata.alpinebits.opendatahub.bz.it/
+    description: OpenDataHub Server
   - url: http://localhost:8080
     description: Local Server
 tags:
@@ -70,43 +81,43 @@ paths:
     $ref: paths/events.paths.yml#/eventsIdVenues
   /1.0/lifts:
     $ref: paths/lifts.paths.yml#/lifts
-  /1.0/lifts/:id:
+  /1.0/lifts/{id}:
     $ref: paths/lifts.paths.yml#/liftsId
-  /1.0/lifts/:id/connections:
+  /1.0/lifts/{id}/connections:
     $ref: paths/lifts.paths.yml#/liftsIdConnections
-  /1.0/lifts/:id/multimediaDescriptions:
+  /1.0/lifts/{id}/multimediaDescriptions:
     $ref: paths/lifts.paths.yml#/liftsIdMultimediaDescriptions
   /1.0/snowparks:
     $ref: paths/snowparks.paths.yml#/snowparks
-  /1.0/snowparks/:id:
+  /1.0/snowparks/{id}:
     $ref: paths/snowparks.paths.yml#/snowparksId
-  /1.0/snowparks/:id/connections:
+  /1.0/snowparks/{id}/connections:
     $ref: paths/snowparks.paths.yml#/snowparksIdConnections
-  /1.0/snowparks/:id/multimediaDescriptions:
+  /1.0/snowparks/{id}/multimediaDescriptions:
     $ref: paths/snowparks.paths.yml#/snowparksIdMultimediaDescriptions
   /1.0/trails:
     $ref: paths/trails.paths.yml#/trails
-  /1.0/trails/:id:
+  /1.0/trails/{id}:
     $ref: paths/trails.paths.yml#/trailsId
-  /1.0/trails/:id/connections:
+  /1.0/trails/{id}/connections:
     $ref: paths/trails.paths.yml#/trailsIdConnections
-  /1.0/trails/:id/multimediaDescriptions:
+  /1.0/trails/{id}/multimediaDescriptions:
     $ref: paths/trails.paths.yml#/trailsIdMultimediaDescriptions
   /1.0/mountainAreas:
     $ref: paths/mountainareas.paths.yml#/mountainAreas
-  /1.0/mountainAreas/:id:
+  /1.0/mountainAreas/{id}:
     $ref: paths/mountainareas.paths.yml#/mountainAreasId
-  /1.0/mountainAreas/:id/areaOwner:
+  /1.0/mountainAreas/{id}/areaOwner:
     $ref: paths/mountainareas.paths.yml#/mountainAreasIdAreaOwner
-  /1.0/mountainAreas/:id/connections:
+  /1.0/mountainAreas/{id}/connections:
     $ref: paths/mountainareas.paths.yml#/mountainAreasIdConnections
-  /1.0/mountainAreas/:id/lifts:
+  /1.0/mountainAreas/{id}/lifts:
     $ref: paths/mountainareas.paths.yml#/mountainAreasIdLifts
-  /1.0/mountainAreas/:id/multimediaDescriptions:
+  /1.0/mountainAreas/{id}/multimediaDescriptions:
     $ref: paths/mountainareas.paths.yml#/mountainAreasIdMultimediaDescriptions
-  /1.0/mountainAreas/:id/snowparks:
+  /1.0/mountainAreas/{id}/snowparks:
     $ref: paths/mountainareas.paths.yml#/mountainAreasIdSnowparks
-  /1.0/mountainAreas/:id/subAreas:
+  /1.0/mountainAreas/{id}/subAreas:
     $ref: paths/mountainareas.paths.yml#/mountainAreasIdSubAreas
-  /1.0/mountainAreas/:id/trails:
+  /1.0/mountainAreas/{id}/trails:
     $ref: paths/mountainareas.paths.yml#/mountainAreasIdTrails

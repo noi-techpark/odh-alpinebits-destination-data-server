@@ -4,11 +4,16 @@ mountainAreas:
     tags:
       - Mountain Areas
     parameters:
+      - $ref: ../parameters/index.yml#/parameters/page
       - $ref: ../parameters/index.yml#/parameters/fields
       - $ref: ../parameters/mountainareas.params.yml#/parameters/include
     responses:
       '200':
         description: OK
+        content:
+            application/vnd.api+json:
+              example:
+                $ref: ../examples/mountainAreas.examples.yml#/mountainAreas
 mountainAreasId:
   get:
     description: Retrieves a single `mountainAreas` resource.
@@ -21,6 +26,10 @@ mountainAreasId:
     responses:
       '200':
         description: OK
+        content:
+            application/vnd.api+json:
+              example:
+                $ref: ../examples/mountainAreas.examples.yml#/mountainAreasId
 mountainAreasIdAreaOwner:
   get:
     description: Retrieves a single `mountainAreas` resource.
@@ -32,6 +41,10 @@ mountainAreasIdAreaOwner:
     responses:
       '200':
         description: OK
+        content:
+            application/vnd.api+json:
+              example:
+                $ref: ../examples/mountainAreas.examples.yml#/mountainAreasIdAreaOwner
 mountainAreasIdConnections:
   get:
     description: Retrieves a single `mountainAreas` resource.
@@ -41,8 +54,12 @@ mountainAreasIdConnections:
       - $ref: ../parameters/index.yml#/parameters/id
       - $ref: ../parameters/index.yml#/parameters/fields
     responses:
-      '200':
-        description: OK
+      '501':
+        description: Not Implemented
+        content:
+            application/vnd.api+json:
+              example:
+                $ref: ../examples/mountainAreas.examples.yml#/mountainAreasIdConnections
 mountainAreasIdLifts:
   get:
     description: Retrieves a single `mountainAreas` resource.
@@ -54,6 +71,10 @@ mountainAreasIdLifts:
     responses:
       '200':
         description: OK
+        content:
+            application/vnd.api+json:
+              example:
+                $ref: ../examples/mountainAreas.examples.yml#/mountainAreasIdLifts
 mountainAreasIdMultimediaDescriptions:
   get:
     description: Retrieves a single `mountainAreas` resource.
@@ -65,6 +86,10 @@ mountainAreasIdMultimediaDescriptions:
     responses:
       '200':
         description: OK
+        content:
+            application/vnd.api+json:
+              example:
+                $ref: ../examples/mountainAreas.examples.yml#/mountainAreasIdMultimediaDescriptions
 mountainAreasIdSnowparks:
   get:
     description: Retrieves a single `mountainAreas` resource.
@@ -76,6 +101,10 @@ mountainAreasIdSnowparks:
     responses:
       '200':
         description: OK
+        content:
+            application/vnd.api+json:
+              example:
+                $ref: ../examples/mountainAreas.examples.yml#/mountainAreasIdSnowparks
 mountainAreasIdSubAreas:
   get:
     description: Retrieves a single `mountainAreas` resource.
@@ -85,8 +114,12 @@ mountainAreasIdSubAreas:
       - $ref: ../parameters/index.yml#/parameters/id
       - $ref: ../parameters/index.yml#/parameters/fields
     responses:
-      '200':
-        description: OK
+      '501':
+        description: Not Implemented
+        content:
+            application/vnd.api+json:
+              example:
+                $ref: ../examples/mountainAreas.examples.yml#/mountainAreasIdSubAreas
 mountainAreasIdTrails:
   get:
     description: Retrieves a single `mountainAreas` resource.
@@ -98,3 +131,7 @@ mountainAreasIdTrails:
     responses:
       '200':
         description: OK
+        content:
+            application/vnd.api+json:
+              example:
+                $ref: ../examples/mountainAreas.examples.yml#/mountainAreasIdTrails

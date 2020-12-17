@@ -4,6 +4,7 @@ events:
     tags:
       - Events
     parameters:
+      - $ref: ../parameters/index.yml#/parameters/page
       - $ref: ../parameters/events.params.yml#/parameters/include
       - $ref: ../parameters/index.yml#/parameters/fields
       - $ref: ../parameters/events.params.yml#/parameters/filter

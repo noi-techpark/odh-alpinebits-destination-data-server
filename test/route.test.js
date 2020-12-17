@@ -8,10 +8,14 @@ module.exports.basicRouteTests = (opts) => {
 
   beforeAll( () => {
 
-    return utils.axiosInstance.get(`/1.0/${opts.route}?${pageParam}`)
+    console.log("Request", `/1.0/${opts.route}`);
+    console.log("Options", opts);
+
+    return utils.axiosInstance.get(`/1.0/${opts.route}`)
       .then( (response) => {
         ({headers, status} = response);
         ({meta, data, links} = response.data);
+        console.log("Data",response.data);
       })
   })
 
@@ -105,6 +109,7 @@ module.exports.basicRouteTests = (opts) => {
     })
 
     test(`/${opts.route}: pagination 'next' link works`, () => {
+      console.log("Next",links.next)
       return utils.get(links.next).then( res => expect(res.data.data).toBeDefined())
     });
 

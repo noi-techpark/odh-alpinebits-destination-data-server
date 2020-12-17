@@ -11,6 +11,10 @@ snowparks:
     responses:
       '200':
         description: OK
+        content:
+            application/vnd.api+json:
+              example:
+                $ref: ../examples/snowparks.examples.yml#/snowparks
 snowparksId:
   get:
     description: Retrieves a single `snowparks` resource.
@@ -23,20 +27,29 @@ snowparksId:
     responses:
       '200':
         description: OK
+        content:
+            application/vnd.api+json:
+              example:
+                $ref: ../examples/snowparks.examples.yml#/snowparksId
 snowparksIdConnections:
   get:
-    description: Retrieves all `connections` of the lift
+    description: Retrieves all `connections` of the snowpark
     tags:
       - Snowparks
     parameters:
+      - $ref: ../parameters/index.yml#/parameters/page
       - $ref: ../parameters/index.yml#/parameters/id
       - $ref: ../parameters/index.yml#/parameters/fields
     responses:
-      '200':
-        description: OK
+      '501':
+        description: Not Implement
+        content:
+            application/vnd.api+json:
+              example:
+                $ref: ../examples/snowparks.examples.yml#/snowparksIdConnections
 snowparksIdMultimediaDescriptions:
   get:
-    description: Retrieves all `multimediaDescriptions` of the lift
+    description: Retrieves all `multimediaDescriptions` of the snowpark
     tags:
       - Snowparks
     parameters:
@@ -45,3 +58,7 @@ snowparksIdMultimediaDescriptions:
     responses:
       '200':
         description: OK
+        content:
+            application/vnd.api+json:
+              example:
+                $ref: ../examples/snowparks.examples.yml#/snowparksIdMultimediaDescriptions

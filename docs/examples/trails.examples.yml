@@ -1,0 +1,1128 @@
+trails: {
+    "jsonapi": {
+        "version": "1.0"
+    },
+    "meta": {
+        "count": 1180,
+        "pages": 118
+    },
+    "links": {
+        "first": "http://localhost:8080/1.0/trails?page[number]=1",
+        "last": "http://localhost:8080/1.0/trails?page[number]=118",
+        "next": "http://localhost:8080/1.0/trails?page[number]=2",
+        "prev": "http://localhost:8080/1.0/trails?page[number]=1",
+        "self": "http://localhost:8080/1.0/trails?page[number]=1"
+    },
+    "data": [
+        {
+            "type": "trails",
+            "id": "01CFEFF8DA586E548327E539276C42F3",
+            "meta": {
+                "lastUpdate": "2020-12-10T03:05:18.9846401+01:00",
+                "dataProvider": "http://tourism.opendatahub.bz.it/"
+            },
+            "links": {
+                "self": "http://localhost:8080/1.0/trails/01CFEFF8DA586E548327E539276C42F3"
+            },
+            "attributes": {
+                "abstract": null,
+                "categories": [
+                    "alpinebits/cross-country",
+                    "odh/loipen",
+                    "odh/klassisch-und-skating"
+                ],
+                "name": {
+                    "deu": "01 Toblacher Stadionrunde",
+                    "ita": "01 Giro dello stadio di Dobbiaco",
+                    "eng": "01 Cross country stadium track Toblach/Dobbiaco"
+                },
+                "shortName": null,
+                "description": {
+                    "deu": "Die anspruchsvolle Rundloipe ab dem Langlaufstadion in Toblach wird häufig als Trainingsstrecke für verschiedene Langlauf-Nationalteams aus der ganzen Welt genutzt.Diese Loipe wird am Montag und Donnerstag von 17.00 bis 20.00 Uhr mit Flutlicht beleuchtet. Die Benützung ist kostenpflichtig.",
+                    "ita": "La pista impegnativa che parte dallo stadio di sci da fondo di Dobbiaco spesso viene utilizzata come circuito d'allenamento dai teams sportivi di varie nazioni.Questa pista da fondo é illuminate lunedì e giovedí dalle ore 17.00 alle ore 20.00. L’utilizzo è a pagamento.",
+                    "eng": "Demanding round-trip tours starting at the cross-country stadium in Toblach/Dobbiaco, often used as training tracks by various national cross-country teams from all over the world.This trail will be floodlit on Monday and Thursday from 5:00 pm to 8:00 pm from. Use is subject to a fee."
+                },
+                "url": {
+                    "deu": "http://www.toblach.info",
+                    "ita": "http://www.toblach.info",
+                    "eng": "http://www.toblach.info"
+                },
+                "length": 1400,
+                "minAltitude": 1216,
+                "maxAltitude": 1235,
+                "difficulty": {
+                    "eu": "beginner"
+                },
+                "address": {
+                    "street": null,
+                    "city": {
+                        "deu": "Toblach",
+                        "ita": "Dobbiaco",
+                        "eng": "Toblach/Dobbiaco"
+                    },
+                    "region": null,
+                    "country": "IT",
+                    "complement": null,
+                    "categories": null,
+                    "zipcode": "39034"
+                },
+                "geometries": [
+                    {
+                        "type": "Point",
+                        "coordinates": [
+                            12.223967,
+                            46.718797,
+                            1217
+                        ]
+                    }
+                ],
+                "howToArrive": {
+                    "deu": "Wie Sie Toblach erreichen: https://www.drei-zinnen.info/de/toblach/toblach/kontakt-service/anreise-mobilitaet.htmlVon Toblach in Richtung Süden und weiter in den Ortsteil Säge.",
+                    "ita": "Come arrivare a Dobbiaco: https://www.tre-cime.info/it/dobbiaco/dobbiaco/contatto-servizi/arrivo-mobilita.htmlDa Dobbiaco in direzione sud proseguendo fino alla località Segheria.",
+                    "eng": "How to reach Dobbiaco/Toblach: https://www.drei-zinnen.info/en/dobbiaco/dobbiaco/contact-and-service/arrival-mobility.htmlFrom Dobbiaco in southern direction and further on to the district Säge/Segheria."
+                },
+                "openingHours": {
+                    "dailySchedules": {
+                        "2020-12-01": null
+                    },
+                    "weeklySchedules": [
+                        {
+                            "validFrom": "1900-01-01",
+                            "validTo": "2020-03-01",
+                            "monday": null,
+                            "tuesday": null,
+                            "wednesday": null,
+                            "thursday": null,
+                            "friday": null,
+                            "saturday": null,
+                            "sunday": null
+                        }
+                    ]
+                },
+                "snowCondition": null
+            },
+            "relationships": {
+                "connections": null,
+                "multimediaDescriptions": null
+            }
+        },
+        {
+            "type": "trails",
+            "id": "B66FA66DA650717E0964A4E30A716DAE",
+            "meta": {
+                "lastUpdate": "2020-11-17T03:05:08.7218441+01:00",
+                "dataProvider": "http://tourism.opendatahub.bz.it/"
+            },
+            "links": {
+                "self": "http://localhost:8080/1.0/trails/B66FA66DA650717E0964A4E30A716DAE"
+            },
+            "attributes": {
+                "abstract": null,
+                "categories": [
+                    "alpinebits/cross-country",
+                    "odh/loipen",
+                    "odh/klassisch-und-skating"
+                ],
+                "name": {
+                    "deu": "02 Langlaufstadion Toblach Fisloipe - Stephanie",
+                    "ita": "02 Stadio sci da fondo Dobbiaco pista FISI - Stephanie",
+                    "eng": "02 Cross country stadium Toblach/Dobbiaco FISI - Stephanie"
+                },
+                "shortName": null,
+                "description": {
+                    "deu": "Die anspruchsvolle Rundloipe ab dem Langlaufstadion in Toblach wird häufig als Trainingsstrecke für verschiedene Langlauf-Nationalteams aus der ganzen Welt genutzt.",
+                    "ita": "La pista impegnativa che parte dallo stadio di sci da fondo di Dobbiaco spesso viene utilizzata come circuito d'allenamento dai teams sportivi di varie nazioni.",
+                    "eng": "Demanding round-trip tours starting at the cross-country stadium in Toblach/Dobbiaco, often used as training tracks by various national cross-country teams from all over the world."
+                },
+                "url": {
+                    "deu": "http://www.toblach.info",
+                    "ita": "http://www.toblach.info",
+                    "eng": "http://www.toblach.info"
+                },
+                "length": 3900,
+                "minAltitude": 1216,
+                "maxAltitude": 1281,
+                "difficulty": {
+                    "eu": "expert"
+                },
+                "address": {
+                    "street": null,
+                    "city": {
+                        "deu": "Toblach",
+                        "ita": "Dobbiaco",
+                        "eng": "Toblach/Dobbiaco"
+                    },
+                    "region": null,
+                    "country": "IT",
+                    "complement": null,
+                    "categories": null,
+                    "zipcode": "39034"
+                },
+                "geometries": [
+                    {
+                        "type": "Point",
+                        "coordinates": [
+                            12.22372,
+                            46.71875,
+                            1216
+                        ]
+                    }
+                ],
+                "howToArrive": {
+                    "deu": "Wie Sie Toblach erreichen: https://www.drei-zinnen.info/de/toblach/toblach/kontakt-service/anreise-mobilitaet.html\r\nVon Toblach in Richtung Süden und weiter in den Ortsteil Säge.",
+                    "ita": "Come arrivare a Dobbiaco: https://www.tre-cime.info/it/dobbiaco/dobbiaco/contatto-servizi/arrivo-mobilita.html\r\nDa Dobbiaco in direzione sud proseguendo fino alla località Segheria.",
+                    "eng": "How to reach Dobbiaco/Toblach: https://www.drei-zinnen.info/en/dobbiaco/dobbiaco/contact-and-service/arrival-mobility.html\r\nFrom Dobbiaco in southern direction and further on to the district Säge/Segheria."
+                },
+                "openingHours": {
+                    "dailySchedules": null,
+                    "weeklySchedules": [
+                        {
+                            "validFrom": "2014-12-01",
+                            "validTo": "2015-03-31",
+                            "monday": null,
+                            "tuesday": null,
+                            "wednesday": null,
+                            "thursday": null,
+                            "friday": null,
+                            "saturday": null,
+                            "sunday": null
+                        }
+                    ]
+                },
+                "snowCondition": null
+            },
+            "relationships": {
+                "connections": null,
+                "multimediaDescriptions": null
+            }
+        },
+        {
+            "type": "trails",
+            "id": "98DCCBB4D6A1F8CC477D9631A8B703F8",
+            "meta": {
+                "lastUpdate": "2020-11-17T03:05:09.1320058+01:00",
+                "dataProvider": "http://tourism.opendatahub.bz.it/"
+            },
+            "links": {
+                "self": "http://localhost:8080/1.0/trails/98DCCBB4D6A1F8CC477D9631A8B703F8"
+            },
+            "attributes": {
+                "abstract": null,
+                "categories": [
+                    "alpinebits/cross-country",
+                    "odh/loipen",
+                    "odh/klassisch-und-skating"
+                ],
+                "name": {
+                    "deu": "03 Langlaufstadion Toblach Fisloipe - Ole",
+                    "ita": "03 Stadio sci da fondo pista Dobbiaco FISI - Ole",
+                    "eng": "03 Cross country stadium Toblach/Dobbiaco FISI - Ole"
+                },
+                "shortName": null,
+                "description": {
+                    "deu": "Die anspruchsvolle Rundloipe ab dem Langlaufstadion in Toblach wird häufig als Trainingsstrecke für verschiedene Langlauf-Nationalteams aus der ganzen Welt genutzt.",
+                    "ita": "La pista impegnativa che parte dallo stadio di sci da fondo di Dobbiaco spesso viene utilizzata come circuito d'allenamento dai teams sportivi di varie nazioni.",
+                    "eng": "Demanding round-trip tours starting at the cross-country stadium in Toblach/Dobbiaco, often used as training tracks by various national cross-country teams from all over the world."
+                },
+                "url": {
+                    "deu": "http://www.toblach.info",
+                    "ita": "http://www.toblach.info",
+                    "eng": "http://www.toblach.info"
+                },
+                "length": 4200,
+                "minAltitude": 1215,
+                "maxAltitude": 1281,
+                "difficulty": {
+                    "eu": "expert"
+                },
+                "address": {
+                    "street": null,
+                    "city": {
+                        "deu": "Toblach",
+                        "ita": "Dobbiaco",
+                        "eng": "Toblach/Dobbiaco"
+                    },
+                    "region": null,
+                    "country": "IT",
+                    "complement": null,
+                    "categories": null,
+                    "zipcode": "39034"
+                },
+                "geometries": [
+                    {
+                        "type": "Point",
+                        "coordinates": [
+                            12.223999,
+                            46.718804,
+                            1217
+                        ]
+                    }
+                ],
+                "howToArrive": {
+                    "deu": "Wie Sie Toblach erreichen: https://www.drei-zinnen.info/de/toblach/toblach/kontakt-service/anreise-mobilitaet.html\r\nVon Toblach in Richtung Süden und weiter in den Ortsteil Säge.",
+                    "ita": "Come arrivare a Dobbiaco: https://www.tre-cime.info/it/dobbiaco/dobbiaco/contatto-servizi/arrivo-mobilita.html\r\nDa Dobbiaco in direzione sud proseguendo fino alla località Segheria.",
+                    "eng": "How to reach Dobbiaco/Toblach: https://www.drei-zinnen.info/en/dobbiaco/dobbiaco/contact-and-service/arrival-mobility.html\r\nFrom Dobbiaco in southern direction and further on to the district Säge/Segheria."
+                },
+                "openingHours": {
+                    "dailySchedules": {
+                        "2020-12-01": null
+                    },
+                    "weeklySchedules": [
+                        {
+                            "validFrom": "1900-01-01",
+                            "validTo": "2020-03-01",
+                            "monday": null,
+                            "tuesday": null,
+                            "wednesday": null,
+                            "thursday": null,
+                            "friday": null,
+                            "saturday": null,
+                            "sunday": null
+                        }
+                    ]
+                },
+                "snowCondition": null
+            },
+            "relationships": {
+                "connections": null,
+                "multimediaDescriptions": null
+            }
+        },
+        {
+            "type": "trails",
+            "id": "8683D8A950D921AEC3E8FECADD8928B8",
+            "meta": {
+                "lastUpdate": "2020-12-10T03:05:16.2101755+01:00",
+                "dataProvider": "http://tourism.opendatahub.bz.it/"
+            },
+            "links": {
+                "self": "http://localhost:8080/1.0/trails/8683D8A950D921AEC3E8FECADD8928B8"
+            },
+            "attributes": {
+                "abstract": null,
+                "categories": [
+                    "alpinebits/cross-country",
+                    "odh/loipen",
+                    "odh/klassisch-und-skating"
+                ],
+                "name": {
+                    "deu": "04 Langlaufstadion Toblach Fisloipe - Nathalie",
+                    "ita": "04 Stadio sci da fondo Dobbiaco pista FISI - Nathalie",
+                    "eng": "04 Cross country stadium Toblach/Dobbiaco FISI - Nathalie"
+                },
+                "shortName": null,
+                "description": {
+                    "deu": "Die anspruchsvolle Rundloipe ab dem Langlaufstadion in Toblach wird häufig als Trainingsstrecke für verschiedene Langlauf-Nationalteams aus der ganzen Welt genutzt.",
+                    "ita": "La pista impegnativa che parte dallo stadio di sci da fondo di Dobbiaco spesso viene utilizzata come circuito d'allenamento dai teams sportivi di varie nazioni.",
+                    "eng": "Demanding round-trip tours starting at the cross-country stadium in Toblach/Dobbiaco, often used as training tracks by various national cross-country teams from all over the world."
+                },
+                "url": {
+                    "deu": "http://www.toblach.info",
+                    "ita": "http://www.toblach.info",
+                    "eng": "http://www.toblach.info"
+                },
+                "length": 5454,
+                "minAltitude": 1201,
+                "maxAltitude": 1279,
+                "difficulty": {
+                    "eu": "expert"
+                },
+                "address": {
+                    "street": null,
+                    "city": {
+                        "deu": "Toblach",
+                        "ita": "Dobbiaco",
+                        "eng": "Toblach/Dobbiaco"
+                    },
+                    "region": null,
+                    "country": "IT",
+                    "complement": null,
+                    "categories": null,
+                    "zipcode": "39034"
+                },
+                "geometries": [
+                    {
+                        "type": "Point",
+                        "coordinates": [
+                            12.224067,
+                            46.718982,
+                            1201
+                        ]
+                    }
+                ],
+                "howToArrive": {
+                    "deu": "Wie Sie Toblach erreichen: https://www.drei-zinnen.info/de/toblach/toblach/kontakt-service/anreise-mobilitaet.html\r\nVon Toblach in Richtung Süden und weiter in den Ortsteil Säge.",
+                    "ita": "Come arrivare a Dobbiaco: https://www.tre-cime.info/it/dobbiaco/dobbiaco/contatto-servizi/arrivo-mobilita.html\r\nDa Dobbiaco in direzione sud proseguendo fino alla località Segheria.",
+                    "eng": "How to reach Dobbiaco/Toblach: https://www.drei-zinnen.info/en/dobbiaco/dobbiaco/contact-and-service/arrival-mobility.html\r\nFrom Dobbiaco in southern direction and further on to the district Säge/Segheria."
+                },
+                "openingHours": {
+                    "dailySchedules": {
+                        "2020-12-01": null
+                    },
+                    "weeklySchedules": [
+                        {
+                            "validFrom": "1900-01-01",
+                            "validTo": "2020-03-01",
+                            "monday": null,
+                            "tuesday": null,
+                            "wednesday": null,
+                            "thursday": null,
+                            "friday": null,
+                            "saturday": null,
+                            "sunday": null
+                        }
+                    ]
+                },
+                "snowCondition": null
+            },
+            "relationships": {
+                "connections": null,
+                "multimediaDescriptions": null
+            }
+        },
+        {
+            "type": "trails",
+            "id": "B633594E831BEE18AF6735D3BAFA01E1",
+            "meta": {
+                "lastUpdate": "2020-12-10T03:05:19.4191917+01:00",
+                "dataProvider": "http://tourism.opendatahub.bz.it/"
+            },
+            "links": {
+                "self": "http://localhost:8080/1.0/trails/B633594E831BEE18AF6735D3BAFA01E1"
+            },
+            "attributes": {
+                "abstract": null,
+                "categories": [
+                    "alpinebits/cross-country",
+                    "odh/loipen",
+                    "odh/klassisch-und-skating"
+                ],
+                "name": {
+                    "deu": "05 Langlaufstadion Toblach Fisloipe - Saskia",
+                    "ita": "05 Stadio sci da fondo Dobbiaco pista FISI - Saskia",
+                    "eng": "05 Cross country stadium Toblach/Dobbiaco FISI - Saskia"
+                },
+                "shortName": null,
+                "description": {
+                    "deu": "Die anspruchsvolle Rundloipe ab dem Langlaufstadion in Toblach wird häufig als Trainingsstrecke für verschiedene Langlauf-Nationalteams aus der ganzen Welt genutzt.",
+                    "ita": "La pista impegnativa che parte dallo stadio di sci da fondo di Dobbiaco spesso viene utilizzata come circuito d'allenamento dai teams sportivi di varie nazioni.",
+                    "eng": "Demanding round-trip tours starting at the cross-country stadium in Toblach/Dobbiaco, often used as training tracks by various national cross-country teams from all over the world."
+                },
+                "url": {
+                    "deu": "http://www.toblach.info",
+                    "ita": "http://www.toblach.info",
+                    "eng": "http://www.toblach.info"
+                },
+                "length": 5300,
+                "minAltitude": 1215,
+                "maxAltitude": 1284,
+                "difficulty": {
+                    "eu": "expert"
+                },
+                "address": {
+                    "street": null,
+                    "city": {
+                        "deu": "Toblach",
+                        "ita": "Dobbiaco",
+                        "eng": "Toblach/Dobbiaco"
+                    },
+                    "region": null,
+                    "country": "IT",
+                    "complement": null,
+                    "categories": null,
+                    "zipcode": "39034"
+                },
+                "geometries": [
+                    {
+                        "type": "Point",
+                        "coordinates": [
+                            12.223981,
+                            46.718787,
+                            1217
+                        ]
+                    }
+                ],
+                "howToArrive": {
+                    "deu": "Wie Sie Toblach erreichen: https://www.drei-zinnen.info/de/toblach/toblach/kontakt-service/anreise-mobilitaet.htmlVon Toblach in Richtung Süden und weiter in den Ortsteil Säge.",
+                    "ita": "Come arrivare a Dobbiaco: https://www.tre-cime.info/it/dobbiaco/dobbiaco/contatto-servizi/arrivo-mobilita.htmlDa Dobbiaco in direzione sud proseguendo fino alla località Segheria.",
+                    "eng": "How to reach Dobbiaco/Toblach: https://www.drei-zinnen.info/en/dobbiaco/dobbiaco/contact-and-service/arrival-mobility.htmlFrom Dobbiaco in southern direction and further on to the district Säge/Segheria."
+                },
+                "openingHours": {
+                    "dailySchedules": {
+                        "2020-12-01": null
+                    },
+                    "weeklySchedules": [
+                        {
+                            "validFrom": "1900-01-01",
+                            "validTo": "2020-03-01",
+                            "monday": null,
+                            "tuesday": null,
+                            "wednesday": null,
+                            "thursday": null,
+                            "friday": null,
+                            "saturday": null,
+                            "sunday": null
+                        }
+                    ]
+                },
+                "snowCondition": null
+            },
+            "relationships": {
+                "connections": null,
+                "multimediaDescriptions": null
+            }
+        },
+        {
+            "type": "trails",
+            "id": "F443A24D8EECD6879F8C45E1F740B311",
+            "meta": {
+                "lastUpdate": "2020-12-11T09:34:57.0930378+01:00",
+                "dataProvider": "http://tourism.opendatahub.bz.it/"
+            },
+            "links": {
+                "self": "http://localhost:8080/1.0/trails/F443A24D8EECD6879F8C45E1F740B311"
+            },
+            "attributes": {
+                "abstract": null,
+                "categories": [
+                    "alpinebits/cross-country",
+                    "odh/loipen",
+                    "odh/klassisch-und-skating"
+                ],
+                "name": {
+                    "deu": "06 Anbindung Toblacher See Variante",
+                    "ita": "06 Connessione Lago di Dobbiaco variante",
+                    "eng": "06 Connection lake of Toblach/Dobbiaco variant"
+                },
+                "shortName": null,
+                "description": {
+                    "deu": "Traumhaftes Naturerlebnis in der verschneiten Winterlandschaft südlich des Toblacher Sees. Diese kurze Variante verbindet das Ostufer mit dem Westufer des Sees.",
+                    "ita": "Immersa nella natura innevata sul lato sud del Lago di Dobbiaco. Questa breve variante collega lo spondo est e lo spondo ovest del lago.",
+                    "eng": "A fantastic experience of nature through the winter-wood at the south side of the Lake of Dobbiaco. This short variant is needed to connect the east bank with the west bank."
+                },
+                "url": {
+                    "deu": "http://www.toblach.info",
+                    "ita": "http://www.toblach.info",
+                    "eng": "http://www.toblach.info"
+                },
+                "length": 400,
+                "minAltitude": 1257,
+                "maxAltitude": 1260,
+                "difficulty": {
+                    "eu": "intermediate"
+                },
+                "address": {
+                    "street": null,
+                    "city": {
+                        "deu": "Toblach",
+                        "ita": "Dobbiaco",
+                        "eng": "Toblach/Dobbiaco"
+                    },
+                    "region": null,
+                    "country": "IT",
+                    "complement": null,
+                    "categories": null,
+                    "zipcode": "39034"
+                },
+                "geometries": [
+                    {
+                        "type": "LineString",
+                        "coordinates": [
+                            [
+                                12.221668,
+                                46.699332,
+                                1257
+                            ],
+                            [
+                                12.217415,
+                                46.697142,
+                                1259
+                            ]
+                        ]
+                    }
+                ],
+                "howToArrive": {
+                    "deu": "Wie Sie Toblach erreichen: https://www.drei-zinnen.info/de/toblach/toblach/kontakt-service/anreise-mobilitaet.htmlVon Toblach in Richtung Süden und weiter in den Ortsteil Säge.",
+                    "ita": "Come arrivare a Dobbiaco: https://www.tre-cime.info/it/dobbiaco/dobbiaco/contatto-servizi/arrivo-mobilita.htmlDa Dobbiaco in direzione sud proseguendo fino alla località Segheria.",
+                    "eng": "How to reach Dobbiaco/Toblach: https://www.drei-zinnen.info/en/dobbiaco/dobbiaco/contact-and-service/arrival-mobility.htmlFrom Dobbiaco in southern direction and further on to the district Säge/Segheria."
+                },
+                "openingHours": {
+                    "dailySchedules": {
+                        "2020-12-01": null
+                    },
+                    "weeklySchedules": [
+                        {
+                            "validFrom": "1900-01-01",
+                            "validTo": "2020-03-01",
+                            "monday": null,
+                            "tuesday": null,
+                            "wednesday": null,
+                            "thursday": null,
+                            "friday": null,
+                            "saturday": null,
+                            "sunday": null
+                        }
+                    ]
+                },
+                "snowCondition": null
+            },
+            "relationships": {
+                "connections": null,
+                "multimediaDescriptions": null
+            }
+        },
+        {
+            "type": "trails",
+            "id": "0A7428B48777B69EB4C1A615926E5F3C",
+            "meta": {
+                "lastUpdate": "2020-03-11T03:15:49.306397+01:00",
+                "dataProvider": "http://tourism.opendatahub.bz.it/"
+            },
+            "links": {
+                "self": "http://localhost:8080/1.0/trails/0A7428B48777B69EB4C1A615926E5F3C"
+            },
+            "attributes": {
+                "abstract": null,
+                "categories": [
+                    "alpinebits/ski-slope",
+                    "odh/piste",
+                    "odh/weitere-pisten",
+                    "odh/ski-alpin"
+                ],
+                "name": {
+                    "deu": "10 Langenstein",
+                    "ita": "10 Orso",
+                    "eng": "10 Langenstein/Orso"
+                },
+                "shortName": null,
+                "description": {
+                    "deu": "Anspruchsvolle Waldabfahrt",
+                    "ita": "Discesa nel bosco difficile",
+                    "eng": "Difficult slope"
+                },
+                "url": {
+                    "deu": "http://www.seilbahnensulden.it",
+                    "ita": "http://www.seilbahnensulden.it",
+                    "eng": "http://www.seilbahnensulden.it"
+                },
+                "length": 2700,
+                "minAltitude": null,
+                "maxAltitude": null,
+                "difficulty": {
+                    "eu": "intermediate"
+                },
+                "address": {
+                    "street": null,
+                    "city": {
+                        "deu": "Sulden",
+                        "ita": "Solda",
+                        "eng": "Solda"
+                    },
+                    "region": null,
+                    "country": "IT",
+                    "complement": null,
+                    "categories": null,
+                    "zipcode": "39029"
+                },
+                "geometries": [
+                    {
+                        "type": "LineString",
+                        "coordinates": [
+                            [
+                                10.577482,
+                                46.519268,
+                                2350
+                            ],
+                            [
+                                10.585971,
+                                46.525989,
+                                1900
+                            ]
+                        ]
+                    }
+                ],
+                "howToArrive": null,
+                "openingHours": {
+                    "dailySchedules": null,
+                    "weeklySchedules": [
+                        {
+                            "validFrom": "2019-11-09",
+                            "validTo": "2020-05-02",
+                            "monday": [
+                                {
+                                    "opens": "08:30:00",
+                                    "closes": "16:00:00"
+                                }
+                            ],
+                            "tuesday": [
+                                {
+                                    "opens": "08:30:00",
+                                    "closes": "16:00:00"
+                                }
+                            ],
+                            "wednesday": [
+                                {
+                                    "opens": "08:30:00",
+                                    "closes": "16:00:00"
+                                }
+                            ],
+                            "thursday": [
+                                {
+                                    "opens": "08:30:00",
+                                    "closes": "16:00:00"
+                                }
+                            ],
+                            "friday": [
+                                {
+                                    "opens": "08:30:00",
+                                    "closes": "16:00:00"
+                                }
+                            ],
+                            "saturday": [
+                                {
+                                    "opens": "08:30:00",
+                                    "closes": "16:00:00"
+                                }
+                            ],
+                            "sunday": [
+                                {
+                                    "opens": "08:30:00",
+                                    "closes": "16:00:00"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                "snowCondition": null
+            },
+            "relationships": {
+                "connections": null,
+                "multimediaDescriptions": null
+            }
+        },
+        {
+            "type": "trails",
+            "id": "BB476AF8573B34DBA121BB8B5D329DB5",
+            "meta": {
+                "lastUpdate": "2020-11-20T03:05:07.3410569+01:00",
+                "dataProvider": "http://tourism.opendatahub.bz.it/"
+            },
+            "links": {
+                "self": "http://localhost:8080/1.0/trails/BB476AF8573B34DBA121BB8B5D329DB5"
+            },
+            "attributes": {
+                "abstract": null,
+                "categories": [
+                    "alpinebits/cross-country",
+                    "odh/loipen",
+                    "odh/klassisch-und-skating"
+                ],
+                "name": {
+                    "deu": "11 Langlaufstadion Toblach - Cortina (Tour De Ski)",
+                    "ita": "11 Stadio di fondo Nordic Arena Dobbiaco - Cortina (Tour De Ski)",
+                    "eng": "11 Cross country stadium Nordic Arena Toblach/Dobbiaco - Cortina (Tour De Ski)"
+                },
+                "shortName": null,
+                "description": {
+                    "deu": "Die Langlaufloipe startet im Langlaufstadion in Toblach und führt über die alte Bahntrasse der Eisenbahn, welche Anfang der 1960er-Jahre stillgelegt wurde, bis nach Cortina. Die nahe Straße mit mehreren Bushaltestellen ermöglicht nahezu jederzeit einen Ausstieg aus den Strecken, z.B. bei Materialgebrechen oder Ermüdung.",
+                    "ita": "La pista da fondo parte nello stadio di sci da fondo a Dobbiaco e porta sul tracciato della vecchia linea ferroviaria Dobbiaco-Cortina, dismessa all’inizio degli anni ’60, fino a Cortina.La vicinanza alle strade e alle numerose fermate dell’autobus consente di lasciare il tracciato in qualsiasi momento, per esempio in caso di rottura del materiale o di stanchezza.",
+                    "eng": "The cross country track takes along the old railway track from Toblach/Dobbiaco to Cortina, which was closed in the early 1960s.The nearby road with its several bus stops means that you can leave the trail at virtually any point, for example if you are tired or have problems with your equipment."
+                },
+                "url": {
+                    "deu": "http://www.toblach.info",
+                    "ita": "http://www.toblach.info",
+                    "eng": "http://www.toblach.info"
+                },
+                "length": 31000,
+                "minAltitude": 1204,
+                "maxAltitude": 1534,
+                "difficulty": {
+                    "eu": "intermediate"
+                },
+                "address": {
+                    "street": null,
+                    "city": {
+                        "deu": "Toblach",
+                        "ita": "Dobbiaco",
+                        "eng": "Toblach/Dobbiaco"
+                    },
+                    "region": null,
+                    "country": "IT",
+                    "complement": null,
+                    "categories": null,
+                    "zipcode": "39034"
+                },
+                "geometries": [
+                    {
+                        "type": "LineString",
+                        "coordinates": [
+                            [
+                                12.138546,
+                                46.536857,
+                                1204
+                            ],
+                            [
+                                12.223732,
+                                46.718714,
+                                1216
+                            ]
+                        ]
+                    }
+                ],
+                "howToArrive": {
+                    "deu": "Wie Sie Toblach erreichen: https://www.drei-zinnen.info/de/toblach/toblach/kontakt-service/anreise-mobilitaet.html\r\nVon Toblach in Richtung Süden und weiter in den Ortsteil Säge.",
+                    "ita": "Come arrivare a Dobbiaco: https://www.tre-cime.info/it/dobbiaco/dobbiaco/contatto-servizi/arrivo-mobilita.html\r\nDa Dobbiaco in direzione sud proseguendo fino alla località Segheria.",
+                    "eng": "How to reach Dobbiaco/Toblach: https://www.drei-zinnen.info/en/dobbiaco/dobbiaco/contact-and-service/arrival-mobility.html\r\nFrom Dobbiaco in southern direction and further on to the district Säge/Segheria."
+                },
+                "openingHours": {
+                    "dailySchedules": {
+                        "2020-12-01": null
+                    },
+                    "weeklySchedules": [
+                        {
+                            "validFrom": "1900-01-01",
+                            "validTo": "2020-03-01",
+                            "monday": null,
+                            "tuesday": null,
+                            "wednesday": null,
+                            "thursday": null,
+                            "friday": null,
+                            "saturday": null,
+                            "sunday": null
+                        }
+                    ]
+                },
+                "snowCondition": null
+            },
+            "relationships": {
+                "connections": null,
+                "multimediaDescriptions": null
+            }
+        },
+        {
+            "type": "trails",
+            "id": "B962FCAB4368D334E041D5F0DA07387D",
+            "meta": {
+                "lastUpdate": "2020-12-14T09:52:04.3199096+01:00",
+                "dataProvider": "http://tourism.opendatahub.bz.it/"
+            },
+            "links": {
+                "self": "http://localhost:8080/1.0/trails/B962FCAB4368D334E041D5F0DA07387D"
+            },
+            "attributes": {
+                "abstract": null,
+                "categories": [
+                    "alpinebits/cross-country",
+                    "odh/loipen",
+                    "odh/klassisch-und-skating"
+                ],
+                "name": {
+                    "deu": "11 Langlaufstadion Toblach - Im Gemärk",
+                    "ita": "11 Stadio sci da fondo - Cimabanche",
+                    "eng": "11 Cross country stadium Toblach/Dobbiaco - Gemärk/Cimabanche"
+                },
+                "shortName": null,
+                "description": {
+                    "deu": "Lange, phantastische Runde durch das gesamte Höhlensteintal.„Im Gemärk“ lautet die deutsche Bezeichnung für eine Passhöhe, die sich auf 1.530 m befindet. Kurz vor der Passhöhe verläuft die Provinzgrenze zwischen den Provinzen Südtirol und Belluno.",
+                    "ita": "Lungo Giro fantastico attraverso tutta la Val di Landro.Il Passo Cimabanche si trova a 1.530 m s.l.m.. Il passo si trova poco dopo aver superato il confine tra le due Province di Alto Adige e Belluno.",
+                    "eng": "A long and fantastic tour through the entire Höhlensteintal/Val di Landro valley.“Im Gemärk” is the German name for a pass height located at 1,530 m. Shortly before the pass, the provincial border runs between the provinces of South Tyrol and Belluno."
+                },
+                "url": {
+                    "deu": "http://www.toblach.info",
+                    "ita": "http://www.toblach.info",
+                    "eng": "http://www.toblach.info"
+                },
+                "length": 16800,
+                "minAltitude": 1214,
+                "maxAltitude": 1529,
+                "difficulty": {
+                    "eu": "intermediate"
+                },
+                "address": {
+                    "street": null,
+                    "city": {
+                        "deu": "Toblach",
+                        "ita": "Dobbiaco",
+                        "eng": "Toblach/Dobbiaco"
+                    },
+                    "region": null,
+                    "country": "IT",
+                    "complement": null,
+                    "categories": null,
+                    "zipcode": "39034"
+                },
+                "geometries": [
+                    {
+                        "type": "LineString",
+                        "coordinates": [
+                            [
+                                12.2236,
+                                46.718404,
+                                1214
+                            ],
+                            [
+                                12.18388,
+                                46.620543,
+                                1529
+                            ]
+                        ]
+                    }
+                ],
+                "howToArrive": {
+                    "deu": "Wie Sie Toblach erreichen: https://www.drei-zinnen.info/de/toblach/toblach/kontakt-service/anreise-mobilitaet.htmlVon Toblach in Richtung Süden und weiter in den Ortsteil Säge.",
+                    "ita": "Come arrivare a Dobbiaco: https://www.tre-cime.info/it/dobbiaco/dobbiaco/contatto-servizi/arrivo-mobilita.htmlDa Dobbiaco in direzione sud proseguendo fino alla località Segheria.",
+                    "eng": "How to reach Dobbiaco/Toblach: https://www.drei-zinnen.info/en/dobbiaco/dobbiaco/contact-and-service/arrival-mobility.htmlFrom Dobbiaco in southern direction and further on to the district Säge/Segheria."
+                },
+                "openingHours": {
+                    "dailySchedules": {
+                        "2020-12-01": null
+                    },
+                    "weeklySchedules": [
+                        {
+                            "validFrom": "1900-01-01",
+                            "validTo": "2020-03-01",
+                            "monday": null,
+                            "tuesday": null,
+                            "wednesday": null,
+                            "thursday": null,
+                            "friday": null,
+                            "saturday": null,
+                            "sunday": null
+                        }
+                    ]
+                },
+                "snowCondition": null
+            },
+            "relationships": {
+                "connections": null,
+                "multimediaDescriptions": null
+            }
+        },
+        {
+            "type": "trails",
+            "id": "69446ACFCD5F5E7DE824F09FC6766613",
+            "meta": {
+                "lastUpdate": "2020-12-14T09:17:11.5834893+01:00",
+                "dataProvider": "http://tourism.opendatahub.bz.it/"
+            },
+            "links": {
+                "self": "http://localhost:8080/1.0/trails/69446ACFCD5F5E7DE824F09FC6766613"
+            },
+            "attributes": {
+                "abstract": null,
+                "categories": [
+                    "alpinebits/cross-country",
+                    "odh/loipen",
+                    "odh/skating"
+                ],
+                "name": {
+                    "deu": "11 Langlaufstadion Toblach - Kriegerfriedhof",
+                    "ita": "11 Stadio di sci da fondo Dobbiaco - Cimitero di Guerra",
+                    "eng": "11 Cross country stadium Toblach/Dobbiaco - War Cemetery"
+                },
+                "shortName": null,
+                "description": {
+                    "deu": "Die mittelschwere Langlaufloipe ist geschichtlich sehr interessant, da sie zum Kriegerfriedhof, auf welchem 1.295 österreichisch-ungarischen Soldaten, die nicht der deutschen Sprachgruppe angehörten, im ersten Weltkrieg beerdigt worden sind.",
+                    "ita": "La pista da fondo di media difficoltà é dal punto di vista storico molto interessante, dato che porta fino al cimitero di guerra, dove riposano 1.295 soldati austro-ungarici di lingua diversa da quella tedesca della 1a Guerra Mondiale.",
+                    "eng": "The medium difficult cross country track is historically very interesting, because it leads to the War Cemetery, the final home of Austro-Hungarian soldiers of non-German speaking origin."
+                },
+                "url": {
+                    "deu": "http://www.dobbiaco.info",
+                    "ita": "http://www.dobbiaco.info",
+                    "eng": "http://www.dobbiaco.info"
+                },
+                "length": 5000,
+                "minAltitude": 1214,
+                "maxAltitude": 1312,
+                "difficulty": {
+                    "eu": "intermediate"
+                },
+                "address": {
+                    "street": null,
+                    "city": {
+                        "deu": "Toblach",
+                        "ita": "Dobbiaco",
+                        "eng": "Toblach/Dobbiaco"
+                    },
+                    "region": null,
+                    "country": "IT",
+                    "complement": null,
+                    "categories": null,
+                    "zipcode": "39034"
+                },
+                "geometries": [
+                    {
+                        "type": "LineString",
+                        "coordinates": [
+                            [
+                                12.223589,
+                                46.71843,
+                                1214
+                            ],
+                            [
+                                12.221775,
+                                46.676238,
+                                1312
+                            ]
+                        ]
+                    }
+                ],
+                "howToArrive": {
+                    "deu": "Wie Sie Toblach erreichen: https://www.drei-zinnen.info/de/toblach/toblach/kontakt-service/anreise-mobilitaet.htmlVon Toblach in Richtung Süden und weiter in den Ortsteil Säge.",
+                    "ita": "Come arrivare a Dobbiaco: https://www.tre-cime.info/it/dobbiaco/dobbiaco/contatto-servizi/arrivo-mobilita.htmlDa Dobbiaco in direzione sud proseguendo fino alla località Segheria.",
+                    "eng": "How to reach Dobbiaco/Toblach: https://www.drei-zinnen.info/en/dobbiaco/dobbiaco/contact-and-service/arrival-mobility.htmlFrom Dobbiaco in southern direction and further on to the district Säge/Segheria."
+                },
+                "openingHours": {
+                    "dailySchedules": {
+                        "2020-12-01": null
+                    },
+                    "weeklySchedules": [
+                        {
+                            "validFrom": "1900-01-01",
+                            "validTo": "2020-03-01",
+                            "monday": null,
+                            "tuesday": null,
+                            "wednesday": null,
+                            "thursday": null,
+                            "friday": null,
+                            "saturday": null,
+                            "sunday": null
+                        }
+                    ]
+                },
+                "snowCondition": null
+            },
+            "relationships": {
+                "connections": null,
+                "multimediaDescriptions": null
+            }
+        }
+    ]
+}
+trailsId: {
+    "jsonapi": {
+        "version": "1.0"
+    },
+    "links": {
+        "self": "http://localhost:8080/1.0/trails/B962FCAB4368D334E041D5F0DA07387D"
+    },
+    "data": {
+        "type": "trails",
+        "id": "B962FCAB4368D334E041D5F0DA07387D",
+        "meta": {
+            "lastUpdate": "2020-12-14T09:52:04.3199096+01:00",
+            "dataProvider": "http://tourism.opendatahub.bz.it/"
+        },
+        "links": {
+            "self": "http://localhost:8080/1.0/trails/B962FCAB4368D334E041D5F0DA07387D"
+        },
+        "attributes": {
+            "abstract": null,
+            "categories": [
+                "alpinebits/cross-country",
+                "odh/loipen",
+                "odh/klassisch-und-skating"
+            ],
+            "name": {
+                "deu": "11 Langlaufstadion Toblach - Im Gemärk",
+                "ita": "11 Stadio sci da fondo - Cimabanche",
+                "eng": "11 Cross country stadium Toblach/Dobbiaco - Gemärk/Cimabanche"
+            },
+            "shortName": null,
+            "description": {
+                "deu": "Lange, phantastische Runde durch das gesamte Höhlensteintal.„Im Gemärk“ lautet die deutsche Bezeichnung für eine Passhöhe, die sich auf 1.530 m befindet. Kurz vor der Passhöhe verläuft die Provinzgrenze zwischen den Provinzen Südtirol und Belluno.",
+                "ita": "Lungo Giro fantastico attraverso tutta la Val di Landro.Il Passo Cimabanche si trova a 1.530 m s.l.m.. Il passo si trova poco dopo aver superato il confine tra le due Province di Alto Adige e Belluno.",
+                "eng": "A long and fantastic tour through the entire Höhlensteintal/Val di Landro valley.“Im Gemärk” is the German name for a pass height located at 1,530 m. Shortly before the pass, the provincial border runs between the provinces of South Tyrol and Belluno."
+            },
+            "url": {
+                "deu": "http://www.toblach.info",
+                "ita": "http://www.toblach.info",
+                "eng": "http://www.toblach.info"
+            },
+            "length": 16800,
+            "minAltitude": 1214,
+            "maxAltitude": 1529,
+            "difficulty": {
+                "eu": "intermediate"
+            },
+            "address": {
+                "street": null,
+                "city": {
+                    "deu": "Toblach",
+                    "ita": "Dobbiaco",
+                    "eng": "Toblach/Dobbiaco"
+                },
+                "region": null,
+                "country": "IT",
+                "complement": null,
+                "categories": null,
+                "zipcode": "39034"
+            },
+            "geometries": [
+                {
+                    "type": "LineString",
+                    "coordinates": [
+                        [
+                            12.2236,
+                            46.718404,
+                            1214
+                        ],
+                        [
+                            12.18388,
+                            46.620543,
+                            1529
+                        ]
+                    ]
+                }
+            ],
+            "howToArrive": {
+                "deu": "Wie Sie Toblach erreichen: https://www.drei-zinnen.info/de/toblach/toblach/kontakt-service/anreise-mobilitaet.htmlVon Toblach in Richtung Süden und weiter in den Ortsteil Säge.",
+                "ita": "Come arrivare a Dobbiaco: https://www.tre-cime.info/it/dobbiaco/dobbiaco/contatto-servizi/arrivo-mobilita.htmlDa Dobbiaco in direzione sud proseguendo fino alla località Segheria.",
+                "eng": "How to reach Dobbiaco/Toblach: https://www.drei-zinnen.info/en/dobbiaco/dobbiaco/contact-and-service/arrival-mobility.htmlFrom Dobbiaco in southern direction and further on to the district Säge/Segheria."
+            },
+            "openingHours": {
+                "dailySchedules": {
+                    "2020-12-01": null
+                },
+                "weeklySchedules": [
+                    {
+                        "validFrom": "1900-01-01",
+                        "validTo": "2020-03-01",
+                        "monday": null,
+                        "tuesday": null,
+                        "wednesday": null,
+                        "thursday": null,
+                        "friday": null,
+                        "saturday": null,
+                        "sunday": null
+                    }
+                ]
+            },
+            "snowCondition": null
+        },
+        "relationships": {
+            "connections": null,
+            "multimediaDescriptions": null
+        }
+    }
+}
+trailsIdConnections: {
+    "errors": [
+        {
+            "title": "The route has not been implemented yet.",
+            "status": 501
+        }
+    ],
+    "links": {
+        "self": "http://localhost:8080/1.0/trails/B962FCAB4368D334E041D5F0DA07387D/connections"
+    }
+}
+trailsIdMultimediaDescriptions: {
+    "jsonapi": {
+        "version": "1.0"
+    },
+    "links": {
+        "self": "http://localhost:8080/1.0/trails/B962FCAB4368D334E041D5F0DA07387D/multimediaDescriptions"
+    },
+    "data": null
+}
