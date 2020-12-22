@@ -1,0 +1,14 @@
+base:
+  data: null
+  links: 
+    self: http://localhost:8080
+    "1.0": http://localhost:8080/1.0
+baseVersion:
+  data: null,
+  links:
+    self: http://localhost:8080/1.0
+    events: http://localhost:8080/1.0/events
+    lifts: http://localhost:8080/1.0/lifts
+    mountainAreas: http://localhost:8080/1.0/mountainAreas
+    snowparks: http://localhost:8080/1.0/snowparks
+    trails: http://localhost:8080/1.0/trails

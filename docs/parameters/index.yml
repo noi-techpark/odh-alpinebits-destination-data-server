@@ -1,0 +1,126 @@
+parameters:
+  id:
+    name: id
+    in: path
+    description: Resource id
+    required: true
+    schema:
+      $ref: "#/definitions/id"
+  page:
+    name: page
+    in: query
+    style: deepObject
+    explode: true
+    allowReserved: true
+    description: Allows navigating through paginated resources by specifying the
+      desired page number and/or the desired page size. For example, the query
+      `page[number]=2&page[size]=5` requests the second page of an endpoint
+      providing 5 resources per request (page of size 5). Requests may only
+      query for size or number, in which case the other value is set in the
+      server using its default values.
+    schema:
+      $ref: "#/definitions/page"
+  fields:
+    name: fields
+    in: query
+    style: deepObject
+    explode: true
+    allowReserved: true
+    description: Also known as "sparse field-sets", this query allows selecting
+      only a subset of attributes and relationships to be displayed in the
+      resources contained in response message. This reduces the payload of the
+      response message that includes all attributes and relationships of every
+      resource. Note that field selection is specified on a resource type basis
+      (i.e., "agents", "events", and so on).
+      <br/><br/>
+      Documentation on all resources' attributes and relationships is available
+      [here](https://www.alpinebits.org/wp-content/uploads/2020/08/AlpineBits_2020-04.pdf).
+    schema:
+      $ref: "#/definitions/fields"
+  search:
+    name: search
+    in: query
+    style: deepObject
+    explode: true
+    allowReserved: true
+    description: Search for resources containing the desired substring (case
+      ignored) on the selected text attribute.
+    schema:
+      $ref: "#/definitions/search"
+definitions:
+  id:
+    type: string
+    minLength: 1
+  search:
+    type: object
+    properties:
+      name:
+        type: string
+        minLength: 1
+        example: bozen
+  page:
+    type: object
+    properties:
+      number:
+        type: integer
+        minimum: 1
+      size:
+        type: integer
+        minimum: 1
+    example:
+      number: 1
+      size: 10
+  fields:
+    type: object
+    properties:
+      agents:
+        $ref: "#/definitions/agentsFields"
+      events:
+        $ref: "#/definitions/eventsFields"
+      eventSeries:
+        $ref: "#/definitions/eventSeriesFields"
+      lifts:
+        $ref: "#/definitions/liftsFields"
+      mountainAreas:
+        $ref: "#/definitions/mountainAreasFields"
+      snowparks:
+        $ref: "#/definitions/snowparksFields"
+      trails:
+        $ref: "#/definitions/trailsFields"
+      venues:
+        $ref: "#/definitions/venuesFields"
+    example:
+      agents: name
+      events: organizers
+  agentsFields:
+    type: string
+    pattern: "^abstract|description|name|shortName(,(abstract|description|name|shortName))*"
+    example: name
+  eventsFields:
+    type: string
+    pattern: "^abstract|description|name|shortName(,(abstract|description|name|shortName))*"
+    example: name
+  eventSeriesFields:
+    type: string
+    pattern: "^abstract|description|name|shortName(,(abstract|description|name|shortName))*"
+    example: name
+  liftsFields:
+    type: string
+    pattern: "^abstract|description|name|shortName(,(abstract|description|name|shortName))*"
+    example: name
+  mountainAreasFields:
+    type: string
+    pattern: "^abstract|description|name|shortName(,(abstract|description|name|shortName))*"
+    example: name
+  snowparksFields:
+    type: string
+    pattern: "^abstract|description|name|shortName(,(abstract|description|name|shortName))*"
+    example: name
+  trailsFields:
+    type: string
+    pattern: "^abstract|description|name|shortName(,(abstract|description|name|shortName))*"
+    example: name
+  venuesFields:
+    type: string
+    pattern: "^abstract|description|name|shortName(,(abstract|description|name|shortName))*"
+    example: name

@@ -1,0 +1,64 @@
+trails:
+  get:
+    description: Retrieves a list of `trails` resources.
+    tags:
+      - Trails
+    parameters:
+      - $ref: ../parameters/index.yml#/parameters/page
+      - $ref: ../parameters/index.yml#/parameters/fields
+      - $ref: ../parameters/trails.params.yml#/parameters/include
+      - $ref: ../parameters/trails.params.yml#/parameters/filter
+      - $ref: ../parameters/index.yml#/parameters/search
+    responses:
+      '200':
+        description: OK
+        content:
+            application/vnd.api+json:
+              example:
+                $ref: ../examples/trails.examples.yml#/trails
+trailsId:
+  get:
+    description: Retrieves a single `trails` resource.
+    tags:
+      - Trails
+    parameters:
+      - $ref: ../parameters/index.yml#/parameters/id
+      - $ref: ../parameters/index.yml#/parameters/fields
+      - $ref: ../parameters/trails.params.yml#/parameters/include
+    responses:
+      '200':
+        description: OK
+        content:
+            application/vnd.api+json:
+              example:
+                $ref: ../examples/trails.examples.yml#/trailsId
+trailsIdConnections:
+  get:
+    description: Retrieves all `connections` of the trails
+    tags:
+      - Trails
+    parameters:
+      - $ref: ../parameters/index.yml#/parameters/id
+      - $ref: ../parameters/index.yml#/parameters/fields
+    responses:
+      '501':
+        description: Not Implemented
+        content:
+            application/vnd.api+json:
+              example:
+                $ref: ../examples/trails.examples.yml#/trailsIdConnections
+trailsIdMultimediaDescriptions:
+  get:
+    description: Retrieves all `multimediaDescriptions` of the trails
+    tags:
+      - Trails
+    parameters:
+      - $ref: ../parameters/index.yml#/parameters/id
+      - $ref: ../parameters/index.yml#/parameters/fields
+    responses:
+      '200':
+        description: OK
+        content:
+            application/vnd.api+json:
+              example:
+                $ref: ../examples/trails.examples.yml#/trailsIdMultimediaDescriptions
