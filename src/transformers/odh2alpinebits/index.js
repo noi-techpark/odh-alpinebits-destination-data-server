@@ -149,13 +149,12 @@ function createPaginationObjects(odhData, request) {
     regexParams = /page|include|fields|filter|sort|search|random/;
     hasParams = !!selfUrl.match(regexParams);
 
-    // TODO: double-check; removed appending question mark on <first: selfUrl + (hasParams ? "&" : "?") + pageQueryStr + first,>
     links = {
-      first: selfUrl + (hasParams ? "&" : "") + pageQueryStr + first,
-      last: selfUrl + (hasParams ? "&" : "") + pageQueryStr + last,
-      next: selfUrl + (hasParams ? "&" : "") + pageQueryStr + next,
-      prev: selfUrl + (hasParams ? "&" : "") + pageQueryStr + prev,
-      self: selfUrl + (hasParams ? "&" : "") + pageQueryStr + current,
+      first: selfUrl + (hasParams ? "&" : "?") + pageQueryStr + first,
+      last: selfUrl + (hasParams ? "&" : "?") + pageQueryStr + last,
+      next: selfUrl + (hasParams ? "&" : "?") + pageQueryStr + next,
+      prev: selfUrl + (hasParams ? "&" : "?") + pageQueryStr + prev,
+      self: selfUrl + (hasParams ? "&" : "?") + pageQueryStr + current,
     };
   } else
     links = {

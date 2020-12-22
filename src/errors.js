@@ -64,22 +64,22 @@ const types = {
 }
 
 function throwUnknownQuery(description) {
-  const newError = Object.assign({ description }, types.unknownQuery)
+  const newError = Object.assign({}, types.unknownQuery, { description })
   throw newError
 }
 
 function throwBadQuery(description) {
-  const newError = Object.assign({ description }, types.badQuery)
+  const newError = Object.assign({}, types.badQuery, { description })
   throw newError
 }
 
 function throwQueryConflict(description) {
-  const newError = Object.assign({ description }, types.queryConflict)
+  const newError = Object.assign({}, types.queryConflict, { description })
   throw newError
 }
 
 function throwPageNotFound(description) {
-  const newError = Object.assign({ description }, types.pageNotFound)
+  const newError = Object.assign({}, types.pageNotFound, { description })
   throw newError
 }
 
@@ -92,6 +92,8 @@ function getSelfUrl(request) {
 }
 
 function handleError(err, req, res) {
+  console.log("\n> Handling error", err,'');
+
   const errorMessage = {
     errors: [err],
     links: getSelfUrl(req) ? { self: getSelfUrl(req) } : undefined,

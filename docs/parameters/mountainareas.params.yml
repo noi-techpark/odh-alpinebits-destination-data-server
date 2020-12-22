@@ -1,0 +1,27 @@
+parameters:
+  include:
+    name: include
+    in: query
+    style: form
+    explode: false
+    description: The include query allows the inclusion of resources referenced
+      in the relationships in the response message. With this query, it is
+      possible to avoid additional requests to the server in order to retrieve
+      related resources. For example, a request containing the query
+      `include=multimediaDescriptions` asks the server to add to the response
+      all resources referenced in the relationship `multimediaDescriptions`.
+    schema:
+      $ref: "#/definitions/include"
+definitions:
+  include:
+    type: array
+    items:
+      type: string
+      enum:
+        - areaOwner
+        - connections
+        - lifts
+        - multimediaDescriptions
+        - snowparks
+        - subAreas
+        - trail

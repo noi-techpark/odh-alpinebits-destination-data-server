@@ -1,0 +1,433 @@
+openapi: 3.0.2
+info:
+  title: AlpineBits DestinationData Reference Server
+  version: '1.0'
+  description: This page presents the documentation of the AlpineBits DestinationData standard as implement by its reference server.
+servers:
+  - url: 'http://localhost:8080'
+    description: Local Server
+tags:
+  - name: Base
+    description: Requests to base endpoints
+  - name: Events
+    description: Requests related to `events` resources
+  - name: Lifts
+    description: Requests related to `lifts` resources
+  - name: Mountain Areas
+    description: Requests related to `mountainAreas` resources
+  - name: Snowparks
+    description: Requests related to `snowparks` resources
+  - name: Trails
+    description: Requests related to `trails` resources
+paths:
+  /:
+    get:
+      description: Retrieves links to the  implemented versions of the AlpineBits DestinationData standard.
+      tags:
+        - Base
+      responses:
+        '200':
+          description: OK
+          content:
+            application/vnd.api+json:
+              example:
+                data: null
+                links:
+                  self: 'http://localhost:8080'
+                  '1.0': 'http://localhost:8080/1.0'
+  /1.0:
+    get:
+      description: Retrieves links to the resources available as base endpoints.
+      tags:
+        - Base
+      responses:
+        '200':
+          description: OK
+          content:
+            application/vnd.api+json:
+              example:
+                data: 'null,'
+                links:
+                  self: 'http://localhost:8080/1.0'
+                  events: 'http://localhost:8080/1.0/events'
+                  lifts: 'http://localhost:8080/1.0/lifts'
+                  mountainAreas: 'http://localhost:8080/1.0/mountainAreas'
+                  snowparks: 'http://localhost:8080/1.0/snowparks'
+                  trails: 'http://localhost:8080/1.0/trails'
+  /1.0/events:
+    get:
+      description: Retrieves a list of `events` resources.
+      tags:
+        - Events
+      parameters:
+        - $ref: '#/paths/~11.0~1lifts/get/parameters/0'
+        - $ref: '#/paths/~11.0~1lifts/get/parameters/1'
+      responses:
+        '200':
+          description: OK
+  '/1.0/events/{id}':
+    get:
+      description: Retrieves a single `events` resource.
+      tags:
+        - Events
+      parameters:
+        - $ref: '#/paths/~11.0~1lifts~1%3Aid/get/parameters/0'
+        - $ref: '#/paths/~11.0~1lifts/get/parameters/0'
+        - $ref: '#/paths/~11.0~1lifts/get/parameters/1'
+      responses:
+        '200':
+          description: OK
+  '/1.0/events/{id}/contributors':
+    get:
+      description: Retrieves all contributors of the event
+      tags:
+        - Events
+      parameters:
+        - $ref: '#/paths/~11.0~1lifts~1%3Aid/get/parameters/0'
+        - $ref: '#/paths/~11.0~1lifts/get/parameters/0'
+        - $ref: '#/paths/~11.0~1lifts/get/parameters/1'
+      responses:
+        '200':
+          description: OK
+  '/1.0/events/{id}/multimediaDescriptions':
+    get:
+      description: Retrieves all multimediaDescriptions of the event
+      tags:
+        - Events
+      parameters:
+        - $ref: '#/paths/~11.0~1lifts~1%3Aid/get/parameters/0'
+        - $ref: '#/paths/~11.0~1lifts/get/parameters/0'
+        - $ref: '#/paths/~11.0~1lifts/get/parameters/1'
+      responses:
+        '200':
+          description: OK
+  '/1.0/events/{id}/organizers':
+    get:
+      description: Retrieves all organizers of the event
+      tags:
+        - Events
+      parameters:
+        - $ref: '#/paths/~11.0~1lifts~1%3Aid/get/parameters/0'
+        - $ref: '#/paths/~11.0~1lifts/get/parameters/0'
+        - $ref: '#/paths/~11.0~1lifts/get/parameters/1'
+      responses:
+        '200':
+          description: OK
+  '/1.0/events/{id}/publisher':
+    get:
+      description: Retrieves all publisher of the event
+      tags:
+        - Events
+      parameters:
+        - $ref: '#/paths/~11.0~1lifts~1%3Aid/get/parameters/0'
+        - $ref: '#/paths/~11.0~1lifts/get/parameters/0'
+        - $ref: '#/paths/~11.0~1lifts/get/parameters/1'
+      responses:
+        '200':
+          description: OK
+  '/1.0/events/{id}/series':
+    get:
+      description: Retrieves all series of the event
+      tags:
+        - Events
+      parameters:
+        - $ref: '#/paths/~11.0~1lifts~1%3Aid/get/parameters/0'
+        - $ref: '#/paths/~11.0~1lifts/get/parameters/0'
+        - $ref: '#/paths/~11.0~1lifts/get/parameters/1'
+      responses:
+        '200':
+          description: OK
+  '/1.0/events/{id}/sponsors':
+    get:
+      description: Retrieves all sponsors of the event
+      tags:
+        - Events
+      parameters:
+        - $ref: '#/paths/~11.0~1lifts~1%3Aid/get/parameters/0'
+        - $ref: '#/paths/~11.0~1lifts/get/parameters/0'
+        - $ref: '#/paths/~11.0~1lifts/get/parameters/1'
+      responses:
+        '200':
+          description: OK
+  '/1.0/events/{id}/subEvents':
+    get:
+      description: Retrieves all subEvents of the event
+      tags:
+        - Events
+      parameters:
+        - $ref: '#/paths/~11.0~1lifts~1%3Aid/get/parameters/0'
+        - $ref: '#/paths/~11.0~1lifts/get/parameters/0'
+        - $ref: '#/paths/~11.0~1lifts/get/parameters/1'
+      responses:
+        '200':
+          description: OK
+  '/1.0/events/{id}/venues':
+    get:
+      description: Retrieves all venues of the event
+      tags:
+        - Events
+      parameters:
+        - $ref: '#/paths/~11.0~1lifts~1%3Aid/get/parameters/0'
+        - $ref: '#/paths/~11.0~1lifts/get/parameters/0'
+        - $ref: '#/paths/~11.0~1lifts/get/parameters/1'
+      responses:
+        '200':
+          description: OK
+  /1.0/lifts:
+    get:
+      description: Retrieves a list of `lifts` resources.
+      tags:
+        - Lifts
+      parameters:
+        - name: fields
+          in: query
+          style: deepObject
+          explode: true
+          allowReserved: true
+          description: 'Also known as "sparse field-sets", this query allows selecting only a subset of attributes and relationships to be displayed in the resources contained in response message. This reduces the payload of the response message that includes all attributes and relationships of every resource. Note that field selection is specified on a resource type basis (i.e., "agents", "events", and so on).'
+          schema:
+            type: object
+            properties:
+              agents:
+                type: string
+                pattern: '^abstract|description|name|shortName(,(abstract|description|name|shortName))*'
+                example: name
+              events:
+                type: string
+                pattern: '^abstract|description|name|shortName(,(abstract|description|name|shortName))*'
+                example: name
+              eventSeries:
+                type: string
+                pattern: '^abstract|description|name|shortName(,(abstract|description|name|shortName))*'
+                example: name
+              lifts:
+                type: string
+                pattern: '^abstract|description|name|shortName(,(abstract|description|name|shortName))*'
+                example: name
+              mountainAreas:
+                type: string
+                pattern: '^abstract|description|name|shortName(,(abstract|description|name|shortName))*'
+                example: name
+              snowparks:
+                type: string
+                pattern: '^abstract|description|name|shortName(,(abstract|description|name|shortName))*'
+                example: name
+              trails:
+                type: string
+                pattern: '^abstract|description|name|shortName(,(abstract|description|name|shortName))*'
+                example: name
+              venues:
+                type: string
+                pattern: '^abstract|description|name|shortName(,(abstract|description|name|shortName))*'
+                example: name
+            example:
+              agents: name
+              events: organizers
+        - name: include
+          in: query
+          style: deepObject
+          description: 'The include query allows the inclusion of resources referenced in the relationships in the response message. With this query, it is possible to avoid additional requests to the server in order to retrieve related resources.'
+          schema:
+            type: string
+            pattern: '^(areaOwner|connections|contributors|copyrightOwner|editions|lifts|multimediaDescriptions|organizers|publisher|series|sponsors|snowparks|subAreas|subEvents|trails|venues)(,(areaOwner|connections|contributors|copyrightOwner|editions|lifts|multimediaDescriptions|organizers|publisher|series|sponsors|snowparks|subAreas|subEvents|trails|venues))*$'
+            example: organizers
+      responses:
+        '200':
+          description: OK
+  '/1.0/lifts/:id':
+    get:
+      description: Retrieves a single `lifts` resource.
+      tags:
+        - Lifts
+      parameters:
+        - name: id
+          in: path
+          description: Resource id
+          required: true
+          schema:
+            type: string
+            minLength: 1
+            example: FD7DC58E68A9447FB987460138FB3C85
+        - $ref: '#/paths/~11.0~1lifts/get/parameters/0'
+        - $ref: '#/paths/~11.0~1lifts/get/parameters/1'
+      responses:
+        '200':
+          description: OK
+  '/1.0/lifts/:id/connections':
+    get:
+      description: Retrieves all `connections` of the lift
+      tags:
+        - Lifts
+      parameters:
+        - $ref: '#/paths/~11.0~1lifts~1%3Aid/get/parameters/0'
+        - $ref: '#/paths/~11.0~1lifts/get/parameters/0'
+        - $ref: '#/paths/~11.0~1lifts/get/parameters/1'
+      responses:
+        '200':
+          description: OK
+  '/1.0/lifts/:id/multimediaDescriptions':
+    get:
+      description: Retrieves all `multimediaDescriptions` of the lift
+      tags:
+        - Lifts
+      parameters:
+        - $ref: '#/paths/~11.0~1lifts~1%3Aid/get/parameters/0'
+        - $ref: '#/paths/~11.0~1lifts/get/parameters/0'
+        - $ref: '#/paths/~11.0~1lifts/get/parameters/1'
+      responses:
+        '200':
+          description: OK
+  /1.0/trails:
+    get:
+      description: Retrieves a list of `trails` resources.
+      tags:
+        - Trails
+      parameters:
+        - $ref: '#/paths/~11.0~1lifts/get/parameters/0'
+        - $ref: '#/paths/~11.0~1lifts/get/parameters/1'
+      responses:
+        '200':
+          description: OK
+  '/1.0/trails/:id':
+    get:
+      description: Retrieves a single `trails` resource.
+      tags:
+        - Trails
+      parameters:
+        - $ref: '#/paths/~11.0~1lifts~1%3Aid/get/parameters/0'
+        - $ref: '#/paths/~11.0~1lifts/get/parameters/0'
+        - $ref: '#/paths/~11.0~1lifts/get/parameters/1'
+      responses:
+        '200':
+          description: OK
+  '/1.0/trails/:id/connections':
+    get:
+      description: Retrieves all `connections` of the lift
+      tags:
+        - Trails
+      parameters:
+        - $ref: '#/paths/~11.0~1lifts~1%3Aid/get/parameters/0'
+        - $ref: '#/paths/~11.0~1lifts/get/parameters/0'
+        - $ref: '#/paths/~11.0~1lifts/get/parameters/1'
+      responses:
+        '200':
+          description: OK
+  '/1.0/trails/:id/multimediaDescriptions':
+    get:
+      description: Retrieves all `multimediaDescriptions` of the lift
+      tags:
+        - Trails
+      parameters:
+        - $ref: '#/paths/~11.0~1lifts~1%3Aid/get/parameters/0'
+        - $ref: '#/paths/~11.0~1lifts/get/parameters/0'
+        - $ref: '#/paths/~11.0~1lifts/get/parameters/1'
+      responses:
+        '200':
+          description: OK
+  /1.0/mountainAreas:
+    get:
+      description: Retrieves a list of `mountainAreas` resources.
+      tags:
+        - Mountain Areas
+      parameters:
+        - $ref: '#/paths/~11.0~1lifts/get/parameters/0'
+        - $ref: '#/paths/~11.0~1lifts/get/parameters/1'
+      responses:
+        '200':
+          description: OK
+  '/1.0/mountainAreas/:id':
+    get:
+      description: Retrieves a single `mountainAreas` resource.
+      tags:
+        - Mountain Areas
+      parameters:
+        - $ref: '#/paths/~11.0~1lifts~1%3Aid/get/parameters/0'
+        - $ref: '#/paths/~11.0~1lifts/get/parameters/0'
+        - $ref: '#/paths/~11.0~1lifts/get/parameters/1'
+      responses:
+        '200':
+          description: OK
+  '/1.0/mountainAreas/:id/areaOwner':
+    get:
+      description: Retrieves a single `mountainAreas` resource.
+      tags:
+        - Mountain Areas
+      parameters:
+        - $ref: '#/paths/~11.0~1lifts~1%3Aid/get/parameters/0'
+        - $ref: '#/paths/~11.0~1lifts/get/parameters/0'
+        - $ref: '#/paths/~11.0~1lifts/get/parameters/1'
+      responses:
+        '200':
+          description: OK
+  '/1.0/mountainAreas/:id/connections':
+    get:
+      description: Retrieves a single `mountainAreas` resource.
+      tags:
+        - Mountain Areas
+      parameters:
+        - $ref: '#/paths/~11.0~1lifts~1%3Aid/get/parameters/0'
+        - $ref: '#/paths/~11.0~1lifts/get/parameters/0'
+        - $ref: '#/paths/~11.0~1lifts/get/parameters/1'
+      responses:
+        '200':
+          description: OK
+  '/1.0/mountainAreas/:id/lifts':
+    get:
+      description: Retrieves a single `mountainAreas` resource.
+      tags:
+        - Mountain Areas
+      parameters:
+        - $ref: '#/paths/~11.0~1lifts~1%3Aid/get/parameters/0'
+        - $ref: '#/paths/~11.0~1lifts/get/parameters/0'
+        - $ref: '#/paths/~11.0~1lifts/get/parameters/1'
+      responses:
+        '200':
+          description: OK
+  '/1.0/mountainAreas/:id/multimediaDescriptions':
+    get:
+      description: Retrieves a single `mountainAreas` resource.
+      tags:
+        - Mountain Areas
+      parameters:
+        - $ref: '#/paths/~11.0~1lifts~1%3Aid/get/parameters/0'
+        - $ref: '#/paths/~11.0~1lifts/get/parameters/0'
+        - $ref: '#/paths/~11.0~1lifts/get/parameters/1'
+      responses:
+        '200':
+          description: OK
+  '/1.0/mountainAreas/:id/snowparks':
+    get:
+      description: Retrieves a single `mountainAreas` resource.
+      tags:
+        - Mountain Areas
+      parameters:
+        - $ref: '#/paths/~11.0~1lifts~1%3Aid/get/parameters/0'
+        - $ref: '#/paths/~11.0~1lifts/get/parameters/0'
+        - $ref: '#/paths/~11.0~1lifts/get/parameters/1'
+      responses:
+        '200':
+          description: OK
+  '/1.0/mountainAreas/:id/subAreas':
+    get:
+      description: Retrieves a single `mountainAreas` resource.
+      tags:
+        - Mountain Areas
+      parameters:
+        - $ref: '#/paths/~11.0~1lifts~1%3Aid/get/parameters/0'
+        - $ref: '#/paths/~11.0~1lifts/get/parameters/0'
+        - $ref: '#/paths/~11.0~1lifts/get/parameters/1'
+      responses:
+        '200':
+          description: OK
+  '/1.0/mountainAreas/:id/trails':
+    get:
+      description: Retrieves a single `mountainAreas` resource.
+      tags:
+        - Mountain Areas
+      parameters:
+        - $ref: '#/paths/~11.0~1lifts~1%3Aid/get/parameters/0'
+        - $ref: '#/paths/~11.0~1lifts/get/parameters/0'
+        - $ref: '#/paths/~11.0~1lifts/get/parameters/1'
+      responses:
+        '200':
+          description: OK
