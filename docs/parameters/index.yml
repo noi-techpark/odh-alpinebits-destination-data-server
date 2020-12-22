@@ -37,26 +37,6 @@ parameters:
       [here](https://www.alpinebits.org/wp-content/uploads/2020/08/AlpineBits_2020-04.pdf).
     schema:
       $ref: "#/definitions/fields"
-  random:
-    name: random
-    in: query
-    description: Sort resources in a random order based on a number seed between
-      1 and 50.  Cannot be combined with `random` on a single request.
-    schema:
-      $ref: "#/definitions/random"
-  sort:
-    name: sort
-    in: query
-    description: Sort resources based on primitive attribute. The prefix '-' on
-      any attribute path indicates a descending order. Cannot be combined with
-      `random` on a single request.
-      <br/><br/>
-      For example, `sort=-startDate` sort `events` resources on descending order
-      of `startDate`.
-      <br/><br/>
-      At the moment, `startDate` is the only sorting field available.
-    schema:
-      $ref: "#/definitions/sort"
   search:
     name: search
     in: query
@@ -71,14 +51,6 @@ definitions:
   id:
     type: string
     minLength: 1
-  random:
-    type: integer
-    enum: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50]
-  sort:
-    type: string
-    enum:
-      - startDate
-      - -startDate
   search:
     type: object
     properties:

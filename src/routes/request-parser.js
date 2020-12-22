@@ -1,133 +1,17 @@
+const schemas = require("./query-schemas");
+const Ajv = new require("ajv");
+const ajv = new Ajv();
+
 const iso6393to6391 = require("iso-639-3/to-1.json");
 const errors = require("../errors");
 const { templates } = require("../transformers/odh2alpinebits/templates");
-
-const langValidation = (languageCodes) => {
-  if (Array.isArray(languageCodes)) {
-    return languageCodes.some(
-      (code) => !Array.isArray(code) || !!iso6393to6391[code]
-    );
-  } else {
-    languageCodes = languageCodes.split(",")
-    return languageCodes.every(languageCode => !!iso6393to6391[languageCode]);
-  }
-};
-
-const categoriesValidation = (categories) => {
-  const regex = /^([a-z]|[A-Z]|[0-9]|-|_)+\/([a-z]|[A-Z]|[0-9]|-|_)+(,(([a-z]|[A-Z]|[0-9]|-|_)+\/([a-z]|[A-Z]|[0-9]|-|_)+))*$/;
-  if (Array.isArray(categories)) {
-    return categories.some(
-      (category) => !Array.isArray(category) || regex.test(categories)
-    );
-  } else {
-    return regex.test(categories);
-  }
-};
-
-const dateValidation = (date) =>
-  !Array.isArray(date) && !isNaN(new Date(date).getTime());
-
-const nearToValidation = (pointsInfo) => {
-  if (!Array.isArray(pointsInfo) && typeof pointsInfo !== "string") {
-    return false;
-  }
-
-  pointsInfo = normalize(pointsInfo);
-
-  if (!Array.isArray(pointsInfo) || pointsInfo.length !== 3) {
-    return false;
-  }
-
-  const lng = Number(pointsInfo[0]);
-  const lat = Number(pointsInfo[1]);
-  const dist = Number(pointsInfo[2]);
-
-  return (
-    pointsInfo[0] &&
-    pointsInfo[1] &&
-    pointsInfo[2] &&
-    !isNaN(lng) &&
-    !isNaN(lat) &&
-    Number.isInteger(dist) &&
-    dist > 0
-  );
-};
-
-const organizationValidation = (organizationId) => {
-  return typeof organizationId === "string" && organizationId.indexOf(",") < 0;
-};
-
-const queryValidation = {
-  agents: {},
-  events: {
-    lang: langValidation,
-    categories: (filterQuery) =>
-      filterQuery.any && categoriesValidation(filterQuery.any),
-    lastUpdate: (filterQuery) =>
-      filterQuery.gt && dateValidation(filterQuery.gt),
-    venues: (filterQuery) =>
-      filterQuery.near && nearToValidation(filterQuery.near),
-    endDate: (filterQuery) =>
-      filterQuery.gte && dateValidation(filterQuery.gte),
-    startDate: (filterQuery) =>
-      filterQuery.lte && dateValidation(filterQuery.lte),
-    organizers: (filterQuery) =>
-      filterQuery.eq && organizationValidation(filterQuery.eq),
-  },
-  eventSeries: {},
-  lifts: {
-    lang: langValidation,
-    categories: (filterQuery) =>
-      filterQuery.any && categoriesValidation(filterQuery.any),
-    lastUpdate: (filterQuery) =>
-      filterQuery.gt && dateValidation(filterQuery.gt),
-    geometries: (filterQuery) =>
-      filterQuery.near && nearToValidation(filterQuery.near),
-  },
-  mediaObjects: {},
-  mountainAreas: {},
-  snowparks: {
-    lang: langValidation,
-    lastUpdate: (filterQuery) =>
-      filterQuery.gt && dateValidation(filterQuery.gt),
-    geometries: (filterQuery) =>
-      filterQuery.near && nearToValidation(filterQuery.near),
-  },
-  trails: {
-    lang: langValidation,
-    lastUpdate: (filterQuery) =>
-      filterQuery.gt && dateValidation(filterQuery.gt),
-    geometries: (filterQuery) =>
-      filterQuery.near && nearToValidation(filterQuery.near),
-  },
-  venues: {},
-};
-
-function isRepeated(queryValues) {
-  return Array.isArray(queryValues);
-}
-
-function containsRepeatedValues(queryValues) {
-  queryValues = normalize(queryValues);
-  for (const value of queryValues) {
-    if (queryValues.indexOf(value) !== queryValues.lastIndexOf(value)) {
-      return true;
-    }
-  }
-  return false;
-}
-
-function normalize(queryValues) {
-  queryValues = Array.isArray(queryValues)
-    ? queryValues.flatMap((value) => value.split(","))
-    : queryValues.split(",");
-  return queryValues;
-}
 
 function validateResourceRequestQueries(request) {
   if (!request.query) {
     return;
   }
+
+  console.log("\n\n> Validating query parameters");
 
   const { query } = request;
   const specificQueryNames = Object.keys(query);
@@ -142,7 +26,8 @@ function validateResourceRequestQueries(request) {
         break;
       default:
         errors.throwUnknownQuery(
-          `The query parameter "${queryName}" was not recognized for the requested endpoint`
+          `The request contains unsupported query parameters for this endpoint ` +
+          `${urlQueriesToString(request,queryName)}.`
         );
     }
   }
@@ -152,6 +37,8 @@ function validateCollectionRequestQueries(request) {
   if (!request.query) {
     return;
   }
+
+  console.log("Validating query parameters");
 
   const { query } = request;
   const specificQueryNames = Object.keys(query);
@@ -181,126 +68,134 @@ function validateCollectionRequestQueries(request) {
         break;
       default:
         errors.throwUnknownQuery(
-          `The query parameter "${queryName}" was not recognized for the requested endpoint`
+          `The request contains unsupported query parameters for this endpoint ` +
+          `${urlQueriesToString(request,queryName)}.`
         );
     }
   }
 }
 
-function validatePageQuery(request) {
-  const pageQuery = request.query.page;
+function urlQueriesToString(request, queryName) {
+  const regex = new RegExp(`${queryName}[^&]*`, "g")
+  const urlSerializedQueries = request.originalUrl
+      .match(regex)
+      .reduce((acc, current) => `${acc ? acc + ',': acc} '${current}'`, '');
+  return urlSerializedQueries;
+}
 
-  if (typeof pageQuery !== "object") {
-    errors.throwBadQuery(`Invalid page query parameter "page=${pageQuery}"`);
+function getResourceTypeFromPath(request) {
+  const regex = /\/1\.0\/\w+/;
+  const { path } = request;
+  let resourceType = path.match(regex);
+
+  if(resourceType && resourceType.length === 1) {
+    resourceType = resourceType[0].replace("/1.0/","");
+  } else {
+    throw new Error("Unable to extract resource type from path")
   }
 
-  const pageKeys = Object.keys(pageQuery);
-  const isValid = (numberInput) =>
-    Number.isInteger(Number(numberInput)) && Number(numberInput) > 0;
+  return resourceType
+}
 
-  for (const key of pageKeys) {
-    if ((key !== "size" && key !== "number") || !isValid(pageQuery[key])) {
-      errors.throwBadQuery(
-        `Invalid page query parameter "page[${key}]${pageQuery[key]}"`
-      );
-    }
+function containsRepeatedValues(queryParameterValue) {
+  const arr = queryParameterValue.split(",");
+  const set = new Set(arr);
+  return arr.length > set.size
+}
+
+function validateQueryParameterWithSchema(request, schema, queryName) {
+  const validate = ajv.compile(schema);
+  const query = request.query[queryName]
+  
+  if(!validate(query)) {
+    console.log(`\nQuery parameter '${queryName}' failed the schema:`, validate.errors)
+    errors.throwBadQuery(`Some error is present in some of the following query parameters: ${urlQueriesToString(request, queryName)}`);
   }
 }
 
+function validatePageQuery(request) {
+  validateQueryParameterWithSchema(request, schemas.page, "page");
+}
+
 function validateIncludeQuery(request) {
-  let resourceType = request.path.replace("/1.0/", "");
-
-  if (resourceType.indexOf("/") >= 0) {
-    resourceType = resourceType.substring(0, resourceType.indexOf("/"));
-  }
-
+  const { include } = request.query;
+  const resourceType = getResourceTypeFromPath(request);
   const relationships = templates[resourceType].relationships;
 
-  let includeQuery = request.query.include;
+  validateQueryParameterWithSchema(request, schemas.include, "include");
 
-  if (isRepeated(includeQuery)) {
-    errors.throwBadQuery(`Repeated include query`);
-  }
-
-  includeQuery = normalize(includeQuery);
-
-  if (containsRepeatedValues(includeQuery)) {
-    errors.throwBadQuery(`Include query contains repeated values`);
-  }
-
-  if (includeQuery.some((include) => relationships[include] !== null)) {
-    errors.throwUnknownQuery(
-      `Unknown or unsupported value on "include=${includeQuery}"`
+  if (containsRepeatedValues(include)) {
+    errors.throwBadQuery(
+      `The following query cannot contain repeated values: ${urlQueriesToString(
+        request,
+        "include"
+      )}`
     );
+  }
+
+  for (const includeRelationship of include.split(',')) {
+    if(relationships[includeRelationship] !== null) {
+      errors.throwUnknownQuery(
+        `The value '${includeRelationship}' is not a supported relationship for this endpoint's resource types. ` + 
+        `Please review the following query parameters: ${urlQueriesToString(request, 'include')}.`);
+    } 
   }
 }
 
 function validateSortQuery(request) {
-  const resourceType = request.path.replace("/1.0/", "");
+  const { sort } = request.query;
+  const resourceType = getResourceTypeFromPath(request);
   const supportedFields = {
     events: {
       startDate: true,
     },
   };
 
-  let sortQuery = request.query.sort;
+  validateQueryParameterWithSchema(request, schemas.sort, 'sort');
 
-  if (isRepeated(sortQuery)) {
-    errors.throwBadQuery(`Repeated sort query`);
-  }
-
-  sortQuery = normalize(sortQuery).map((value) => value.replace("-", ""));
-
-  if (containsRepeatedValues(sortQuery)) {
-    errors.throwBadQuery(`Sort query contains repeated values`);
-  }
-
-  if (
-    sortQuery.some(
-      (fieldToSort) =>
-        !supportedFields[resourceType] ||
-        !supportedFields[resourceType][fieldToSort]
-    )
-  ) {
-    errors.throwUnknownQuery(
-      `Unknown or unsupported value on "sort=${sortQuery}"`
+  if(containsRepeatedValues(sort.replace(/-/g,""))) {
+    errors.throwBadQuery(
+      `The following query cannot contain repeated values: ${urlQueriesToString(
+        request,
+        'sort'
+      )}`
     );
+  }
+
+  for (const sortBy of sort.split( ',')) {
+    if(!supportedFields[resourceType][sortBy.replace(/-/g,"")]) {
+      errors.throwUnknownQuery(
+        `Sorting by '${sortBy}' is not supported. ` +
+        `Please review the following query parameters: ${urlQueriesToString(request, 'sort')}.`
+      );
+    }
   }
 }
 
 function validateRandomQuery(request) {
+  const resourceType = getResourceTypeFromPath(request);
+  const supportedResourceTypes = ["events", "lifts", "snowparks", "trails"];
+
+  validateQueryParameterWithSchema(request, schemas.random, 'random');
+
   if (request.query.sort) {
     errors.throwQueryConflict(
-      `Unable to process "random" and "sort" on a single request`
+      `Unable to process the following query parameters in the same request: ` +
+      `${urlQueriesToString(request,'(random|sort)')}.`
     );
   }
-
-  const resourceType = request.path.replace("/1.0/", "");
-  const supportedResourceTypes = ["events", "lifts", "snowparks", "trails"];
 
   if (!supportedResourceTypes.includes(resourceType)) {
     errors.throwUnknownQuery(
-      `Random query parameter not supported on the requested endpoint`
-    );
-  }
-
-  let randomQuery = request.query.random;
-
-  if (isRepeated(randomQuery)) {
-    errors.throwBadQuery(`Repeated random query`);
-  }
-
-  randomQuery = Number(randomQuery);
-
-  if (!Number.isInteger(randomQuery) || randomQuery < 1 || randomQuery > 50) {
-    errors.throwBadQuery(
-      `Invalid query parameter value "random=${randomQuery}"`
+      `Query parameter 'random' not supported on the requested endpoint: ` +
+      `${urlQueriesToString(request,'random')}.`
     );
   }
 }
 
 function validateSearchQuery(request) {
-  const resourceType = request.path.replace("/1.0/", "");
+  const { search } = request.query;
+  const resourceType = getResourceTypeFromPath(request);
   const supportedFields = {
     events: {
       name: true,
@@ -315,94 +210,71 @@ function validateSearchQuery(request) {
       name: true,
     },
   };
+  
+  validateQueryParameterWithSchema(request, schemas.search, 'search');
 
   if (!supportedFields[resourceType]) {
     errors.throwUnknownQuery(
-      `Search query parameter not supported on the requested endpoint`
+      `Search query parameter not supported on the requested endpoint: ` +
+      `${urlQueriesToString(request,'search')}.`
     );
   }
 
-  const searchQuery = request.query.search;
-
-  if (
-    Object.values(searchQuery).some((searchString) => isRepeated(searchString))
-  ) {
-    errors.throwBadQuery(`Repeated search query`);
-  }
-
-  if (typeof searchQuery !== "object") {
-    errors.throwBadQuery(
-      `Invalid or unsupported query parameter value on "search"`
-    );
-  }
-
-  if (
-    Object.keys(searchQuery).some(
-      (fieldToSearch) => !supportedFields[resourceType][fieldToSearch]
-    )
-  ) {
-    errors.throwBadQuery(
-      `Invalid or unsupported query parameter value on "search"`
-    );
+  for (const searchFieldName of Object.keys(search)) {
+    if(!supportedFields[resourceType][searchFieldName]) {
+      errors.throwUnknownQuery(
+        `Search field '${searchFieldName}' not supported on the requested endpoint: ` +
+        `${urlQueriesToString(request,'search')}.`
+      );
+    }
   }
 }
 
 function validateFilterQuery(request) {
-  const filterQuery = request.query.filter;
-  let resourceType = request.path.replace("/1.0/", "");
-
-  if (resourceType.indexOf("/") >= 0) {
-    resourceType = resourceType.substring(0, resourceType.indexOf("/"));
+  const { filter } = request.query;
+  const resourceType = getResourceTypeFromPath(request);
+  const checkLangCodes = input => {
+    const languages = input.split(',');
+    for (const languageCode of languages) {
+      if(!iso6393to6391[languageCode]) {
+        errors.throwBadQuery(
+          `Language code '${languageCode}' in 'lang' filter does not match an ISO 639-3 language code.`
+        )
+      }
+    }
+  }
+  const additionalValidation = {
+    events: { lang: checkLangCodes },
+    lifts: { lang: checkLangCodes },
+    snowparks: { lang: checkLangCodes },
+    trails: { lang: checkLangCodes },
   }
 
-  if (!queryValidation[resourceType] || typeof filterQuery !== "object") {
-    errors.throwBadQuery(
-      `Invalid or unsupported query parameter value on "filter"`
-    );
-  }
+  validateQueryParameterWithSchema(request, schemas.filter[resourceType], 'filter');
 
-  for (const filterName in filterQuery) {
-    const filterValidation = queryValidation[resourceType][filterName];
-
-    if (!filterValidation || !filterValidation(filterQuery[filterName])) {
-      errors.throwBadQuery(
-        `Invalid or unsupported query parameter value on "filter"`
-      );
+  for (const filterName of Object.keys(filter)) {
+    // Adding validations per operand would require an additional loop
+    if(additionalValidation[resourceType][filterName]) {
+      const validate = additionalValidation[resourceType][filterName]
+      validate(filter[filterName])
     }
   }
 }
 
 function validateFieldsQuery(request) {
-  const fieldsQuery = request.query.fields;
-
-  if (typeof fieldsQuery !== "object" || Array.isArray(fieldsQuery)) {
-    errors.throwBadQuery(
-      `Invalid or unsupported query parameter value on "fields"`
-    );
-  }
-
-  for (const resourceType in fieldsQuery) {
-    let fieldNames = normalize(fieldsQuery[resourceType]);
-
-    if (
-      !templates[resourceType] ||
-      !Array.isArray(fieldNames) ||
-      containsRepeatedValues(fieldNames)
-    ) {
-      errors.throwBadQuery(
-        `Invalid or unsupported query parameter value on "fields"`
-      );
-    }
-
+  const { fields } = request.query;
+  
+  validateQueryParameterWithSchema(request, schemas.fields, 'fields');
+  
+  for (const resourceType of Object.keys(fields)) {
     const attributes = templates[resourceType].attributes;
     const relationships = templates[resourceType].relationships;
 
-    for (const fieldName of fieldNames) {
-      if (
-        !(relationships[fieldName] === null || attributes[fieldName] === null)
-      ) {
-        errors.throwBadQuery(
-          `Invalid or unsupported query parameter value on "fields"`
+    for (const fieldName of fields[resourceType].split(',')) {
+      if(attributes[fieldName] !== null && relationships[fieldName] !== null) {
+        errors.throwUnknownQuery(
+          `In the query parameters, '${fieldName}' is not an attribute or relationship field name in the queried resource type '${resourceType}': ` +
+          `${urlQueriesToString(request,'fields')}.`
         );
       }
     }
@@ -469,6 +341,14 @@ function parseInclude(req) {
   }
 
   return result;
+}
+
+
+function normalize(queryValues) {
+  queryValues = Array.isArray(queryValues)
+    ? queryValues.flatMap((value) => value.split(","))
+    : queryValues.split(",");
+  return queryValues;
 }
 
 function parseFields(req) {
