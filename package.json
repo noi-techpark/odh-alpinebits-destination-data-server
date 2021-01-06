@@ -21,7 +21,7 @@
   "homepage": "https://github.com/tgoprince/odh-alpinebits-destination-data-server#readme",
   "dependencies": {
     "ajv": "^6.10.2",
-    "axios": "^0.19.0",
+    "axios": "^0.21.1",
     "cors": "^2.8.5",
     "custom-env": "^1.0.2",
     "express": "^4.17.1",
