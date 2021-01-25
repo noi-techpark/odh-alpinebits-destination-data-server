@@ -65,7 +65,6 @@ const resources = {
     attributes: {
       abstract: null,
       capacity: null,
-      categories: null,
       description: null,
       endDate: null,
       name: null,
@@ -75,6 +74,7 @@ const resources = {
       url: null
     },
     relationships: {
+      categories: null,
       contributors: null,
       multimediaDescriptions: null,
       organizers: null,
@@ -279,7 +279,27 @@ const resources = {
       snowparks: null,
       subAreas: null
     }
-  }
+  },
+  Category: {
+    type: "categories",
+    id: "",
+    meta,
+    links,
+    attributes: {
+      abstract: null,
+      description: null,
+      name: null,
+      namespace: null,
+      resourceTypes: null,
+      shortName: null,
+      url: null
+    },
+    relationships: {
+      children: null,
+      multimediaDescriptions: null,
+      parents: null,
+    }
+  },
 }
 
 // Function to create empty objects. It is better to have fields with null values than to have missing fields.
@@ -304,4 +324,5 @@ module.exports.templates = {
   snowparks: resources.Snowpark,
   trails: resources.Trail,
   venues: resources.Venue,
+  categories: resources.Category,
 };

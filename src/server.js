@@ -56,6 +56,7 @@ require('./routes/mountain-areas.route.js')(app);
 require('./routes/venues.route.js')(app);
 require('./routes/agents.route.js')(app);
 require('./routes/media-objects.route.js')(app);
+require('./routes/categories.route.js')(app);
 
 app.get('*', (req, res) => {
   errors.handleError(errors.notFound, req, res);

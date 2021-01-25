@@ -66,13 +66,6 @@ module.exports = {
   getEventSeries: (req) => handleRequest(req, odhCon.fetchEventSeries, val.validateEventSeires),
   getEventSeriesById: (req) => handleRequest(req, odhCon.fetchEventSeriesById, val.validateEventSeiresId),
   getEventSeriesMedia: req => handleRequest(req, odhCon.fetchEventSeriesMedia, val.validateEventSeiresMedia),
+  getCategories: (req) => handleRequest(req, odhCon.fetchCategories, val.validateCategories),
+  getCategoryById: (req) => handleRequest(req, odhCon.fetchCategoryById, val.validateCategoriesId),
 }
-
-// validateAgentNoPagesArray
-// validateEventNoPagesArray
-// validateLiftNoPagesArray
-// validateMediaObjectNoPagesArray
-// validateVenueNoPagesArray
-// validateTrailNoPagesArray
-// validateSnowparkNoPagesArray
-// validateMountainAreaNoPagesArray

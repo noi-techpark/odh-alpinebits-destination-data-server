@@ -28,6 +28,10 @@ module.exports = function (app) {
     }
   });
 
+  app.get("/1.0/events/:id/categories", function (req, res) {
+    errors.handleNotImplemented(req, res);
+  });
+
   app.get("/1.0/events/:id/contributors", function (req, res) {
     errors.handleNotImplemented(req, res);
   });

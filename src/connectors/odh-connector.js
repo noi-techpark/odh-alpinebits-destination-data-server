@@ -8,6 +8,8 @@ const errors = require ('../errors');
 const { handleError } = require('../errors');
 require('custom-env').env();
 
+const mappings = require('./../transformers/odh2alpinebits/mappings');
+
 const EVENT_PATH = 'Event';
 const ACTIVITY_PATH = 'Activity';
 const ACTIVITY_REDUCED_PATH = 'ActivityReduced';
@@ -59,7 +61,8 @@ function fetchTrails (request) {
   const searchQuery = getSearchQuery(request);
   const queryArray = [ ...pageQuery, ...filterQuery, ...searchQuery ];
 
-  queryArray.push('odhtagfilter=ski alpin,ski alpin (rundkurs),rodelbahnen,loipen')
+  // queryArray.push('odhtagfilter=ski alpin,ski alpin (rundkurs),rodelbahnen,loipen')
+  queryArray.push('odhtagfilter=ski alpin,rodelbahnen,loipen')
 
   const path = ACTIVITY_PATH+"?"+queryArray.join("&");
 
@@ -333,6 +336,81 @@ function fetchMountainAreaIndependentRelationship(request, relationship, transfo
   return fetch(path, request, transformFn);
 }
 
+async function fetchCategories(request, transformArray) {
+  // fetch event topics from ODH
+  const instance = axios.create(axiosOpts);
+  let res;
+
+  try {
+    console.log(`\n> Fetching event topics(s) from ${process.env.ODH_BASE_URL}...`);
+    let eventTopicsPath = 'EventTopics';
+    // let activityTypesPath = 'ActivityTypes';
+    // [ areaRes, regionRes] = await Promise.all([instance.get(eventTopicsPath), instance.get(activityTypesPath)]); // TODO: insert filters here
+    res = await instance.get(eventTopicsPath)
+
+    if(typeof res.data === 'string') {
+      res.data = JSON.parse(res.data);
+    }
+  }
+  catch(error) {
+    handleConnectionError(error);
+  }
+
+  if((!res.data) || (res.status!==200)) {
+    console.log('ERROR: Resource not found!');
+    throw errors.notFound;
+  } else {
+    console.log('OK: categories data received from ODH API');
+  }
+
+  // transform data and filter out those without a category mapping
+
+  res.data = odh2ab.transformCategoryArray(res.data,request)
+
+  // return data
+
+  return res.data
+}
+
+async function fetchCategory(request/*, odh2ab.transformCategory*/) {
+  // fetch event topics from ODH
+  const instance = axios.create(axiosOpts);
+  let res;
+
+  try {
+    console.log(`\n> Fetching event topic from ${process.env.ODH_BASE_URL}...`);
+    let eventTopicsPath = 'EventTopics';
+    let regex = /(odh|schema)+\:\w(\w|-)*/;
+    let topicId = mappings.eventCategoryToTopicId[request.selfUrl.match(regex)[0]];
+    // let activityTypesPath = 'ActivityTypes';
+    // [ areaRes, regionRes] = await Promise.all([instance.get(eventTopicsPath), instance.get(activityTypesPath)]); // TODO: insert filters here
+    console.log('Making request to: ', `${eventTopicsPath}/${topicId}`, topicId, request.selfUrl);
+    res = await instance.get(`${eventTopicsPath}/${topicId}`)
+
+    if(typeof res.data === 'string') {
+      res.data = JSON.parse(res.data);
+    }
+  }
+  catch(error) {
+    handleConnectionError(error);
+  }
+
+  if((!res.data) || (res.status!==200)) {
+    console.log('ERROR: Resource not found!');
+    throw errors.notFound;
+  } else {
+    console.log('OK: categories data received from ODH API');
+  }
+
+  // transform data and filter out those without a category mapping
+
+  res.data = odh2ab.transformCategory(res.data,request)
+
+  // return data
+
+  return res.data
+}
+
 
 
 function handleConnectionError(error) {
@@ -439,19 +517,19 @@ function getRandomQuery(request) {
 }
 
 module.exports = {
-  fetchEvents, // TODO: support events filters
+  fetchEvents,
   fetchEventById: fetchResourceById(EVENT_PATH, odh2ab.transformEvent),
   fetchEventPublisher: fetchResourceById(EVENT_PATH, odh2ab.transformPublisherRelationship),
   fetchEventMediaObjects: fetchResourceById(EVENT_PATH, odh2ab.transformMultimediaDescriptionsRelationship),
   fetchEventOrganizers: fetchResourceById(EVENT_PATH, odh2ab.transformOrganizersRelationship),
   fetchEventVenues: fetchResourceById(EVENT_PATH, odh2ab.transformVenuesRelationship),
-  fetchLifts, // TODO: support lifts filters
+  fetchLifts,
   fetchLiftById: fetchResourceById(ACTIVITY_PATH, odh2ab.transformLift),
   fetchLiftMediaObjects: fetchResourceById(ACTIVITY_PATH, odh2ab.transformMultimediaDescriptionsRelationship),
-  fetchTrails, // TODO: support trails filters
+  fetchTrails,
   fetchTrailById: fetchResourceById(ACTIVITY_PATH, odh2ab.transformTrail),
   fetchTrailMediaObjects: fetchResourceById(ACTIVITY_PATH, odh2ab.transformMultimediaDescriptionsRelationship),
-  fetchSnowparks, // TODO: support snowparks filters
+  fetchSnowparks,
   fetchSnowparkById: fetchResourceById(ACTIVITY_PATH, odh2ab.transformSnowpark),
   fetchSnowparkMediaObjects: fetchResourceById(ACTIVITY_PATH, odh2ab.transformMultimediaDescriptionsRelationship),
   fetchMountainAreas: request => fetchMountainArea(request, null), // TODO: support mountain areas filters
@@ -464,4 +542,6 @@ module.exports = {
   fetchEventSeries: request => fechMockData(request, EVENT_SERIES_PATH, odh2ab.transformEventSeriesArray),
   fetchEventSeriesById: request => fechMockData(request, EVENT_SERIES_PATH, odh2ab.transformEventSeries),
   fetchEventSeriesMedia: request => fechMockData(request, EVENT_SERIES_PATH, odh2ab.transformMockMultimediaDescriptionsRelationship),
+  fetchCategories: request => fetchCategories(request, odh2ab.transformCategoryArray),
+  fetchCategoryById: request => fetchCategory(request, odh2ab.transformCategory),
 }

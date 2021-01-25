@@ -6,6 +6,9 @@ const { transformPublisher } = require('./publisher.transform');
 const { transformVenue } = require('./venue.transform');
 const { transformMediaObject } = require('./media-object.transform');
 
+const mappings = require('./mappings')
+require('custom-env').env();
+
 module.exports = (originalObject, included = {}, request) => {
   const sourceEvent = JSON.parse(JSON.stringify(originalObject));
   let target = templates.createObject('Event');
@@ -30,50 +33,54 @@ module.exports = (originalObject, included = {}, request) => {
 
   attributes.status = 'published';
 
-  if(sourceEvent.Topics && sourceEvent.Topics.length>0){
-    // Event categories
-    const categoryMapping = {
-      'Gastronomie/Typische Produkte': 'schema/FoodEvent',
-      'Musik/Tanz': 'schema/MusicEvent',
-      'Volksfeste/Festivals': 'schema/Festival',
-      'Sport': 'schema/SportsEvent',
-      'Führungen/Besichtigungen': null,
-      'Theater/Vorführungen': 'schema/TheaterEvent',
-      'Kurse/Bildung': 'schema/EducationEvent',
-      'Tagungen Vorträge': 'schema/BusinessEvent',
-      'Familie': 'schema/ChildrensEvent',
-      'Handwerk/Brauchtum': null,
-      'Messen/Märkte': null,
-      'Wanderungen/Ausflüge': null,
-      'Ausstellungen/Kunst': 'schema/VisualArts',
-    }
+  // if(sourceEvent.Topics && sourceEvent.Topics.length>0){
+  //   for (const topic of source.Topics) {
+      
+  //   }
+
+  //   // Event categories
+  //   const categoryMapping = {
+  //     'Gastronomie/Typische Produkte': 'schema/FoodEvent',
+  //     'Musik/Tanz': 'schema/MusicEvent',
+  //     'Volksfeste/Festivals': 'schema/Festival',
+  //     'Sport': 'schema/SportsEvent',
+  //     'Führungen/Besichtigungen': null,
+  //     'Theater/Vorführungen': 'schema/TheaterEvent',
+  //     'Kurse/Bildung': 'schema/EducationEvent',
+  //     'Tagungen Vorträge': 'schema/BusinessEvent',
+  //     'Familie': 'schema/ChildrensEvent',
+  //     'Handwerk/Brauchtum': null,
+  //     'Messen/Märkte': null,
+  //     'Wanderungen/Ausflüge': null,
+  //     'Ausstellungen/Kunst': 'schema/VisualArts',
+  //   }
     
-    let schemaCategories = [];
-    let odhCategories = [];
+  //   let schemaCategories = [];
+  //   let odhCategories = [];
 
-    sourceEvent.Topics.forEach(topic => {
-      if(!topic || !topic.TopicInfo)
-        return;
+  //   sourceEvent.Topics.forEach(topic => {
+  //     if(!topic || !topic.TopicInfo)
+  //       return;
 
-      let type = topic.TopicInfo;
+  //     let type = topic.TopicInfo;
       
-      if(categoryMapping[type])
-        schemaCategories.push(categoryMapping[type]);
+  //     if(categoryMapping[type])
+  //       schemaCategories.push(categoryMapping[type]);
       
-      let odhCategory = "odh/" + type
-                          .replace(/[\/|\s]/g,'-')
-                          .replace(/ö/g, 'o')
-                          .replace(/ä/g, 'a')
-                          .toLowerCase();
+  //     let odhCategory = "odh/" + type
+  //                         .replace(/[\/|\s]/g,'-')
+  //                         .replace(/ö/g, 'o')
+  //                         .replace(/ä/g, 'a')
+  //                         .toLowerCase();
 
-      odhCategories.push(odhCategory);
-    })
+  //     odhCategories.push(odhCategory);
+  //   })
 
-    let categories = schemaCategories.concat(odhCategories);
+  //   let categories = schemaCategories.concat(odhCategories);
 
-    if(categories.length>0)
-      attributes.categories = categories;
-  }
+  //   if(categories.length>0)
+  //     attributes.categories = categories;
+  // }
 
   /**
    * 
@@ -105,6 +112,37 @@ module.exports = (originalObject, included = {}, request) => {
     utils.addRelationshipToMany(relationships, 'multimediaDescriptions', mediaObject, links.self);
     utils.addIncludedResource(included, mediaObject);
     utils.addIncludedResource(included, copyrightOwner);
+  }
+
+  // Categories
+  if(sourceEvent.Topics && sourceEvent.Topics.length>0){
+    let categories = target.relationships.categories;
+
+    for (const topic of sourceEvent.Topics) {
+      if(!categories) {
+        categories = (target.relationships.categories = {
+          data: [],
+          links: {
+            related: target.links.self + `/categories`
+          }
+        })
+      }
+
+      const getCategoryReference = categoryId => { 
+        return { type: "categories", id: categoryId } 
+      }
+      let reference;
+
+      if(mappings.eventTopicIdToODHCategories[topic.TopicRID]) {
+        reference = getCategoryReference(mappings.eventTopicIdToODHCategories[topic.TopicRID])
+        utils.addRelationshipToMany(relationships, 'categories', reference, links.self);
+      }
+      if(mappings.eventTopicIdToAlpineBitsCategories[topic.TopicRID]) {
+        reference = getCategoryReference(mappings.eventTopicIdToAlpineBitsCategories[topic.TopicRID])
+        utils.addRelationshipToMany(relationships, 'categories', reference, links.self);
+      }
+      // TODO: Enable include categories
+    }
   }
 
   return target;
