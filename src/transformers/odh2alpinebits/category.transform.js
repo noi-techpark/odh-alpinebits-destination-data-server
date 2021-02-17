@@ -3,12 +3,14 @@
 // const { transformMediaObject } = require('./media-object.transform');
 
 require("custom-env").env();
+const utils = require('./utils');
 const templates = require("./templates");
 const mappings = require("./mappings");
+const sourceCategories = require('../../../data/categories.data');
 
 function eventTopicToCategory(originalObject, included = {}, request) {
   const source = JSON.parse(JSON.stringify(originalObject));
-  let target = templates.createObject("Category");
+  let target = templates.createObject("Category", request.apiVersion);
 
   target.id = mappings.eventTopicIdToODHCategories[source.Id];
 
@@ -108,47 +110,47 @@ function getSchemaOrgCategoryCopy(categoryResource, request) {
   return copy;
 }
 
-function transformCategoryArray(odhData, request) {
-  let data = [];
-  let includedMap = {};
+// function transformCategoryArray(odhData, request) {
+//   let data = [];
+//   let includedMap = {};
 
-  for (object of odhData) {
-    if (isEventTopic(object)) {
-      let resource = eventTopicToCategory(object, includedMap, request);
-      data.push(resource);
+//   for (object of odhData) {
+//     if (isEventTopic(object)) {
+//       let resource = eventTopicToCategory(object, includedMap, request);
+//       data.push(resource);
 
-      if (isSchemaOrgCategory(resource)) {
-        resource = getSchemaOrgCategoryCopy(resource, request);
-        data.push(resource);
-      }
-    }
-  }
+//       if (isSchemaOrgCategory(resource)) {
+//         resource = getSchemaOrgCategoryCopy(resource, request);
+//         data.push(resource);
+//       }
+//     }
+//   }
 
-  data.sort((resourceA, resourceB) => (resourceA.id < resourceB.id ? -1 : 1));
-  selectFields(data, request);
+//   data.sort((resourceA, resourceB) => (resourceA.id < resourceB.id ? -1 : 1));
+//   selectFields(data, request);
 
-  let response = {
-    jsonapi: {
-      version: "1.0",
-    },
-    meta: {
-      count: data.length,
-      pages: 1,
-    },
-    links: {
-      self: request.selfUrl,
-    },
-    data: data.length > 0 ? data : null,
-  };
+//   let response = {
+//     jsonapi: {
+//       version: "1.0",
+//     },
+//     meta: {
+//       count: data.length,
+//       pages: 1,
+//     },
+//     links: {
+//       self: request.selfUrl,
+//     },
+//     data: data.length > 0 ? data : null,
+//   };
 
-  const included = createIncludedArray(data, includedMap, request);
-  if (included) {
-    selectFields(included, request);
-    response.included = included;
-  }
+//   const included = createIncludedArray(data, includedMap, request);
+//   if (included) {
+//     selectFields(included, request);
+//     response.included = included;
+//   }
 
-  return response;
-}
+//   return response;
+// }
 
 function isSchemaCategoryRequest(request) {
   return request.selfUrl.includes("/schema:");
@@ -158,39 +160,39 @@ function isOdhCategoryRequest(request) {
   return request.selfUrl.includes("/odh:");
 }
 
-function transformCategory(odhData, request) {
-  let data = null;
-  let includedMap = {};
+// function transformCategory(odhData, request) {
+//   let data = null;
+//   let includedMap = {};
 
-  if (isEventTopic(odhData)) {
-    if (isOdhCategoryRequest(request)) {
-      data = eventTopicToCategory(odhData, includedMap, request);
-    } else if (isSchemaCategoryRequest(request)) {
-      odhCategory = eventTopicToCategory(odhData, includedMap, request);
-      data = getSchemaOrgCategoryCopy(odhCategory, request);
-    }
-  }
+//   if (isEventTopic(odhData)) {
+//     if (isOdhCategoryRequest(request)) {
+//       data = eventTopicToCategory(odhData, includedMap, request);
+//     } else if (isSchemaCategoryRequest(request)) {
+//       odhCategory = eventTopicToCategory(odhData, includedMap, request);
+//       data = getSchemaOrgCategoryCopy(odhCategory, request);
+//     }
+//   }
 
-  selectFields(data, request);
+//   selectFields(data, request);
 
-  let response = {
-    jsonapi: {
-      version: "1.0",
-    },
-    links: {
-      self: request.selfUrl,
-    },
-    data,
-  };
+//   let response = {
+//     jsonapi: {
+//       version: "1.0",
+//     },
+//     links: {
+//       self: request.selfUrl,
+//     },
+//     data,
+//   };
 
-  const included = createIncludedArray(data, includedMap, request);
-  if (included) {
-    selectFields(included, request);
-    response.included = included;
-  }
+//   const included = createIncludedArray(data, includedMap, request);
+//   if (included) {
+//     selectFields(included, request);
+//     response.included = included;
+//   }
 
-  return response;
-}
+//   return response;
+// }
 
 function selectFields(data, request) {
   const fields = request.query.fields;
@@ -242,8 +244,103 @@ function createIncludedArray(data, includedMap, request) {
   return included.length > 0 ? included : null;
 }
 
+function transformCategory(originalObject, included = {}, request) {
+  const source = JSON.parse(JSON.stringify(originalObject));
+  const target = templates.createObject('Category', '2.0');
+
+  processId(source, target, request);
+  processMeta(source, target, request);
+  processLinks(source, target, request);
+
+  processBasicAttributes(source,target);
+
+  processChildrenRelationship(source,target,included,request);
+  processParentsRelationship(source,target,included,request);
+  // processMultimediaDescriptionsRelationship(source,target,included,request);
+
+  return target;
+}
+
+function processId(source, target, request) {
+  // Try to retrieve the from each mapping and if it fails all, it must be a alpinebits one
+  target.id = mappings.eventTopicIdToODHCategories[source.id];
+  target.id = target.id ? target.id : mappings.activityTypeIdToODHCategories[source.id]
+  target.id = target.id ? target.id : mappings.activitySmgTagToODHCategories[source.id]
+  target.id = target.id ? target.id : mappings.skiAreaSmgTagToODHCategories[source.id]
+  target.id = target.id ? target.id : source.id;
+}
+
+function processMeta(source, target, request) {
+  const { meta } = target;
+  meta.lastUpdate = new Date('2021-02-18').toISOString();
+  meta.dataProvider = 'https://tourism.opendatahub.bz.it';
+}
+
+function processLinks(source, target, request) {
+  const { links } = target;
+  links.self = `${request.baseUrl}/categories/${target.id}`
+  
+  if(Array.isArray(source.resourceTypes)) {
+    links.resources = {};
+    source.resourceTypes.forEach(resourceType =>
+      links.resources[resourceType] = `${request.baseUrl}/${resourceType}?filter[categories][any]=${target.id}`
+    )
+  } else {
+    links.resources = null;
+  }
+}
+
+function processBasicAttributes(source,target) {
+  const { attributes } = target;
+  attributes.abstract = source.abstract
+  attributes.description = source.description
+  attributes.name = source.name
+  attributes.namespace = source.namespace
+  attributes.resourceTypes = source.resourceTypes
+  attributes.shortName = source.shortName
+  attributes.url = source.url
+}
+
+function processChildrenRelationship(source,target,included,request) {
+  const { relationships, links } = target;
+
+  if(!Array.isArray(source.children))
+    return ;
+
+  for (const childSourceId of source.children) {
+    const childSource = sourceCategories[childSourceId]
+    const child = { type: 'categories', id: null };
+
+    if(!childSource)
+      continue ;
+
+    processId(childSource, child, null);
+    utils.addRelationshipToMany(relationships, 'children', child, links.self);
+    // utils.addIncludedResource(included, child);
+  }
+}
+
+function processParentsRelationship(source,target,included,request) {
+  const { relationships, links } = target;
+
+  if(!Array.isArray(source.parents))
+    return ;
+
+  for (const parentSourceId of source.parents) {
+    const parentSource = sourceCategories[parentSourceId]
+    const parent = { type: 'categories', id: null };
+
+    if(!parentSource)
+      continue ;
+
+    processId(parentSource, parent, null);
+    utils.addRelationshipToMany(relationships, 'parents', parent, links.self);
+    // utils.addIncludedResource(included, parent);
+  }
+}
+
 module.exports = {
   eventTopicToCategory,
   transformCategory,
-  transformCategoryArray,
+  // transformCategoryArray,
 };

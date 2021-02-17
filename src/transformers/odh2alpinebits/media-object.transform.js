@@ -43,7 +43,7 @@ function transformMultimediaDescriptionsRelationship(sourceResource, included, r
 }
 
 function transformMediaObject(source, included, request) {
-  let mediaObject = templates.createObject('MediaObject');
+  let mediaObject = templates.createObject('MediaObject', request.apiVersion);
   let attributes = mediaObject.attributes;
   let relationships = mediaObject.relationships;
 
@@ -83,7 +83,7 @@ function transformMediaObject(source, included, request) {
    * 
    */
 
-  const copyrightOwner = templates.createObject('Agent');
+  const copyrightOwner = templates.createObject('Agent', request.apiVersion);
   copyrightOwner.id = shajs('sha256').update(source.CopyRight).digest('hex');
   copyrightOwner.attributes.name = {
     deu: source.CopyRight,

@@ -51,12 +51,13 @@ require('./routes/lifts.route.js')(app);
 require('./routes/trails.route.js')(app);
 require('./routes/snowparks.route.js')(app);
 require('./routes/mountain-areas.route.js')(app);
-// require('./routes/event-series.route.js')(app);
+require('./routes/event-series.route.js')(app);
 
 require('./routes/venues.route.js')(app);
 require('./routes/agents.route.js')(app);
 require('./routes/media-objects.route.js')(app);
 require('./routes/categories.route.js')(app);
+require('./routes/features.route.js')(app);
 
 app.get('*', (req, res) => {
   errors.handleError(errors.notFound, req, res);

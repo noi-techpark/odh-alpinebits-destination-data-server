@@ -69,43 +69,128 @@ IGNORED:
   * Webcam
 */
 
-const shajs = require('sha.js');
-const utils = require('./utils');
-const templates = require('./templates');
-const transformLift = require('./lift.transform');
-const transformTrail = require('./trail.transform');
-const transformSnowpark = require('./snowpark.transform');
-const { transformMultimediaDescriptionsRelationship, 
-  transformMediaObject } = require('./media-object.transform');
+const shajs = require("sha.js");
+const utils = require("./utils");
+const templates = require("./templates");
+const transformLift = require("./lift.transform");
+const transformTrail = require("./trail.transform");
+const transformSnowpark = require("./snowpark.transform");
+const {
+  transformMultimediaDescriptionsRelationship,
+  transformMediaObject,
+} = require("./media-object.transform");
+const mappings = require("./mappings");
+
+module.exports = (originalObject, included = {}, request) => {
+  const { apiVersion } = request;
+
+  if (!apiVersion || apiVersion === "1.0") {
+    return transformEventV1(originalObject, included, request);
+  } else if (apiVersion === "2.0") {
+    return transformEventV2(originalObject, included, request);
+  } else {
+    throw new Error(`Unexpected value for 'apiVersion': ${apiVersion}`);
+  }
+};
 
 function transformMountainArea(originalObject, included = {}, request) {
+  const { apiVersion } = request;
+
+  if (!apiVersion || apiVersion === "1.0") {
+    return transformMountainAreaV1(originalObject, included, request);
+  } else if (apiVersion === "2.0") {
+    return transformMountainAreaV2(originalObject, included, request);
+  } else {
+    throw new Error(`Unexpected value for 'apiVersion': ${apiVersion}`);
+  }
+}
+
+function transformAreaMultimedDescriptionsRelationship(originalObject, included = {}, request) {
+  const { apiVersion } = request;
+
+  if (!apiVersion || apiVersion === "1.0") {
+    return transformAreaMultimedDescriptionsRelationshipV1(originalObject, included, request);
+  } else if (apiVersion === "2.0") {
+    return transformAreaMultimedDescriptionsRelationshipV2(originalObject, included, request);
+  } else {
+    throw new Error(`Unexpected value for 'apiVersion': ${apiVersion}`);
+  }
+}
+
+function transformMountainAreaV1(originalObject, included = {}, request) {
   const source = JSON.parse(JSON.stringify(originalObject));
-  let target = templates.createObject('MountainArea');
+  const target = templates.createObject('MountainArea','1.0');
 
   target.id = source.Id;
 
-  let meta = target.meta;
-  Object.assign(meta, utils.transformMetadata(source));
+  utils.processMeta(source, target, request);
+  utils.processLinks(target, request);
 
-  let links = target.links;
-  Object.assign(links, utils.createSelfLink(target, request));
+  utils.processBasicAttributes(source, target);
 
-   /**
-   * 
-   *  ATTRIBUTES
-   * 
-   */
+  utils.processHowToArriveAttribute(source, target);
+  processMinAltitudeAttribute(source, target);
+  processMaxAltitudeAttribute(source, target);
+  processTotalTrailLengthAttribute(source, target);
+  utils.processOpeningHoursAttribute(source, target);
+  processGeometriesAttribute(source, target);
+  processCategoriesAttributeV1(source, target);
 
-  let attributes = target.attributes;
-  Object.assign(attributes, utils.transformBasicProperties(source));
+  processMultimediaDescriptionsRelationship(source,target,included,request)
+  processAreaOwnerRelationship(source,target,included,request);
+  processLiftsRelationship(source,target,included,request);
+  processTrailsRelationship(source,target,included,request);
+  processSnowparksRelationship(source,target,included,request);
 
-  attributes.howToArrive = utils.transformHowToArrive(source.Detail);
+  return target;
+}
 
+function transformMountainAreaV2(originalObject, included = {}, request) {
+  const source = JSON.parse(JSON.stringify(originalObject));
+  const target = templates.createObject('MountainArea','2.0');
+
+  target.id = source.Id;
+
+  utils.processMeta(source, target, request);
+  utils.processLinks(target, request);
+
+  utils.processBasicAttributes(source, target);
+
+  utils.processHowToArriveAttribute(source, target);
+  processMinAltitudeAttribute(source, target);
+  processMaxAltitudeAttribute(source, target);
+  processTotalTrailLengthAttribute(source, target);
+  utils.processOpeningHoursAttribute(source, target);
+  processGeometriesAttribute(source, target);
+
+  processMultimediaDescriptionsRelationship(source,target,included,request)
+  processAreaOwnerRelationship(source,target,included,request);
+  processLiftsRelationship(source,target,included,request);
+  processTrailsRelationship(source,target,included,request);
+  processSnowparksRelationship(source,target,included,request);
+  processCategoriesRelationshipV2(source,target,included,request);
+
+  return target;
+}
+
+function processMinAltitudeAttribute(source, target) {
+  const { attributes } = target;
   attributes.minAltitude = source.AltitudeFrom || null;
-  attributes.maxAltitude = source.AltitudeTo || null;
-  attributes.totalTrailLength = parseInt(source.TotalSlopeKm) || null;
+}
 
-  attributes.openingHours = utils.transformOperationSchedule(source.OperationSchedule);
+function processMaxAltitudeAttribute(source, target) {
+  const { attributes } = target;
+  attributes.maxAltitude = source.AltitudeTo || null;
+}
+
+function processTotalTrailLengthAttribute(source, target) {
+  const { attributes } = target;  
+  attributes.totalTrailLength = parseInt(source.TotalSlopeKm) || null;
+}
+
+function processGeometriesAttribute(source, target) {
+  const { attributes } = target;  
+  attributes.totalTrailLength = parseInt(source.TotalSlopeKm) || null;
 
   if(source.Longitude && source.Latitude) {
     let point = templates.createObject('Point');
@@ -134,25 +219,22 @@ function transformMountainArea(originalObject, included = {}, request) {
     
     attributes.geometries.push(polygon);
   }
+}
 
-  let categories = [];
-  if(source.OdhTags)
-    source.OdhTags.forEach(tag => {
-      categories.push("odh/"+ tag.Id.replace(/[\/|\s]/g,'-').toLowerCase());
-    })
+function processCategoriesAttributeV1(source, target) {
+  const { attributes } = target;
 
-  if(categories.length>0)
-    attributes.categories = categories;
+  if (Array.isArray(source.SmgTags)) {
+    const mappedTags = source.SmgTags
+        .map((tag) => mappings.skiAreaSmgTagToODHCategories[tag])
+        .map((mappedTag) => mappedTag.replace(/\:/,'/'));
+    const mappedTagsSet = new Set(mappedTags);
+    attributes.categories = mappedTagsSet.size > 0 ? [ ...mappedTagsSet ] : null;
+  }
+}
 
-
-  /**
-   * 
-   *  RELATIONSHIPS
-   * 
-   */
-
-  let relationships = target.relationships;
-
+function processMultimediaDescriptionsRelationship(source,target,included,request) {
+  const { relationships, links } = target;
   for (image of source.ImageGallery){
     const { mediaObject, copyrightOwner } = transformMediaObject(image, links, request);
     utils.addRelationshipToMany(relationships, 'multimediaDescriptions', mediaObject, links.self);
@@ -160,27 +242,36 @@ function transformMountainArea(originalObject, included = {}, request) {
     utils.addIncludedResource(included, copyrightOwner);
   }
 
-  let map = transformAreaMap(source, included, request);
+  const map = transformAreaMap(source, included, request);
   if(map) {
     utils.addRelationshipToMany(relationships, 'multimediaDescriptions', map, links.self);
     utils.addIncludedResource(included, map);
   }
+}
 
-  let { areaOwner, ownerLogo } = transformAreaOwner(source.ContactInfos, request);
+function processAreaOwnerRelationship(source,target,included,request) {
+  const { relationships, links } = target;
+  const { areaOwner, ownerLogo } = transformAreaOwner(source.ContactInfos, request);
   
   utils.addRelationshipToOne(relationships, 'areaOwner', areaOwner, links.self);
   utils.addIncludedResource(included, areaOwner);
   
   if(ownerLogo)
     utils.addIncludedResource(included, ownerLogo);
+}
 
+function processLiftsRelationship(source,target,included,request) {
+  const { relationships, links } = target;
   if(source.lifts && source.lifts.length>0)
     source.lifts.forEach( lift => {
       let newLift = conditionalTransform(lift, included, request, 'lifts', transformLift);
       utils.addRelationshipToMany(relationships, 'lifts', newLift, links.self);
       utils.addIncludedResource(included, newLift);
     });
+}
 
+function processTrailsRelationship(source,target,included,request) {
+  const { relationships, links } = target;
   if(source.trails && source.trails.length>0){
     source.trails.forEach( trail => {
       let newTrail = conditionalTransform(trail, included, request, 'trails', transformTrail);
@@ -188,7 +279,10 @@ function transformMountainArea(originalObject, included = {}, request) {
       utils.addIncludedResource(included, newTrail);
     });
   }
+}
 
+function processSnowparksRelationship(source,target,included,request) {
+  const { relationships, links } = target;
   if(source.snowparks && source.snowparks.length>0){
     source.snowparks.forEach( snowpark => {
       let newSnowpark = conditionalTransform(snowpark, included, request, 'snowparks', transformSnowpark);
@@ -196,12 +290,28 @@ function transformMountainArea(originalObject, included = {}, request) {
       utils.addIncludedResource(included, newSnowpark);
     });
   }
-
-  return target;
 }
 
+function processCategoriesRelationshipV2(source, target) {
+  const { relationships, links } = target;
+  const getCategoryReference = (categoryId) => {
+    return categoryId ? { type: "categories", id: categoryId } : null;
+  };
+
+  if (Array.isArray(source.SmgTags)) {
+    const mappedTags = source.SmgTags.map((tag) => mappings.skiAreaSmgTagToODHCategories[tag]);
+    const mappedTagsSet = new Set(mappedTags);
+
+    for (const mappedTag of mappedTagsSet) {
+      const categoryReference = getCategoryReference(mappedTag);
+      utils.addRelationshipToMany(relationships, "categories", categoryReference, links.self);
+    }
+  }
+}
+
+// TODO: do some refactoring here too
 function transformAreaOwner(contactInfo, request){
-  let areaOwner = templates.createObject('Agent');
+  let areaOwner = templates.createObject('Agent', request.apiVersion);
   
   let idBaseAttributes = [ ['de','Email'],['it','Email'],['en','Email'],
                            ['de','CompanyName'],['it','CompanyName'],['en','CompanyName'] ];
@@ -213,7 +323,6 @@ function transformAreaOwner(contactInfo, request){
   let links = areaOwner.links;
   Object.assign(links, utils.createSelfLink(areaOwner, request));
 
-  areaOwner.attributes.categories = ['alpinebits/organization'];
   areaOwner.attributes.url = utils.safeGetOne([['de','Url'],['it','Url'],['en','Url']], contactInfo);
   areaOwner.attributes.name = {
     deu: utils.safeGet(['de','CompanyName'], contactInfo),
@@ -238,7 +347,7 @@ function transformAreaOwner(contactInfo, request){
   let ownerLogo;
   let logoUrl = utils.safeGetOne([['de','LogoUrl'],['it','LogoUrl'],['en','LogoUrl']], contactInfo);
   if(logoUrl) {
-    ownerLogo = templates.createObject('MediaObject');
+    ownerLogo = templates.createObject('MediaObject', request.apiVersion);
     ownerLogo.id = areaOwner.id+'+logo';
 
     ownerLogo.attributes.name = {
@@ -256,6 +365,13 @@ function transformAreaOwner(contactInfo, request){
     utils.addRelationshipToMany(areaOwner.relationships, 'multimediaDescriptions', ownerLogo, areaOwner.links.self);
   }
 
+  if(!request.apiVersion || request.apiVersion === '1.0') {
+    areaOwner.attributes.categories = ['alpinebits/organization'];
+  } else if(request.apiVersion === '2.0') {
+    const category = { type: 'categories', id: 'alpinebits:organization' }
+    utils.addRelationshipToMany(areaOwner.relationships, 'categories', category, areaOwner.links.self);
+  }
+
   return ({
     areaOwner,
     ownerLogo
@@ -271,7 +387,7 @@ function transformAreaOwnerRelationship(sourceArea, included, request) {
   return areaOwner;
 }
 
-function transformAreaMultimedDescriptionsRelationship (sourceArea, included, request) {
+function transformAreaMultimedDescriptionsRelationshipV1 (sourceArea, included, request) {
   let data = transformMultimediaDescriptionsRelationship(sourceArea, included, request);
 
   if(!data)
@@ -292,7 +408,7 @@ function transformAreaMap(sourceArea, included, request) {
   if(!sourceArea.SkiAreaMapURL) 
     return null
 
-  let map = templates.createObject('MediaObject');
+  let map = templates.createObject('MediaObject', request.apiVersion);
   map.id = sourceArea.Id+'+map';
   map.attributes.name = {
     deu: 'Skikarte',

@@ -62,75 +62,156 @@ IGNORED:
   * PoiType: redudant with difficulty [[blau, 2], [rot, 4], [schwarz, 6]]
 */
 
-const utils = require('./utils');
-const templates = require('./templates');
-const { transformMediaObject } = require('./media-object.transform');
+const utils = require("./utils");
+const templates = require("./templates");
 
 module.exports = (originalObject, included = {}, request) => {
+  const { apiVersion } = request;
+
+  if (!apiVersion || apiVersion === "1.0") {
+    return transformSnowparkV1(originalObject, included, request);
+  } else if (apiVersion === "2.0") {
+    return transformSnowparkV2(originalObject, included, request);
+  } else {
+    throw new Error(`Unexpected value for 'apiVersion': ${apiVersion}`);
+  }
+};
+
+function transformSnowparkV1(originalObject, included = {}, request) {
   const source = JSON.parse(JSON.stringify(originalObject));
-  let target = templates.createObject('Snowpark');
+  let target = templates.createObject("Snowpark");
 
   target.id = source.Id;
 
-  let meta = target.meta;
-  Object.assign(meta, utils.transformMetadata(source));
+  utils.processMeta(source, target, request);
+  utils.processLinks(target, request);
+  utils.processBasicAttributes(source, target);
 
-  let links = target.links;
-  Object.assign(links, utils.createSelfLink(target, request));
+  utils.processAddressAttribute(source, target);
+  utils.processCategoriesAttributeFromActivitiesV1(source, target);
+  processDifficultyAttribute(source, target);
+  utils.processGeometriesAttribute(source, target);
+  utils.processHowToArriveAttribute(source, target);
+  utils.processLengthAttribute(source, target);
+  utils.processMinAltitudeAttribute(source, target);
+  utils.processMaxAltitudeAttribute(source, target);
+  utils.processOpeningHoursAttribute(source, target);
 
-   /**
-   * 
-   *  ATTRIBUTES
-   * 
-   */
-
-  let attributes = target.attributes;
-  Object.assign(attributes, utils.transformBasicProperties(source));
-
-  attributes.minAltitude = source.AltitudeLowestPoint || null;
-  attributes.maxAltitude = source.AltitudeHighestPoint || null;
-
-  let categories = [];
-  source.SmgTags.forEach(tag => 
-    categories.push("odh/"+ tag.replace(/[\/|\s]/g,'-').toLowerCase())
+  utils.processMultimediaDescriptionsRelationship(
+    source,
+    target,
+    included,
+    request
   );
 
-  if(categories.length>0)
-    attributes.categories = categories;
+  return target;
+}
 
-  const difficultyMapping = {
-    '2': 'beginner',
-    '4': 'intermediate',
-    '6': 'advanced'
-  }
-  attributes.difficulty = difficultyMapping[source.Difficulty];
+function transformSnowparkV2(originalObject, included = {}, request) {
+  const source = JSON.parse(JSON.stringify(originalObject));
+  let target = templates.createObject("Snowpark", '2.0');
 
-  attributes.length = source.DistanceLength > 0 ? source.DistanceLength : null;
+  target.id = source.Id;
 
-  attributes.howToArrive = utils.transformHowToArrive(source.Detail);
+  utils.processMeta(source, target, request);
+  utils.processLinks(target, request);
+  utils.processBasicAttributes(source, target);
 
-  attributes.openingHours = utils.transformOperationSchedule(source.OperationSchedule);
+  utils.processAddressAttribute(source, target);
+  processDifficultyAttribute(source, target);
+  utils.processGeometriesAttribute(source, target);
+  utils.processHowToArriveAttribute(source, target);
+  utils.processLengthAttribute(source, target);
+  utils.processMinAltitudeAttribute(source, target);
+  utils.processMaxAltitudeAttribute(source, target);
+  utils.processOpeningHoursAttribute(source, target);
 
-  attributes.address = utils.transformAddress(source.ContactInfos, ['city','country','zipcode']);
-
-  const geometry = utils.transformGeometry(source.GpsInfo, ['Startpunkt', 'Endpunkt'], source.GpsPoints, source.GpsTrack);
-  if(geometry) 
-    attributes.geometries = [geometry];
-
-  /**
-   * 
-   *  RELATIONSHIPS
-   * 
-   */
-
-  let relationships = target.relationships;
-
-  for (image of source.ImageGallery){
-    const { mediaObject, copyrightOwner } = transformMediaObject(image, links, request);
-    utils.addRelationshipToMany(relationships, 'multimediaDescriptions', mediaObject, links.self);
-    utils.addIncludedResource(included, mediaObject);
-    utils.addIncludedResource(included, copyrightOwner);
-  }
+  utils.processCategoriesRelationshipFromActivitiesV2(
+    source,
+    target,
+    included,
+    request
+  );
+  utils.processMultimediaDescriptionsRelationship(
+    source,
+    target,
+    included,
+    request
+  );
 
   return target;
+}
+
+function processDifficultyAttribute(source, target) {
+  const { attributes } = target;
+  const difficultyMapping = {
+    2: "beginner",
+    4: "intermediate",
+    6: "advanced",
+  };
+  attributes.difficulty = difficultyMapping[source.Difficulty];
+}
+
+function processCategoriesRelationshipFromActivitiesV2(
+  source,
+  target,
+  included,
+  request
+) {
+  const { relationships, links } = target;
+  const getCategoryReference = (categoryId) => {
+    return categoryId ? { type: "categories", id: categoryId } : null;
+  };
+
+  let mappedCategories = [
+    mappings.activityTypeIdToODHCategories[source.Type],
+    mappings.activityTypeIdToODHCategories[source.SubType],
+    mappings.activityTypeIdToAlpineBitsCategories[source.SubType],
+  ];
+
+  if (Array.isArray(source.SmgTags)) {
+    source.SmgTags.forEach((tag) => {
+      mappedCategories.push(mappings.activitySmgTagToODHCategories[tag]);
+      mappedCategories.push(mappings.activitySmgTagToAlpineBitsCategories[tag]);
+    });
+  }
+
+  mappedCategories
+    .reduce((categories, mappedCategory) => {
+      if (
+        !!mappedCategory &&
+        !categories.find((category) => category.id === mappedCategory)
+      ) {
+        categories.push(getCategoryReference(mappedCategory));
+      }
+
+      return categories;
+    }, [])
+    .forEach((category) => {
+      addRelationshipToMany(relationships, "categories", category, links.self);
+    });
+}
+
+function processMultimediaDescriptionsRelationship(
+  source,
+  target,
+  included,
+  request
+) {
+  const { relationships, links } = target;
+  for (image of source.ImageGallery) {
+    const { mediaObject, copyrightOwner } = transformMediaObject(
+      image,
+      links,
+      request
+    );
+    addRelationshipToMany(
+      relationships,
+      "multimediaDescriptions",
+      mediaObject,
+      links.self
+    );
+    addIncludedResource(included, mediaObject);
+    addIncludedResource(included, copyrightOwner);
+  }
 }

@@ -84,12 +84,12 @@ function urlQueriesToString(request, queryName) {
 }
 
 function getResourceTypeFromPath(request) {
-  const regex = /\/1\.0\/\w+/;
+  const regex = /\/\d+\.\d+\/\w+/;
   const { path } = request;
   let resourceType = path.match(regex);
 
   if(resourceType && resourceType.length === 1) {
-    resourceType = resourceType[0].replace("/1.0/","");
+    resourceType = resourceType[0].replace(/\/\d+\.\d+\//,"");
   } else {
     throw new Error("Unable to extract resource type from path")
   }
@@ -118,9 +118,13 @@ function validatePageQuery(request) {
 }
 
 function validateIncludeQuery(request) {
+  // console.log(request);
+  // console.log(templates);
+  console.log(getApiVersion(request));
+  console.log(getApiVersion(templates[getApiVersion(request)]));
   const { include } = request.query;
   const resourceType = getResourceTypeFromPath(request);
-  const relationships = templates[resourceType].relationships;
+  const relationships = templates[getApiVersion(request)][resourceType].relationships;
 
   validateQueryParameterWithSchema(request, schemas.include, "include");
 
@@ -267,8 +271,8 @@ function validateFieldsQuery(request) {
   validateQueryParameterWithSchema(request, schemas.fields, 'fields');
   
   for (const resourceType of Object.keys(fields)) {
-    const attributes = templates[resourceType].attributes;
-    const relationships = templates[resourceType].relationships;
+    const attributes = templates[getApiVersion(request)][resourceType].attributes;
+    const relationships = templates[getApiVersion(request)][resourceType].relationships;
 
     for (const fieldName of fields[resourceType].split(',')) {
       if(attributes[fieldName] !== null && relationships[fieldName] !== null) {
@@ -281,8 +285,17 @@ function validateFieldsQuery(request) {
   }
 }
 
+function getApiVersion(req) {
+  const urlRegex = /\/\d+\.\d+\/?/;
+  const versionRegex = /\d+\.\d+/;
+  const apiVersionInUrl = urlRegex.test(req.originalUrl) ? req.originalUrl.match(urlRegex)[0] : '';
+  const apiVersion = versionRegex.test(apiVersionInUrl) ? apiVersionInUrl.match(versionRegex)[0] : '';
+  return apiVersion;
+}
+
 function getBaseUrl(req) {
-  return process.env.REF_SERVER_URL + "/1.0";
+  const apiVersion = getApiVersion(req);
+  return process.env.REF_SERVER_URL + (apiVersion ? `/${apiVersion}` : '');
 }
 
 function getSelfUrl(req) {
@@ -291,6 +304,7 @@ function getSelfUrl(req) {
 
 function createRequest(req) {
   return {
+    apiVersion: getApiVersion(req),
     baseUrl: getBaseUrl(req),
     selfUrl: getSelfUrl(req),
     params: req.params,
@@ -374,7 +388,7 @@ function parseSearch(req) {
 
 function parseResourceRequest(req) {
   validateResourceRequestQueries(req);
-
+  
   let parsedRequest = createRequest(req);
 
   parsedRequest.query.fields = parseFields(req);
@@ -385,7 +399,7 @@ function parseResourceRequest(req) {
 
 function parseCollectionRequest(req) {
   validateCollectionRequestQueries(req);
-
+  
   let parsedRequest = createRequest(req);
 
   parsedRequest.query.page = parsePage(req);

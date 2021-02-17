@@ -7,7 +7,8 @@ function getBaseResponse(request, response) {
     data: null,
     links: {
       self: SERVER_URL,
-      "1.0":  SERVER_URL+"/1.0"
+      "1.0":  SERVER_URL+"/1.0",
+      "2.0":  SERVER_URL+"/2.0",
     }
   };
 
@@ -36,7 +37,31 @@ function getVersion1Response(request, response) {
   response.json(data);
 }
 
+function getVersion2Response(request, response) {
+  let data = {
+    data: null,
+    links: {
+      self: SERVER_URL+'/2.0',
+      categories: SERVER_URL+'/2.0/categories',
+      events: SERVER_URL+'/2.0/events',
+      features: SERVER_URL+'/2.0/features',
+      // eventSeries: SERVER_URL+'/2.0/eventSeries',
+      lifts: SERVER_URL+'/2.0/lifts',
+      mountainAreas: SERVER_URL+'/2.0/mountainAreas',
+      snowparks: SERVER_URL+'/2.0/snowparks',
+      trails: SERVER_URL+'/2.0/trails',
+      // agents: SERVER_URL+'/2.0/agents',
+      // mediaObjects: SERVER_URL+'/2.0/mediaObjects',
+      // venues: SERVER_URL+'/2.0/venues'
+    }
+  };
+
+  response.status(200);
+  response.json(data);
+}
+
 module.exports = function(app) {
   app.get('/', getBaseResponse);
   app.get('/1.0', getVersion1Response);
+  app.get('/2.0', getVersion2Response);
 }

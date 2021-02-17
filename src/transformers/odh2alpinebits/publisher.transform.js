@@ -12,7 +12,7 @@ function transformPublisherRelationship(sourceEvent, included, request) {
 }
 
 function transformPublisher(originalObject, included, request) {
-  let publisher = templates.createObject('Agent');
+  let publisher = templates.createObject('Agent', request.apiVersion);
   
   publisher.id = shajs('sha256').update('lts').digest('hex'),
   publisher.attributes.name = {

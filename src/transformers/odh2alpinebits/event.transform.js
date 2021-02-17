@@ -1,4 +1,3 @@
-const shajs = require('sha.js')
 const utils = require('./utils');
 const templates = require('./templates');
 const { transformOrganizer } = require('./organizer.transform');
@@ -10,142 +9,162 @@ const mappings = require('./mappings')
 require('custom-env').env();
 
 module.exports = (originalObject, included = {}, request) => {
+  const { apiVersion } = request;
+
+  if(!apiVersion || apiVersion === '1.0') {
+    return transformEventV1(originalObject, included, request)
+  } else if(apiVersion === '2.0') {
+    return transformEventV2(originalObject, included, request)
+  } else {
+    throw new Error(`Unexpected value for 'apiVersion': ${apiVersion}`)
+  }
+}
+
+function transformEventV1(originalObject, included = {}, request) {
   const sourceEvent = JSON.parse(JSON.stringify(originalObject));
-  let target = templates.createObject('Event');
+  const target = templates.createObject('Event');
 
   target.id = sourceEvent.Id;
 
-  let meta = target.meta;
-  Object.assign(meta, utils.transformMetadata(sourceEvent));
+  utils.processMeta(sourceEvent, target, request);
+  utils.processLinks(target, request);
 
-  let links = target.links;
-  Object.assign(links, utils.createSelfLink(target, request));
-  
-  /**
-   * 
-   *  ATTRIBUTES
-   * 
-   */
+  processDatesAttributes(sourceEvent,target);
+  utils.processBasicAttributes(sourceEvent,target);
+  processPublishedAttribute(target);
+  processCategoriesAttributeV1(sourceEvent,target);
 
-  let attributes = target.attributes;
-  Object.assign(attributes, utils.transformBasicProperties(sourceEvent));
+  processVenuesRelationship(sourceEvent,target,included,request);
+  processOrganizersRelationship(sourceEvent,target,included,request);
+  processPublisherRelationship(sourceEvent,target,included,request);
+  processMultimediaDescriptionsRelationship(sourceEvent,target,included,request);
+
+  return target;
+}
+
+function transformEventV2(originalObject, included = {}, request) {
+  const sourceEvent = JSON.parse(JSON.stringify(originalObject));
+  const target = templates.createObject('Event', '2.0');
+
+  target.id = sourceEvent.Id;
+
+  utils.processMeta(sourceEvent, target, request);
+  utils.processLinks(target, request);
+
+  processDatesAttributes(sourceEvent,target);
+  utils.processBasicAttributes(sourceEvent,target);
+  processPublishedAttribute(target);
+
+  processVenuesRelationship(sourceEvent,target,included,request);
+  processOrganizersRelationship(sourceEvent,target,included,request);
+  processPublisherRelationship(sourceEvent,target,included,request);
+  processMultimediaDescriptionsRelationship(sourceEvent,target,included,request);
+  processCategoriesRelationshipV2(sourceEvent,target,included,request);
+
+  return target;
+}
+
+function processDatesAttributes(sourceEvent,target) {
+  const { attributes } = target;
   Object.assign(attributes, transformDates(sourceEvent));
+}
 
-  attributes.status = 'published';
+function processPublishedAttribute(target) {
+  const { attributes } = target;
+  attributes.status = 'published'
+}
 
-  // if(sourceEvent.Topics && sourceEvent.Topics.length>0){
-  //   for (const topic of source.Topics) {
-      
-  //   }
+function processCategoriesAttributeV1(sourceEvent,target) {
+  const {attributes} = target;
 
-  //   // Event categories
-  //   const categoryMapping = {
-  //     'Gastronomie/Typische Produkte': 'schema/FoodEvent',
-  //     'Musik/Tanz': 'schema/MusicEvent',
-  //     'Volksfeste/Festivals': 'schema/Festival',
-  //     'Sport': 'schema/SportsEvent',
-  //     'Führungen/Besichtigungen': null,
-  //     'Theater/Vorführungen': 'schema/TheaterEvent',
-  //     'Kurse/Bildung': 'schema/EducationEvent',
-  //     'Tagungen Vorträge': 'schema/BusinessEvent',
-  //     'Familie': 'schema/ChildrensEvent',
-  //     'Handwerk/Brauchtum': null,
-  //     'Messen/Märkte': null,
-  //     'Wanderungen/Ausflüge': null,
-  //     'Ausstellungen/Kunst': 'schema/VisualArts',
-  //   }
-    
-  //   let schemaCategories = [];
-  //   let odhCategories = [];
+  if(!Array.isArray(sourceEvent.Topics) || sourceEvent.Topics.length === 0)
+    return ;
 
-  //   sourceEvent.Topics.forEach(topic => {
-  //     if(!topic || !topic.TopicInfo)
-  //       return;
+  let categories = [];
 
-  //     let type = topic.TopicInfo;
-      
-  //     if(categoryMapping[type])
-  //       schemaCategories.push(categoryMapping[type]);
-      
-  //     let odhCategory = "odh/" + type
-  //                         .replace(/[\/|\s]/g,'-')
-  //                         .replace(/ö/g, 'o')
-  //                         .replace(/ä/g, 'a')
-  //                         .toLowerCase();
+  sourceEvent.Topics.forEach(topic => {
+    let odhCategory = mappings.eventTopicIdToODHCategories[topic.TopicRID];
+    let schemaOrgCategory = mappings.eventTopicIdToAlpineBitsCategories[topic.TopicRID];
 
-  //     odhCategories.push(odhCategory);
-  //   })
+    if(odhCategory)
+      categories.push(odhCategory);
+    if(schemaOrgCategory)
+      categories.push(schemaOrgCategory);
+  })
 
-  //   let categories = schemaCategories.concat(odhCategories);
+  attributes.categories = categories.length > 0 ? categories : null;
+}
 
-  //   if(categories.length>0)
-  //     attributes.categories = categories;
-  // }
-
-  /**
-   * 
-   *  RELATIONSHIPS
-   * 
-   */
-
-  let relationships = target.relationships;
-  
-  // Venue
-  let venue = transformVenue(sourceEvent, included, request);
-  utils.addRelationshipToMany(relationships, 'venues', venue, links.self);
-  utils.addIncludedResource(included, venue);
-  
-  
-  // Organizer
-  let organizer = transformOrganizer(sourceEvent, included, request)
-  utils.addRelationshipToMany(relationships, 'organizers', organizer, links.self);
-  utils.addIncludedResource(included, organizer);
-
-  // Publisher
-  let publisher = transformPublisher(sourceEvent, included, request);
-  utils.addRelationshipToOne(relationships, 'publisher', publisher, links.self);
-  utils.addIncludedResource(included, publisher);
-
-  // Media Objects
+function processMultimediaDescriptionsRelationship(sourceEvent,target,included,request) {
+  const { relationships, links } = target;
   for (image of sourceEvent.ImageGallery){
     const { mediaObject, copyrightOwner } = transformMediaObject(image, links, request);
     utils.addRelationshipToMany(relationships, 'multimediaDescriptions', mediaObject, links.self);
     utils.addIncludedResource(included, mediaObject);
     utils.addIncludedResource(included, copyrightOwner);
   }
+}
 
-  // Categories
-  if(sourceEvent.Topics && sourceEvent.Topics.length>0){
-    let categories = target.relationships.categories;
+function processPublisherRelationship(sourceEvent,target,included,request) {
+  const { relationships, links } = target;
+  let publisher = transformPublisher(sourceEvent, included, request);
+  utils.addRelationshipToOne(relationships, 'publisher', publisher, links.self);
+  utils.addIncludedResource(included, publisher);
+}
 
-    for (const topic of sourceEvent.Topics) {
-      if(!categories) {
-        categories = (target.relationships.categories = {
-          data: [],
-          links: {
-            related: target.links.self + `/categories`
-          }
-        })
-      }
+function processOrganizersRelationship(sourceEvent,target,included,request) {
+  const { relationships, links } = target;
+  const organizer = transformOrganizer(sourceEvent, included, request)
+  utils.addRelationshipToMany(relationships, 'organizers', organizer, links.self);
+  utils.addIncludedResource(included, organizer);
+}
 
-      const getCategoryReference = categoryId => { 
-        return { type: "categories", id: categoryId } 
-      }
-      let reference;
+function processVenuesRelationship(sourceEvent,target,included,request) {
+  const { relationships, links } = target;
+  const venue = transformVenue(sourceEvent, included, request);
+  utils.addRelationshipToMany(relationships, 'venues', venue, links.self);
+  utils.addIncludedResource(included, venue);
+}
 
-      if(mappings.eventTopicIdToODHCategories[topic.TopicRID]) {
-        reference = getCategoryReference(mappings.eventTopicIdToODHCategories[topic.TopicRID])
-        utils.addRelationshipToMany(relationships, 'categories', reference, links.self);
-      }
-      if(mappings.eventTopicIdToAlpineBitsCategories[topic.TopicRID]) {
-        reference = getCategoryReference(mappings.eventTopicIdToAlpineBitsCategories[topic.TopicRID])
-        utils.addRelationshipToMany(relationships, 'categories', reference, links.self);
-      }
-      // TODO: Enable include categories
-    }
+function processCategoriesRelationshipV2(sourceEvent, target, included, request) {
+  const { relationships, links } = target;
+
+  if (!Array.isArray(sourceEvent.Topics) || sourceEvent.Topics.length < 1) return;
+
+  for (const topic of sourceEvent.Topics) {
+    const getCategoryReference = (categoryId) => {
+      return categoryId ? { type: "categories", id: categoryId } : null;
+    };
+
+    const odhCategoryReference = getCategoryReference(mappings.eventTopicIdToODHCategories[topic.TopicRID]);
+    const schemaOrgCategoryReference = getCategoryReference(
+      mappings.eventTopicIdToAlpineBitsCategories[topic.TopicRID]
+    );
+
+    if (odhCategoryReference)
+      utils.addRelationshipToMany(relationships, "categories", odhCategoryReference, links.self);
+
+    if (schemaOrgCategoryReference)
+      utils.addRelationshipToMany(relationships, "categories", schemaOrgCategoryReference, links.self);
+
+    // TODO: Enable include categories
   }
+}
 
-  return target;
+function processVenuesRelationship(sourceEvent,target,included,request) {
+  const { relationships, links } = target;
+  const venue = transformVenue(sourceEvent, included, request);
+  utils.addRelationshipToMany(relationships, 'venues', venue, links.self);
+  utils.addIncludedResource(included, venue);
+}
+
+function processFeaturesRelationshipV2(
+  sourceEvent,
+  target,
+  included,
+  request
+) {
+  // TODO: Enable features relationship
 }
 
 function transformDates(sourceEvent) {

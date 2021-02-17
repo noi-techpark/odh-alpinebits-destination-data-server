@@ -58,91 +58,146 @@ IGNORED:
 
 */
 
-const utils = require('./utils');
-const templates = require('./templates');
-const { transformMediaObject } = require('./media-object.transform');
+const utils = require("./utils");
+const templates = require("./templates");
+const { transformMediaObject } = require("./media-object.transform");
+const mappings = require("./mappings");
 
 module.exports = (originalObject, included = {}, request) => {
+  const { apiVersion } = request;
+
+  if (!apiVersion || apiVersion === "1.0") {
+    return transformTrailV1(originalObject, included, request);
+  } else if (apiVersion === "2.0") {
+    return transformTrailV2(originalObject, included, request);
+  } else {
+    throw new Error(`Unexpected value for 'apiVersion': ${apiVersion}`);
+  }
+};
+
+function transformTrailV1(originalObject, included = {}, request) {
   const source = JSON.parse(JSON.stringify(originalObject));
-  let target = templates.createObject('Trail');
+  let target = templates.createObject("Trail");
 
   target.id = source.Id;
 
-  let meta = target.meta;
-  Object.assign(meta, utils.transformMetadata(source));
+  utils.processMeta(source, target, request);
+  utils.processLinks(target, request);
+  utils.processBasicAttributes(source, target);
 
-  let links = target.links;
-  Object.assign(links, utils.createSelfLink(target, request));
+  utils.processAddressAttribute(source, target);
+  utils.processCategoriesAttributeFromActivitiesV1(source, target);
+  processDifficultyAttribute(source, target);
+  utils.processGeometriesAttribute(source, target);
+  utils.processHowToArriveAttribute(source, target);
+  utils.processLengthAttribute(source, target);
+  utils.processMinAltitudeAttribute(source, target);
+  utils.processMaxAltitudeAttribute(source, target);
+  utils.processOpeningHoursAttribute(source, target);
 
-   /**
-   * 
-   *  ATTRIBUTES
-   * 
-   */
+  processMultimediaDescriptionsRelationship(source, target, included, request);
 
-  let attributes = target.attributes;
-  Object.assign(attributes, utils.transformBasicProperties(source));
+  return target;
+}
 
-  const categoryMapping = {
-    'ski alpin': 'alpinebits/ski-slope',
-    'ski alpin (rundkurs)': 'alpinebits/ski-slope',
-    'rodelbahnen': 'alpinebits/sledge-slope',
-    'loipen': 'alpinebits/cross-country',
-  };
+function transformTrailV2(originalObject, included = {}, request) {
+  const source = JSON.parse(JSON.stringify(originalObject));
+  let target = templates.createObject("Trail", '2.0');
 
-  let schemaCategories = [];
-  let odhCategories = [];
-  
-  source.SmgTags.forEach(tag => {
-    if(categoryMapping[tag])
-      schemaCategories.push(categoryMapping[tag]);
-    
-    odhCategories.push("odh/"+ tag.replace(/[\/|\s]/g,'-').toLowerCase());
-  })
-  
-  let categories = schemaCategories.concat(odhCategories);
+  target.id = source.Id;
 
-  if(categories.length>0)
-    attributes.categories = categories;
+  utils.processMeta(source, target, request);
+  utils.processLinks(target, request);
+  utils.processBasicAttributes(source, target);
 
-  attributes.length = source.DistanceLength > 0 ? source.DistanceLength : null;
+  utils.processAddressAttribute(source, target);
+  processDifficultyAttribute(source, target);
+  utils.processGeometriesAttribute(source, target);
+  utils.processHowToArriveAttribute(source, target);
+  utils.processLengthAttribute(source, target);
+  utils.processMinAltitudeAttribute(source, target);
+  utils.processMaxAltitudeAttribute(source, target);
+  utils.processOpeningHoursAttribute(source, target);
 
-  attributes.minAltitude = source.AltitudeLowestPoint || null;
-  attributes.maxAltitude = source.AltitudeHighestPoint || null;
+  processCategoriesRelationshipV2(source, target, included, request);
+  processMultimediaDescriptionsRelationship(source, target, included, request);
 
+  return target;
+}
+
+function processDifficultyAttribute(source, target) {
+  const { attributes } = target;
   const difficultyMapping = {
-    '2': 'beginner',
-    '4': 'intermediate',
-    '6': 'expert'
-  }
+    2: "beginner",
+    4: "intermediate",
+    6: "expert",
+  };
   attributes.difficulty = {
-    'eu': difficultyMapping[source.Difficulty]
+    eu: difficultyMapping[source.Difficulty],
+  };
+}
+
+function processCategoriesRelationshipV2(source, target, included, request) {
+  const { relationships, links } = target;
+  const getCategoryReference = (categoryId) => {
+    return categoryId ? { type: "categories", id: categoryId } : null;
   };
 
-  const geometry = utils.transformGeometry(source.GpsInfo, ['Startpunkt', 'Endpunkt'], source.GpsPoints, source.GpsTrack);
-  if(geometry) 
-    attributes.geometries = [geometry];
+  let mappedCategories = [
+    mappings.activityTypeIdToODHCategories[source.Type],
+    mappings.activityTypeIdToODHCategories[source.SubType],
+    mappings.activityTypeIdToAlpineBitsCategories[source.SubType],
+  ];
 
-  attributes.openingHours = utils.transformOperationSchedule(source.OperationSchedule);
+  if (Array.isArray(source.SmgTags)) {
+    source.SmgTags.forEach((tag) => {
+      mappedCategories.push(mappings.activitySmgTagToODHCategories[tag]);
+      mappedCategories.push(mappings.activitySmgTagToAlpineBitsCategories[tag]);
+    });
+  }
 
-  attributes.address = utils.transformAddress(source.ContactInfos, ['city','country','zipcode']);
+  mappedCategories = mappedCategories.reduce((categories, mappedCategory) => {
+    if (
+      !!mappedCategory &&
+      !categories.find((category) => category.id === mappedCategory)
+    ) {
+      categories.push(getCategoryReference(mappedCategory));
+    }
 
-  attributes.howToArrive = utils.transformHowToArrive(source.Detail);
+    return categories;
+  }, []);
 
-  /**
-   * 
-   *  RELATIONSHIPS
-   * 
-   */
+  console.log("mappedCategories after reduce", mappedCategories);
+  mappedCategories.forEach((category) => {
+    utils.addRelationshipToMany(
+      relationships,
+      "categories",
+      category,
+      links.self
+    );
+  });
+}
 
-  let relationships = target.relationships;
-
-  for (image of source.ImageGallery){
-    const { mediaObject, copyrightOwner } = transformMediaObject(image, links, request);
-    utils.addRelationshipToMany(relationships, 'multimediaDescriptions', mediaObject, links.self);
+function processMultimediaDescriptionsRelationship(
+  source,
+  target,
+  included,
+  request
+) {
+  const { relationships, links } = target;
+  for (image of source.ImageGallery) {
+    const { mediaObject, copyrightOwner } = transformMediaObject(
+      image,
+      links,
+      request
+    );
+    utils.addRelationshipToMany(
+      relationships,
+      "multimediaDescriptions",
+      mediaObject,
+      links.self
+    );
     utils.addIncludedResource(included, mediaObject);
     utils.addIncludedResource(included, copyrightOwner);
   }
-
-  return target;
 }

@@ -13,7 +13,7 @@ function transformVenuesRelationship(sourceEvent, included, request) {
 }
 
 function transformVenue(sourceEvent, included, request) {
-  let venue = templates.createObject('Venue');
+  let venue = templates.createObject('Venue', request.apiVersion);
   venue.id = sourceEvent.Id+'+location';
   
   let links = venue.links;

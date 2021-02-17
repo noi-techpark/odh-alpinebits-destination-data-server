@@ -10,7 +10,7 @@ const transformTrail = require('./trail.transform');
 const transformSnowpark = require('./snowpark.transform');
 const { transformAreaMultimedDescriptionsRelationship, transformMountainArea, transformAreaOwnerRelationship } = require('./mountainarea.transform');
 const transformEventSeries = require('./event-series.transform');
-const { transformCategory, transformCategoryArray } = require('./category.transform');
+const { transformCategory } = require('./category.transform');
 
 function transformArray(odhData, request, transformFn) {
   let data = [];
@@ -229,6 +229,8 @@ module.exports = {
   transformAreaMultimedDescriptionsRelationship: (odhData, request) => transformObject(odhData, request, transformAreaMultimedDescriptionsRelationship),
   transformMultimediaDescriptionsRelationship: (odhData, request) => transformObject(odhData, request, transformMultimediaDescriptionsRelationship),
   transformMockMultimediaDescriptionsRelationship: (odhData, request) => transformObject(odhData, request, transformMockMultimediaDescriptionsRelationship),
-  transformCategoryArray,
-  transformCategory,
+  // transformCategoryArray,
+  // transformCategory,
+  transformCategoryArray: (data, request) => transformArray(data, request, transformCategory),
+  transformCategory: (data, request) => transformObject(data, request, transformCategory),
 }

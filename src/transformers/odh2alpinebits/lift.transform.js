@@ -61,87 +61,135 @@ IGNORED:
   * GpsTrack
 */
 
-const utils = require('./utils');
-const templates = require('./templates');
-const { transformMediaObject } = require('./media-object.transform');
+const utils = require("./utils");
+const templates = require("./templates");
+const { transformMediaObject } = require("./media-object.transform");
+const mappings = require("./mappings");
 
 module.exports = (originalObject, included = {}, request) => {
+  const { apiVersion } = request;
+
+  if (!apiVersion || apiVersion === "1.0") {
+    return transformLiftV1(originalObject, included, request);
+  } else if (apiVersion === "2.0") {
+    return transformLiftV2(originalObject, included, request);
+  } else {
+    throw new Error(`Unexpected value for 'apiVersion': ${apiVersion}`);
+  }
+};
+
+function transformLiftV1(originalObject, included = {}, request) {
   const source = JSON.parse(JSON.stringify(originalObject));
-  let target = templates.createObject('Lift');
+  const target = templates.createObject("Lift", "1.0");
 
   target.id = source.Id;
 
-  let meta = target.meta;
-  Object.assign(meta, utils.transformMetadata(source));
+  utils.processMeta(source, target, request);
+  utils.processLinks(target, request);
+  utils.processBasicAttributes(source, target);
 
-  let links = target.links;
-  Object.assign(links, utils.createSelfLink(target, request));
+  utils.processAddressAttribute(source, target);
+  utils.processCategoriesAttributeFromActivitiesV1(source, target);
+  utils.processGeometriesAttribute(source, target);
+  utils.processHowToArriveAttribute(source, target);
+  utils.processLengthAttribute(source, target);
+  utils.processOpeningHoursAttribute(source, target);
+  processPersonsPerChairAttribute(source, target);
 
-  /**
-   * 
-   *  ATTRIBUTES
-   * 
-   */
-  
-  let attributes = target.attributes;
-  Object.assign(attributes, utils.transformBasicProperties(source));
+  processMultimediaDescriptionsRelationship(source, target, included, request);
 
-  // Lift categories
-  const categoryMapping = {
-    'Sessellift': [ 'alpinebits/chairlift' ],
-    'Telemix': [ 'alpinebits/chairlift',],
-    'Kabinenbahn': [ 'alpinebits/gondola' ],
-    'Umlaufbahn': [ 'alpinebits/gondola' ],
-    'Skilift': [ 'alpinebits/skilift' ] ,
-    'Seilbahn': [ 'alpinebits/cablecar' ],
-    'Standseilbahn/Zahnradbahn': [ 'alpinebits/funicular' ],
-    'Schrägaufzug': [ 'alpinebits/funicular' ],
-    'Unterirdische Bahn': [ 'alpinebits/funicular' ],
-    'Förderband': [ 'alpinebits/magic-carpet' ],
-    'Skibus': [ 'alpinebits/skibus'],
-    'Zug': [ 'alpinebits/train'],
-    'no Subtype': null,
+  return target;
+}
+
+function transformLiftV2(originalObject, included = {}, request) {
+  const source = JSON.parse(JSON.stringify(originalObject));
+  const target = templates.createObject("Lift", "2.0");
+
+  target.id = source.Id;
+
+  utils.processMeta(source, target, request);
+  utils.processLinks(target, request);
+  utils.processBasicAttributes(source, target);
+
+  utils.processAddressAttribute(source, target);
+  utils.processGeometryAttribute(source, target);
+  utils.processHowToArriveAttribute(source, target);
+  utils.processLengthAttribute(source, target);
+  utils.processOpeningHoursAttribute(source, target);
+  processPersonsPerChairAttribute(source, target);
+
+  processMultimediaDescriptionsRelationship(source, target, included, request);
+  processCategoriesRelationshipV2(source, target, included, request);
+
+  return target;
+}
+
+function processPersonsPerChairAttribute(source, target) {
+  const { attributes } = target;
+  const ppc = parseInt(source.PoiType, 10);
+  attributes.personsPerChair = ppc ? ppc : null;
+}
+
+function processCategoriesRelationshipV2(source, target, included, request) {
+  const { relationships, links } = target;
+  const getCategoryReference = (categoryId) => {
+    return categoryId ? { type: "categories", id: categoryId } : null;
+  };
+
+  let mappedCategories = [
+    mappings.activityTypeIdToODHCategories[source.Type],
+    mappings.activityTypeIdToODHCategories[source.SubType],
+    mappings.activityTypeIdToAlpineBitsCategories[source.SubType],
+  ];
+
+  if (Array.isArray(source.SmgTags)) {
+    source.SmgTags.forEach((tag) => {
+      mappedCategories.push(mappings.activitySmgTagToODHCategories[tag]);
+      mappedCategories.push(mappings.activitySmgTagToAlpineBitsCategories[tag]);
+    });
   }
 
-  attributes.categories = categoryMapping[source.SubType];
+  mappedCategories
+    .reduce((categories, mappedCategory) => {
+      if (
+        !!mappedCategory &&
+        !categories.find((category) => category.id === mappedCategory)
+      ) {
+        categories.push(getCategoryReference(mappedCategory));
+      }
 
-  let odhCategory = "odh/" + source.SubType
-                      .replace(/[\s\/]/g, '-')
-                      .replace(/ö/g, 'o')
-                      .replace(/ä/g, 'a')
-                      .toLowerCase();
+      return categories;
+    }, [])
+    .forEach((category) => {
+      utils.addRelationshipToMany(
+        relationships,
+        "categories",
+        category,
+        links.self
+      );
+    });
+}
 
-  attributes.categories.push(odhCategory);
-
-  attributes.length = source.DistanceLength>0 ? source.DistanceLength : null;
-
-  attributes.howToArrive = utils.transformHowToArrive(source.Detail);
-  
-  let ppc = parseInt(source.PoiType, 10);
-  attributes.personsPerChair =  ppc ? ppc : null;
-
-  attributes.openingHours = utils.transformOperationSchedule(source.OperationSchedule);
-
-  attributes.address = utils.transformAddress(source.ContactInfos, ['city','country','zipcode']);
-
-  const geometry = utils.transformGeometry(source.GpsInfo, ['Talstation','Mittelstation','Bergstation'], source.GpsPoints, source.GpsTrack);
-  if(geometry) 
-    attributes.geometries = [ geometry ];
-
-  /**
-   * 
-   *  RELATIONSHIPS
-   * 
-   */
-
-  let relationships = target.relationships;
-
-  for (image of source.ImageGallery){
-    const { mediaObject, copyrightOwner } = transformMediaObject(image, links, request);
-    utils.addRelationshipToMany(relationships, 'multimediaDescriptions', mediaObject, links.self);
+function processMultimediaDescriptionsRelationship(
+  source,
+  target,
+  included,
+  request
+) {
+  const { relationships, links } = target;
+  for (image of source.ImageGallery) {
+    const { mediaObject, copyrightOwner } = transformMediaObject(
+      image,
+      links,
+      request
+    );
+    utils.addRelationshipToMany(
+      relationships,
+      "multimediaDescriptions",
+      mediaObject,
+      links.self
+    );
     utils.addIncludedResource(included, mediaObject);
     utils.addIncludedResource(included, copyrightOwner);
   }
-
-  return target;
 }

@@ -6,9 +6,8 @@ const { getTrailFilterQuery } = require('./filters/trail-filters');
 const odh2ab = require ('../transformers/odh2alpinebits');
 const errors = require ('../errors');
 const { handleError } = require('../errors');
+const sourceCategories = require('../../data/categories.data');
 require('custom-env').env();
-
-const mappings = require('./../transformers/odh2alpinebits/mappings');
 
 const EVENT_PATH = 'Event';
 const ACTIVITY_PATH = 'Activity';
@@ -336,82 +335,91 @@ function fetchMountainAreaIndependentRelationship(request, relationship, transfo
   return fetch(path, request, transformFn);
 }
 
+// async function fetchCategories(request, transformArray) {
+//   // fetch event topics from ODH
+//   const instance = axios.create(axiosOpts);
+//   let res;
+
+//   try {
+//     console.log(`\n> Fetching event topics(s) from ${process.env.ODH_BASE_URL}...`);
+//     let eventTopicsPath = 'EventTopics';
+//     res = await instance.get(eventTopicsPath)
+
+//     if(typeof res.data === 'string') {
+//       res.data = JSON.parse(res.data);
+//     }
+//   }
+//   catch(error) {
+//     handleConnectionError(error);
+//   }
+
+//   if((!res.data) || (res.status!==200)) {
+//     console.log('ERROR: Resource not found!');
+//     throw errors.notFound;
+//   } else {
+//     console.log('OK: categories data received from ODH API');
+//   }
+
+//   // transform data and filter out those without a category mapping
+//   res.data = odh2ab.transformCategoryArray(res.data,request)
+
+//   return res.data
+// }
+
+// async function fetchCategory(request/*, odh2ab.transformCategory*/) {
+//   // fetch event topics from ODH
+//   const instance = axios.create(axiosOpts);
+//   let res;
+
+//   try {
+//     console.log(`\n> Fetching event topic from ${process.env.ODH_BASE_URL}...`);
+//     let eventTopicsPath = 'EventTopics';
+//     let regex = /(odh|schema)+\:\w(\w|-)*/;
+//     let topicId = mappings.eventCategoryToTopicId[request.selfUrl.match(regex)[0]];
+//     // let activityTypesPath = 'ActivityTypes';
+//     // [ areaRes, regionRes] = await Promise.all([instance.get(eventTopicsPath), instance.get(activityTypesPath)]); // TODO: insert filters here
+//     console.log('Making request to: ', `${eventTopicsPath}/${topicId}`, topicId, request.selfUrl);
+//     res = await instance.get(`${eventTopicsPath}/${topicId}`)
+
+//     if(typeof res.data === 'string') {
+//       res.data = JSON.parse(res.data);
+//     }
+//   }
+//   catch(error) {
+//     handleConnectionError(error);
+//   }
+
+//   if((!res.data) || (res.status!==200)) {
+//     console.log('ERROR: Resource not found!');
+//     throw errors.notFound;
+//   } else {
+//     console.log('OK: categories data received from ODH API');
+//   }
+
+//   // transform data and filter out those without a category mapping
+
+//   res.data = odh2ab.transformCategory(res.data,request)
+
+//   // return data
+
+//   return res.data
+// }
+
 async function fetchCategories(request, transformArray) {
-  // fetch event topics from ODH
-  const instance = axios.create(axiosOpts);
-  let res;
-
-  try {
-    console.log(`\n> Fetching event topics(s) from ${process.env.ODH_BASE_URL}...`);
-    let eventTopicsPath = 'EventTopics';
-    // let activityTypesPath = 'ActivityTypes';
-    // [ areaRes, regionRes] = await Promise.all([instance.get(eventTopicsPath), instance.get(activityTypesPath)]); // TODO: insert filters here
-    res = await instance.get(eventTopicsPath)
-
-    if(typeof res.data === 'string') {
-      res.data = JSON.parse(res.data);
-    }
-  }
-  catch(error) {
-    handleConnectionError(error);
+  const data = {
+    Items: Object.values(sourceCategories),
   }
 
-  if((!res.data) || (res.status!==200)) {
-    console.log('ERROR: Resource not found!');
-    throw errors.notFound;
-  } else {
-    console.log('OK: categories data received from ODH API');
-  }
+  data.TotalResults = data.Items.length
+  data.CurrentPage = 1
+  data.TotalPages = 1
 
-  // transform data and filter out those without a category mapping
-
-  res.data = odh2ab.transformCategoryArray(res.data,request)
-
-  // return data
-
-  return res.data
+  return transformArray(data,request);
 }
 
-async function fetchCategory(request/*, odh2ab.transformCategory*/) {
-  // fetch event topics from ODH
-  const instance = axios.create(axiosOpts);
-  let res;
-
-  try {
-    console.log(`\n> Fetching event topic from ${process.env.ODH_BASE_URL}...`);
-    let eventTopicsPath = 'EventTopics';
-    let regex = /(odh|schema)+\:\w(\w|-)*/;
-    let topicId = mappings.eventCategoryToTopicId[request.selfUrl.match(regex)[0]];
-    // let activityTypesPath = 'ActivityTypes';
-    // [ areaRes, regionRes] = await Promise.all([instance.get(eventTopicsPath), instance.get(activityTypesPath)]); // TODO: insert filters here
-    console.log('Making request to: ', `${eventTopicsPath}/${topicId}`, topicId, request.selfUrl);
-    res = await instance.get(`${eventTopicsPath}/${topicId}`)
-
-    if(typeof res.data === 'string') {
-      res.data = JSON.parse(res.data);
-    }
-  }
-  catch(error) {
-    handleConnectionError(error);
-  }
-
-  if((!res.data) || (res.status!==200)) {
-    console.log('ERROR: Resource not found!');
-    throw errors.notFound;
-  } else {
-    console.log('OK: categories data received from ODH API');
-  }
-
-  // transform data and filter out those without a category mapping
-
-  res.data = odh2ab.transformCategory(res.data,request)
-
-  // return data
-
-  return res.data
+async function fetchCategory(request, transformObject) {
+  return transformObject(sourceCategories[request.params.id],request);
 }
-
-
 
 function handleConnectionError(error) {
   console.log(error);

@@ -42,4 +42,49 @@ module.exports = function (app) {
       errors.handleError(error, req, res);
     }
   });
+
+  app.get("/2.0/lifts", function (req, res) {
+    try {
+      connector
+        .getLifts(parseCollectionRequest(req))
+        .then((data) => res.json(data))
+        .catch((error) => errors.handleError(error, req, res));
+    } catch (error) {
+      errors.handleError(error, req, res);
+    }
+  });
+
+  app.get("/2.0/lifts/:id", function (req, res) {
+    try {
+      connector
+        .getLiftById(parseResourceRequest(req))
+        .then((data) => res.json(data))
+        .catch((error) => errors.handleError(error, req, res));
+    } catch (error) {
+      errors.handleError(error, req, res);
+    }
+  });
+
+  app.get("/2.0/lifts/:id/categories", function (req, res) {
+    errors.handleNotImplemented(req, res);
+  });
+
+  app.get("/2.0/lifts/:id/connections", function (req, res) {
+    errors.handleNotImplemented(req, res);
+  });
+
+  app.get("/2.0/lifts/:id/features", function (req, res) {
+    errors.handleNotImplemented(req, res);
+  });
+
+  app.get("/2.0/lifts/:id/multimediaDescriptions", function (req, res) {
+    try {
+      connector
+        .getLiftMedia(parseResourceRequest(req))
+        .then((data) => res.json(data))
+        .catch((error) => errors.handleError(error, req, res));
+    } catch (error) {
+      errors.handleError(error, req, res);
+    }
+  });
 };
