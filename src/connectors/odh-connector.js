@@ -7,6 +7,7 @@ const odh2ab = require ('../transformers/odh2alpinebits');
 const errors = require ('../errors');
 const { handleError } = require('../errors');
 const sourceCategories = require('../../data/categories.data');
+const mappings = require('./../transformers/odh2alpinebits/mappings')
 require('custom-env').env();
 
 const EVENT_PATH = 'Event';

@@ -64,6 +64,7 @@ IGNORED:
 
 const utils = require("./utils");
 const templates = require("./templates");
+const mappings = require("./mappings");
 
 module.exports = (originalObject, included = {}, request) => {
   const { apiVersion } = request;
@@ -97,19 +98,14 @@ function transformSnowparkV1(originalObject, included = {}, request) {
   utils.processMaxAltitudeAttribute(source, target);
   utils.processOpeningHoursAttribute(source, target);
 
-  utils.processMultimediaDescriptionsRelationship(
-    source,
-    target,
-    included,
-    request
-  );
+  processMultimediaDescriptionsRelationship(source, target, included, request);
 
   return target;
 }
 
 function transformSnowparkV2(originalObject, included = {}, request) {
   const source = JSON.parse(JSON.stringify(originalObject));
-  let target = templates.createObject("Snowpark", '2.0');
+  let target = templates.createObject("Snowpark", "2.0");
 
   target.id = source.Id;
 
@@ -126,18 +122,8 @@ function transformSnowparkV2(originalObject, included = {}, request) {
   utils.processMaxAltitudeAttribute(source, target);
   utils.processOpeningHoursAttribute(source, target);
 
-  utils.processCategoriesRelationshipFromActivitiesV2(
-    source,
-    target,
-    included,
-    request
-  );
-  utils.processMultimediaDescriptionsRelationship(
-    source,
-    target,
-    included,
-    request
-  );
+  processCategoriesRelationshipFromActivitiesV2(source, target, included, request);
+  processMultimediaDescriptionsRelationship(source, target, included, request);
 
   return target;
 }
@@ -152,12 +138,7 @@ function processDifficultyAttribute(source, target) {
   attributes.difficulty = difficultyMapping[source.Difficulty];
 }
 
-function processCategoriesRelationshipFromActivitiesV2(
-  source,
-  target,
-  included,
-  request
-) {
+function processCategoriesRelationshipFromActivitiesV2(source, target, included, request) {
   const { relationships, links } = target;
   const getCategoryReference = (categoryId) => {
     return categoryId ? { type: "categories", id: categoryId } : null;
@@ -178,40 +159,23 @@ function processCategoriesRelationshipFromActivitiesV2(
 
   mappedCategories
     .reduce((categories, mappedCategory) => {
-      if (
-        !!mappedCategory &&
-        !categories.find((category) => category.id === mappedCategory)
-      ) {
+      if (!!mappedCategory && !categories.find((category) => category.id === mappedCategory)) {
         categories.push(getCategoryReference(mappedCategory));
       }
 
       return categories;
     }, [])
     .forEach((category) => {
-      addRelationshipToMany(relationships, "categories", category, links.self);
+      utils.addRelationshipToMany(relationships, "categories", category, links.self);
     });
 }
 
-function processMultimediaDescriptionsRelationship(
-  source,
-  target,
-  included,
-  request
-) {
+function processMultimediaDescriptionsRelationship(source, target, included, request) {
   const { relationships, links } = target;
   for (image of source.ImageGallery) {
-    const { mediaObject, copyrightOwner } = transformMediaObject(
-      image,
-      links,
-      request
-    );
-    addRelationshipToMany(
-      relationships,
-      "multimediaDescriptions",
-      mediaObject,
-      links.self
-    );
-    addIncludedResource(included, mediaObject);
-    addIncludedResource(included, copyrightOwner);
+    const { mediaObject, copyrightOwner } = transformMediaObject(image, links, request);
+    utils.addRelationshipToMany(relationships, "multimediaDescriptions", mediaObject, links.self);
+    utils.addIncludedResource(included, mediaObject);
+    utils.addIncludedResource(included, copyrightOwner);
   }
 }
