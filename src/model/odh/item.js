@@ -54,6 +54,26 @@ class Item {
     getGetThereText() {
         return Item.extractFieldFromMultilingualObject(this.Detail, 'GetThereText');
     }
+
+    /** Returns the item's "Address" in each available language, e.g, { "de": "My Item" } */
+    getAddress() {
+        return Item.extractFieldFromMultilingualObject(this.ContactInfos, 'Address');
+    }
+
+    /** Returns the item's "City" in each available language, e.g, { "de": "My Item" } */
+    getCity() {
+        return Item.extractFieldFromMultilingualObject(this.ContactInfos, 'City');
+    }
+
+    /** Returns the item's "CountryCode" in each available language, e.g, { "de": "My Item" } */
+    getCountryCode() {
+        return Item.extractFieldFromMultilingualObject(this.ContactInfos, 'CountryCode');
+    }
+
+    /** Returns the item's "ZipCode" in each available language, e.g, { "de": "My Item" } */
+    getZipCode() {
+        return Item.extractFieldFromMultilingualObject(this.ContactInfos, 'ZipCode');
+    }
 }
 
 module.exports = {

@@ -209,7 +209,52 @@
             "Phonenumber": "+39 0472 659153"
         }
     },
-    "ImageGallery": [],
+    "ImageGallery": [
+        {
+            "Width": 1023,
+            "Height": 767,
+            "License": "CC0",
+            "ValidTo": null,
+            "ImageUrl": "https://doc.lts.it/docsite/ImageRender.aspx?ID=bc59f5dd810efdceb1fc673567d02a2f",
+            "CopyRight": "Tourimusverein Lajen",
+            "ImageDesc": {
+                "de": "Albions",
+                "en": "Albions",
+                "it": "Albions"
+            },
+            "ImageName": "95BEE3DCCD31B7F02E43FE9FB527D244",
+            "ImageTags": null,
+            "ValidFrom": null,
+            "ImageTitle": {},
+            "ImageSource": "LTS",
+            "IsInGallery": true,
+            "ImageAltText": {},
+            "ListPosition": 0,
+            "LicenseHolder": null
+        },
+        {
+            "Width": 3280,
+            "Height": 4376,
+            "License": "CC0",
+            "ValidTo": null,
+            "ImageUrl": "https://doc.lts.it/DocSite/ImageRender.aspx?ID=89dc0b89a1c5f6fdde746674c4b332f1",
+            "CopyRight": "Tourismusverein Lajen",
+            "ImageDesc": {
+                "de": "Albions - Gufidaun",
+                "en": "Albions - Gufidaun/Gudon",
+                "it": "Albions - Gudon"
+            },
+            "ImageName": "9954343DF50CD1E746F628E08491612D",
+            "ImageTags": null,
+            "ValidFrom": null,
+            "ImageTitle": {},
+            "ImageSource": "LTS",
+            "IsInGallery": true,
+            "ImageAltText": {},
+            "ListPosition": 1,
+            "LicenseHolder": null
+        }
+    ],
     "LocationInfo": {
         "TvInfo": {
             "Id": "522822D151CA11D18F1400A02427D15E",
@@ -283,7 +328,72 @@
     "OutdooractiveID": null,
     "CopyrightChecked": true,
     "DistanceDuration": 0.03,
-    "OperationSchedule": [],
+    "OperationSchedule": [
+        {
+            "Stop": "2020-05-02T00:00:00",
+            "Type": "1",
+            "Start": "2018-10-27T00:00:00",
+            "OperationScheduleTime": [
+                {
+                    "End": "16:00:00",
+                    "Start": "08:30:00",
+                    "State": 2,
+                    "Friday": true,
+                    "Monday": true,
+                    "Sunday": true,
+                    "Tuesday": true,
+                    "Saturday": true,
+                    "Timecode": 1,
+                    "Thuresday": true,
+                    "Wednesday": true
+                }
+            ],
+            "OperationscheduleName": {
+                "de": "1"
+            }
+        },
+        {
+            "Stop": "2020-03-01T00:00:00",
+            "Type": "3",
+            "Start": "1900-01-01T00:00:00",
+            "OperationScheduleTime": null,
+            "OperationscheduleName": {
+                "de": ""
+            }
+        },
+        {
+            "Stop": "2020-12-01T00:00:00",
+            "Type": "3",
+            "Start": "2020-12-01T00:00:00",
+            "OperationScheduleTime": null,
+            "OperationscheduleName": {
+                "de": ""
+            }
+        },
+        {
+            "Stop": "2020-05-02T00:00:00",
+            "Type": "1",
+            "Start": "2018-10-27T00:00:00",
+            "OperationScheduleTime": [
+                {
+                    "End": "16:00:00",
+                    "Start": "08:30:00",
+                    "State": 2,
+                    "Friday": true,
+                    "Monday": true,
+                    "Sunday": true,
+                    "Tuesday": true,
+                    "Saturday": true,
+                    "Timecode": 1,
+                    "Thuresday": true,
+                    "Wednesday": true
+                }
+            ],
+            "OperationscheduleName": {
+                "de": "1"
+            }
+        }
+    ],
     "AdditionalPoiInfos": {
         "de": {
             "Novelty": null,

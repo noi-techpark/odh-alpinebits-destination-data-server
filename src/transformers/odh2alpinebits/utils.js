@@ -283,7 +283,7 @@ function transformOperationSchedule(operationSchedule) {
 
       key = found[0];
 
-      if (!openingHours.dailySchedule) openingHours.dailySchedules = {};
+      if (!openingHours.dailySchedules) openingHours.dailySchedules = {};
 
       let hoursArray = entry.OperationScheduleTime;
 

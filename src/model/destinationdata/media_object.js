@@ -5,7 +5,7 @@ class MediaObject extends Resource {
     constructor(base) {
         super(base);
 
-        this.type = ResourceType,mediaObjects;
+        this.type = ResourceType.mediaObjects;
 
         this.attributes.contentType = this.attributes.contentType || null;
         this.attributes.duration = this.attributes.duration || null;
