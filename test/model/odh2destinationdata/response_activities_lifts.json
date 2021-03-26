@@ -1,0 +1,3018 @@
+{
+    "TotalResults": 446,
+    "TotalPages": 45,
+    "CurrentPage": 1,
+    "PreviousPage": null,
+    "NextPage": "http://tourism.api.opendatahub.bz.it/v1/Activity?odhtagfilter=aufstiegsanlagen&pagenumber=2",
+    "Seed": null,
+    "Items": [
+        {
+            "Id": "7FC702D2210CFAA29E153BA9AB5ABB62",
+            "Self": "http://tourism.api.opendatahub.bz.it/v1/Activity/7FC702D2210CFAA29E153BA9AB5ABB62",
+            "Type": "Aufstiegsanlagen",
+            "Areas": [
+                {
+                    "Id": "4972D41A8DC042F88190C154D9CC8A8E",
+                    "Self": "http://tourism.api.opendatahub.bz.it/v1/Area/4972D41A8DC042F88190C154D9CC8A8E"
+                }
+            ],
+            "SmgId": null,
+            "Active": true,
+            "AreaId": [
+                "4972D41A8DC042F88190C154D9CC8A8E"
+            ],
+            "Detail": {
+                "de": {
+                    "Title": "Abrahamwiese",
+                    "Header": null,
+                    "BaseText": "<p>Der Schlepplift Abrahamwiese befindet sich direkt neben der Talstation von Ratschings. Vor allem f&uuml;r Kinder eignet sich die Anf&auml;ngerpiste, auf der sie die ersten Erfahrungen mit den Skiern bzw. dem Snowboard sammeln k&ouml;nnen.</p>",
+                    "Keywords": null,
+                    "Language": "de",
+                    "MetaDesc": null,
+                    "IntroText": null,
+                    "MetaTitle": null,
+                    "SubHeader": null,
+                    "GetThereText": "Von Sterzing kommend in Richtung Ratschingstal fahren. Im Dorf Stange nach links in das Ratschingstal einbiegen und der Stra&szlig;e f&uuml;r ca. 7 km bis nach Innerratschings folgen.",
+                    "AdditionalText": null
+                },
+                "en": {
+                    "Title": "Abrahamwiese",
+                    "Header": null,
+                    "BaseText": "The Abrahamwiese skilift is located directly next to the valley station of Ratschings/Racines. The beginners' slope is especially suitable for children, where they can gain their first experience with skis or snowboard.",
+                    "Keywords": null,
+                    "Language": "en",
+                    "MetaDesc": null,
+                    "IntroText": null,
+                    "MetaTitle": null,
+                    "SubHeader": null,
+                    "GetThereText": "Coming from Sterzing / Vipiteno, drive in the direction of Ratschingstal / Val Racines. In the village of Stange/Stanghe turn left into the Ratschingstal and follow the road for about 7 km to Innerratschings / Racines di Dentro.",
+                    "AdditionalText": null
+                },
+                "it": {
+                    "Title": "Prato Abraham",
+                    "Header": null,
+                    "BaseText": "La sciovia Abrahamwiese si trova direttamente accanto alla stazione a valle di Racines. La pista per principianti &egrave; particolarmente adatta ai bambini, dove possono fare le prime esperienze con gli sci o lo snowboard.",
+                    "Keywords": null,
+                    "Language": "it",
+                    "MetaDesc": null,
+                    "IntroText": null,
+                    "MetaTitle": null,
+                    "SubHeader": null,
+                    "GetThereText": "Venendo da Vipiteno, proseguire in direzione di Val Racines. Nel villaggio di Stanghe svoltare a sinistra nella Val Racines e seguire la strada per circa 7 km fino a Racines di Dentro.",
+                    "AdditionalText": null
+                }
+            },
+            "IsOpen": false,
+            "Number": "0",
+            "GpsInfo": [
+                {
+                    "Gpstype": "Talstation",
+                    "Altitude": 1298.0,
+                    "Latitude": 46.863848,
+                    "Longitude": 11.309652,
+                    "AltitudeUnitofMeasure": "m"
+                },
+                {
+                    "Gpstype": "Bergstation",
+                    "Altitude": 1342.0,
+                    "Latitude": 46.861944,
+                    "Longitude": 11.309296,
+                    "AltitudeUnitofMeasure": "m"
+                }
+            ],
+            "LTSTags": [],
+            "ODHTags": [
+                {
+                    "Id": "aufstiegsanlagen",
+                    "Self": "http://tourism.api.opendatahub.bz.it/v1/ActivityTypes/aufstiegsanlagen"
+                },
+                {
+                    "Id": "weitere aufstiegsanlagen",
+                    "Self": "http://tourism.api.opendatahub.bz.it/v1/ActivityTypes/weitere%20aufstiegsanlagen"
+                },
+                {
+                    "Id": "skilift",
+                    "Self": "http://tourism.api.opendatahub.bz.it/v1/ActivityTypes/skilift"
+                },
+                {
+                    "Id": "kleinskilift",
+                    "Self": "http://tourism.api.opendatahub.bz.it/v1/ActivityTypes/kleinskilift"
+                }
+            ],
+            "PoiType": "Kleinskilift",
+            "Ratings": {
+                "Stamina": "0",
+                "Landscape": "0",
+                "Technique": "0",
+                "Difficulty": "0",
+                "Experience": "0"
+            },
+            "SmgTags": [
+                "aufstiegsanlagen",
+                "weitere aufstiegsanlagen",
+                "skilift",
+                "kleinskilift"
+            ],
+            "SubType": "Skilift",
+            "GpsTrack": [],
+            "OwnerRid": "522822D151CA11D18F1400A02427D15E",
+            "FeetClimb": false,
+            "GpsPoints": {
+                "position": {
+                    "Gpstype": "Talstation",
+                    "Altitude": 1298.0,
+                    "Latitude": 46.863848,
+                    "Longitude": 11.309652,
+                    "AltitudeUnitofMeasure": "m"
+                },
+                "endposition": {
+                    "Gpstype": "Bergstation",
+                    "Altitude": 1342.0,
+                    "Latitude": 46.861944,
+                    "Longitude": 11.309296,
+                    "AltitudeUnitofMeasure": "m"
+                }
+            },
+            "Highlight": false,
+            "OdhActive": true,
+            "Shortname": "Abrahamwiese",
+            "SmgActive": true,
+            "WayNumber": null,
+            "Difficulty": "0",
+            "Exposition": [],
+            "HasRentals": false,
+            "IsPrepared": false,
+            "LastChange": "2021-03-10T13:09:12.1985011",
+            "ChildPoiIds": null,
+            "FirstImport": "2015-03-30T16:25:42.6616827",
+            "HasLanguage": [
+                "de",
+                "it",
+                "en"
+            ],
+            "IsWithLigth": false,
+            "LicenseInfo": {
+                "Author": "",
+                "License": "CC0",
+                "ClosedData": false,
+                "LicenseHolder": "https://www.lts.it"
+            },
+            "RunToValley": false,
+            "ContactInfos": {
+                "de": {
+                    "Tax": null,
+                    "Url": "http://www.ratschings-jaufen.it",
+                    "Vat": null,
+                    "City": "Ratschings",
+                    "Email": "info@ratschings-jaufen.it",
+                    "Address": "Innerratschings 18a",
+                    "LogoUrl": null,
+                    "Surname": "",
+                    "ZipCode": "39040",
+                    "Language": "de",
+                    "Faxnumber": "",
+                    "Givenname": "",
+                    "NamePrefix": "",
+                    "CompanyName": "Ratschings-Jaufen GmbH",
+                    "CountryCode": "IT",
+                    "CountryName": "Italy",
+                    "Phonenumber": "+39 0472 659153"
+                },
+                "en": {
+                    "Tax": null,
+                    "Url": "http://www.ratschings-jaufen.it",
+                    "Vat": null,
+                    "City": "Ratschings/Racines",
+                    "Email": "info@ratschings-jaufen.it",
+                    "Address": "Innerratschings / Racines di Dentro 18a",
+                    "LogoUrl": null,
+                    "Surname": "",
+                    "ZipCode": "39040",
+                    "Language": "en",
+                    "Faxnumber": "",
+                    "Givenname": "",
+                    "NamePrefix": "",
+                    "CompanyName": "Racines Giovo SRL",
+                    "CountryCode": "IT",
+                    "CountryName": "Italy",
+                    "Phonenumber": "+39 0472 659153"
+                },
+                "it": {
+                    "Tax": null,
+                    "Url": "http://www.ratschings-jaufen.it",
+                    "Vat": null,
+                    "City": "Racines",
+                    "Email": "info@ratschings-jaufen.it",
+                    "Address": "Racines di Dentro 18a",
+                    "LogoUrl": null,
+                    "Surname": "",
+                    "ZipCode": "39040",
+                    "Language": "it",
+                    "Faxnumber": "",
+                    "Givenname": "",
+                    "NamePrefix": "",
+                    "CompanyName": "Racines Giovo SRL",
+                    "CountryCode": "IT",
+                    "CountryName": "Italy",
+                    "Phonenumber": "+39 0472 659153"
+                }
+            },
+            "ImageGallery": [],
+            "LocationInfo": {
+                "TvInfo": {
+                    "Id": "522822D151CA11D18F1400A02427D15E",
+                    "Name": {
+                        "cs": "Ratschings/Racines",
+                        "de": "Ratschings",
+                        "en": "Ratschings/Racines",
+                        "fr": "Ratschings/Racines",
+                        "it": "Racines",
+                        "nl": "Ratschings/Racines",
+                        "pl": "Ratschings/Racines",
+                        "ru": "Ратшингс/Racines"
+                    },
+                    "Self": "http://tourism.api.opendatahub.bz.it/v1/TourismAssociation/522822D151CA11D18F1400A02427D15E"
+                },
+                "AreaInfo": {
+                    "Id": "4972D41A8DC042F88190C154D9CC8A8E",
+                    "Name": {
+                        "cs": "Ratschings–Jaufen",
+                        "de": "Ratschings–Jaufen",
+                        "en": "Ratschings–Jaufen",
+                        "fr": "Ratschings–Jaufen",
+                        "it": "Ratschings–Jaufen",
+                        "nl": "Ratschings–Jaufen",
+                        "pl": "Ratschings–Jaufen",
+                        "ru": "Ratschings–Jaufen"
+                    },
+                    "Self": "http://tourism.api.opendatahub.bz.it/v1/Area/4972D41A8DC042F88190C154D9CC8A8E"
+                },
+                "RegionInfo": {
+                    "Id": "D2633A1DC24E11D18F1B006097B8970B",
+                    "Name": {
+                        "cs": "Brixen/Bressanone a okolí",
+                        "de": "Brixen und Umgebung",
+                        "en": "Brixen/Bressanone and environs",
+                        "fr": "Brixen/Bressanone et environs",
+                        "it": "Bressanone e dintorni",
+                        "nl": "Brixen/Bressanone en omgeving",
+                        "pl": "Brixen/Bressanone i okolice",
+                        "ru": "Бриксен/Bressanone и окрестности"
+                    },
+                    "Self": "http://tourism.api.opendatahub.bz.it/v1/Region/D2633A1DC24E11D18F1B006097B8970B"
+                },
+                "DistrictInfo": null,
+                "MunicipalityInfo": null
+            },
+            "MasterPoiIds": null,
+            "ActivityTypes": [
+                {
+                    "Id": "Aufstiegsanlagen",
+                    "Self": "http://tourism.api.opendatahub.bz.it/v1/ActivityTypes/Aufstiegsanlagen",
+                    "Type": "Type"
+                },
+                {
+                    "Id": "Skilift",
+                    "Self": "http://tourism.api.opendatahub.bz.it/v1/ActivityTypes/Skilift",
+                    "Type": "SubType"
+                },
+                {
+                    "Id": "Kleinskilift",
+                    "Self": "http://tourism.api.opendatahub.bz.it/v1/ActivityTypes/Kleinskilift",
+                    "Type": "PoiType"
+                }
+            ],
+            "AltitudeSumUp": 0.0,
+            "BikeTransport": false,
+            "LiftAvailable": false,
+            "DistanceLength": 290.0,
+            "AltitudeSumDown": 0.0,
+            "HasFreeEntrance": false,
+            "OutdooractiveID": null,
+            "CopyrightChecked": true,
+            "DistanceDuration": 0.03,
+            "OperationSchedule": [],
+            "AdditionalPoiInfos": {
+                "de": {
+                    "Novelty": null,
+                    "PoiType": "Kleinskilift",
+                    "SubType": "Skilift",
+                    "Language": "de",
+                    "MainType": "Aufstiegsanlagen",
+                    "Categories": null
+                },
+                "en": {
+                    "Novelty": null,
+                    "PoiType": "Low profile skilift",
+                    "SubType": "Ski lift",
+                    "Language": "en",
+                    "MainType": "lifts",
+                    "Categories": null
+                },
+                "it": {
+                    "Novelty": null,
+                    "PoiType": "Manovia",
+                    "SubType": "Sciovia",
+                    "Language": "it",
+                    "MainType": "ascensioni",
+                    "Categories": null
+                }
+            },
+            "AltitudeDifference": 0.0,
+            "AltitudeLowestPoint": 0.0,
+            "AltitudeHighestPoint": 0.0,
+            "TourismorganizationId": "522822D151CA11D18F1400A02427D15E",
+            "OutdooractiveElevationID": null
+        },
+        {
+            "Id": "49A4560AF5D84691A095B9D466D392D7",
+            "Self": "http://tourism.api.opendatahub.bz.it/v1/Activity/49A4560AF5D84691A095B9D466D392D7",
+            "Type": "Aufstiegsanlagen",
+            "Areas": [
+                {
+                    "Id": "330C5C98F1094FCB8443FB3F2F07C998",
+                    "Self": "http://tourism.api.opendatahub.bz.it/v1/Area/330C5C98F1094FCB8443FB3F2F07C998"
+                }
+            ],
+            "SmgId": null,
+            "Active": true,
+            "AreaId": [
+                "330C5C98F1094FCB8443FB3F2F07C998"
+            ],
+            "Detail": {
+                "de": {
+                    "Title": "Abrusé",
+                    "Header": null,
+                    "BaseText": "<p><span class=\"tlid-translation translation\" lang=\"de\"><span title=\"\">Der Skilift Abrus&eacute; in Corvara befindet sich in der N&auml;he der Skischule und der Kabinenbahn Bo&eacute;.</span><span title=\"\">Der kurze Lift mit geringem H&ouml;henunterschied ist f&uuml;r Anf&auml;nger besonders geeignet.</span></span></p>",
+                    "Keywords": null,
+                    "Language": "de",
+                    "MetaDesc": null,
+                    "IntroText": null,
+                    "MetaTitle": null,
+                    "SubHeader": null,
+                    "GetThereText": "<p><strong>*Mit dem Auto</strong></p>\r\n<p>Von Norden kommend:</p>\r\n<ul>\r\n<li>Brenner Autobahn A22 bis Ausfahrt Brixen, Pustertaler Stra&szlig;e SS 49 bis St. Lorenzen, Gadertaler Stra&szlig;e SS 244, Alta Badia</li>\r\n</ul>\r\n<p>Von S&uuml;den kommend:</p>\r\n<ul>\r\n<li>Brennerautobahn A22 bis Ausfahrt Klausen, Staatsstra&szlig;e SS 242, Gr&ouml;dnerjoch, Alta Badia</li>\r\n<li>Autobahn A27 bis Ausfahrt Ponte nelle Alpi, SS 203, Caprile, Arabba, Campolongo Pass, Alta Badia</li>\r\n</ul>\r\n<p><strong>*Mit der Bahn</strong></p>\r\n<p>Bahnh&ouml;fe:</p>\r\n<ul>\r\n<li>Bruneck - 37 km</li>\r\n<li>Bozen (via Gr&ouml;dnerjoch) - 72 km (via Bruneck) - 100 km</li>\r\n<li>Von den Zugbahnh&ouml;fen erreichen Sie Alta Badia mit Linienbus. Fahrpl&auml;ne &amp; Ausk&uuml;nfte: <a href=\"http://www.sii.bz.it/\">www.sii.bz.it</a></li>\r\n</ul>\r\n<p><strong>*Mit dem Flugzeug</strong></p>\r\n<ul>\r\n<li>Innsbruck - 130 km</li>\r\n<li>M&uuml;nchen - 330 km</li>\r\n<li>Venedig Treviso / Venedig Marco Polo - 180 km / 200 km</li>\r\n<li>Verona - 213 km</li>\r\n<li>Mailand Bergamo / Mailand Malpensa - 310 km / 400 km</li>\r\n<li>Flughafen Transfer: <a href=\"http://www.suedtirolbus.de\">www.suedtirolbus.de</a> - <a href=\"http://www.cortinaexpress.it\">www.cortinaexpress.it</a></li>\r\n</ul>",
+                    "AdditionalText": null
+                },
+                "en": {
+                    "Title": "Abrusé",
+                    "Header": null,
+                    "BaseText": "<span class=\"tlid-translation translation\" lang=\"en\"><span title=\"\">The Abrus&eacute; ski lift in Corvara is located near the ski school and near the Bo&eacute; gondola.</span><span title=\"\">The short lift, with little difference in height, is suitable for beginners.</span></span>",
+                    "Keywords": null,
+                    "Language": "en",
+                    "MetaDesc": null,
+                    "IntroText": null,
+                    "MetaTitle": null,
+                    "SubHeader": null,
+                    "GetThereText": "<p><strong>*By car</strong></p>\r\n<ul>\r\n<li>Coming from Innsbruck: take the A13 and the A22 toll motorway and exit at Bressanone/Brixen, following the signs to Brunico/Bruneck along the Val Pusteria/Pustertal road as far as S. Lorenzo/St. Lorenzen. Follow the signs to Val Badia/Gadertal&nbsp;</li>\r\n<li>Coming from Verona - Bolzano: take the A22, exit at Bressanone/Brixen and continue as above</li>\r\n</ul>\r\n<p><strong>*By train</strong></p>\r\n<p>The nearest train stations are:</p>\r\n<ul>\r\n<li>Brunico - 37 km</li>\r\n<li>Bolzano (via Passo Gardena) - 72 km (via Brunico) - 100 km</li>\r\n<li>Connection train station - Alta Badia by the local bus SAD: <a href=\"http://www.sii.bz.it\">www.sii.bz.it</a></li>\r\n</ul>\r\n<p><strong>*By air</strong></p>\r\n<ul>\r\n<li>Innsbruck - 130 km</li>\r\n<li>Munich - 330 km</li>\r\n<li>Venice Treviso / Venice Marco Polo - 180 km / 200 km</li>\r\n<li>Verona - 213 km</li>\r\n<li>Milan Bergamo / Milan Malpensa - 310 km / 400 km</li>\r\n<li>Information airport transfer: <a href=\"http://www.altoadigebus.com\">www.altoadigebus.com</a> - <a href=\"http://www.cortinaexpress.it\">www.cortinaexpress.it</a></li>\r\n</ul>",
+                    "AdditionalText": null
+                },
+                "it": {
+                    "Title": "Abrusé",
+                    "Header": null,
+                    "BaseText": "<p>Lo skilift Abrus&eacute; a Corvara paese, si trova nelle vicinanze della scuola sci e della cabinovia Bo&eacute;. Essendo corto e con poco dislivello, &egrave; un impianto adatto anche ai pi&ugrave; piccini e per chi &egrave; alle prime armi.<br />Alcune sere d'inverno diventa punto d'incontro per le manifestazioni della scuola sci Corvara.</p>",
+                    "Keywords": null,
+                    "Language": "it",
+                    "MetaDesc": null,
+                    "IntroText": null,
+                    "MetaTitle": null,
+                    "SubHeader": null,
+                    "GetThereText": "<p><strong>*In macchina</strong></p>\r\n<ul>\r\n<li>Autostrada del Brennero A22 fino al casello di Bressanone, strada SS 49 della Val Pusteria fino a S. Lorenzo, strada SS 244 della Val Badia, Alta Badia</li>\r\n<li>Autostrada A27 fino a Ponte nelle Alpi, SS 203 dell'Agordino, Caprile, Arabba, Passo Campolongo, Alta Badia</li>\r\n<li>Autostrada A27 fino all'uscita di Belluno, SS 51 per Cortina d'Ampezzo, Passo Falzarego, Passo Valparola, Alta Badia</li>\r\n</ul>\r\n<p><strong>*In treno</strong></p>\r\n<ul>\r\n<li>Brunico - 37 km</li>\r\n<li>Bolzano (via Passo Gardena) - 72 km (via Brunico) - 100 km</li>\r\n<li>Collegamento stazione ferroviaria - Alta Badia tramite autobus di linea SAD: <a href=\"http://www.sii.bz.it\">www.sii.bz.it</a></li>\r\n</ul>\r\n<p><strong>*In aereo</strong></p>\r\n<ul>\r\n<li>Venezia Treviso / Venezia Marco Polo - 180 km / 200 km</li>\r\n<li>Verona - 213 km</li>\r\n<li>Milano Bergamo / Milano Malpensa - 310 km / 400 km</li>\r\n<li>Informazioni transfer aeroporto: <a href=\"http://www.altoadigebus.it\">www.altoadigebus.it</a> - <a href=\"http://www.cortinaexpress.it\">www.cortinaexpress.it</a></li>\r\n</ul>",
+                    "AdditionalText": null
+                }
+            },
+            "IsOpen": false,
+            "Number": "18",
+            "GpsInfo": [
+                {
+                    "Gpstype": "Bergstation",
+                    "Altitude": 1588.0,
+                    "Latitude": 46.547822,
+                    "Longitude": 11.86944,
+                    "AltitudeUnitofMeasure": "m"
+                },
+                {
+                    "Gpstype": "Talstation",
+                    "Altitude": 1532.0,
+                    "Latitude": 46.549903,
+                    "Longitude": 11.870309,
+                    "AltitudeUnitofMeasure": "m"
+                }
+            ],
+            "LTSTags": [],
+            "ODHTags": [
+                {
+                    "Id": "aufstiegsanlagen",
+                    "Self": "http://tourism.api.opendatahub.bz.it/v1/ActivityTypes/aufstiegsanlagen"
+                },
+                {
+                    "Id": "weitere aufstiegsanlagen",
+                    "Self": "http://tourism.api.opendatahub.bz.it/v1/ActivityTypes/weitere%20aufstiegsanlagen"
+                },
+                {
+                    "Id": "skilift",
+                    "Self": "http://tourism.api.opendatahub.bz.it/v1/ActivityTypes/skilift"
+                }
+            ],
+            "PoiType": "",
+            "Ratings": {
+                "Stamina": "0",
+                "Landscape": "0",
+                "Technique": "0",
+                "Difficulty": "0",
+                "Experience": "0"
+            },
+            "SmgTags": [
+                "aufstiegsanlagen",
+                "weitere aufstiegsanlagen",
+                "skilift"
+            ],
+            "SubType": "Skilift",
+            "GpsTrack": [],
+            "OwnerRid": "3C0B620FB487093CAE0EAE99210CC45F",
+            "FeetClimb": false,
+            "GpsPoints": {
+                "position": {
+                    "Gpstype": "Talstation",
+                    "Altitude": 1532.0,
+                    "Latitude": 46.549903,
+                    "Longitude": 11.870309,
+                    "AltitudeUnitofMeasure": "m"
+                },
+                "endposition": {
+                    "Gpstype": "Bergstation",
+                    "Altitude": 1588.0,
+                    "Latitude": 46.547822,
+                    "Longitude": 11.86944,
+                    "AltitudeUnitofMeasure": "m"
+                }
+            },
+            "Highlight": false,
+            "OdhActive": true,
+            "Shortname": "Abrusé",
+            "SmgActive": true,
+            "WayNumber": null,
+            "Difficulty": "0",
+            "Exposition": [],
+            "HasRentals": false,
+            "IsPrepared": false,
+            "LastChange": "2021-03-10T13:10:06.1513609",
+            "ChildPoiIds": null,
+            "FirstImport": "2015-03-30T16:25:48.0124921",
+            "HasLanguage": [
+                "de",
+                "it",
+                "en"
+            ],
+            "IsWithLigth": false,
+            "LicenseInfo": {
+                "Author": "",
+                "License": "CC0",
+                "ClosedData": false,
+                "LicenseHolder": "https://www.lts.it"
+            },
+            "RunToValley": true,
+            "ContactInfos": {
+                "de": {
+                    "Tax": null,
+                    "Url": "https://www.impianticolfosco.com",
+                    "Vat": null,
+                    "City": "Corvara in Badia",
+                    "Email": "info@impianticolfosco.com",
+                    "Address": "Colfosco - Str. Sodlijia 13",
+                    "LogoUrl": null,
+                    "Surname": "",
+                    "ZipCode": "39033",
+                    "Language": "de",
+                    "Faxnumber": "",
+                    "Givenname": "",
+                    "NamePrefix": "",
+                    "CompanyName": "Impianti Colfosco",
+                    "CountryCode": "IT",
+                    "CountryName": "Italy",
+                    "Phonenumber": "+39 0471 836466"
+                },
+                "en": {
+                    "Tax": null,
+                    "Url": "https://www.impianticolfosco.com",
+                    "Vat": null,
+                    "City": "Corvara in Badia",
+                    "Email": "info@impianticolfosco.com",
+                    "Address": "Colfosco - Str. Sodlijia 13",
+                    "LogoUrl": null,
+                    "Surname": "",
+                    "ZipCode": "39033",
+                    "Language": "en",
+                    "Faxnumber": "",
+                    "Givenname": "",
+                    "NamePrefix": "",
+                    "CompanyName": "Impianti Colfosco",
+                    "CountryCode": "IT",
+                    "CountryName": "Italy",
+                    "Phonenumber": "+39 0471 836466"
+                },
+                "it": {
+                    "Tax": null,
+                    "Url": "https://www.impianticolfosco.com",
+                    "Vat": null,
+                    "City": "Corvara in Badia",
+                    "Email": "info@impianticolfosco.com",
+                    "Address": "Colfosco - Str. Sodlijia 13",
+                    "LogoUrl": null,
+                    "Surname": "",
+                    "ZipCode": "39033",
+                    "Language": "it",
+                    "Faxnumber": "",
+                    "Givenname": "",
+                    "NamePrefix": "",
+                    "CompanyName": "Impianti Colfosco",
+                    "CountryCode": "IT",
+                    "CountryName": "Italy",
+                    "Phonenumber": "+39 0471 836466"
+                }
+            },
+            "ImageGallery": [],
+            "LocationInfo": {
+                "TvInfo": {
+                    "Id": "522822A551CA11D18F1400A02427D15E",
+                    "Name": {
+                        "cs": "Corvara-Calfosch/Colfosco",
+                        "de": "Corvara-Kolfuschg",
+                        "en": "Corvara-Calfosch/Colfosco",
+                        "fr": "Corvara-Calfosch/Colfosco",
+                        "it": "Corvara - Colfosco",
+                        "nl": "Corvara-Calfosch/Colfosco",
+                        "pl": "Corvara-Calfosch/Colfosco",
+                        "ru": "Корвара - Кальфош/Colfosco"
+                    },
+                    "Self": "http://tourism.api.opendatahub.bz.it/v1/TourismAssociation/522822A551CA11D18F1400A02427D15E"
+                },
+                "AreaInfo": {
+                    "Id": "330C5C98F1094FCB8443FB3F2F07C998",
+                    "Name": {
+                        "cs": "Corvara–Colfosco",
+                        "de": "Corvara–Colfosco",
+                        "en": "Corvara–Colfosco",
+                        "fr": "Corvara–Colfosco",
+                        "it": "Corvara–Colfosco",
+                        "nl": "Corvara–Colfosco",
+                        "pl": "Corvara–Colfosco",
+                        "ru": "Corvara–Colfosco"
+                    },
+                    "Self": "http://tourism.api.opendatahub.bz.it/v1/Area/330C5C98F1094FCB8443FB3F2F07C998"
+                },
+                "RegionInfo": {
+                    "Id": "D2633A26C24E11D18F1B006097B8970B",
+                    "Name": {
+                        "cs": "Oblast Alta Badia Dolomity",
+                        "de": "Dolomitenregion Alta Badia",
+                        "en": "Dolomites Region Alta Badia",
+                        "fr": "Région des Dolomites Alta Badia",
+                        "it": "Regione dolomitica Alta Badia",
+                        "nl": "Dolomietenregio Alta Badia",
+                        "pl": "Region Alta Badia w Dolomitach",
+                        "ru": "Регион Альта-Бадия Доломиты"
+                    },
+                    "Self": "http://tourism.api.opendatahub.bz.it/v1/Region/D2633A26C24E11D18F1B006097B8970B"
+                },
+                "DistrictInfo": null,
+                "MunicipalityInfo": null
+            },
+            "MasterPoiIds": null,
+            "ActivityTypes": [
+                {
+                    "Id": "Aufstiegsanlagen",
+                    "Self": "http://tourism.api.opendatahub.bz.it/v1/ActivityTypes/Aufstiegsanlagen",
+                    "Type": "Type"
+                },
+                {
+                    "Id": "Skilift",
+                    "Self": "http://tourism.api.opendatahub.bz.it/v1/ActivityTypes/Skilift",
+                    "Type": "SubType"
+                }
+            ],
+            "AltitudeSumUp": 0.0,
+            "BikeTransport": false,
+            "LiftAvailable": false,
+            "DistanceLength": 280.0,
+            "AltitudeSumDown": 0.0,
+            "HasFreeEntrance": false,
+            "OutdooractiveID": null,
+            "CopyrightChecked": true,
+            "DistanceDuration": 0.0,
+            "OperationSchedule": [],
+            "AdditionalPoiInfos": {
+                "de": {
+                    "Novelty": null,
+                    "PoiType": "",
+                    "SubType": "Skilift",
+                    "Language": "de",
+                    "MainType": "Aufstiegsanlagen",
+                    "Categories": null
+                },
+                "en": {
+                    "Novelty": null,
+                    "PoiType": "",
+                    "SubType": "Ski lift",
+                    "Language": "en",
+                    "MainType": "lifts",
+                    "Categories": null
+                },
+                "it": {
+                    "Novelty": null,
+                    "PoiType": "",
+                    "SubType": "Sciovia",
+                    "Language": "it",
+                    "MainType": "ascensioni",
+                    "Categories": null
+                }
+            },
+            "AltitudeDifference": 56.0,
+            "AltitudeLowestPoint": 0.0,
+            "AltitudeHighestPoint": 0.0,
+            "TourismorganizationId": "522822A551CA11D18F1400A02427D15E",
+            "OutdooractiveElevationID": null
+        },
+        {
+            "Id": "F560D06C0AB0462C8C0FF31B52F73F8C",
+            "Self": "http://tourism.api.opendatahub.bz.it/v1/Activity/F560D06C0AB0462C8C0FF31B52F73F8C",
+            "Type": "Aufstiegsanlagen",
+            "Areas": [
+                {
+                    "Id": "019521AF32EA4B99933EF855F64C098E",
+                    "Self": "http://tourism.api.opendatahub.bz.it/v1/Area/019521AF32EA4B99933EF855F64C098E"
+                },
+                {
+                    "Id": "EF8E6BFBEF72426AADBDBCA15E49450C",
+                    "Self": "http://tourism.api.opendatahub.bz.it/v1/Area/EF8E6BFBEF72426AADBDBCA15E49450C"
+                }
+            ],
+            "SmgId": null,
+            "Active": true,
+            "AreaId": [
+                "019521AF32EA4B99933EF855F64C098E",
+                "EF8E6BFBEF72426AADBDBCA15E49450C"
+            ],
+            "Detail": {
+                "de": {
+                    "Title": "Absam/Meierl",
+                    "Header": null,
+                    "BaseText": null,
+                    "Keywords": null,
+                    "Language": "de",
+                    "MetaDesc": null,
+                    "IntroText": null,
+                    "MetaTitle": null,
+                    "SubHeader": null,
+                    "GetThereText": null,
+                    "AdditionalText": null
+                },
+                "en": {
+                    "Title": "Absam/Meierl",
+                    "Header": null,
+                    "BaseText": null,
+                    "Keywords": null,
+                    "Language": "en",
+                    "MetaDesc": null,
+                    "IntroText": null,
+                    "MetaTitle": null,
+                    "SubHeader": null,
+                    "GetThereText": null,
+                    "AdditionalText": null
+                },
+                "it": {
+                    "Title": "Absam/Meierl",
+                    "Header": null,
+                    "BaseText": null,
+                    "Keywords": null,
+                    "Language": "it",
+                    "MetaDesc": null,
+                    "IntroText": null,
+                    "MetaTitle": null,
+                    "SubHeader": null,
+                    "GetThereText": null,
+                    "AdditionalText": null
+                }
+            },
+            "IsOpen": false,
+            "Number": "21",
+            "GpsInfo": [
+                {
+                    "Gpstype": "Talstation",
+                    "Altitude": 1732.0,
+                    "Latitude": 46.366722,
+                    "Longitude": 11.530947,
+                    "AltitudeUnitofMeasure": "m"
+                },
+                {
+                    "Gpstype": "Bergstation",
+                    "Altitude": 2165.0,
+                    "Latitude": 46.363514,
+                    "Longitude": 11.548304,
+                    "AltitudeUnitofMeasure": "m"
+                }
+            ],
+            "LTSTags": [],
+            "ODHTags": [
+                {
+                    "Id": "aufstiegsanlagen",
+                    "Self": "http://tourism.api.opendatahub.bz.it/v1/ActivityTypes/aufstiegsanlagen"
+                },
+                {
+                    "Id": "weitere aufstiegsanlagen",
+                    "Self": "http://tourism.api.opendatahub.bz.it/v1/ActivityTypes/weitere%20aufstiegsanlagen"
+                },
+                {
+                    "Id": "sessellift",
+                    "Self": "http://tourism.api.opendatahub.bz.it/v1/ActivityTypes/sessellift"
+                },
+                {
+                    "Id": "6er sessellift kuppelbar",
+                    "Self": "http://tourism.api.opendatahub.bz.it/v1/ActivityTypes/6er%20sessellift%20kuppelbar"
+                }
+            ],
+            "PoiType": "6er Sessellift kuppelbar",
+            "Ratings": {
+                "Stamina": "0",
+                "Landscape": "0",
+                "Technique": "0",
+                "Difficulty": "0",
+                "Experience": "0"
+            },
+            "SmgTags": [
+                "aufstiegsanlagen",
+                "weitere aufstiegsanlagen",
+                "sessellift",
+                "6er sessellift kuppelbar"
+            ],
+            "SubType": "Sessellift",
+            "GpsTrack": [],
+            "OwnerRid": "D2633A21C24E11D18F1B006097B8970B",
+            "FeetClimb": false,
+            "GpsPoints": {
+                "position": {
+                    "Gpstype": "Talstation",
+                    "Altitude": 1732.0,
+                    "Latitude": 46.366722,
+                    "Longitude": 11.530947,
+                    "AltitudeUnitofMeasure": "m"
+                },
+                "endposition": {
+                    "Gpstype": "Bergstation",
+                    "Altitude": 2165.0,
+                    "Latitude": 46.363514,
+                    "Longitude": 11.548304,
+                    "AltitudeUnitofMeasure": "m"
+                }
+            },
+            "Highlight": false,
+            "OdhActive": true,
+            "Shortname": "Absam/Meierl",
+            "SmgActive": true,
+            "WayNumber": null,
+            "Difficulty": "0",
+            "Exposition": [],
+            "HasRentals": false,
+            "IsPrepared": false,
+            "LastChange": "2021-03-10T13:07:49.2081311",
+            "ChildPoiIds": null,
+            "FirstImport": "2015-03-30T16:24:38.9355708",
+            "HasLanguage": [
+                "de",
+                "it",
+                "en"
+            ],
+            "IsWithLigth": false,
+            "LicenseInfo": {
+                "Author": "",
+                "License": "CC0",
+                "ClosedData": false,
+                "LicenseHolder": "https://www.lts.it"
+            },
+            "RunToValley": true,
+            "ContactInfos": {
+                "de": {
+                    "Tax": null,
+                    "Url": "https://obereggen.com/",
+                    "Vat": null,
+                    "City": "Deutschnofen - Obereggen",
+                    "Email": "obereggen@latemar.it",
+                    "Address": "Obereggen 16",
+                    "LogoUrl": null,
+                    "Surname": "",
+                    "ZipCode": "39050",
+                    "Language": "de",
+                    "Faxnumber": "",
+                    "Givenname": "",
+                    "NamePrefix": "",
+                    "CompanyName": "Obereggen Latemar AG",
+                    "CountryCode": "IT",
+                    "CountryName": "Italy",
+                    "Phonenumber": "+39 0471 618200"
+                },
+                "en": {
+                    "Tax": null,
+                    "Url": "https://obereggen.com/",
+                    "Vat": null,
+                    "City": "Nova Ponente - Obereggen",
+                    "Email": "obereggen@latemar.it",
+                    "Address": "Obereggen 16",
+                    "LogoUrl": null,
+                    "Surname": "",
+                    "ZipCode": "39050",
+                    "Language": "en",
+                    "Faxnumber": "",
+                    "Givenname": "",
+                    "NamePrefix": "",
+                    "CompanyName": "Obereggen Latemar AG",
+                    "CountryCode": "IT",
+                    "CountryName": "Italy",
+                    "Phonenumber": "+39 0471 618200"
+                },
+                "it": {
+                    "Tax": null,
+                    "Url": "https://obereggen.com/",
+                    "Vat": null,
+                    "City": "Nova Ponente - Obereggen",
+                    "Email": "obereggen@latemar.it",
+                    "Address": "Obereggen 16",
+                    "LogoUrl": null,
+                    "Surname": "",
+                    "ZipCode": "39050",
+                    "Language": "it",
+                    "Faxnumber": "",
+                    "Givenname": "",
+                    "NamePrefix": "",
+                    "CompanyName": "Obereggen Latemar AG",
+                    "CountryCode": "IT",
+                    "CountryName": "Italy",
+                    "Phonenumber": "+39 0471 618200"
+                }
+            },
+            "ImageGallery": [],
+            "LocationInfo": {
+                "TvInfo": {
+                    "Id": "522822C751CA11D18F1400A02427D15E",
+                    "Name": {
+                        "cs": "Deutschnofen/Nova Ponente-Obereggen",
+                        "de": "Deutschnofen - Obereggen",
+                        "en": "Deutschnofen/Nova Ponente-Obereggen",
+                        "fr": "Deutschnofen/Nova Ponente-Obereggen",
+                        "it": "Nova Ponente - Obereggen",
+                        "nl": "Deutschnofen/Nova Ponente-Obereggen",
+                        "pl": "Deutschnofen/Nova Ponente-Obereggen",
+                        "ru": "Дойчнофен - Оберегген/Nova Ponente"
+                    },
+                    "Self": "http://tourism.api.opendatahub.bz.it/v1/TourismAssociation/522822C751CA11D18F1400A02427D15E"
+                },
+                "AreaInfo": {
+                    "Id": "EF8E6BFBEF72426AADBDBCA15E49450C",
+                    "Name": {
+                        "cs": "Obereggen",
+                        "de": "Obereggen",
+                        "en": "Obereggen",
+                        "fr": "Obereggen",
+                        "it": "Obereggen",
+                        "nl": "Obereggen",
+                        "pl": "Obereggen",
+                        "ru": "Obereggen"
+                    },
+                    "Self": "http://tourism.api.opendatahub.bz.it/v1/Area/EF8E6BFBEF72426AADBDBCA15E49450C"
+                },
+                "RegionInfo": {
+                    "Id": "D2633A21C24E11D18F1B006097B8970B",
+                    "Name": {
+                        "cs": "Oblast Eggental Dolomity",
+                        "de": "Dolomitenregion Eggental",
+                        "en": "Dolomites Region Eggental",
+                        "fr": "Région des Dolomites Eggental",
+                        "it": "Regione dolomitica Val d'Ega",
+                        "nl": "Dolomietenregio Eggental",
+                        "pl": "Region Eggental w Dolomitach",
+                        "ru": "регион Эггенталь, Доломиты"
+                    },
+                    "Self": "http://tourism.api.opendatahub.bz.it/v1/Region/D2633A21C24E11D18F1B006097B8970B"
+                },
+                "DistrictInfo": null,
+                "MunicipalityInfo": null
+            },
+            "MasterPoiIds": null,
+            "ActivityTypes": [
+                {
+                    "Id": "Aufstiegsanlagen",
+                    "Self": "http://tourism.api.opendatahub.bz.it/v1/ActivityTypes/Aufstiegsanlagen",
+                    "Type": "Type"
+                },
+                {
+                    "Id": "Sessellift",
+                    "Self": "http://tourism.api.opendatahub.bz.it/v1/ActivityTypes/Sessellift",
+                    "Type": "SubType"
+                },
+                {
+                    "Id": "6er Sessellift kuppelbar",
+                    "Self": "http://tourism.api.opendatahub.bz.it/v1/ActivityTypes/6er%20Sessellift%20kuppelbar",
+                    "Type": "PoiType"
+                }
+            ],
+            "AltitudeSumUp": 0.0,
+            "BikeTransport": false,
+            "LiftAvailable": false,
+            "DistanceLength": 1477.0,
+            "AltitudeSumDown": 0.0,
+            "HasFreeEntrance": false,
+            "OutdooractiveID": null,
+            "CopyrightChecked": true,
+            "DistanceDuration": 0.0,
+            "OperationSchedule": [],
+            "AdditionalPoiInfos": {
+                "de": {
+                    "Novelty": null,
+                    "PoiType": "6er Sessellift kuppelbar",
+                    "SubType": "Sessellift",
+                    "Language": "de",
+                    "MainType": "Aufstiegsanlagen",
+                    "Categories": null
+                },
+                "en": {
+                    "Novelty": null,
+                    "PoiType": "Chairlift 6 persons",
+                    "SubType": "Chairlift",
+                    "Language": "en",
+                    "MainType": "lifts",
+                    "Categories": null
+                },
+                "it": {
+                    "Novelty": null,
+                    "PoiType": "Seggiovia a 6",
+                    "SubType": "Seggiovia",
+                    "Language": "it",
+                    "MainType": "ascensioni",
+                    "Categories": null
+                }
+            },
+            "AltitudeDifference": 433.0,
+            "AltitudeLowestPoint": 0.0,
+            "AltitudeHighestPoint": 0.0,
+            "TourismorganizationId": "522822C751CA11D18F1400A02427D15E",
+            "OutdooractiveElevationID": null
+        },
+        {
+            "Id": "B11B1AADF6EE3270D5411FE62E6E0B47",
+            "Self": "http://tourism.api.opendatahub.bz.it/v1/Activity/B11B1AADF6EE3270D5411FE62E6E0B47",
+            "Type": "Aufstiegsanlagen",
+            "Areas": [
+                {
+                    "Id": "0E9790D2D4BD4F84B1E0055BC96277E4",
+                    "Self": "http://tourism.api.opendatahub.bz.it/v1/Area/0E9790D2D4BD4F84B1E0055BC96277E4"
+                }
+            ],
+            "SmgId": null,
+            "Active": true,
+            "AreaId": [
+                "0E9790D2D4BD4F84B1E0055BC96277E4"
+            ],
+            "Detail": {
+                "de": {
+                    "Title": "Almboden",
+                    "Header": null,
+                    "BaseText": null,
+                    "Keywords": null,
+                    "Language": "de",
+                    "MetaDesc": null,
+                    "IntroText": null,
+                    "MetaTitle": null,
+                    "SubHeader": null,
+                    "GetThereText": null,
+                    "AdditionalText": null
+                },
+                "en": {
+                    "Title": "Almboden",
+                    "Header": null,
+                    "BaseText": null,
+                    "Keywords": null,
+                    "Language": "en",
+                    "MetaDesc": null,
+                    "IntroText": null,
+                    "MetaTitle": null,
+                    "SubHeader": null,
+                    "GetThereText": null,
+                    "AdditionalText": null
+                },
+                "it": {
+                    "Title": "Almboden",
+                    "Header": null,
+                    "BaseText": null,
+                    "Keywords": null,
+                    "Language": "it",
+                    "MetaDesc": null,
+                    "IntroText": null,
+                    "MetaTitle": null,
+                    "SubHeader": null,
+                    "GetThereText": null,
+                    "AdditionalText": null
+                }
+            },
+            "IsOpen": false,
+            "Number": "5",
+            "GpsInfo": [
+                {
+                    "Gpstype": "Talstation",
+                    "Altitude": 1550.0,
+                    "Latitude": 46.982448,
+                    "Longitude": 11.982822,
+                    "AltitudeUnitofMeasure": "m"
+                },
+                {
+                    "Gpstype": "Bergstation",
+                    "Altitude": 1650.0,
+                    "Latitude": 46.977116,
+                    "Longitude": 11.985027,
+                    "AltitudeUnitofMeasure": "m"
+                }
+            ],
+            "LTSTags": [],
+            "ODHTags": [
+                {
+                    "Id": "aufstiegsanlagen",
+                    "Self": "http://tourism.api.opendatahub.bz.it/v1/ActivityTypes/aufstiegsanlagen"
+                },
+                {
+                    "Id": "weitere aufstiegsanlagen",
+                    "Self": "http://tourism.api.opendatahub.bz.it/v1/ActivityTypes/weitere%20aufstiegsanlagen"
+                },
+                {
+                    "Id": "sessellift",
+                    "Self": "http://tourism.api.opendatahub.bz.it/v1/ActivityTypes/sessellift"
+                },
+                {
+                    "Id": "4er sessellift kuppelbar",
+                    "Self": "http://tourism.api.opendatahub.bz.it/v1/ActivityTypes/4er%20sessellift%20kuppelbar"
+                }
+            ],
+            "PoiType": "4er Sessellift kuppelbar",
+            "Ratings": {
+                "Stamina": "0",
+                "Landscape": "0",
+                "Technique": "0",
+                "Difficulty": "0",
+                "Experience": "0"
+            },
+            "SmgTags": [
+                "aufstiegsanlagen",
+                "weitere aufstiegsanlagen",
+                "sessellift",
+                "4er sessellift kuppelbar"
+            ],
+            "SubType": "Sessellift",
+            "GpsTrack": [],
+            "OwnerRid": "5103EE77003574337B8C30B24CC9D9F3",
+            "FeetClimb": false,
+            "GpsPoints": {
+                "position": {
+                    "Gpstype": "Talstation",
+                    "Altitude": 1550.0,
+                    "Latitude": 46.982448,
+                    "Longitude": 11.982822,
+                    "AltitudeUnitofMeasure": "m"
+                },
+                "endposition": {
+                    "Gpstype": "Bergstation",
+                    "Altitude": 1650.0,
+                    "Latitude": 46.977116,
+                    "Longitude": 11.985027,
+                    "AltitudeUnitofMeasure": "m"
+                }
+            },
+            "Highlight": false,
+            "OdhActive": true,
+            "Shortname": "Almboden",
+            "SmgActive": true,
+            "WayNumber": null,
+            "Difficulty": "0",
+            "Exposition": [],
+            "HasRentals": false,
+            "IsPrepared": false,
+            "LastChange": "2021-03-10T13:07:13.3433694",
+            "ChildPoiIds": null,
+            "FirstImport": "2015-03-30T16:24:21.2139397",
+            "HasLanguage": [
+                "de",
+                "it",
+                "en"
+            ],
+            "IsWithLigth": false,
+            "LicenseInfo": {
+                "Author": "",
+                "License": "CC0",
+                "ClosedData": false,
+                "LicenseHolder": "https://www.lts.it"
+            },
+            "RunToValley": false,
+            "ContactInfos": {
+                "de": {
+                    "Tax": null,
+                    "Url": "http://www.klausberg.it",
+                    "Vat": null,
+                    "City": "Steinhaus (BZ)",
+                    "Email": "skiarena@klausberg.it",
+                    "Address": "Enz Schachen 11",
+                    "LogoUrl": null,
+                    "Surname": "",
+                    "ZipCode": "39030",
+                    "Language": "de",
+                    "Faxnumber": "",
+                    "Givenname": "",
+                    "NamePrefix": "",
+                    "CompanyName": "Skiarena Klausberg",
+                    "CountryCode": "IT",
+                    "CountryName": "Italy",
+                    "Phonenumber": "+39 0474 652155"
+                },
+                "en": {
+                    "Tax": null,
+                    "Url": "http://www.klausberg.it",
+                    "Vat": null,
+                    "City": "Steinhaus / Cadipietra (BZ)",
+                    "Email": "skiarena@klausberg.it",
+                    "Address": "Enz Schachen 11",
+                    "LogoUrl": null,
+                    "Surname": "",
+                    "ZipCode": "39030",
+                    "Language": "en",
+                    "Faxnumber": "",
+                    "Givenname": "",
+                    "NamePrefix": "",
+                    "CompanyName": "Ski area Klausberg",
+                    "CountryCode": "IT",
+                    "CountryName": "Italy",
+                    "Phonenumber": "+39 0474 652155"
+                },
+                "it": {
+                    "Tax": null,
+                    "Url": "http://www.klausberg.it",
+                    "Vat": null,
+                    "City": "Cadipietra (BZ)",
+                    "Email": "skiarena@klausberg.it",
+                    "Address": "Enz Schachen 11",
+                    "LogoUrl": null,
+                    "Surname": "",
+                    "ZipCode": "39030",
+                    "Language": "it",
+                    "Faxnumber": "",
+                    "Givenname": "",
+                    "NamePrefix": "",
+                    "CompanyName": "Area sciistica Klausberg",
+                    "CountryCode": "IT",
+                    "CountryName": "Italy",
+                    "Phonenumber": "+39 0474 652155"
+                }
+            },
+            "ImageGallery": [],
+            "LocationInfo": {
+                "TvInfo": {
+                    "Id": "522822F751CA11D18F1400A02427D15E",
+                    "Name": {
+                        "cs": "Ahrntal/Valle Aurina",
+                        "de": "Ahrntal",
+                        "en": "Ahrntal/Valle Aurina",
+                        "fr": "Ahrntal/Valle Aurina",
+                        "it": "Valle Aurina",
+                        "nl": "Ahrntal/Valle Aurina",
+                        "pl": "Ahrntal/Valle Aurina",
+                        "ru": "Арнталь/Valle Aurina"
+                    },
+                    "Self": "http://tourism.api.opendatahub.bz.it/v1/TourismAssociation/522822F751CA11D18F1400A02427D15E"
+                },
+                "AreaInfo": {
+                    "Id": "0E9790D2D4BD4F84B1E0055BC96277E4",
+                    "Name": {
+                        "cs": "Klausberg",
+                        "de": "Klausberg",
+                        "en": "Klausberg",
+                        "fr": "Klausberg",
+                        "it": "Klausberg",
+                        "nl": "Klausberg",
+                        "pl": "Klausberg",
+                        "ru": "Klausberg"
+                    },
+                    "Self": "http://tourism.api.opendatahub.bz.it/v1/Area/0E9790D2D4BD4F84B1E0055BC96277E4"
+                },
+                "RegionInfo": {
+                    "Id": "D2633A1BC24E11D18F1B006097B8970B",
+                    "Name": {
+                        "cs": "Bruneck/Brunico a okolí",
+                        "de": "Bruneck und Umgebung",
+                        "en": "Bruneck/Brunico and environs",
+                        "fr": "Bruneck/Brunico et environs",
+                        "it": "Brunico e dintorni",
+                        "nl": "Bruneck/Brunico en omgeving",
+                        "pl": "Bruneck/Brunico i okolice",
+                        "ru": "Брунек/Brunico и окрестности"
+                    },
+                    "Self": "http://tourism.api.opendatahub.bz.it/v1/Region/D2633A1BC24E11D18F1B006097B8970B"
+                },
+                "DistrictInfo": null,
+                "MunicipalityInfo": null
+            },
+            "MasterPoiIds": null,
+            "ActivityTypes": [
+                {
+                    "Id": "Aufstiegsanlagen",
+                    "Self": "http://tourism.api.opendatahub.bz.it/v1/ActivityTypes/Aufstiegsanlagen",
+                    "Type": "Type"
+                },
+                {
+                    "Id": "Sessellift",
+                    "Self": "http://tourism.api.opendatahub.bz.it/v1/ActivityTypes/Sessellift",
+                    "Type": "SubType"
+                },
+                {
+                    "Id": "4er Sessellift kuppelbar",
+                    "Self": "http://tourism.api.opendatahub.bz.it/v1/ActivityTypes/4er%20Sessellift%20kuppelbar",
+                    "Type": "PoiType"
+                }
+            ],
+            "AltitudeSumUp": 0.0,
+            "BikeTransport": false,
+            "LiftAvailable": false,
+            "DistanceLength": 580.0,
+            "AltitudeSumDown": 0.0,
+            "HasFreeEntrance": false,
+            "OutdooractiveID": null,
+            "CopyrightChecked": true,
+            "DistanceDuration": 12.13,
+            "OperationSchedule": [
+                {
+                    "Stop": "2020-03-12T00:00:00",
+                    "Type": "1",
+                    "Start": "2019-12-05T00:00:00",
+                    "OperationScheduleTime": [
+                        {
+                            "End": "16:15:00",
+                            "Start": "08:00:00",
+                            "State": 2,
+                            "Friday": true,
+                            "Monday": true,
+                            "Sunday": true,
+                            "Tuesday": true,
+                            "Saturday": true,
+                            "Timecode": 1,
+                            "Thuresday": true,
+                            "Wednesday": true
+                        }
+                    ],
+                    "OperationscheduleName": {
+                        "de": "Betriebszeiten"
+                    }
+                }
+            ],
+            "AdditionalPoiInfos": {
+                "de": {
+                    "Novelty": null,
+                    "PoiType": "4er Sessellift kuppelbar",
+                    "SubType": "Sessellift",
+                    "Language": "de",
+                    "MainType": "Aufstiegsanlagen",
+                    "Categories": null
+                },
+                "en": {
+                    "Novelty": null,
+                    "PoiType": "Chairlift 4 persons",
+                    "SubType": "Chairlift",
+                    "Language": "en",
+                    "MainType": "lifts",
+                    "Categories": null
+                },
+                "it": {
+                    "Novelty": null,
+                    "PoiType": "Seggiovia a 4",
+                    "SubType": "Seggiovia",
+                    "Language": "it",
+                    "MainType": "ascensioni",
+                    "Categories": null
+                }
+            },
+            "AltitudeDifference": 0.0,
+            "AltitudeLowestPoint": 0.0,
+            "AltitudeHighestPoint": 0.0,
+            "TourismorganizationId": "522822F751CA11D18F1400A02427D15E",
+            "OutdooractiveElevationID": null
+        },
+        {
+            "Id": "824C9A697EEB6F08A67F84FA22B93D90",
+            "Self": "http://tourism.api.opendatahub.bz.it/v1/Activity/824C9A697EEB6F08A67F84FA22B93D90",
+            "Type": "Aufstiegsanlagen",
+            "Areas": [
+                {
+                    "Id": "4096611E0BDA4794BB8983B897A68F7C",
+                    "Self": "http://tourism.api.opendatahub.bz.it/v1/Area/4096611E0BDA4794BB8983B897A68F7C"
+                },
+                {
+                    "Id": "D35C0B3F5214422B92931F7F0115B8BA",
+                    "Self": "http://tourism.api.opendatahub.bz.it/v1/Area/D35C0B3F5214422B92931F7F0115B8BA"
+                }
+            ],
+            "SmgId": null,
+            "Active": true,
+            "AreaId": [
+                "4096611E0BDA4794BB8983B897A68F7C",
+                "D35C0B3F5214422B92931F7F0115B8BA"
+            ],
+            "Detail": {
+                "de": {
+                    "Title": "Alm-Express",
+                    "Header": null,
+                    "BaseText": "<p>Speikboden Bergbahnen ist ein schneesicheres, famili&auml;res Skigebiet im Tauferer-Ahrntal. Es umfasst 8 Liftanlagen mit einer Bef&ouml;rderungsleistung von insgesamt 13.140 Personen pro Stunde. Ca. 100 ha Piste bieten gen&uuml;gend Abwechslung &ndash; vom Gipfel (2.400 m.&uuml;.d.M.) bis ins Tal (950 m.&uuml;.d.M.). Viel Abwechslung im Gel&auml;nde und sehr breite Pisten begl&uuml;cken sowohl Anf&auml;ngern als auch Ski-Profis. Im Sommer ist der Speikboden ein hervorragendes Wandergebiet!<br /><br />Die zwei Skigebiete Speikboden und Klausberg mit den Dorfliften Wei&szlig;enbach und Rein in Taufers bilden zusammen die <strong>Skiworld Ahrntal</strong>. Ein einziger Skipass erm&ouml;glicht es dir &uuml;ber 76 Pistenkilometer zu befahren, w&auml;hrend 21 Aufstiegsanlagen auf einer H&ouml;he von 950 bis 2.510 Metern dich auf den Berg bringen. Durch fl&auml;chendeckende Beschneiungsanlagen garantiert die Skiworld Ahrntal 100% Schneesicherheit.</p>",
+                    "Keywords": null,
+                    "Language": "de",
+                    "MetaDesc": null,
+                    "IntroText": null,
+                    "MetaTitle": null,
+                    "SubHeader": null,
+                    "GetThereText": null,
+                    "AdditionalText": null
+                },
+                "en": {
+                    "Title": "Alm-Express",
+                    "Header": null,
+                    "BaseText": "<p>Speikboden Bergbahnen is a snow-secure, familiarly skiing-area in the valley &ldquo;Tauferer-Ahrntal&rdquo;. It contains 8 cableways with a total transport performance of 13.140 persons/hour. About 80 hectare of slopes has to offer enough liberty for everyone &ndash; from the summit (2.400 m altitude) to the valley (950 m altitude). Many alternations of the terrain and very wide slopes make happy beginners and professional skiers. In the summer the &ldquo;Speikboden&rdquo; is a fantastic hiking area!<br /><br />The two ski arenas Speikboden and Klausberg including the two town lifts Wei&szlig;enbach and Rein in Taufers form together the <strong>Skiworld Ahrntal</strong>. A single ski pass allows you to use over 74 kilometers of slopes while 21 lifts from 950 to 2.510 meters carry you to the mountain top. The covering artificial snow systems of the Skiworld Ahrntal guarantee snow all the way through.</p>",
+                    "Keywords": null,
+                    "Language": "en",
+                    "MetaDesc": null,
+                    "IntroText": null,
+                    "MetaTitle": null,
+                    "SubHeader": null,
+                    "GetThereText": null,
+                    "AdditionalText": null
+                },
+                "it": {
+                    "Title": "Alm-Express",
+                    "Header": null,
+                    "BaseText": "<p>&ldquo;Speikboden Funivie&rdquo; &egrave; una zona sciistica incentrata sulla famiglia all&rsquo;interno della bella Valle di Tures ed Aurina, la quale garantisce ai suoi ospiti la sicurezza di neve per il periodo invernale. Il centro sciistico si compone da 8 impianti di risalita capaci di trasportare ben 13.140 persone all&rsquo;ora. Circa 80 ettari di ottime piste garantiscono molte possibilit&agrave; di divertimento &ndash; iniziando dalla cima (2.400 metri s.l.m.) fino al fondovalle (950 metri s.l.m.). I differenti pendii e le piste molto larghe fanno la gioia di tutti gli sciatori, principianti e professionisti. In estate Speikboden &egrave; uno straordinario luogo per praticare dell&rsquo;escursionismo.<br /><br />I compensori sciistici Speikboden e Klausberg, con i loro impianti di risalita Riobianco e Riva di Tures, formano assieme la <strong>Skiworld Ahrntal</strong>. Vi aspettano pi&ugrave; di 74 chilometri di piste e 21 impianti di risalita da 950 a 2.510 metri di altitudine che vi conducono in vetta. Grazie a impianti dell&rsquo;ultima generazione, le piste sono sempre perfettamente preparate al 100%.</p>",
+                    "Keywords": null,
+                    "Language": "it",
+                    "MetaDesc": null,
+                    "IntroText": null,
+                    "MetaTitle": null,
+                    "SubHeader": null,
+                    "GetThereText": null,
+                    "AdditionalText": null
+                }
+            },
+            "IsOpen": false,
+            "Number": "2",
+            "GpsInfo": [
+                {
+                    "Gpstype": "Bergstation",
+                    "Altitude": 2003.0,
+                    "Latitude": 46.92278,
+                    "Longitude": 11.904314,
+                    "AltitudeUnitofMeasure": "m"
+                },
+                {
+                    "Gpstype": "Talstation",
+                    "Altitude": 1853.0,
+                    "Latitude": 46.928303,
+                    "Longitude": 11.907458,
+                    "AltitudeUnitofMeasure": "m"
+                }
+            ],
+            "LTSTags": [],
+            "ODHTags": [
+                {
+                    "Id": "aufstiegsanlagen",
+                    "Self": "http://tourism.api.opendatahub.bz.it/v1/ActivityTypes/aufstiegsanlagen"
+                },
+                {
+                    "Id": "weitere aufstiegsanlagen",
+                    "Self": "http://tourism.api.opendatahub.bz.it/v1/ActivityTypes/weitere%20aufstiegsanlagen"
+                },
+                {
+                    "Id": "kabinenbahn",
+                    "Self": "http://tourism.api.opendatahub.bz.it/v1/ActivityTypes/kabinenbahn"
+                }
+            ],
+            "PoiType": "",
+            "Ratings": {
+                "Stamina": "0",
+                "Landscape": "0",
+                "Technique": "0",
+                "Difficulty": "0",
+                "Experience": "0"
+            },
+            "SmgTags": [
+                "aufstiegsanlagen",
+                "weitere aufstiegsanlagen",
+                "kabinenbahn"
+            ],
+            "SubType": "Kabinenbahn",
+            "GpsTrack": [],
+            "OwnerRid": "FA6AFB1BE10CD8B878CC2D789F73141C",
+            "FeetClimb": false,
+            "GpsPoints": {
+                "position": {
+                    "Gpstype": "Talstation",
+                    "Altitude": 1853.0,
+                    "Latitude": 46.928303,
+                    "Longitude": 11.907458,
+                    "AltitudeUnitofMeasure": "m"
+                },
+                "endposition": {
+                    "Gpstype": "Bergstation",
+                    "Altitude": 2003.0,
+                    "Latitude": 46.92278,
+                    "Longitude": 11.904314,
+                    "AltitudeUnitofMeasure": "m"
+                }
+            },
+            "Highlight": false,
+            "OdhActive": true,
+            "Shortname": "Alm-Express",
+            "SmgActive": true,
+            "WayNumber": null,
+            "Difficulty": "0",
+            "Exposition": [],
+            "HasRentals": false,
+            "IsPrepared": false,
+            "LastChange": "2021-03-10T13:09:35.1675485",
+            "ChildPoiIds": null,
+            "FirstImport": "2015-03-30T16:24:50.8851918",
+            "HasLanguage": [
+                "de",
+                "it",
+                "en"
+            ],
+            "IsWithLigth": false,
+            "LicenseInfo": {
+                "Author": "",
+                "License": "CC0",
+                "ClosedData": false,
+                "LicenseHolder": "https://www.lts.it"
+            },
+            "RunToValley": false,
+            "ContactInfos": {
+                "de": {
+                    "Tax": null,
+                    "Url": "http://www.speikboden.it",
+                    "Vat": null,
+                    "City": "Sand in Taufers (BZ)",
+                    "Email": "info@speikboden.it",
+                    "Address": "Drittelsand 7",
+                    "LogoUrl": null,
+                    "Surname": "",
+                    "ZipCode": "39032",
+                    "Language": "de",
+                    "Faxnumber": "",
+                    "Givenname": "",
+                    "NamePrefix": "",
+                    "CompanyName": "Speikboden AG",
+                    "CountryCode": "IT",
+                    "CountryName": "Italy",
+                    "Phonenumber": "+39 0474 678122"
+                },
+                "en": {
+                    "Tax": null,
+                    "Url": "http://www.speikboden.it",
+                    "Vat": null,
+                    "City": "Sand in Taufers/Campo Tures",
+                    "Email": "info@speikboden.it",
+                    "Address": "Drittelsand 7",
+                    "LogoUrl": null,
+                    "Surname": "",
+                    "ZipCode": "39032",
+                    "Language": "en",
+                    "Faxnumber": "",
+                    "Givenname": "",
+                    "NamePrefix": "",
+                    "CompanyName": "Speikboden AG",
+                    "CountryCode": "IT",
+                    "CountryName": "Italy",
+                    "Phonenumber": "+39 0474 678122"
+                },
+                "it": {
+                    "Tax": null,
+                    "Url": "http://www.speikboden.it",
+                    "Vat": null,
+                    "City": "Campo Tures (BZ)",
+                    "Email": "info@speikboden.it",
+                    "Address": "Costa di Tures 7",
+                    "LogoUrl": null,
+                    "Surname": "",
+                    "ZipCode": "39032",
+                    "Language": "it",
+                    "Faxnumber": "",
+                    "Givenname": "",
+                    "NamePrefix": "",
+                    "CompanyName": "Speikboden S.p.A.",
+                    "CountryCode": "IT",
+                    "CountryName": "Italy",
+                    "Phonenumber": "+39 0474 678122"
+                }
+            },
+            "ImageGallery": [],
+            "LocationInfo": {
+                "TvInfo": {
+                    "Id": "5228229A51CA11D18F1400A02427D15E",
+                    "Name": {
+                        "cs": "Sand in Taufers/Campo Tures",
+                        "de": "Sand in Taufers",
+                        "en": "Sand in Taufers/Campo Tures",
+                        "fr": "Sand in Taufers/Campo Tures",
+                        "it": "Campo Tures",
+                        "nl": "Sand in Taufers/Campo Tures",
+                        "pl": "Sand in Taufers/Campo Tures",
+                        "ru": "Занд-ин-Тауферс/Campo Tures"
+                    },
+                    "Self": "http://tourism.api.opendatahub.bz.it/v1/TourismAssociation/5228229A51CA11D18F1400A02427D15E"
+                },
+                "AreaInfo": {
+                    "Id": "4096611E0BDA4794BB8983B897A68F7C",
+                    "Name": {
+                        "cs": "Speikboden",
+                        "de": "Speikboden",
+                        "en": "Speikboden",
+                        "fr": "Speikboden",
+                        "it": "Speikboden",
+                        "nl": "Speikboden",
+                        "pl": "Speikboden",
+                        "ru": "Speikboden"
+                    },
+                    "Self": "http://tourism.api.opendatahub.bz.it/v1/Area/4096611E0BDA4794BB8983B897A68F7C"
+                },
+                "RegionInfo": {
+                    "Id": "D2633A1BC24E11D18F1B006097B8970B",
+                    "Name": {
+                        "cs": "Bruneck/Brunico a okolí",
+                        "de": "Bruneck und Umgebung",
+                        "en": "Bruneck/Brunico and environs",
+                        "fr": "Bruneck/Brunico et environs",
+                        "it": "Brunico e dintorni",
+                        "nl": "Bruneck/Brunico en omgeving",
+                        "pl": "Bruneck/Brunico i okolice",
+                        "ru": "Брунек/Brunico и окрестности"
+                    },
+                    "Self": "http://tourism.api.opendatahub.bz.it/v1/Region/D2633A1BC24E11D18F1B006097B8970B"
+                },
+                "DistrictInfo": null,
+                "MunicipalityInfo": null
+            },
+            "MasterPoiIds": null,
+            "ActivityTypes": [
+                {
+                    "Id": "Aufstiegsanlagen",
+                    "Self": "http://tourism.api.opendatahub.bz.it/v1/ActivityTypes/Aufstiegsanlagen",
+                    "Type": "Type"
+                },
+                {
+                    "Id": "Kabinenbahn",
+                    "Self": "http://tourism.api.opendatahub.bz.it/v1/ActivityTypes/Kabinenbahn",
+                    "Type": "SubType"
+                }
+            ],
+            "AltitudeSumUp": 0.0,
+            "BikeTransport": false,
+            "LiftAvailable": false,
+            "DistanceLength": 660.0,
+            "AltitudeSumDown": 0.0,
+            "HasFreeEntrance": false,
+            "OutdooractiveID": null,
+            "CopyrightChecked": true,
+            "DistanceDuration": 0.03,
+            "OperationSchedule": [
+                {
+                    "Stop": "2021-04-11T00:00:00",
+                    "Type": "1",
+                    "Start": "2021-04-10T00:00:00",
+                    "OperationScheduleTime": [
+                        {
+                            "End": "16:00:00",
+                            "Start": "08:30:00",
+                            "State": 2,
+                            "Friday": true,
+                            "Monday": true,
+                            "Sunday": true,
+                            "Tuesday": true,
+                            "Saturday": true,
+                            "Timecode": 1,
+                            "Thuresday": true,
+                            "Wednesday": true
+                        }
+                    ],
+                    "OperationscheduleName": {
+                        "de": "Betriebszeitraum"
+                    }
+                }
+            ],
+            "AdditionalPoiInfos": {
+                "de": {
+                    "Novelty": null,
+                    "PoiType": "",
+                    "SubType": "Kabinenbahn",
+                    "Language": "de",
+                    "MainType": "Aufstiegsanlagen",
+                    "Categories": null
+                },
+                "en": {
+                    "Novelty": null,
+                    "PoiType": "",
+                    "SubType": "Gondola ropeway",
+                    "Language": "en",
+                    "MainType": "lifts",
+                    "Categories": null
+                },
+                "it": {
+                    "Novelty": null,
+                    "PoiType": "",
+                    "SubType": "Telecabina",
+                    "Language": "it",
+                    "MainType": "ascensioni",
+                    "Categories": null
+                }
+            },
+            "AltitudeDifference": 0.0,
+            "AltitudeLowestPoint": 0.0,
+            "AltitudeHighestPoint": 0.0,
+            "TourismorganizationId": "5228229A51CA11D18F1400A02427D15E",
+            "OutdooractiveElevationID": null
+        },
+        {
+            "Id": "772BF64EA853FA47FA2C6710DA7FC10C",
+            "Self": "http://tourism.api.opendatahub.bz.it/v1/Activity/772BF64EA853FA47FA2C6710DA7FC10C",
+            "Type": "Aufstiegsanlagen",
+            "Areas": [
+                {
+                    "Id": "14855033C95946EA8B4C972C14BA6FB3",
+                    "Self": "http://tourism.api.opendatahub.bz.it/v1/Area/14855033C95946EA8B4C972C14BA6FB3"
+                },
+                {
+                    "Id": "DDBB3A1BC24E11D18F1B006097B8970B",
+                    "Self": "http://tourism.api.opendatahub.bz.it/v1/Area/DDBB3A1BC24E11D18F1B006097B8970B"
+                }
+            ],
+            "SmgId": null,
+            "Active": true,
+            "AreaId": [
+                "14855033C95946EA8B4C972C14BA6FB3",
+                "DDBB3A1BC24E11D18F1B006097B8970B"
+            ],
+            "Detail": {
+                "de": {
+                    "Title": "Alpen connecting",
+                    "Header": null,
+                    "BaseText": null,
+                    "Keywords": null,
+                    "Language": "de",
+                    "MetaDesc": null,
+                    "IntroText": null,
+                    "MetaTitle": null,
+                    "SubHeader": null,
+                    "GetThereText": null,
+                    "AdditionalText": null
+                },
+                "en": {
+                    "Title": "Alpen connecting",
+                    "Header": null,
+                    "BaseText": null,
+                    "Keywords": null,
+                    "Language": "en",
+                    "MetaDesc": null,
+                    "IntroText": null,
+                    "MetaTitle": null,
+                    "SubHeader": null,
+                    "GetThereText": null,
+                    "AdditionalText": null
+                },
+                "it": {
+                    "Title": "Alpen connecting",
+                    "Header": null,
+                    "BaseText": null,
+                    "Keywords": null,
+                    "Language": "it",
+                    "MetaDesc": null,
+                    "IntroText": null,
+                    "MetaTitle": null,
+                    "SubHeader": null,
+                    "GetThereText": null,
+                    "AdditionalText": null
+                }
+            },
+            "IsOpen": false,
+            "Number": "304",
+            "GpsInfo": [
+                {
+                    "Gpstype": "Bergstation",
+                    "Altitude": 2168.0,
+                    "Latitude": 46.743356,
+                    "Longitude": 11.967498,
+                    "AltitudeUnitofMeasure": "m"
+                },
+                {
+                    "Gpstype": "Talstation",
+                    "Altitude": 1635.0,
+                    "Latitude": 46.752058,
+                    "Longitude": 11.993027,
+                    "AltitudeUnitofMeasure": "m"
+                }
+            ],
+            "LTSTags": [],
+            "ODHTags": [
+                {
+                    "Id": "aufstiegsanlagen",
+                    "Self": "http://tourism.api.opendatahub.bz.it/v1/ActivityTypes/aufstiegsanlagen"
+                },
+                {
+                    "Id": "weitere aufstiegsanlagen",
+                    "Self": "http://tourism.api.opendatahub.bz.it/v1/ActivityTypes/weitere%20aufstiegsanlagen"
+                },
+                {
+                    "Id": "umlaufbahn",
+                    "Self": "http://tourism.api.opendatahub.bz.it/v1/ActivityTypes/umlaufbahn"
+                }
+            ],
+            "PoiType": "",
+            "Ratings": {
+                "Stamina": "0",
+                "Landscape": "0",
+                "Technique": "0",
+                "Difficulty": "0",
+                "Experience": "0"
+            },
+            "SmgTags": [
+                "aufstiegsanlagen",
+                "weitere aufstiegsanlagen",
+                "umlaufbahn"
+            ],
+            "SubType": "Umlaufbahn",
+            "GpsTrack": [],
+            "OwnerRid": "4EA42712A4950B04410E96E643D6E370",
+            "FeetClimb": false,
+            "GpsPoints": {
+                "position": {
+                    "Gpstype": "Talstation",
+                    "Altitude": 1635.0,
+                    "Latitude": 46.752058,
+                    "Longitude": 11.993027,
+                    "AltitudeUnitofMeasure": "m"
+                },
+                "endposition": {
+                    "Gpstype": "Bergstation",
+                    "Altitude": 2168.0,
+                    "Latitude": 46.743356,
+                    "Longitude": 11.967498,
+                    "AltitudeUnitofMeasure": "m"
+                }
+            },
+            "Highlight": false,
+            "OdhActive": true,
+            "Shortname": "Alpen connecting",
+            "SmgActive": true,
+            "WayNumber": null,
+            "Difficulty": "0",
+            "Exposition": [],
+            "HasRentals": false,
+            "IsPrepared": false,
+            "LastChange": "2021-03-10T13:09:31.599136",
+            "ChildPoiIds": null,
+            "FirstImport": "2015-06-24T04:31:46.7814318",
+            "HasLanguage": [
+                "de",
+                "it",
+                "en"
+            ],
+            "IsWithLigth": false,
+            "LicenseInfo": {
+                "Author": "",
+                "License": "CC0",
+                "ClosedData": false,
+                "LicenseHolder": "https://www.lts.it"
+            },
+            "RunToValley": true,
+            "ContactInfos": {
+                "de": {
+                    "Tax": null,
+                    "Url": "http://www.kronplatz.org",
+                    "Vat": null,
+                    "City": "Olang",
+                    "Email": "olang@kronplatz.org",
+                    "Address": "Gassl 23",
+                    "LogoUrl": null,
+                    "Surname": "",
+                    "ZipCode": "39030",
+                    "Language": "de",
+                    "Faxnumber": "",
+                    "Givenname": "",
+                    "NamePrefix": "",
+                    "CompanyName": "Olanger Seilbahnen AG",
+                    "CountryCode": "IT",
+                    "CountryName": "Italy",
+                    "Phonenumber": "+39 0474 592035"
+                },
+                "en": {
+                    "Tax": null,
+                    "Url": "http://www.kronplatz.org",
+                    "Vat": null,
+                    "City": "Valdaora",
+                    "Email": "olang@kronplatz.org",
+                    "Address": "Casola 23",
+                    "LogoUrl": null,
+                    "Surname": "",
+                    "ZipCode": "39030",
+                    "Language": "en",
+                    "Faxnumber": "",
+                    "Givenname": "",
+                    "NamePrefix": "",
+                    "CompanyName": "Funivie Valdaora Spa",
+                    "CountryCode": "IT",
+                    "CountryName": "Italy",
+                    "Phonenumber": "+39 0474 592035"
+                },
+                "it": {
+                    "Tax": null,
+                    "Url": "http://www.kronplatz.org",
+                    "Vat": null,
+                    "City": "Valdaora",
+                    "Email": "olang@kronplatz.org",
+                    "Address": "Casola 23",
+                    "LogoUrl": null,
+                    "Surname": "",
+                    "ZipCode": "39030",
+                    "Language": "it",
+                    "Faxnumber": "",
+                    "Givenname": "",
+                    "NamePrefix": "",
+                    "CompanyName": "Funivie Valdaora Spa",
+                    "CountryCode": "IT",
+                    "CountryName": "Italy",
+                    "Phonenumber": "+39 0474 592035"
+                }
+            },
+            "ImageGallery": [],
+            "LocationInfo": {
+                "TvInfo": {
+                    "Id": "5228229851CA11D18F1400A02427D15E",
+                    "Name": {
+                        "cs": "Bruneck/Brunico a okolí",
+                        "de": "Bruneck",
+                        "en": "Bruneck/Brunico and environs",
+                        "fr": "Bruneck/Brunico et environs",
+                        "it": "Brunico",
+                        "nl": "Bruneck/Brunico en omgeving",
+                        "pl": "Bruneck/Brunico i okolice",
+                        "ru": "Брунек/Brunico и окрестности"
+                    },
+                    "Self": "http://tourism.api.opendatahub.bz.it/v1/TourismAssociation/5228229851CA11D18F1400A02427D15E"
+                },
+                "AreaInfo": {
+                    "Id": "14855033C95946EA8B4C972C14BA6FB3",
+                    "Name": {
+                        "cs": "Bruneck Kronplatz Tourismus",
+                        "de": "Bruneck Kronplatz Tourismus",
+                        "en": "Bruneck Kronplatz Tourismus",
+                        "fr": "Bruneck Kronplatz Tourismus",
+                        "it": "Bruneck Kronplatz Tourismus",
+                        "nl": "Bruneck Kronplatz Tourismus",
+                        "pl": "Bruneck Kronplatz Tourismus",
+                        "ru": "Bruneck Kronplatz Tourismus"
+                    },
+                    "Self": "http://tourism.api.opendatahub.bz.it/v1/Area/14855033C95946EA8B4C972C14BA6FB3"
+                },
+                "RegionInfo": {
+                    "Id": "D2633A1BC24E11D18F1B006097B8970B",
+                    "Name": {
+                        "cs": "Bruneck/Brunico a okolí",
+                        "de": "Bruneck und Umgebung",
+                        "en": "Bruneck/Brunico and environs",
+                        "fr": "Bruneck/Brunico et environs",
+                        "it": "Brunico e dintorni",
+                        "nl": "Bruneck/Brunico en omgeving",
+                        "pl": "Bruneck/Brunico i okolice",
+                        "ru": "Брунек/Brunico и окрестности"
+                    },
+                    "Self": "http://tourism.api.opendatahub.bz.it/v1/Region/D2633A1BC24E11D18F1B006097B8970B"
+                },
+                "DistrictInfo": null,
+                "MunicipalityInfo": null
+            },
+            "MasterPoiIds": null,
+            "ActivityTypes": [
+                {
+                    "Id": "Aufstiegsanlagen",
+                    "Self": "http://tourism.api.opendatahub.bz.it/v1/ActivityTypes/Aufstiegsanlagen",
+                    "Type": "Type"
+                },
+                {
+                    "Id": "Umlaufbahn",
+                    "Self": "http://tourism.api.opendatahub.bz.it/v1/ActivityTypes/Umlaufbahn",
+                    "Type": "SubType"
+                }
+            ],
+            "AltitudeSumUp": 0.0,
+            "BikeTransport": false,
+            "LiftAvailable": false,
+            "DistanceLength": 2146.0,
+            "AltitudeSumDown": 0.0,
+            "HasFreeEntrance": false,
+            "OutdooractiveID": null,
+            "CopyrightChecked": true,
+            "DistanceDuration": 0.0,
+            "OperationSchedule": [
+                {
+                    "Stop": "2021-04-18T00:00:00",
+                    "Type": "1",
+                    "Start": "2021-01-31T00:00:00",
+                    "OperationScheduleTime": [
+                        {
+                            "End": "16:40:00",
+                            "Start": "08:50:00",
+                            "State": 2,
+                            "Friday": true,
+                            "Monday": true,
+                            "Sunday": true,
+                            "Tuesday": true,
+                            "Saturday": true,
+                            "Timecode": 1,
+                            "Thuresday": true,
+                            "Wednesday": true
+                        }
+                    ],
+                    "OperationscheduleName": {
+                        "de": "Öffnungszeit Winter"
+                    }
+                }
+            ],
+            "AdditionalPoiInfos": {
+                "de": {
+                    "Novelty": null,
+                    "PoiType": "",
+                    "SubType": "Umlaufbahn",
+                    "Language": "de",
+                    "MainType": "Aufstiegsanlagen",
+                    "Categories": null
+                },
+                "en": {
+                    "Novelty": null,
+                    "PoiType": "",
+                    "SubType": "Detachable gondola ropeway",
+                    "Language": "en",
+                    "MainType": "lifts",
+                    "Categories": null
+                },
+                "it": {
+                    "Novelty": null,
+                    "PoiType": "",
+                    "SubType": "Telecabina ad agganciamento automatico",
+                    "Language": "it",
+                    "MainType": "ascensioni",
+                    "Categories": null
+                }
+            },
+            "AltitudeDifference": 533.0,
+            "AltitudeLowestPoint": 0.0,
+            "AltitudeHighestPoint": 0.0,
+            "TourismorganizationId": "5228229851CA11D18F1400A02427D15E",
+            "OutdooractiveElevationID": null
+        },
+        {
+            "Id": "ACD7B60456144B52838231C964460230",
+            "Self": "http://tourism.api.opendatahub.bz.it/v1/Activity/ACD7B60456144B52838231C964460230",
+            "Type": "Aufstiegsanlagen",
+            "Areas": [
+                {
+                    "Id": "0646D169CCA842E38B981790A08D3AF5",
+                    "Self": "http://tourism.api.opendatahub.bz.it/v1/Area/0646D169CCA842E38B981790A08D3AF5"
+                },
+                {
+                    "Id": "2861C7E0C4C04BDF942B99417D44FDA2",
+                    "Self": "http://tourism.api.opendatahub.bz.it/v1/Area/2861C7E0C4C04BDF942B99417D44FDA2"
+                }
+            ],
+            "SmgId": null,
+            "Active": true,
+            "AreaId": [
+                "0646D169CCA842E38B981790A08D3AF5",
+                "2861C7E0C4C04BDF942B99417D44FDA2"
+            ],
+            "Detail": {
+                "de": {
+                    "Title": "Alpenrose",
+                    "Header": null,
+                    "BaseText": null,
+                    "Keywords": null,
+                    "Language": "de",
+                    "MetaDesc": null,
+                    "IntroText": null,
+                    "MetaTitle": null,
+                    "SubHeader": null,
+                    "GetThereText": null,
+                    "AdditionalText": null
+                },
+                "en": {
+                    "Title": "Alpenrose",
+                    "Header": null,
+                    "BaseText": null,
+                    "Keywords": null,
+                    "Language": "en",
+                    "MetaDesc": null,
+                    "IntroText": null,
+                    "MetaTitle": null,
+                    "SubHeader": null,
+                    "GetThereText": null,
+                    "AdditionalText": null
+                },
+                "it": {
+                    "Title": "Alpenrose",
+                    "Header": null,
+                    "BaseText": null,
+                    "Keywords": null,
+                    "Language": "it",
+                    "MetaDesc": null,
+                    "IntroText": null,
+                    "MetaTitle": null,
+                    "SubHeader": null,
+                    "GetThereText": null,
+                    "AdditionalText": null
+                }
+            },
+            "IsOpen": false,
+            "Number": "127",
+            "GpsInfo": [
+                {
+                    "Gpstype": "Bergstation",
+                    "Altitude": 1985.0,
+                    "Latitude": 46.486131,
+                    "Longitude": 11.855948,
+                    "AltitudeUnitofMeasure": "m"
+                },
+                {
+                    "Gpstype": "Talstation",
+                    "Altitude": 1854.0,
+                    "Latitude": 46.488317,
+                    "Longitude": 11.844162,
+                    "AltitudeUnitofMeasure": "m"
+                }
+            ],
+            "LTSTags": [],
+            "ODHTags": [
+                {
+                    "Id": "aufstiegsanlagen",
+                    "Self": "http://tourism.api.opendatahub.bz.it/v1/ActivityTypes/aufstiegsanlagen"
+                },
+                {
+                    "Id": "weitere aufstiegsanlagen",
+                    "Self": "http://tourism.api.opendatahub.bz.it/v1/ActivityTypes/weitere%20aufstiegsanlagen"
+                },
+                {
+                    "Id": "sessellift",
+                    "Self": "http://tourism.api.opendatahub.bz.it/v1/ActivityTypes/sessellift"
+                },
+                {
+                    "Id": "6er sessellift kuppelbar",
+                    "Self": "http://tourism.api.opendatahub.bz.it/v1/ActivityTypes/6er%20sessellift%20kuppelbar"
+                }
+            ],
+            "PoiType": "6er Sessellift kuppelbar",
+            "Ratings": {
+                "Stamina": "0",
+                "Landscape": "0",
+                "Technique": "0",
+                "Difficulty": "0",
+                "Experience": "0"
+            },
+            "SmgTags": [
+                "aufstiegsanlagen",
+                "weitere aufstiegsanlagen",
+                "sessellift",
+                "6er sessellift kuppelbar"
+            ],
+            "SubType": "Sessellift",
+            "GpsTrack": [],
+            "OwnerRid": "F7D7AAEC0313487B9CE8EC9067E43B73",
+            "FeetClimb": false,
+            "GpsPoints": {
+                "position": {
+                    "Gpstype": "Talstation",
+                    "Altitude": 1854.0,
+                    "Latitude": 46.488317,
+                    "Longitude": 11.844162,
+                    "AltitudeUnitofMeasure": "m"
+                },
+                "endposition": {
+                    "Gpstype": "Bergstation",
+                    "Altitude": 1985.0,
+                    "Latitude": 46.486131,
+                    "Longitude": 11.855948,
+                    "AltitudeUnitofMeasure": "m"
+                }
+            },
+            "Highlight": false,
+            "OdhActive": true,
+            "Shortname": "Alpenrose",
+            "SmgActive": true,
+            "WayNumber": null,
+            "Difficulty": "0",
+            "Exposition": [],
+            "HasRentals": false,
+            "IsPrepared": false,
+            "LastChange": "2021-03-10T13:08:12.9789634",
+            "ChildPoiIds": null,
+            "FirstImport": "2015-03-30T16:24:02.5251069",
+            "HasLanguage": [
+                "de",
+                "it",
+                "en"
+            ],
+            "IsWithLigth": false,
+            "LicenseInfo": {
+                "Author": "",
+                "License": "CC0",
+                "ClosedData": false,
+                "LicenseHolder": "https://www.lts.it"
+            },
+            "RunToValley": true,
+            "ContactInfos": {},
+            "ImageGallery": [],
+            "LocationInfo": {
+                "TvInfo": null,
+                "AreaInfo": null,
+                "RegionInfo": null,
+                "DistrictInfo": null,
+                "MunicipalityInfo": null
+            },
+            "MasterPoiIds": null,
+            "ActivityTypes": [
+                {
+                    "Id": "Aufstiegsanlagen",
+                    "Self": "http://tourism.api.opendatahub.bz.it/v1/ActivityTypes/Aufstiegsanlagen",
+                    "Type": "Type"
+                },
+                {
+                    "Id": "Sessellift",
+                    "Self": "http://tourism.api.opendatahub.bz.it/v1/ActivityTypes/Sessellift",
+                    "Type": "SubType"
+                },
+                {
+                    "Id": "6er Sessellift kuppelbar",
+                    "Self": "http://tourism.api.opendatahub.bz.it/v1/ActivityTypes/6er%20Sessellift%20kuppelbar",
+                    "Type": "PoiType"
+                }
+            ],
+            "AltitudeSumUp": 0.0,
+            "BikeTransport": false,
+            "LiftAvailable": false,
+            "DistanceLength": 927.0,
+            "AltitudeSumDown": 0.0,
+            "HasFreeEntrance": false,
+            "OutdooractiveID": null,
+            "CopyrightChecked": true,
+            "DistanceDuration": 0.0,
+            "OperationSchedule": [
+                {
+                    "Stop": "2020-04-14T00:00:00",
+                    "Type": "1",
+                    "Start": "2019-11-30T00:00:00",
+                    "OperationScheduleTime": [
+                        {
+                            "End": "17:00:00",
+                            "Start": "08:45:00",
+                            "State": 2,
+                            "Friday": true,
+                            "Monday": true,
+                            "Sunday": true,
+                            "Tuesday": true,
+                            "Saturday": true,
+                            "Timecode": 1,
+                            "Thuresday": true,
+                            "Wednesday": true
+                        }
+                    ],
+                    "OperationscheduleName": {
+                        "de": "Öffnungszeit Winter"
+                    }
+                }
+            ],
+            "AdditionalPoiInfos": {
+                "de": {
+                    "Novelty": null,
+                    "PoiType": "6er Sessellift kuppelbar",
+                    "SubType": "Sessellift",
+                    "Language": "de",
+                    "MainType": "Aufstiegsanlagen",
+                    "Categories": null
+                },
+                "en": {
+                    "Novelty": null,
+                    "PoiType": "Chairlift 6 persons",
+                    "SubType": "Chairlift",
+                    "Language": "en",
+                    "MainType": "lifts",
+                    "Categories": null
+                },
+                "it": {
+                    "Novelty": null,
+                    "PoiType": "Seggiovia a 6",
+                    "SubType": "Seggiovia",
+                    "Language": "it",
+                    "MainType": "ascensioni",
+                    "Categories": null
+                }
+            },
+            "AltitudeDifference": 131.0,
+            "AltitudeLowestPoint": 0.0,
+            "AltitudeHighestPoint": 0.0,
+            "TourismorganizationId": "F7D7AAEC0313487B9CE8EC9067E43B73",
+            "OutdooractiveElevationID": null
+        },
+        {
+            "Id": "10E4572B00BD478F7C284546AAB580A4",
+            "Self": "http://tourism.api.opendatahub.bz.it/v1/Activity/10E4572B00BD478F7C284546AAB580A4",
+            "Type": "Aufstiegsanlagen",
+            "Areas": [
+                {
+                    "Id": "14855033C95946EA8B4C972C14BA6FB3",
+                    "Self": "http://tourism.api.opendatahub.bz.it/v1/Area/14855033C95946EA8B4C972C14BA6FB3"
+                },
+                {
+                    "Id": "DDBB3A1BC24E11D18F1B006097B8970B",
+                    "Self": "http://tourism.api.opendatahub.bz.it/v1/Area/DDBB3A1BC24E11D18F1B006097B8970B"
+                }
+            ],
+            "SmgId": null,
+            "Active": true,
+            "AreaId": [
+                "14855033C95946EA8B4C972C14BA6FB3",
+                "DDBB3A1BC24E11D18F1B006097B8970B"
+            ],
+            "Detail": {
+                "de": {
+                    "Title": "Antermoia",
+                    "Header": null,
+                    "BaseText": null,
+                    "Keywords": null,
+                    "Language": "de",
+                    "MetaDesc": null,
+                    "IntroText": null,
+                    "MetaTitle": null,
+                    "SubHeader": null,
+                    "GetThereText": null,
+                    "AdditionalText": null
+                },
+                "en": {
+                    "Title": "Antermoia",
+                    "Header": null,
+                    "BaseText": null,
+                    "Keywords": null,
+                    "Language": "en",
+                    "MetaDesc": null,
+                    "IntroText": null,
+                    "MetaTitle": null,
+                    "SubHeader": null,
+                    "GetThereText": null,
+                    "AdditionalText": null
+                },
+                "it": {
+                    "Title": "Antermoia",
+                    "Header": null,
+                    "BaseText": null,
+                    "Keywords": null,
+                    "Language": "it",
+                    "MetaDesc": null,
+                    "IntroText": null,
+                    "MetaTitle": null,
+                    "SubHeader": null,
+                    "GetThereText": null,
+                    "AdditionalText": null
+                }
+            },
+            "IsOpen": false,
+            "Number": "601",
+            "GpsInfo": [
+                {
+                    "Gpstype": "Bergstation",
+                    "Altitude": 1689.0,
+                    "Latitude": 46.689986,
+                    "Longitude": 11.841803,
+                    "AltitudeUnitofMeasure": "m"
+                },
+                {
+                    "Gpstype": "Talstation",
+                    "Altitude": 1515.0,
+                    "Latitude": 46.69055,
+                    "Longitude": 11.849555,
+                    "AltitudeUnitofMeasure": "m"
+                }
+            ],
+            "LTSTags": [],
+            "ODHTags": [
+                {
+                    "Id": "aufstiegsanlagen",
+                    "Self": "http://tourism.api.opendatahub.bz.it/v1/ActivityTypes/aufstiegsanlagen"
+                },
+                {
+                    "Id": "weitere aufstiegsanlagen",
+                    "Self": "http://tourism.api.opendatahub.bz.it/v1/ActivityTypes/weitere%20aufstiegsanlagen"
+                },
+                {
+                    "Id": "skilift",
+                    "Self": "http://tourism.api.opendatahub.bz.it/v1/ActivityTypes/skilift"
+                }
+            ],
+            "PoiType": "",
+            "Ratings": {
+                "Stamina": "0",
+                "Landscape": "0",
+                "Technique": "0",
+                "Difficulty": "0",
+                "Experience": "0"
+            },
+            "SmgTags": [
+                "aufstiegsanlagen",
+                "weitere aufstiegsanlagen",
+                "skilift"
+            ],
+            "SubType": "Skilift",
+            "GpsTrack": [],
+            "OwnerRid": "4EA42712A4950B04410E96E643D6E370",
+            "FeetClimb": false,
+            "GpsPoints": {
+                "position": {
+                    "Gpstype": "Talstation",
+                    "Altitude": 1515.0,
+                    "Latitude": 46.69055,
+                    "Longitude": 11.849555,
+                    "AltitudeUnitofMeasure": "m"
+                },
+                "endposition": {
+                    "Gpstype": "Bergstation",
+                    "Altitude": 1689.0,
+                    "Latitude": 46.689986,
+                    "Longitude": 11.841803,
+                    "AltitudeUnitofMeasure": "m"
+                }
+            },
+            "Highlight": false,
+            "OdhActive": true,
+            "Shortname": "Antermoia",
+            "SmgActive": true,
+            "WayNumber": null,
+            "Difficulty": "0",
+            "Exposition": [],
+            "HasRentals": false,
+            "IsPrepared": false,
+            "LastChange": "2021-03-25T08:41:59.2594677",
+            "ChildPoiIds": null,
+            "FirstImport": "2015-06-24T04:30:16.2343858",
+            "HasLanguage": [
+                "de",
+                "it",
+                "en"
+            ],
+            "IsWithLigth": false,
+            "LicenseInfo": {
+                "Author": "",
+                "License": "CC0",
+                "ClosedData": false,
+                "LicenseHolder": "https://www.lts.it"
+            },
+            "RunToValley": true,
+            "ContactInfos": {
+                "de": {
+                    "Tax": null,
+                    "Url": "http://www.kronplatz.org",
+                    "Vat": null,
+                    "City": "a",
+                    "Email": "skirama@kronplatz.org",
+                    "Address": "a",
+                    "LogoUrl": null,
+                    "Surname": "",
+                    "ZipCode": "39030",
+                    "Language": "de",
+                    "Faxnumber": "",
+                    "Givenname": "",
+                    "NamePrefix": "",
+                    "CompanyName": "a",
+                    "CountryCode": "IT",
+                    "CountryName": "Italy",
+                    "Phonenumber": "+39 0474 551500"
+                },
+                "en": {
+                    "Tax": null,
+                    "Url": "http://www.kronplatz.org",
+                    "Vat": null,
+                    "City": "a",
+                    "Email": "skirama@kronplatz.org",
+                    "Address": "a",
+                    "LogoUrl": null,
+                    "Surname": "",
+                    "ZipCode": "39030",
+                    "Language": "en",
+                    "Faxnumber": "",
+                    "Givenname": "",
+                    "NamePrefix": "",
+                    "CompanyName": "a",
+                    "CountryCode": "IT",
+                    "CountryName": "Italy",
+                    "Phonenumber": "+39 0474 551500"
+                },
+                "it": {
+                    "Tax": null,
+                    "Url": "http://www.kronplatz.org",
+                    "Vat": null,
+                    "City": "a",
+                    "Email": "skirama@kronplatz.org",
+                    "Address": "a",
+                    "LogoUrl": null,
+                    "Surname": "",
+                    "ZipCode": "39030",
+                    "Language": "it",
+                    "Faxnumber": "",
+                    "Givenname": "",
+                    "NamePrefix": "",
+                    "CompanyName": "a",
+                    "CountryCode": "IT",
+                    "CountryName": "Italy",
+                    "Phonenumber": "+39 0474 551500"
+                }
+            },
+            "ImageGallery": [],
+            "LocationInfo": {
+                "TvInfo": {
+                    "Id": "5228229851CA11D18F1400A02427D15E",
+                    "Name": {
+                        "cs": "Bruneck/Brunico a okolí",
+                        "de": "Bruneck",
+                        "en": "Bruneck/Brunico and environs",
+                        "fr": "Bruneck/Brunico et environs",
+                        "it": "Brunico",
+                        "nl": "Bruneck/Brunico en omgeving",
+                        "pl": "Bruneck/Brunico i okolice",
+                        "ru": "Брунек/Brunico и окрестности"
+                    },
+                    "Self": "http://tourism.api.opendatahub.bz.it/v1/TourismAssociation/5228229851CA11D18F1400A02427D15E"
+                },
+                "AreaInfo": {
+                    "Id": "14855033C95946EA8B4C972C14BA6FB3",
+                    "Name": {
+                        "cs": "Bruneck Kronplatz Tourismus",
+                        "de": "Bruneck Kronplatz Tourismus",
+                        "en": "Bruneck Kronplatz Tourismus",
+                        "fr": "Bruneck Kronplatz Tourismus",
+                        "it": "Bruneck Kronplatz Tourismus",
+                        "nl": "Bruneck Kronplatz Tourismus",
+                        "pl": "Bruneck Kronplatz Tourismus",
+                        "ru": "Bruneck Kronplatz Tourismus"
+                    },
+                    "Self": "http://tourism.api.opendatahub.bz.it/v1/Area/14855033C95946EA8B4C972C14BA6FB3"
+                },
+                "RegionInfo": {
+                    "Id": "D2633A1BC24E11D18F1B006097B8970B",
+                    "Name": {
+                        "cs": "Bruneck/Brunico a okolí",
+                        "de": "Bruneck und Umgebung",
+                        "en": "Bruneck/Brunico and environs",
+                        "fr": "Bruneck/Brunico et environs",
+                        "it": "Brunico e dintorni",
+                        "nl": "Bruneck/Brunico en omgeving",
+                        "pl": "Bruneck/Brunico i okolice",
+                        "ru": "Брунек/Brunico и окрестности"
+                    },
+                    "Self": "http://tourism.api.opendatahub.bz.it/v1/Region/D2633A1BC24E11D18F1B006097B8970B"
+                },
+                "DistrictInfo": null,
+                "MunicipalityInfo": null
+            },
+            "MasterPoiIds": null,
+            "ActivityTypes": [
+                {
+                    "Id": "Aufstiegsanlagen",
+                    "Self": "http://tourism.api.opendatahub.bz.it/v1/ActivityTypes/Aufstiegsanlagen",
+                    "Type": "Type"
+                },
+                {
+                    "Id": "Skilift",
+                    "Self": "http://tourism.api.opendatahub.bz.it/v1/ActivityTypes/Skilift",
+                    "Type": "SubType"
+                }
+            ],
+            "AltitudeSumUp": 0.0,
+            "BikeTransport": false,
+            "LiftAvailable": false,
+            "DistanceLength": 586.0,
+            "AltitudeSumDown": 0.0,
+            "HasFreeEntrance": false,
+            "OutdooractiveID": null,
+            "CopyrightChecked": true,
+            "DistanceDuration": 0.0,
+            "OperationSchedule": [],
+            "AdditionalPoiInfos": {
+                "de": {
+                    "Novelty": null,
+                    "PoiType": "",
+                    "SubType": "Skilift",
+                    "Language": "de",
+                    "MainType": "Aufstiegsanlagen",
+                    "Categories": null
+                },
+                "en": {
+                    "Novelty": null,
+                    "PoiType": "",
+                    "SubType": "Ski lift",
+                    "Language": "en",
+                    "MainType": "lifts",
+                    "Categories": null
+                },
+                "it": {
+                    "Novelty": null,
+                    "PoiType": "",
+                    "SubType": "Sciovia",
+                    "Language": "it",
+                    "MainType": "ascensioni",
+                    "Categories": null
+                }
+            },
+            "AltitudeDifference": 174.0,
+            "AltitudeLowestPoint": 0.0,
+            "AltitudeHighestPoint": 0.0,
+            "TourismorganizationId": "5228229851CA11D18F1400A02427D15E",
+            "OutdooractiveElevationID": null
+        },
+        {
+            "Id": "A894E2078EDA430FB3A6D3F7BA6B634C",
+            "Self": "http://tourism.api.opendatahub.bz.it/v1/Activity/A894E2078EDA430FB3A6D3F7BA6B634C",
+            "Type": "Aufstiegsanlagen",
+            "Areas": [
+                {
+                    "Id": "0646D169CCA842E38B981790A08D3AF5",
+                    "Self": "http://tourism.api.opendatahub.bz.it/v1/Area/0646D169CCA842E38B981790A08D3AF5"
+                },
+                {
+                    "Id": "2861C7E0C4C04BDF942B99417D44FDA2",
+                    "Self": "http://tourism.api.opendatahub.bz.it/v1/Area/2861C7E0C4C04BDF942B99417D44FDA2"
+                }
+            ],
+            "SmgId": null,
+            "Active": true,
+            "AreaId": [
+                "0646D169CCA842E38B981790A08D3AF5",
+                "2861C7E0C4C04BDF942B99417D44FDA2"
+            ],
+            "Detail": {
+                "de": {
+                    "Title": "Arabba DMC 1° tronco",
+                    "Header": null,
+                    "BaseText": null,
+                    "Keywords": null,
+                    "Language": "de",
+                    "MetaDesc": null,
+                    "IntroText": null,
+                    "MetaTitle": null,
+                    "SubHeader": null,
+                    "GetThereText": null,
+                    "AdditionalText": null
+                },
+                "en": {
+                    "Title": "Arabba DMC 1° tronco",
+                    "Header": null,
+                    "BaseText": null,
+                    "Keywords": null,
+                    "Language": "en",
+                    "MetaDesc": null,
+                    "IntroText": null,
+                    "MetaTitle": null,
+                    "SubHeader": null,
+                    "GetThereText": null,
+                    "AdditionalText": null
+                },
+                "it": {
+                    "Title": "DMC Europa 1° tronco",
+                    "Header": null,
+                    "BaseText": null,
+                    "Keywords": null,
+                    "Language": "it",
+                    "MetaDesc": null,
+                    "IntroText": null,
+                    "MetaTitle": null,
+                    "SubHeader": null,
+                    "GetThereText": null,
+                    "AdditionalText": null
+                }
+            },
+            "IsOpen": false,
+            "Number": "20",
+            "GpsInfo": [
+                {
+                    "Gpstype": "Bergstation",
+                    "Altitude": 0.0,
+                    "Latitude": 46.481728,
+                    "Longitude": 11.879138,
+                    "AltitudeUnitofMeasure": "m"
+                },
+                {
+                    "Gpstype": "Talstation",
+                    "Altitude": 0.0,
+                    "Latitude": 46.495555,
+                    "Longitude": 11.875,
+                    "AltitudeUnitofMeasure": "m"
+                }
+            ],
+            "LTSTags": [],
+            "ODHTags": [
+                {
+                    "Id": "aufstiegsanlagen",
+                    "Self": "http://tourism.api.opendatahub.bz.it/v1/ActivityTypes/aufstiegsanlagen"
+                },
+                {
+                    "Id": "weitere aufstiegsanlagen",
+                    "Self": "http://tourism.api.opendatahub.bz.it/v1/ActivityTypes/weitere%20aufstiegsanlagen"
+                },
+                {
+                    "Id": "umlaufbahn",
+                    "Self": "http://tourism.api.opendatahub.bz.it/v1/ActivityTypes/umlaufbahn"
+                }
+            ],
+            "PoiType": "",
+            "Ratings": {
+                "Stamina": "0",
+                "Landscape": "0",
+                "Technique": "0",
+                "Difficulty": "0",
+                "Experience": "0"
+            },
+            "SmgTags": [
+                "aufstiegsanlagen",
+                "weitere aufstiegsanlagen",
+                "umlaufbahn"
+            ],
+            "SubType": "Umlaufbahn",
+            "GpsTrack": [],
+            "OwnerRid": "F7D7AAEC0313487B9CE8EC9067E43B73",
+            "FeetClimb": false,
+            "GpsPoints": {
+                "position": {
+                    "Gpstype": "Talstation",
+                    "Altitude": 0.0,
+                    "Latitude": 46.495555,
+                    "Longitude": 11.875,
+                    "AltitudeUnitofMeasure": "m"
+                },
+                "endposition": {
+                    "Gpstype": "Bergstation",
+                    "Altitude": 0.0,
+                    "Latitude": 46.481728,
+                    "Longitude": 11.879138,
+                    "AltitudeUnitofMeasure": "m"
+                }
+            },
+            "Highlight": false,
+            "OdhActive": true,
+            "Shortname": "Arabba DMC 1° tronco",
+            "SmgActive": true,
+            "WayNumber": null,
+            "Difficulty": "0",
+            "Exposition": [],
+            "HasRentals": false,
+            "IsPrepared": false,
+            "LastChange": "2021-03-10T13:08:26.7389099",
+            "ChildPoiIds": null,
+            "FirstImport": "2015-03-30T16:25:34.4872684",
+            "HasLanguage": [
+                "de",
+                "it",
+                "en"
+            ],
+            "IsWithLigth": false,
+            "LicenseInfo": {
+                "Author": "",
+                "License": "CC0",
+                "ClosedData": false,
+                "LicenseHolder": "https://www.lts.it"
+            },
+            "RunToValley": true,
+            "ContactInfos": {},
+            "ImageGallery": [],
+            "LocationInfo": {
+                "TvInfo": null,
+                "AreaInfo": null,
+                "RegionInfo": null,
+                "DistrictInfo": null,
+                "MunicipalityInfo": null
+            },
+            "MasterPoiIds": null,
+            "ActivityTypes": [
+                {
+                    "Id": "Aufstiegsanlagen",
+                    "Self": "http://tourism.api.opendatahub.bz.it/v1/ActivityTypes/Aufstiegsanlagen",
+                    "Type": "Type"
+                },
+                {
+                    "Id": "Umlaufbahn",
+                    "Self": "http://tourism.api.opendatahub.bz.it/v1/ActivityTypes/Umlaufbahn",
+                    "Type": "SubType"
+                }
+            ],
+            "AltitudeSumUp": 0.0,
+            "BikeTransport": false,
+            "LiftAvailable": false,
+            "DistanceLength": 1481.0,
+            "AltitudeSumDown": 0.0,
+            "HasFreeEntrance": false,
+            "OutdooractiveID": null,
+            "CopyrightChecked": true,
+            "DistanceDuration": 0.0,
+            "OperationSchedule": [
+                {
+                    "Stop": "2020-04-14T00:00:00",
+                    "Type": "1",
+                    "Start": "2019-12-21T00:00:00",
+                    "OperationScheduleTime": [
+                        {
+                            "End": "16:00:00",
+                            "Start": "09:30:00",
+                            "State": 2,
+                            "Friday": true,
+                            "Monday": true,
+                            "Sunday": true,
+                            "Tuesday": true,
+                            "Saturday": true,
+                            "Timecode": 1,
+                            "Thuresday": true,
+                            "Wednesday": true
+                        }
+                    ],
+                    "OperationscheduleName": {
+                        "de": "Öffnungszeit Winter"
+                    }
+                }
+            ],
+            "AdditionalPoiInfos": {
+                "de": {
+                    "Novelty": null,
+                    "PoiType": "",
+                    "SubType": "Umlaufbahn",
+                    "Language": "de",
+                    "MainType": "Aufstiegsanlagen",
+                    "Categories": null
+                },
+                "en": {
+                    "Novelty": null,
+                    "PoiType": "",
+                    "SubType": "Detachable gondola ropeway",
+                    "Language": "en",
+                    "MainType": "lifts",
+                    "Categories": null
+                },
+                "it": {
+                    "Novelty": null,
+                    "PoiType": "",
+                    "SubType": "Telecabina ad agganciamento automatico",
+                    "Language": "it",
+                    "MainType": "ascensioni",
+                    "Categories": null
+                }
+            },
+            "AltitudeDifference": 541.0,
+            "AltitudeLowestPoint": 0.0,
+            "AltitudeHighestPoint": 0.0,
+            "TourismorganizationId": "F7D7AAEC0313487B9CE8EC9067E43B73",
+            "OutdooractiveElevationID": null
+        },
+        {
+            "Id": "2473913A03A641C4AE287BCA9852CE82",
+            "Self": "http://tourism.api.opendatahub.bz.it/v1/Activity/2473913A03A641C4AE287BCA9852CE82",
+            "Type": "Aufstiegsanlagen",
+            "Areas": [
+                {
+                    "Id": "0646D169CCA842E38B981790A08D3AF5",
+                    "Self": "http://tourism.api.opendatahub.bz.it/v1/Area/0646D169CCA842E38B981790A08D3AF5"
+                },
+                {
+                    "Id": "2861C7E0C4C04BDF942B99417D44FDA2",
+                    "Self": "http://tourism.api.opendatahub.bz.it/v1/Area/2861C7E0C4C04BDF942B99417D44FDA2"
+                }
+            ],
+            "SmgId": null,
+            "Active": true,
+            "AreaId": [
+                "0646D169CCA842E38B981790A08D3AF5",
+                "2861C7E0C4C04BDF942B99417D44FDA2"
+            ],
+            "Detail": {
+                "de": {
+                    "Title": "Arabba DMC 2° tronco",
+                    "Header": null,
+                    "BaseText": null,
+                    "Keywords": null,
+                    "Language": "de",
+                    "MetaDesc": null,
+                    "IntroText": null,
+                    "MetaTitle": null,
+                    "SubHeader": null,
+                    "GetThereText": null,
+                    "AdditionalText": null
+                },
+                "en": {
+                    "Title": "Arabba DMC 2° tronco",
+                    "Header": null,
+                    "BaseText": null,
+                    "Keywords": null,
+                    "Language": "en",
+                    "MetaDesc": null,
+                    "IntroText": null,
+                    "MetaTitle": null,
+                    "SubHeader": null,
+                    "GetThereText": null,
+                    "AdditionalText": null
+                },
+                "it": {
+                    "Title": "DMC Europa 2° tronco",
+                    "Header": null,
+                    "BaseText": null,
+                    "Keywords": null,
+                    "Language": "it",
+                    "MetaDesc": null,
+                    "IntroText": null,
+                    "MetaTitle": null,
+                    "SubHeader": null,
+                    "GetThereText": null,
+                    "AdditionalText": null
+                }
+            },
+            "IsOpen": false,
+            "Number": "21",
+            "GpsInfo": [
+                {
+                    "Gpstype": "Talstation",
+                    "Altitude": 0.0,
+                    "Latitude": 46.481875,
+                    "Longitude": 11.879181,
+                    "AltitudeUnitofMeasure": "m"
+                },
+                {
+                    "Gpstype": "Bergstation",
+                    "Altitude": 0.0,
+                    "Latitude": 46.473187,
+                    "Longitude": 11.870083,
+                    "AltitudeUnitofMeasure": "m"
+                }
+            ],
+            "LTSTags": [],
+            "ODHTags": [
+                {
+                    "Id": "aufstiegsanlagen",
+                    "Self": "http://tourism.api.opendatahub.bz.it/v1/ActivityTypes/aufstiegsanlagen"
+                },
+                {
+                    "Id": "weitere aufstiegsanlagen",
+                    "Self": "http://tourism.api.opendatahub.bz.it/v1/ActivityTypes/weitere%20aufstiegsanlagen"
+                },
+                {
+                    "Id": "umlaufbahn",
+                    "Self": "http://tourism.api.opendatahub.bz.it/v1/ActivityTypes/umlaufbahn"
+                }
+            ],
+            "PoiType": "",
+            "Ratings": {
+                "Stamina": "0",
+                "Landscape": "0",
+                "Technique": "0",
+                "Difficulty": "0",
+                "Experience": "0"
+            },
+            "SmgTags": [
+                "aufstiegsanlagen",
+                "weitere aufstiegsanlagen",
+                "umlaufbahn"
+            ],
+            "SubType": "Umlaufbahn",
+            "GpsTrack": [],
+            "OwnerRid": "F7D7AAEC0313487B9CE8EC9067E43B73",
+            "FeetClimb": false,
+            "GpsPoints": {
+                "position": {
+                    "Gpstype": "Talstation",
+                    "Altitude": 0.0,
+                    "Latitude": 46.481875,
+                    "Longitude": 11.879181,
+                    "AltitudeUnitofMeasure": "m"
+                },
+                "endposition": {
+                    "Gpstype": "Bergstation",
+                    "Altitude": 0.0,
+                    "Latitude": 46.473187,
+                    "Longitude": 11.870083,
+                    "AltitudeUnitofMeasure": "m"
+                }
+            },
+            "Highlight": false,
+            "OdhActive": true,
+            "Shortname": "Arabba DMC 2° tronco",
+            "SmgActive": true,
+            "WayNumber": null,
+            "Difficulty": "0",
+            "Exposition": [],
+            "HasRentals": false,
+            "IsPrepared": false,
+            "LastChange": "2021-03-10T13:07:21.6383987",
+            "ChildPoiIds": null,
+            "FirstImport": "2015-03-30T16:24:57.234403",
+            "HasLanguage": [
+                "de",
+                "it",
+                "en"
+            ],
+            "IsWithLigth": false,
+            "LicenseInfo": {
+                "Author": "",
+                "License": "CC0",
+                "ClosedData": false,
+                "LicenseHolder": "https://www.lts.it"
+            },
+            "RunToValley": true,
+            "ContactInfos": {},
+            "ImageGallery": [],
+            "LocationInfo": {
+                "TvInfo": null,
+                "AreaInfo": null,
+                "RegionInfo": null,
+                "DistrictInfo": null,
+                "MunicipalityInfo": null
+            },
+            "MasterPoiIds": null,
+            "ActivityTypes": [
+                {
+                    "Id": "Aufstiegsanlagen",
+                    "Self": "http://tourism.api.opendatahub.bz.it/v1/ActivityTypes/Aufstiegsanlagen",
+                    "Type": "Type"
+                },
+                {
+                    "Id": "Umlaufbahn",
+                    "Self": "http://tourism.api.opendatahub.bz.it/v1/ActivityTypes/Umlaufbahn",
+                    "Type": "SubType"
+                }
+            ],
+            "AltitudeSumUp": 0.0,
+            "BikeTransport": false,
+            "LiftAvailable": false,
+            "DistanceLength": 1123.0,
+            "AltitudeSumDown": 0.0,
+            "HasFreeEntrance": false,
+            "OutdooractiveID": null,
+            "CopyrightChecked": true,
+            "DistanceDuration": 0.0,
+            "OperationSchedule": [
+                {
+                    "Stop": "2020-04-14T00:00:00",
+                    "Type": "1",
+                    "Start": "2019-12-21T00:00:00",
+                    "OperationScheduleTime": [
+                        {
+                            "End": "16:00:00",
+                            "Start": "09:30:00",
+                            "State": 2,
+                            "Friday": true,
+                            "Monday": true,
+                            "Sunday": true,
+                            "Tuesday": true,
+                            "Saturday": true,
+                            "Timecode": 1,
+                            "Thuresday": true,
+                            "Wednesday": true
+                        }
+                    ],
+                    "OperationscheduleName": {
+                        "de": "Öffnungszeit Winter"
+                    }
+                }
+            ],
+            "AdditionalPoiInfos": {
+                "de": {
+                    "Novelty": null,
+                    "PoiType": "",
+                    "SubType": "Umlaufbahn",
+                    "Language": "de",
+                    "MainType": "Aufstiegsanlagen",
+                    "Categories": null
+                },
+                "en": {
+                    "Novelty": null,
+                    "PoiType": "",
+                    "SubType": "Detachable gondola ropeway",
+                    "Language": "en",
+                    "MainType": "lifts",
+                    "Categories": null
+                },
+                "it": {
+                    "Novelty": null,
+                    "PoiType": "",
+                    "SubType": "Telecabina ad agganciamento automatico",
+                    "Language": "it",
+                    "MainType": "ascensioni",
+                    "Categories": null
+                }
+            },
+            "AltitudeDifference": 361.0,
+            "AltitudeLowestPoint": 0.0,
+            "AltitudeHighestPoint": 0.0,
+            "TourismorganizationId": "F7D7AAEC0313487B9CE8EC9067E43B73",
+            "OutdooractiveElevationID": null
+        }
+    ]
+}

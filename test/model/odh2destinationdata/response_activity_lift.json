@@ -1,0 +1,318 @@
+{
+    "Id": "7FC702D2210CFAA29E153BA9AB5ABB62",
+    "Self": "http://tourism.api.opendatahub.bz.it/v1/Activity/7FC702D2210CFAA29E153BA9AB5ABB62",
+    "Type": "Aufstiegsanlagen",
+    "Areas": [
+        {
+            "Id": "4972D41A8DC042F88190C154D9CC8A8E",
+            "Self": "http://tourism.api.opendatahub.bz.it/v1/Area/4972D41A8DC042F88190C154D9CC8A8E"
+        }
+    ],
+    "SmgId": null,
+    "Active": true,
+    "AreaId": [
+        "4972D41A8DC042F88190C154D9CC8A8E"
+    ],
+    "Detail": {
+        "de": {
+            "Title": "Abrahamwiese",
+            "Header": null,
+            "BaseText": "<p>Der Schlepplift Abrahamwiese befindet sich direkt neben der Talstation von Ratschings. Vor allem f&uuml;r Kinder eignet sich die Anf&auml;ngerpiste, auf der sie die ersten Erfahrungen mit den Skiern bzw. dem Snowboard sammeln k&ouml;nnen.</p>",
+            "Keywords": null,
+            "Language": "de",
+            "MetaDesc": null,
+            "IntroText": null,
+            "MetaTitle": null,
+            "SubHeader": null,
+            "GetThereText": "Von Sterzing kommend in Richtung Ratschingstal fahren. Im Dorf Stange nach links in das Ratschingstal einbiegen und der Stra&szlig;e f&uuml;r ca. 7 km bis nach Innerratschings folgen.",
+            "AdditionalText": null
+        },
+        "en": {
+            "Title": "Abrahamwiese",
+            "Header": null,
+            "BaseText": "The Abrahamwiese skilift is located directly next to the valley station of Ratschings/Racines. The beginners' slope is especially suitable for children, where they can gain their first experience with skis or snowboard.",
+            "Keywords": null,
+            "Language": "en",
+            "MetaDesc": null,
+            "IntroText": null,
+            "MetaTitle": null,
+            "SubHeader": null,
+            "GetThereText": "Coming from Sterzing / Vipiteno, drive in the direction of Ratschingstal / Val Racines. In the village of Stange/Stanghe turn left into the Ratschingstal and follow the road for about 7 km to Innerratschings / Racines di Dentro.",
+            "AdditionalText": null
+        },
+        "it": {
+            "Title": "Prato Abraham",
+            "Header": null,
+            "BaseText": "La sciovia Abrahamwiese si trova direttamente accanto alla stazione a valle di Racines. La pista per principianti &egrave; particolarmente adatta ai bambini, dove possono fare le prime esperienze con gli sci o lo snowboard.",
+            "Keywords": null,
+            "Language": "it",
+            "MetaDesc": null,
+            "IntroText": null,
+            "MetaTitle": null,
+            "SubHeader": null,
+            "GetThereText": "Venendo da Vipiteno, proseguire in direzione di Val Racines. Nel villaggio di Stanghe svoltare a sinistra nella Val Racines e seguire la strada per circa 7 km fino a Racines di Dentro.",
+            "AdditionalText": null
+        }
+    },
+    "IsOpen": false,
+    "Number": "0",
+    "GpsInfo": [
+        {
+            "Gpstype": "Talstation",
+            "Altitude": 1298.0,
+            "Latitude": 46.863848,
+            "Longitude": 11.309652,
+            "AltitudeUnitofMeasure": "m"
+        },
+        {
+            "Gpstype": "Bergstation",
+            "Altitude": 1342.0,
+            "Latitude": 46.861944,
+            "Longitude": 11.309296,
+            "AltitudeUnitofMeasure": "m"
+        }
+    ],
+    "LTSTags": [],
+    "ODHTags": [
+        {
+            "Id": "aufstiegsanlagen",
+            "Self": "http://tourism.api.opendatahub.bz.it/v1/ActivityTypes/aufstiegsanlagen"
+        },
+        {
+            "Id": "weitere aufstiegsanlagen",
+            "Self": "http://tourism.api.opendatahub.bz.it/v1/ActivityTypes/weitere%20aufstiegsanlagen"
+        },
+        {
+            "Id": "skilift",
+            "Self": "http://tourism.api.opendatahub.bz.it/v1/ActivityTypes/skilift"
+        },
+        {
+            "Id": "kleinskilift",
+            "Self": "http://tourism.api.opendatahub.bz.it/v1/ActivityTypes/kleinskilift"
+        }
+    ],
+    "PoiType": "Kleinskilift",
+    "Ratings": {
+        "Stamina": "0",
+        "Landscape": "0",
+        "Technique": "0",
+        "Difficulty": "0",
+        "Experience": "0"
+    },
+    "SmgTags": [
+        "aufstiegsanlagen",
+        "weitere aufstiegsanlagen",
+        "skilift",
+        "kleinskilift"
+    ],
+    "SubType": "Skilift",
+    "GpsTrack": [],
+    "OwnerRid": "522822D151CA11D18F1400A02427D15E",
+    "FeetClimb": false,
+    "GpsPoints": {
+        "position": {
+            "Gpstype": "Talstation",
+            "Altitude": 1298.0,
+            "Latitude": 46.863848,
+            "Longitude": 11.309652,
+            "AltitudeUnitofMeasure": "m"
+        },
+        "endposition": {
+            "Gpstype": "Bergstation",
+            "Altitude": 1342.0,
+            "Latitude": 46.861944,
+            "Longitude": 11.309296,
+            "AltitudeUnitofMeasure": "m"
+        }
+    },
+    "Highlight": false,
+    "OdhActive": true,
+    "Shortname": "Abrahamwiese",
+    "SmgActive": true,
+    "WayNumber": null,
+    "Difficulty": "0",
+    "Exposition": [],
+    "HasRentals": false,
+    "IsPrepared": false,
+    "LastChange": "2021-03-10T13:09:12.1985011",
+    "ChildPoiIds": null,
+    "FirstImport": "2015-03-30T16:25:42.6616827",
+    "HasLanguage": [
+        "de",
+        "it",
+        "en"
+    ],
+    "IsWithLigth": false,
+    "LicenseInfo": {
+        "Author": "",
+        "License": "CC0",
+        "ClosedData": false,
+        "LicenseHolder": "https://www.lts.it"
+    },
+    "RunToValley": false,
+    "ContactInfos": {
+        "de": {
+            "Tax": null,
+            "Url": "http://www.ratschings-jaufen.it",
+            "Vat": null,
+            "City": "Ratschings",
+            "Email": "info@ratschings-jaufen.it",
+            "Address": "Innerratschings 18a",
+            "LogoUrl": null,
+            "Surname": "",
+            "ZipCode": "39040",
+            "Language": "de",
+            "Faxnumber": "",
+            "Givenname": "",
+            "NamePrefix": "",
+            "CompanyName": "Ratschings-Jaufen GmbH",
+            "CountryCode": "IT",
+            "CountryName": "Italy",
+            "Phonenumber": "+39 0472 659153"
+        },
+        "en": {
+            "Tax": null,
+            "Url": "http://www.ratschings-jaufen.it",
+            "Vat": null,
+            "City": "Ratschings/Racines",
+            "Email": "info@ratschings-jaufen.it",
+            "Address": "Innerratschings / Racines di Dentro 18a",
+            "LogoUrl": null,
+            "Surname": "",
+            "ZipCode": "39040",
+            "Language": "en",
+            "Faxnumber": "",
+            "Givenname": "",
+            "NamePrefix": "",
+            "CompanyName": "Racines Giovo SRL",
+            "CountryCode": "IT",
+            "CountryName": "Italy",
+            "Phonenumber": "+39 0472 659153"
+        },
+        "it": {
+            "Tax": null,
+            "Url": "http://www.ratschings-jaufen.it",
+            "Vat": null,
+            "City": "Racines",
+            "Email": "info@ratschings-jaufen.it",
+            "Address": "Racines di Dentro 18a",
+            "LogoUrl": null,
+            "Surname": "",
+            "ZipCode": "39040",
+            "Language": "it",
+            "Faxnumber": "",
+            "Givenname": "",
+            "NamePrefix": "",
+            "CompanyName": "Racines Giovo SRL",
+            "CountryCode": "IT",
+            "CountryName": "Italy",
+            "Phonenumber": "+39 0472 659153"
+        }
+    },
+    "ImageGallery": [],
+    "LocationInfo": {
+        "TvInfo": {
+            "Id": "522822D151CA11D18F1400A02427D15E",
+            "Name": {
+                "cs": "Ratschings/Racines",
+                "de": "Ratschings",
+                "en": "Ratschings/Racines",
+                "fr": "Ratschings/Racines",
+                "it": "Racines",
+                "nl": "Ratschings/Racines",
+                "pl": "Ratschings/Racines",
+                "ru": "Ратшингс/Racines"
+            },
+            "Self": "http://tourism.api.opendatahub.bz.it/v1/TourismAssociation/522822D151CA11D18F1400A02427D15E"
+        },
+        "AreaInfo": {
+            "Id": "4972D41A8DC042F88190C154D9CC8A8E",
+            "Name": {
+                "cs": "Ratschings–Jaufen",
+                "de": "Ratschings–Jaufen",
+                "en": "Ratschings–Jaufen",
+                "fr": "Ratschings–Jaufen",
+                "it": "Ratschings–Jaufen",
+                "nl": "Ratschings–Jaufen",
+                "pl": "Ratschings–Jaufen",
+                "ru": "Ratschings–Jaufen"
+            },
+            "Self": "http://tourism.api.opendatahub.bz.it/v1/Area/4972D41A8DC042F88190C154D9CC8A8E"
+        },
+        "RegionInfo": {
+            "Id": "D2633A1DC24E11D18F1B006097B8970B",
+            "Name": {
+                "cs": "Brixen/Bressanone a okolí",
+                "de": "Brixen und Umgebung",
+                "en": "Brixen/Bressanone and environs",
+                "fr": "Brixen/Bressanone et environs",
+                "it": "Bressanone e dintorni",
+                "nl": "Brixen/Bressanone en omgeving",
+                "pl": "Brixen/Bressanone i okolice",
+                "ru": "Бриксен/Bressanone и окрестности"
+            },
+            "Self": "http://tourism.api.opendatahub.bz.it/v1/Region/D2633A1DC24E11D18F1B006097B8970B"
+        },
+        "DistrictInfo": null,
+        "MunicipalityInfo": null
+    },
+    "MasterPoiIds": null,
+    "ActivityTypes": [
+        {
+            "Id": "Aufstiegsanlagen",
+            "Self": "http://tourism.api.opendatahub.bz.it/v1/ActivityTypes/Aufstiegsanlagen",
+            "Type": "Type"
+        },
+        {
+            "Id": "Skilift",
+            "Self": "http://tourism.api.opendatahub.bz.it/v1/ActivityTypes/Skilift",
+            "Type": "SubType"
+        },
+        {
+            "Id": "Kleinskilift",
+            "Self": "http://tourism.api.opendatahub.bz.it/v1/ActivityTypes/Kleinskilift",
+            "Type": "PoiType"
+        }
+    ],
+    "AltitudeSumUp": 0.0,
+    "BikeTransport": false,
+    "LiftAvailable": false,
+    "DistanceLength": 290.0,
+    "AltitudeSumDown": 0.0,
+    "HasFreeEntrance": false,
+    "OutdooractiveID": null,
+    "CopyrightChecked": true,
+    "DistanceDuration": 0.03,
+    "OperationSchedule": [],
+    "AdditionalPoiInfos": {
+        "de": {
+            "Novelty": null,
+            "PoiType": "Kleinskilift",
+            "SubType": "Skilift",
+            "Language": "de",
+            "MainType": "Aufstiegsanlagen",
+            "Categories": null
+        },
+        "en": {
+            "Novelty": null,
+            "PoiType": "Low profile skilift",
+            "SubType": "Ski lift",
+            "Language": "en",
+            "MainType": "lifts",
+            "Categories": null
+        },
+        "it": {
+            "Novelty": null,
+            "PoiType": "Manovia",
+            "SubType": "Sciovia",
+            "Language": "it",
+            "MainType": "ascensioni",
+            "Categories": null
+        }
+    },
+    "AltitudeDifference": 0.0,
+    "AltitudeLowestPoint": 0.0,
+    "AltitudeHighestPoint": 0.0,
+    "TourismorganizationId": "522822D151CA11D18F1400A02427D15E",
+    "OutdooractiveElevationID": null
+}
