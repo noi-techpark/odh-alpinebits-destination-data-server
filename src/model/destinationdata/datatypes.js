@@ -1,12 +1,14 @@
 
 module.exports.createPoint = function (longitude, latitude, altitude) {
+    const coordinates = [];
+
+    if(longitude) coordinates.push(longitude);
+    if(latitude) coordinates.push(latitude);
+    if(altitude) coordinates.push(altitude);
+
     return { 
         type: 'Point',
-        coordinates: [
-            longitude, 
-            latitude, 
-            altitude
-        ] 
+        coordinates
     }    
 }
 
@@ -71,5 +73,14 @@ module.exports.createAddress = function () {
         complement: null,
         categories: null,
         zipcode: null
+    }
+}
+
+module.exports.createContactPoints = function (address, availableHours, email, telephone) {
+    return {
+        address: address ? address : null,
+        availableHours: availableHours ? availableHours : null,
+        email: email ? email : null,
+        telephone: telephone ? telephone : null,
     }
 }

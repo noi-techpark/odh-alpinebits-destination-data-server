@@ -1,0 +1,54 @@
+{
+  "type": "agents",
+  "id": "CDB3CC1EE2614488A451C467BE971571_organizer",
+  "meta": {
+    "dataProvider": "http://tourism.opendatahub.bz.it/",
+    "lastUpdate": "2019-11-05T00:05:58.776531+01:00"
+  },
+  "links": {
+    "self": "http://example.com/2021-04/agents/CDB3CC1EE2614488A451C467BE971571_organizer"
+  },
+  "attributes": {
+    "abstract": null,
+    "description": null,
+    "name": {
+      "deu": "LTS - Landesverband der Tourismusorganisationen Südtirols",
+      "eng": "LTS - Landesverband der Tourismusorganisationen Südtirols",
+      "ita": "LTS - Landesverband der Tourismusorganisationen Südtirols"
+    },
+    "shortName": null,
+    "url": {
+      "deu": "http://www.feldthurns.info",
+      "eng": "http://www.feldthurns.info",
+      "ita": "http://www.feldthurns.info"
+    },
+    "contactPoints": [
+      {
+        "address": {
+          "street": {
+            "deu": "Marktplatz 1",
+            "eng": ".",
+            "ita": "Piazza Mercato 1"
+          },
+          "city": {
+            "deu": "Klausen",
+            "eng": ".",
+            "ita": "Chiusa"
+          },
+          "region": null,
+          "complement": null,
+          "categories": null,
+          "zipcode": null,
+          "zipCode": "39040"
+        },
+        "availableHours": null,
+        "email": "info@feldthurns.info",
+        "telephone": "+390472855290"
+      }
+    ]
+  },
+  "relationships": {
+    "categories": null,
+    "multimediaDescriptions": null
+  }
+}

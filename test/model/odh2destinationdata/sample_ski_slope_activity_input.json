@@ -1,0 +1,334 @@
+{
+    "Id": "4DA19B2B1328127FC062FB79F6F435A5",
+    "Self": "http://tourism.api.opendatahub.bz.it/v1/Activity/4DA19B2B1328127FC062FB79F6F435A5",
+    "Type": "Loipen",
+    "Areas": [
+      {
+        "Id": "C30DA5E46A194185A84AA8C774964E2A",
+        "Self": "http://tourism.api.opendatahub.bz.it/v1/Area/C30DA5E46A194185A84AA8C774964E2A"
+      }
+    ],
+    "SmgId": null,
+    "Active": true,
+    "AreaId": [
+      "C30DA5E46A194185A84AA8C774964E2A"
+    ],
+    "Detail": {
+      "de": {
+        "Title": "11 Toblach: Rundschleife Drei-Zinnen-Blick/Landro",
+        "Header": null,
+        "BaseText": "<p>Diese Rundloipe beim vereisten D&uuml;rrensee mit dem fabelhaftem Blick auf die beeindruckenden Drei Zinnen l&auml;sst jedes Langl&auml;uferherz h&ouml;her schlagen.</p>",
+        "Keywords": null,
+        "Language": "de",
+        "MetaDesc": null,
+        "IntroText": null,
+        "MetaTitle": null,
+        "SubHeader": null,
+        "GetThereText": "<p>Wie Sie Toblach erreichen: <a href=\"https://www.drei-zinnen.info/de/toblach/toblach/kontakt-service/anreise-mobilitaet.html\">https://www.drei-zinnen.info/de/toblach/toblach/kontakt-service/anreise-mobilitaet.html</a></p><p>Von Toblach in Richtung S&uuml;den bis zum Drei-Zinnen-Blick/Landro.</p>",
+        "AdditionalText": "<p>Diese Rundloipe ist sehr einfach und f&uuml;hrt inmitten im Wald und sp&auml;ter auf einer Wiese am D&uuml;rrensee und am Drei-Zinnen-Blick/Landro vorbei.</p>"
+      },
+      "en": {
+        "Title": "11 Toblach/Dobbiaco: Round View of the Three Peaks/Landro",
+        "Header": null,
+        "BaseText": "<p>This loop trail near the icy D&uuml;rrensee/Landro lake, with the fabulous view of the imposing Three Peaks, is every cross-country skier&rsquo;s dream come true.</p>",
+        "Keywords": null,
+        "Language": "en",
+        "MetaDesc": null,
+        "IntroText": null,
+        "MetaTitle": null,
+        "SubHeader": null,
+        "GetThereText": "<p>How to reach Toblach/Dobbiaco: <a href=\"https://www.drei-zinnen.info/en/dobbiaco/dobbiaco/contact-and-service/arrival-mobility.html\">https://www.drei-zinnen.info/en/dobbiaco/dobbiaco/contact-and-service/arrival-mobility.html</a></p><p>From Toblach in southern direction until the View of the Three Peaks/Landro.</p>",
+        "AdditionalText": "<p>This very easy round track goes in the middle of the wood and later on a meadow to the D&uuml;rrensee/Landro lake and to the View of the Three Peaks/Landro.</p>"
+      },
+      "it": {
+        "Title": "11 Dobbiaco: Annello Vista Tre Cime/Landro",
+        "Header": null,
+        "BaseText": "<p>Il circuito accanto al Lago di Landro ghiacciato e la vista spettacolare sulle impressionanti Tre Cime di Lavaredo, lascia battere pi&ugrave; veloce il cuore di ogni fondista.</p>",
+        "Keywords": null,
+        "Language": "it",
+        "MetaDesc": null,
+        "IntroText": null,
+        "MetaTitle": null,
+        "SubHeader": null,
+        "GetThereText": "<p>Come arrivare a Dobbiaco: <a href=\"https://www.tre-cime.info/it/dobbiaco/dobbiaco/contatto-servizi/arrivo-mobilita.html\">https://www.tre-cime.info/it/dobbiaco/dobbiaco/contatto-servizi/arrivo-mobilita.html</a></p><p>Da Dobbiaco in direzione sud fino alla Vista Tre Cime/Landro.</p>",
+        "AdditionalText": "<p>Questa pista di sci da fondo facile porta in mezzo al bosco e poi attraverso un prato al Lago di Landro e alla Vista Tre Cime/Landro.</p><p>&nbsp;</p>"
+      }
+    },
+    "IsOpen": true,
+    "Number": "0",
+    "GpsInfo": [
+      {
+        "Gpstype": "Start und Ziel",
+        "Altitude": 1396.0,
+        "Latitude": 46.644231,
+        "Longitude": 12.232614,
+        "AltitudeUnitofMeasure": "m"
+      }
+    ],
+    "LTSTags": [],
+    "ODHTags": [
+      {
+        "Id": "loipen",
+        "Self": "http://tourism.api.opendatahub.bz.it/v1/ActivityTypes/loipen"
+      },
+      {
+        "Id": "klassisch",
+        "Self": "http://tourism.api.opendatahub.bz.it/v1/ActivityTypes/klassisch"
+      }
+    ],
+    "PoiType": "blau",
+    "Ratings": {
+      "Stamina": "2",
+      "Landscape": "6",
+      "Technique": "2",
+      "Difficulty": "2",
+      "Experience": "6"
+    },
+    "SmgTags": [
+      "loipen",
+      "klassisch"
+    ],
+    "SubType": "klassisch",
+    "GpsTrack": [
+      {
+        "Id": "758AFAB52E1A87BF8D43761EB185F6C6",
+        "Type": "overview",
+        "GpxTrackUrl": "https://lcs.lts.it/downloads/gpx/522822A751CA11D18F1400A02427D15E/E929F66468A649A50FD6710BC848DCC1_ov.gpx",
+        "GpxTrackDesc": {
+          "de": "Übersicht",
+          "en": "overview",
+          "it": "compendio"
+        }
+      },
+      {
+        "Id": "E929F66468A649A50FD6710BC848DCC1",
+        "Type": "detailed",
+        "GpxTrackUrl": "https://lcs.lts.it/downloads/gpx/522822A751CA11D18F1400A02427D15E/E929F66468A649A50FD6710BC848DCC1.gpx",
+        "GpxTrackDesc": {
+          "de": "Datei zum herunterladen",
+          "en": "File to download",
+          "it": "scaricare dato"
+        }
+      }
+    ],
+    "OwnerRid": "522822A751CA11D18F1400A02427D15E",
+    "FeetClimb": false,
+    "GpsPoints": {
+      "position": {
+        "Gpstype": "Start und Ziel",
+        "Altitude": 1396.0,
+        "Latitude": 46.644231,
+        "Longitude": 12.232614,
+        "AltitudeUnitofMeasure": "m"
+      }
+    },
+    "Highlight": false,
+    "OdhActive": true,
+    "Shortname": "11 Toblach: Rundschleife Drei-Zinnen-Blick/Landro",
+    "SmgActive": true,
+    "WayNumber": null,
+    "Difficulty": "2",
+    "Exposition": [],
+    "HasRentals": false,
+    "IsPrepared": false,
+    "LastChange": "2021-03-10T14:16:30.0070278",
+    "ChildPoiIds": null,
+    "FirstImport": "2015-04-02T07:31:39.0728312",
+    "HasLanguage": [
+      "de",
+      "it",
+      "en"
+    ],
+    "IsWithLigth": false,
+    "LicenseInfo": {
+      "Author": "",
+      "License": "CC0",
+      "ClosedData": false,
+      "LicenseHolder": "https://www.lts.it"
+    },
+    "RunToValley": false,
+    "ContactInfos": {
+      "de": {
+        "Tax": null,
+        "Url": "http://www.toblach.info",
+        "Vat": null,
+        "City": "Toblach",
+        "Email": "info@toblach.info",
+        "Address": "Dolomitenstraße 3 ",
+        "LogoUrl": null,
+        "Surname": "",
+        "ZipCode": "39034",
+        "Language": "de",
+        "Faxnumber": "",
+        "Givenname": "",
+        "NamePrefix": "",
+        "CompanyName": "Tourist Info Toblach",
+        "CountryCode": "IT",
+        "CountryName": "Italy",
+        "Phonenumber": "+39 0474 972132"
+      },
+      "en": {
+        "Tax": null,
+        "Url": "http://www.toblach.info",
+        "Vat": null,
+        "City": "Toblach/Dobbiaco",
+        "Email": "info@toblach.info",
+        "Address": "Dolomitenstr./Via Dolomiti 3",
+        "LogoUrl": null,
+        "Surname": "",
+        "ZipCode": "39034",
+        "Language": "en",
+        "Faxnumber": "",
+        "Givenname": "",
+        "NamePrefix": "",
+        "CompanyName": "Tourist Info Toblach/Dobbiaco",
+        "CountryCode": "IT",
+        "CountryName": "Italy",
+        "Phonenumber": "+39 0474 972132"
+      },
+      "it": {
+        "Tax": null,
+        "Url": "http://www.toblach.info",
+        "Vat": null,
+        "City": "Dobbiaco",
+        "Email": "info@toblach.info",
+        "Address": "Via Dolomiti 3",
+        "LogoUrl": null,
+        "Surname": "",
+        "ZipCode": "39034",
+        "Language": "it",
+        "Faxnumber": "",
+        "Givenname": "",
+        "NamePrefix": "",
+        "CompanyName": "Tourist Info Dobbiaco",
+        "CountryCode": "IT",
+        "CountryName": "Italy",
+        "Phonenumber": "+39 0474 972132"
+      }
+    },
+    "ImageGallery": [],
+    "LocationInfo": {
+      "TvInfo": {
+        "Id": "522822A751CA11D18F1400A02427D15E",
+        "Name": {
+          "cs": "Toblach/Dobbiaco",
+          "de": "Toblach",
+          "en": "Toblach/Dobbiaco",
+          "fr": "Toblach/Dobbiaco",
+          "it": "Dobbiaco",
+          "nl": "Toblach/Dobbiaco",
+          "pl": "Toblach/Dobbiaco",
+          "ru": "Тоблах/Dobbiaco"
+        },
+        "Self": "http://tourism.api.opendatahub.bz.it/v1/TourismAssociation/522822A751CA11D18F1400A02427D15E"
+      },
+      "AreaInfo": {
+        "Id": "C30DA5E46A194185A84AA8C774964E2A",
+        "Name": {
+          "cs": "Toblach ",
+          "de": "Toblach ",
+          "en": "Toblach ",
+          "fr": "Toblach ",
+          "it": "Toblach ",
+          "nl": "Toblach ",
+          "pl": "Toblach ",
+          "ru": "Toblach "
+        },
+        "Self": "http://tourism.api.opendatahub.bz.it/v1/Area/C30DA5E46A194185A84AA8C774964E2A"
+      },
+      "RegionInfo": {
+        "Id": "D2633A1FC24E11D18F1B006097B8970B",
+        "Name": {
+          "cs": "Oblast Drei Zinnen Dolomity",
+          "de": "Dolomitenregion Drei Zinnen",
+          "en": "Dolomites Region Three Peaks",
+          "fr": "Région des Dolomites Drei Zinnen",
+          "it": "Regione dolomitica Tre Cime",
+          "nl": "Dolomietenregio Drei Zinnen",
+          "pl": "Region Drei Zinnen w Dolomitach",
+          "ru": "регион Драй-Циннен, Доломиты"
+        },
+        "Self": "http://tourism.api.opendatahub.bz.it/v1/Region/D2633A1FC24E11D18F1B006097B8970B"
+      },
+      "DistrictInfo": null,
+      "MunicipalityInfo": null
+    },
+    "MasterPoiIds": null,
+    "ActivityTypes": [
+      {
+        "Id": "Loipen",
+        "Self": "http://tourism.api.opendatahub.bz.it/v1/ActivityTypes/Loipen",
+        "Type": "Type"
+      },
+      {
+        "Id": "klassisch",
+        "Self": "http://tourism.api.opendatahub.bz.it/v1/ActivityTypes/klassisch",
+        "Type": "SubType"
+      },
+      {
+        "Id": "blau",
+        "Self": "http://tourism.api.opendatahub.bz.it/v1/ActivityTypes/blau",
+        "Type": "PoiType"
+      }
+    ],
+    "AltitudeSumUp": 31.0,
+    "BikeTransport": false,
+    "LiftAvailable": false,
+    "DistanceLength": 2800.0,
+    "AltitudeSumDown": 31.0,
+    "HasFreeEntrance": false,
+    "OutdooractiveID": "16420007",
+    "CopyrightChecked": true,
+    "DistanceDuration": 0.0,
+    "OperationSchedule": [
+      {
+        "Stop": "2020-03-01T00:00:00",
+        "Type": "3",
+        "Start": "1900-01-01T00:00:00",
+        "OperationScheduleTime": null,
+        "OperationscheduleName": {
+          "de": ""
+        }
+      },
+      {
+        "Stop": "2020-12-01T00:00:00",
+        "Type": "3",
+        "Start": "2020-12-01T00:00:00",
+        "OperationScheduleTime": null,
+        "OperationscheduleName": {
+          "de": ""
+        }
+      }
+    ],
+    "AdditionalPoiInfos": {
+      "de": {
+        "Novelty": null,
+        "PoiType": "",
+        "SubType": "klassisch",
+        "Language": "de",
+        "MainType": "Loipen",
+        "Categories": null
+      },
+      "en": {
+        "Novelty": null,
+        "PoiType": "",
+        "SubType": "classic",
+        "Language": "en",
+        "MainType": "Cross-country ski-tracks",
+        "Categories": null
+      },
+      "it": {
+        "Novelty": null,
+        "PoiType": "",
+        "SubType": "classica",
+        "Language": "it",
+        "MainType": "Pista di fondo",
+        "Categories": null
+      }
+    },
+    "AltitudeDifference": 0.0,
+    "AltitudeLowestPoint": 1396.0,
+    "AltitudeHighestPoint": 1420.0,
+    "TourismorganizationId": "522822A751CA11D18F1400A02427D15E",
+    "OutdooractiveElevationID": "16422830"
+  }

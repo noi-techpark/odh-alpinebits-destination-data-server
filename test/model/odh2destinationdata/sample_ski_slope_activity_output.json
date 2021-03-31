@@ -1,0 +1,76 @@
+{
+    "type": "skiSlopes",
+    "id": "4DA19B2B1328127FC062FB79F6F435A5",
+    "meta": {
+      "dataProvider": "http://tourism.opendatahub.bz.it/",
+      "lastUpdate": "2021-03-10T14:16:30.0070278+01:00"
+    },
+    "links": {
+      "self": "http://example.com/2021-04/skiSlopes/4DA19B2B1328127FC062FB79F6F435A5"
+    },
+    "attributes": {
+      "abstract": null,
+      "description": {
+        "deu": "Diese Rundloipe beim vereisten Dürrensee mit dem fabelhaftem Blick auf die beeindruckenden Drei Zinnen lässt jedes Langläuferherz höher schlagen.",
+        "eng": "This loop trail near the icy Dürrensee/Landro lake, with the fabulous view of the imposing Three Peaks, is every cross-country skier’s dream come true.",
+        "ita": "Il circuito accanto al Lago di Landro ghiacciato e la vista spettacolare sulle impressionanti Tre Cime di Lavaredo, lascia battere più veloce il cuore di ogni fondista."
+      },
+      "name": {
+        "deu": "11 Toblach: Rundschleife Drei-Zinnen-Blick/Landro",
+        "eng": "11 Toblach/Dobbiaco: Round View of the Three Peaks/Landro",
+        "ita": "11 Dobbiaco: Annello Vista Tre Cime/Landro"
+      },
+      "shortName": null,
+      "url": {
+        "deu": "http://www.toblach.info",
+        "eng": "http://www.toblach.info",
+        "ita": "http://www.toblach.info"
+      },
+      "address": {
+        "street": {
+          "deu": "Dolomitenstraße 3 ",
+          "eng": "Dolomitenstr./Via Dolomiti 3",
+          "ita": "Via Dolomiti 3"
+        },
+        "city": {
+          "deu": "Toblach",
+          "eng": "Toblach/Dobbiaco",
+          "ita": "Dobbiaco"
+        },
+        "region": null,
+        "country": "IT",
+        "complement": null,
+        "categories": null,
+        "zipcode": "39034"
+      },
+      "difficulty": {
+        "eu": "beginner",
+        "us": null
+      },
+      "geometries": [
+        {
+          "type": "Point",
+          "coordinates": [
+            12.232614,
+            46.644231,
+            1396
+          ]
+        }
+      ],
+      "howToArrive": {
+        "deu": "Wie Sie Toblach erreichen: https://www.drei-zinnen.info/de/toblach/toblach/kontakt-service/anreise-mobilitaet.htmlVon Toblach in Richtung Süden bis zum Drei-Zinnen-Blick/Landro.",
+        "eng": "How to reach Toblach/Dobbiaco: https://www.drei-zinnen.info/en/dobbiaco/dobbiaco/contact-and-service/arrival-mobility.htmlFrom Toblach in southern direction until the View of the Three Peaks/Landro.",
+        "ita": "Come arrivare a Dobbiaco: https://www.tre-cime.info/it/dobbiaco/dobbiaco/contatto-servizi/arrivo-mobilita.htmlDa Dobbiaco in direzione sud fino alla Vista Tre Cime/Landro."
+      },
+      "length": 2800,
+      "maxAltitude": 1396,
+      "minAltitude": 1420,
+      "openingHours": null,
+      "snowCondition": null
+    },
+    "relationships": {
+      "categories": null,
+      "multimediaDescriptions": null,
+      "connections": null
+    }
+  }

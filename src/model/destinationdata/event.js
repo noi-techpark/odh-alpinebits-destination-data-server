@@ -22,6 +22,17 @@ class Event extends IndividualResource {
         this.relationships.venues = this.relationships.venues || null;
     }
 
+    toJSON() {
+        const copy = super.toJSON();
+        const { endDate, startDate } = this.attributes;
+
+        // TODO: review whether we need a timezone offset on the serialized string
+        copy.attributes.endDate = endDate instanceof Date ? endDate.toISOString() : endDate;
+        copy.attributes.startDate = startDate instanceof Date ? startDate.toISOString() : startDate;
+
+        return copy;
+    }
+
     addContributor(contributor) {
         return Resource.addRelationshipToMany(this.relationships, 'contributors', contributor, [ ResourceType.agents ])
     }

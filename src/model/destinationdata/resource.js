@@ -1,4 +1,5 @@
 const iso6393to6391 = require("iso-639-3/to-1.json");
+const _ = require( "lodash");
 
 class Resource {
     constructor(base) {
@@ -70,17 +71,23 @@ class Resource {
         const { relationships } = this;
 
         Object.entries(relationships).forEach(([name, relationship]) => {
-            const links = { self: `${this.links.self}/${name}` };
-            let data = null;
-
-            if(Array.isArray(relationship)) {
-                data = relationship.map(target => target.getReference());
-            } else if(relationship instanceof Resource) {
-                data = relationship.getReference();
+            if(_.isEmpty(relationship)) {
+                copy.relationships[name] = null;
+            } else {
+                const links = { self: `${this.links.self}/${name}` };
+                let data = null;
+    
+                if(Array.isArray(relationship)) {
+                    data = relationship.map(target => target.getReference());
+                } else if(relationship instanceof Resource) {
+                    data = relationship.getReference();
+                }
+                
+                copy.relationships[name] = { data, links };
             }
-            
-            copy.relationships[name] = { data, links };
         });
+
+        return copy;
     }
 
     getReference() {

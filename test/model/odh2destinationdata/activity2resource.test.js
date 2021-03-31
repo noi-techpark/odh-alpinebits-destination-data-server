@@ -1,65 +1,322 @@
-// const { Activity } = require('./../../../src/model/odh/activity');
-const { ResourceType } = require('../../../src/model/destinationdata/constants');
-const { Lift } = require('./../../../src/model/destinationdata/lift');
-const Lift2DestinationData = require('./../../../src/model/odh2destinationdata/lift_transform');
-const liftActivity = require('./response_activity_lift.json');
+const OdhEvent2DestinationData = require("../../../src/model/odh2destinationdata/event_transform");
+const OdhActivity2DestinationData = require("../../../src/model/odh2destinationdata/activity_transform");
+const _ = require("lodash");
 
-describe('Test transformation ODH activities into DestinationData resources', () => {
+function expectOptional(field) {
+    expect(field).toBeDefined();
 
-    it('Test transformation of single ODH activity to DestinationData lift', () => {
-        const request = {
-            baseUrl: 'http://example.com/2021-04',
-            selfUrl: 'http://example.com/2021-04/lifts/7FC702D2210CFAA29E153BA9AB5ABB62'
+    if(field) {
+        if(!['boolean', 'number'].includes(typeof field)) {
+            expect(_.isEmpty(field)).toBe(false);
         }
-        const lift = Lift2DestinationData.transformLift(liftActivity, request);
+    } else {
+        expect(field).toBeNull();
+    }
+}
 
-        console.log(lift.relationships.multimediaDescriptions);
-        // console.log(JSON.stringify(lift.attributes.openingHours,null,2));
+function expectMandatory(field) {
+    expect(field).toBeDefined();
+    expect(field).not.toBeNull();
 
-        expect(lift).toBeInstanceOf(Lift);
+    if(!['boolean', 'number'].includes(typeof field)) {
+        expect(_.isEmpty(field)).toBe(false);
+    }
+}
 
-        expect(lift.id).toBe("7FC702D2210CFAA29E153BA9AB5ABB62");
-        expect(lift.type).toBe(ResourceType.lifts);
+function itShouldBeMandatory(fieldName, field) {
+    it(`The field "${fieldName}" is mandatory and cannot be empty`, () => expectMandatory(field))
+}
 
-        expect(lift.meta.dataProvider).toBe("http://tourism.opendatahub.bz.it/");
-        expect(lift.meta.lastUpdate).toBe("2021-03-10T13:09:12.1985011+01:00");
-        
-        expect(lift.links.self).toBe(request.selfUrl);
+function itShouldBeOptional(fieldName, field) {
+    it(`The field "${fieldName}" is optional and cannot be empty`, () => expectOptional(field))
+}
 
-        expect(lift.attributes.abstract).toBeNull();
-        expect(lift.attributes.description).toBeDefined();
-        expect(lift.attributes.name).toBeDefined();
-        expect(lift.attributes.shortName).toBeNull();
-        expect(lift.attributes.url).toBeDefined();
+function itShouldMatch(actualOutput, expectedOutput) {
+    it('The serialized output should match the expected output', () => {
+        const serializedOutput = actualOutput.toJSON();
+        expect(serializedOutput).toMatchObject(expectedOutput);
+    })
+}
 
-        expect(lift.attributes.address).toBeDefined();
-        expect(lift.attributes.geometries).toHaveLength(1);
-        expect(lift.attributes.howToArrive).toBeDefined();
-        expect(lift.attributes.length).toBe(290);
-        expect(lift.attributes.openingHours).toHaveProperty('dailySchedules', null);
-        expect(lift.attributes.openingHours).not.toHaveProperty('weeklySchedules', null);
+describe('Test transformation ODH "items" into DestinationData resources', () => {
+  describe("Test transformation of single ODH activity into a DestinationData resource", () => {
+    const sampleLiftActivity = require("./sample_lift_activity_input.json");
+    const request = {
+        baseUrl: "http://example.com/2021-04",
+        selfUrl: "http://example.com/2021-04/lifts/7FC702D2210CFAA29E153BA9AB5ABB62",
+    };
+    const resource = OdhActivity2DestinationData.transformToLift(sampleLiftActivity, request);
+    const { attributes } = resource;
 
-        expect(lift.relationships.multimediaDescriptions).toHaveLength(2);
-        lift.relationships.multimediaDescriptions.forEach(mediaObject => {
-            expect(mediaObject.meta.dataProvider).toBeDefined();
-            expect(mediaObject.meta.lastUpdate).toBeDefined();
-
-            expect(mediaObject.attributes.abstract).toBeNull();
-            expect(mediaObject.attributes.contentType).toBeDefined();
-            expect(mediaObject.attributes.description).toBeDefined();
-            expect(mediaObject.attributes.duration).toBeNull();
-            expect(mediaObject.attributes.height).toBeDefined();
-            expect(mediaObject.attributes.name).toBeDefined();
-            expect(mediaObject.attributes.license).toBeDefined();
-            expect(mediaObject.attributes.shortName).toBeNull();
-            expect(mediaObject.attributes.url).toBeDefined();
-            expect(mediaObject.attributes.width).toBeDefined();
-
-            expect(mediaObject.relationships.categories).toBeNull();
-            expect(mediaObject.relationships.copyrightOwner).toBeDefined();
-        });
-
-        // TODO: transform categories
-        // TODO: transform multimediaDescriptions
+    it("The fields id and type must hold valid values", () => {
+        expectMandatory(resource.id);
+        expectMandatory(resource.type);
+      });
+  
+    it("The object meta must have a set data provider and last update timestamp greater than zero 0 (January 1, 1970, 00:00:00)", () => {
+        const { meta } = resource;
+        expect(meta.dataProvider).toBe("http://tourism.opendatahub.bz.it/");
+        expect(new Date(meta.lastUpdate) > new Date(0)).toBe(true);
     });
+
+    it("The links object must contain a self reference/link", () => {
+        expectMandatory(resource.links.self);
+    });
+
+    itShouldBeOptional("abstract", attributes.abstract)
+    itShouldBeOptional("description", attributes.description)
+    itShouldBeOptional("name", attributes.name)
+    itShouldBeOptional("shortName", attributes.shortName)
+    itShouldBeOptional("url", attributes.url)
+  });
+
+  describe("Test transformation of single ODH event into DestinationData event", () => {
+    const sampleOdhEvent = require("./sample_event_input.json");
+    const sampleDestinationDataEvent = require("./sample_event_output.json");
+    const request = {
+      baseUrl: "http://example.com/2021-04",
+      selfUrl: "http://example.com/2021-04/events/CDB3CC1EE2614488A451C467BE971571",
+    };
+    const event = OdhEvent2DestinationData.transformToEvent(sampleOdhEvent, request);
+    const { attributes, relationships } = event;
+
+    itShouldBeMandatory('name', attributes.name);
+
+    itShouldBeMandatory('organizers', relationships.organizers);
+    itShouldBeMandatory('publisher', relationships.publisher);
+    itShouldBeMandatory('venues', relationships.venues);
+    
+    itShouldBeOptional('capacity', attributes.capacity);
+    itShouldBeOptional('endDate', attributes.endDate ? attributes.endDate.toISOString(): attributes.endDate);
+    itShouldBeOptional('startDate', attributes.startDate ? attributes.startDate.toISOString(): attributes.startDate);
+    itShouldBeOptional('status', attributes.status);
+    itShouldBeOptional('url', attributes.url);
+    
+    itShouldBeOptional('categories', relationships.categories);
+    itShouldBeOptional('contributors', relationships.contributors);
+    itShouldBeOptional('multimediaDescriptions', relationships.multimediaDescriptions);
+    itShouldBeOptional('series', relationships.series);
+    itShouldBeOptional('sponsors', relationships.sponsors);
+    itShouldBeOptional('subEvents', relationships.subEvents);
+
+    itShouldMatch(event, sampleDestinationDataEvent);
+  });
+
+  describe("Test transformation of single ODH activity into DestinationData lift", () => {
+    const sampleLiftActivity = require("./sample_lift_activity_input.json");
+    const sampleDestinationDataLift = require("./sample_lift_activity_output.json");
+    const request = {
+      baseUrl: "http://example.com/2021-04",
+      selfUrl: "http://example.com/2021-04/lifts/7FC702D2210CFAA29E153BA9AB5ABB62",
+    };
+    const lift = OdhActivity2DestinationData.transformToLift(sampleLiftActivity, request);
+    const { attributes, relationships } = lift;
+
+    itShouldBeMandatory('name', attributes.name);
+    
+    itShouldBeOptional('address', attributes.address);
+    itShouldBeOptional('geometries', attributes.geometries);
+    itShouldBeOptional('howToArrive', attributes.howToArrive);
+    itShouldBeOptional('length', attributes.length);
+    itShouldBeOptional('openingHours', attributes.openingHours);
+    itShouldBeOptional('personsPerChair', attributes.openingHours);
+
+    itShouldBeOptional('categories', relationships.categories);
+    itShouldBeOptional('connections', relationships.connections);
+    itShouldBeOptional('multimediaDescriptions', relationships.multimediaDescriptions);
+
+    itShouldMatch(lift, sampleDestinationDataLift);
+  });
+
+  describe("Test transformation of single ODH activity into DestinationData ski slope", () => {
+    const sampleSkiSlopeActivity = require("./sample_ski_slope_activity_input.json");
+    const sampleDestinationDataSkiSlope = require("./sample_ski_slope_activity_output.json");
+    const request = {
+      baseUrl: "http://example.com/2021-04",
+      selfUrl: "http://example.com/2021-04/skiSlopes/4DA19B2B1328127FC062FB79F6F435A5",
+    };
+    const skiSlope = OdhActivity2DestinationData.transformToSkiSlope(sampleSkiSlopeActivity, request);
+    const { attributes, relationships } = skiSlope;
+
+    itShouldBeMandatory('name', attributes.name);
+    
+    itShouldBeOptional('address', attributes.address);
+    itShouldBeOptional('difficulty', attributes.difficulty);
+    itShouldBeOptional('geometries', attributes.geometries);
+    itShouldBeOptional('howToArrive', attributes.howToArrive);
+    itShouldBeOptional('length', attributes.length);
+    itShouldBeOptional('maxAltitude', attributes.maxAltitude);
+    itShouldBeOptional('minAltitude', attributes.minAltitude);
+    itShouldBeOptional('openingHours', attributes.openingHours);
+    itShouldBeOptional('snowCondition', attributes.snowCondition);
+
+    itShouldBeOptional('categories', relationships.categories);
+    itShouldBeOptional('connections', relationships.connections);
+    itShouldBeOptional('multimediaDescriptions', relationships.multimediaDescriptions);
+
+    itShouldMatch(skiSlope, sampleDestinationDataSkiSlope);
+  });
+
+  describe("Test transformation of single ODH activity into DestinationData snowpark", () => {
+    const sampleSnowparkActivity = require("./sample_snowpark_activity_input.json");
+    const sampleDestinationDataSnowpark = require("./sample_snowpark_activity_output.json");
+    const request = {
+      baseUrl: "http://example.com/2021-04",
+      selfUrl: "http://example.com/2021-04/snowparks/8781EFB8EDC5216BBF7A80DEB565569C",
+    };
+    const snowpark = OdhActivity2DestinationData.transformToSnowpark(sampleSnowparkActivity, request);
+    const { attributes, relationships } = snowpark;
+
+    itShouldBeMandatory('name', attributes.name);
+    
+    itShouldBeOptional('address', attributes.address);
+    itShouldBeOptional('difficulty', attributes.difficulty);
+    itShouldBeOptional('geometries', attributes.geometries);
+    itShouldBeOptional('howToArrive', attributes.howToArrive);
+    itShouldBeOptional('length', attributes.length);
+    itShouldBeOptional('maxAltitude', attributes.maxAltitude);
+    itShouldBeOptional('minAltitude', attributes.minAltitude);
+    itShouldBeOptional('openingHours', attributes.openingHours);
+    itShouldBeOptional('snowCondition', attributes.snowCondition);
+
+    itShouldBeOptional('categories', relationships.categories);
+    itShouldBeOptional('connections', relationships.connections);
+    itShouldBeOptional('multimediaDescriptions', relationships.multimediaDescriptions);
+
+    itShouldMatch(snowpark, sampleDestinationDataSnowpark);
+  });
+
+  describe("Test transformation of image gallery items from ODH activity into DestinationData media objects (multimediaDescription)", () => {
+    const sampleLiftActivity = require("./sample_lift_activity_input.json");
+    const sampleMultimediaDescription = require("./sample_multimedia_description_output.json");
+    const request = {
+      baseUrl: "http://example.com/2021-04",
+      selfUrl: "http://example.com/2021-04/lifts/7FC702D2210CFAA29E153BA9AB5ABB62",
+    };
+    const lift = OdhActivity2DestinationData.transformToLift(sampleLiftActivity, request);
+    const multimediaDescription = lift.relationships.multimediaDescriptions[0];
+    const { attributes, relationships } = multimediaDescription;
+
+    itShouldBeMandatory('contentType', attributes.contentType);
+    itShouldBeMandatory('url', attributes.url);
+
+    itShouldBeOptional("abstract", attributes.abstract)
+    itShouldBeOptional("description", attributes.description)
+    itShouldBeOptional('duration', attributes.duration);
+    itShouldBeOptional('height', attributes.height);
+    itShouldBeOptional('license', attributes.license);
+    itShouldBeOptional("name", attributes.name)
+    itShouldBeOptional("shortName", attributes.shortName)
+    itShouldBeOptional('width', attributes.width);
+
+    itShouldBeOptional('categories', relationships.categories);
+    itShouldBeOptional('copyrightOwner', relationships.copyrightOwner);
+
+    itShouldMatch(multimediaDescription, sampleMultimediaDescription);
+  });
+
+  describe("Test transformation of image gallery items from ODH activity into DestinationData agents (copyrightOwner)", () => {
+    const sampleLiftActivity = require("./sample_lift_activity_input.json");
+    const sampleCopyrightOwner = require("./sample_copyright_owner_output.json");
+    const request = {
+      baseUrl: "http://example.com/2021-04",
+      selfUrl: "http://example.com/2021-04/lifts/7FC702D2210CFAA29E153BA9AB5ABB62",
+    };
+    const lift = OdhActivity2DestinationData.transformToLift(sampleLiftActivity, request);
+    const multimediaDescription = lift.relationships.multimediaDescriptions[0];
+    const copyrightOwner = multimediaDescription.relationships.copyrightOwner;
+    const { attributes, relationships } = copyrightOwner;
+
+    itShouldBeMandatory('name', attributes.name);
+
+    itShouldBeOptional("abstract", attributes.abstract);
+    itShouldBeOptional('contactPoints', attributes.contactPoints);
+    itShouldBeOptional("description", attributes.description);
+    itShouldBeOptional("shortName", attributes.shortName);
+    itShouldBeOptional("url", attributes.url);
+
+    itShouldBeOptional('categories', relationships.categories);
+    itShouldBeOptional('multimediaDescriptions', relationships.multimediaDescriptions);
+
+    itShouldMatch(copyrightOwner, sampleCopyrightOwner);
+  });
+
+  describe("Test transformation from ODH activity into DestinationData agents (organizers)", () => {
+    const sampleOdhEvent = require("./sample_event_input.json");
+    const sampleOrganizer = require("./sample_organizer_output.json");
+    const request = {
+      baseUrl: "http://example.com/2021-04",
+      selfUrl: "http://example.com/2021-04/events/CDB3CC1EE2614488A451C467BE971571",
+    };
+    const event = OdhEvent2DestinationData.transformToEvent(sampleOdhEvent, request);
+    const organizer = event.relationships.organizers[0];
+    const { attributes, relationships } = organizer;
+
+    itShouldBeMandatory('name', attributes.name);
+
+    itShouldBeOptional("abstract", attributes.abstract);
+    itShouldBeOptional('contactPoints', attributes.contactPoints);
+    itShouldBeOptional("description", attributes.description);
+    itShouldBeOptional("shortName", attributes.shortName);
+    itShouldBeOptional("url", attributes.url);
+
+    itShouldBeOptional('categories', relationships.categories);
+    itShouldBeOptional('multimediaDescriptions', relationships.multimediaDescriptions);
+
+    itShouldMatch(organizer, sampleOrganizer);
+  });
+
+  describe("Test transformation from ODH activity into DestinationData agents (publisher)", () => {
+    const sampleOdhEvent = require("./sample_event_input.json");
+    const samplePublisher = require("./sample_publisher_output.json");
+    const request = {
+      baseUrl: "http://example.com/2021-04",
+      selfUrl: "http://example.com/2021-04/events/CDB3CC1EE2614488A451C467BE971571",
+    };
+    const event = OdhEvent2DestinationData.transformToEvent(sampleOdhEvent, request);
+    const publisher = event.relationships.publisher;
+    const { attributes, relationships } = publisher;
+
+    itShouldBeMandatory('name', attributes.name);
+
+    itShouldBeOptional("abstract", attributes.abstract);
+    itShouldBeOptional('contactPoints', attributes.contactPoints);
+    itShouldBeOptional("description", attributes.description);
+    itShouldBeOptional("shortName", attributes.shortName);
+    itShouldBeOptional("url", attributes.url);
+
+    itShouldBeOptional('categories', relationships.categories);
+    itShouldBeOptional('multimediaDescriptions', relationships.multimediaDescriptions);
+
+    itShouldMatch(publisher, samplePublisher);
+  });
+
+  describe("Test transformation from ODH activity into DestinationData venues (venues)", () => {
+    const sampleOdhEvent = require("./sample_event_input.json");
+    const sampleVenue = require("./sample_venue_output.json");
+    const request = {
+      baseUrl: "http://example.com/2021-04",
+      selfUrl: "http://example.com/2021-04/events/CDB3CC1EE2614488A451C467BE971571",
+    };
+    const event = OdhEvent2DestinationData.transformToEvent(sampleOdhEvent, request);
+    const venue = event.relationships.venues[0];
+    const { attributes, relationships } = venue;
+
+    itShouldBeMandatory('name', attributes.name);
+
+    itShouldBeOptional("abstract", attributes.abstract);
+    itShouldBeOptional('address', attributes.address);
+    itShouldBeOptional("description", attributes.description);
+    itShouldBeOptional("geometries", attributes.geometries);
+    itShouldBeOptional("howToArrive", attributes.howToArrive);
+    itShouldBeOptional("shortName", attributes.shortName);
+    itShouldBeOptional("url", attributes.url);
+
+    itShouldBeOptional('categories', relationships.categories);
+    itShouldBeOptional('multimediaDescriptions', relationships.multimediaDescriptions);
+
+    itShouldMatch(venue, sampleVenue);
+  });
+
+  
 });

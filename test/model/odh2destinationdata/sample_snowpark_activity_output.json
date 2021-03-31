@@ -1,0 +1,60 @@
+{
+  "type": "snowparks",
+  "id": "8781EFB8EDC5216BBF7A80DEB565569C",
+  "meta": {
+    "dataProvider": "http://tourism.opendatahub.bz.it/",
+    "lastUpdate": "2021-03-10T13:34:33.8550799+01:00"
+  },
+  "links": {
+    "self": "http://example.com/2021-04/snowparks/8781EFB8EDC5216BBF7A80DEB565569C"
+  },
+  "attributes": {
+    "abstract": null,
+    "description": {
+      "deu": "Der Funpark Val Gardena liegt im wunderschönen Val Gardena und ist eine perfekte Spielwiese für Anfänger und Familien. Es wird aber auch einen Kicker mit einer 20m Table geben, womit Adrenalinkicks für die ganz Mutigen garantiert sind! Die erhöhte Anzahl an Boxen und Kickern garantiert einen hohen Fun-Faktor für alle Rider. Eine weitere Besonderheit ist ein Tunnel, der gänzlich aus Schnee besteht. Zusammen mit den zahlreichen Events des Freeride Club Val Gardena ergibt das ein riesiges Angebot.",
+      "eng": "The Funpark Val Gardena is situated in the beautiful Val Gardena valley. In general, it’s a perfect playground for families and beginners but there will also be a kicker with a 20 m table, which guarantees an adrenaline kick for those who are looking for thrills. The high number of boxes and rails provide loads of fun for everyone. Another secialfeature is the spiral tunnel, which is entirely made of snow. Including the events organized by the Freeride Club Val Gardena, we provide a manifold offer.",
+      "ita": "In Val Gardena c`è il bellissimo Funpark Val Gardena. Ideale per famiglie e principianti è servito da una seggiovia a 6 posti con cupola. L'adrenalina non manca grazie alla presenza di un kicker da 20 m e i box e rail che fanno divertire proprio tutti. Inoltre è caratterizzato dal tunnel tutto in neve a forma di chiocciola. Gli eventi organizzati dal Freeride Club Val Gardena completano l’offerta."
+    },
+    "name": {
+      "deu": "Funpark Val Gardena",
+      "eng": "Funpark Val Gardena",
+      "ita": "Funpark Val Gardena"
+    },
+    "shortName": null,
+    "url": {
+      "deu": "http://www.pizsella.com",
+      "eng": "http://www.pizsella.com",
+      "ita": "http://www.pizsella.com"
+    },
+    "address": {
+      "street": {
+        "deu": "Str. Plan de Gralba 2",
+        "eng": "Str. Plan de Gralba 2",
+        "ita": "Str. Plan de Gralba 2"
+      },
+      "city": {
+        "deu": "Wolkenstein - Gröden",
+        "eng": "Selva – Val Gardena",
+        "ita": "Selva – Val Gardena"
+      },
+      "region": null,
+      "country": "IT",
+      "complement": null,
+      "categories": null,
+      "zipcode": "39048"
+    },
+    "difficulty": "beginner",
+    "geometries": null,
+    "howToArrive": null,
+    "length": 750,
+    "maxAltitude": null,
+    "minAltitude": null,
+    "openingHours": null,
+    "snowCondition": null
+  },
+  "relationships": {
+    "categories": null,
+    "multimediaDescriptions": null,
+    "connections": null
+  }
+}

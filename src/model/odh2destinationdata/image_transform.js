@@ -25,18 +25,17 @@ function transformMediaObject(containerResource, odhSource, request) {
 
     mediaObject.attributes.description = transformDescription(image);
     mediaObject.attributes.name = transformName(image);
-    mediaObject.attributes.contentType = 'image/jpeg'; // TODO: review if this contentType is indeed always jpeg
+    mediaObject.attributes.contentType = 'image/jpeg'; // TODO: ask ODH to provide contentType
     mediaObject.attributes.url = image.ImageUrl || null;
     mediaObject.attributes.license = transformLicense(image);
     mediaObject.attributes.height = transformHeight(image);
     mediaObject.attributes.width = transformWidth(image);
 
+    mediaObject.relationships.copyrightOwner = transformCopyrightOwner(mediaObject, image, request);
+    
     // mediaObject.attributes.abstract - No available data
     // mediaObject.attributes.duration - No available data
     // mediaObject.attributes.shortName - No available data
-
-    mediaObject.relationships.copyrightOwner = transformCopyrightOwner(mediaObject, image, request);
-
     // mediaObject.relationships.categories - No available data
 
     return mediaObject;
@@ -80,7 +79,6 @@ function transformHeight(odhImage) {
 function transformWidth(odhImage) {
     return odhImage.Height && odhImage.Width ? odhImage.Width : null;
 }
-
 
 function transformCopyrightOwner(mediaObjectContainer, odhSource, request) {
     const { CopyRight } = odhSource;

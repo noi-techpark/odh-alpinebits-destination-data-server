@@ -1,3 +1,11 @@
+const { Lift } = require('../src/model/destinationdata/lift');
+const {} = require('./../src/model/destinationdata/category');
+require('custom-env').env();
+
+// const selfUrl = process.env.REF_SERVER_URL + '/2021-04';
+
+// module.exports[''] = new Lift();
+
 module.exports = {
   "0D25868CC23242D6AC97AEB2973CB3D6": {
     id: "0D25868CC23242D6AC97AEB2973CB3D6",
