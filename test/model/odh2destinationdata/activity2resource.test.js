@@ -1,3 +1,4 @@
+const OdhCollection2DestinationData = require("../../../src/model/odh2destinationdata/collection_transform");
 const OdhEvent2DestinationData = require("../../../src/model/odh2destinationdata/event_transform");
 const OdhActivity2DestinationData = require("../../../src/model/odh2destinationdata/activity_transform");
 const _ = require("lodash");
@@ -294,6 +295,7 @@ describe('Test transformation ODH "items" into DestinationData resources', () =>
   describe("Test transformation from ODH activity into DestinationData venues (venues)", () => {
     const sampleOdhEvent = require("./sample_event_input.json");
     const sampleVenue = require("./sample_venue_output.json");
+    // TODO: review "selfUrl" in tests' requests
     const request = {
       baseUrl: "http://example.com/2021-04",
       selfUrl: "http://example.com/2021-04/events/CDB3CC1EE2614488A451C467BE971571",
@@ -318,5 +320,35 @@ describe('Test transformation ODH "items" into DestinationData resources', () =>
     itShouldMatch(venue, sampleVenue);
   });
 
+  describe("Test transformation from a collection of ODH events into a collection DestinationData events", () => {
+    const sampleOdhEventCollection = require("./collection_sample_event_input.json");
+    const sampleEventCollection = require("./collection_sample_event_output.json"); 
+    const request = {
+      baseUrl: "http://example.com/2021-04",
+      selfUrl: "http://example.com/2021-04/events?page[number]=15&include=publisher&fields[agents]=name",
+      include: 'publisher',
+      fields: {
+        agents: 'name',
+      }
+    };
+    const eventCollection = OdhCollection2DestinationData.transformToEventCollection(sampleOdhEventCollection, request);
+    const { jsonapi, meta, links, data, included } = eventCollection;
+    
+    itShouldBeMandatory('jsonapi', jsonapi);
+
+    itShouldBeMandatory('count', meta.count);
+    itShouldBeMandatory('pages', meta.pages);
+
+    itShouldBeMandatory('self', links.self);
+    itShouldBeMandatory('prev', links.prev);
+    itShouldBeMandatory('next', links.next);
+    itShouldBeMandatory('first', links.first);
+    itShouldBeMandatory('last', links.last);
+
+    itShouldBeOptional('data', data);
+    itShouldBeOptional('included', included);
+    
+    itShouldMatch(eventCollection, sampleEventCollection);
+  });
   
 });

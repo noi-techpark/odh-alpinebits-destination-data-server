@@ -20,7 +20,7 @@ function transformMeta(item) {
   return meta;
 }
 
-// TODO: test with "include" query parameter
+// TODO: test with "include" and "fields" query parameters
 function transformResourceLinks(request, resourceType, resourceId) {
   return { self: encodeURI(request.baseUrl + "/" + resourceType + "/" + resourceId) };
 }

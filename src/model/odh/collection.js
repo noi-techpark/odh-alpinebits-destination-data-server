@@ -1,5 +1,5 @@
 
-class OdhCollection {
+class Collection {
     constructor(odhResponse) {
         if (odhResponse) {
             Object.assign(this, odhResponse);
@@ -16,5 +16,5 @@ class OdhCollection {
 }
 
 module.exports = {
-    OdhCollection
+    Collection
 }
