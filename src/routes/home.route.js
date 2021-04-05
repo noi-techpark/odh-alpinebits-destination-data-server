@@ -1,59 +1,23 @@
 require('custom-env').env();
 
-const SERVER_URL = process.env.REF_SERVER_URL
-
-function getBaseResponse(request, response) {
+function getResponse(request, response) {
   let data = {
-    data: null,
+    jsonapi: { version: "1.0" },
     links: {
-      self: SERVER_URL,
-      "1.0":  SERVER_URL+"/1.0",
-      "2.0":  SERVER_URL+"/2.0",
-    }
-  };
-
-  response.status(200);
-  response.json(data);
-}
-
-function getVersion1Response(request, response) {
-  let data = {
+      self: `${process.env.REF_SERVER_URL}/${process.env.API_VERSION}`,
+      // agents: `${process.env.REF_SERVER_URL}/${process.env.API_VERSION}/agents`,
+      categories: `${process.env.REF_SERVER_URL}/${process.env.API_VERSION}/categories`,
+      events: `${process.env.REF_SERVER_URL}/${process.env.API_VERSION}/events`,
+      // eventSeries: `${process.env.REF_SERVER_URL}/${process.env.API_VERSION}/eventSeries`,
+      features: `${process.env.REF_SERVER_URL}/${process.env.API_VERSION}/features`,
+      lifts: `${process.env.REF_SERVER_URL}/${process.env.API_VERSION}/lifts`,
+      // mediaObjects: `${process.env.REF_SERVER_URL}/${process.env.API_VERSION}/mediaObjects`,
+      mountainAreas: `${process.env.REF_SERVER_URL}/${process.env.API_VERSION}/mountainAreas`,
+      snowparks: `${process.env.REF_SERVER_URL}/${process.env.API_VERSION}/snowparks`,
+      skiSlopes: `${process.env.REF_SERVER_URL}/${process.env.API_VERSION}/skiSlopes`,
+      // venues: `${process.env.REF_SERVER_URL}/${process.env.API_VERSION}/venues`
+    },
     data: null,
-    links: {
-      self: SERVER_URL+'/1.0',
-      events: SERVER_URL+'/1.0/events',
-      // eventSeries: SERVER_URL+'/1.0/eventSeries',
-      lifts: SERVER_URL+'/1.0/lifts',
-      mountainAreas: SERVER_URL+'/1.0/mountainAreas',
-      snowparks: SERVER_URL+'/1.0/snowparks',
-      trails: SERVER_URL+'/1.0/trails',
-      // agents: SERVER_URL+'/1.0/agents',
-      // mediaObjects: SERVER_URL+'/1.0/mediaObjects',
-      // venues: SERVER_URL+'/1.0/venues'
-    }
-  };
-
-  response.status(200);
-  response.json(data);
-}
-
-function getVersion2Response(request, response) {
-  let data = {
-    data: null,
-    links: {
-      self: SERVER_URL+'/2.0',
-      categories: SERVER_URL+'/2.0/categories',
-      events: SERVER_URL+'/2.0/events',
-      features: SERVER_URL+'/2.0/features',
-      // eventSeries: SERVER_URL+'/2.0/eventSeries',
-      lifts: SERVER_URL+'/2.0/lifts',
-      mountainAreas: SERVER_URL+'/2.0/mountainAreas',
-      snowparks: SERVER_URL+'/2.0/snowparks',
-      trails: SERVER_URL+'/2.0/trails',
-      // agents: SERVER_URL+'/2.0/agents',
-      // mediaObjects: SERVER_URL+'/2.0/mediaObjects',
-      // venues: SERVER_URL+'/2.0/venues'
-    }
   };
 
   response.status(200);
@@ -61,7 +25,5 @@ function getVersion2Response(request, response) {
 }
 
 module.exports = function(app) {
-  app.get('/', getBaseResponse);
-  app.get('/1.0', getVersion1Response);
-  app.get('/2.0', getVersion2Response);
+  app.get(`/${process.env.API_VERSION}`, getResponse);
 }

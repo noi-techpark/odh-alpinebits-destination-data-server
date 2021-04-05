@@ -101,6 +101,7 @@ function transformOrganizers(eventContainer, odhSource, request) {
     organizer.meta = Object.assign({}, eventContainer.meta)
     organizer.links = utils.transformResourceLinks(request, organizer.type, organizer.id);
 
+    // TODO: review organizers transformation with respect of name and category
     organizer.attributes.contactPoints = transformOrganizerContactPoints(odhSource);
     organizer.attributes.name = {
         deu: "LTS - Landesverband der Tourismusorganisationen Südtirols",
@@ -130,7 +131,8 @@ function transformOrganizerContactPoints(odhSource) {
     address.country = sourceCountryCode ? Object.values(sourceCountryCode)[0] : "IT"; // TODO: confirm if it's safe to assume the organizer to be in Italy
     address.zipCode = sourceZipCode ? Object.values(sourceZipCode)[0] : null;
 
-    const telephone = sourcePhonenumber ? Object.values(sourcePhonenumber)[0].replace(/\s/g,'') : null;
+    // TODO: improve tests for no available data
+    const telephone = sourcePhonenumber && Object.values(sourcePhonenumber)[0] ? Object.values(sourcePhonenumber)[0].replace(/\s/g,'') : null;
     const email = sourceEmail ? Object.values(sourceEmail)[0] : null;
 
     const organizerContactPoint = datatypes.createContactPoints(address, null, email, telephone);

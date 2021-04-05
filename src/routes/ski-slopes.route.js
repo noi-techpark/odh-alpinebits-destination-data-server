@@ -1,4 +1,4 @@
-const connector = require("../connectors");
+const connector = require(`../connectors`);
 const { Connector } = require("../connectors");
 const errors = require("../errors");
 const {
@@ -7,10 +7,10 @@ const {
 } = require("./request-parser");
 
 module.exports = function (app) {
-  app.get(`/${process.env.API_VERSION}/snowparks`, function (req, res) {
+  app.get(`/${process.env.API_VERSION}/skiSlopes`, function (req, res) {
     try {
       connector
-        .getSnowparks(req)
+        .getSkiSlopes(req)
         .then((data) => res.json(data))
         .catch((error) => errors.handleError(error, req, res));
     } catch (error) {
@@ -18,10 +18,10 @@ module.exports = function (app) {
     }
   });
 
-  app.get(`/${process.env.API_VERSION}/snowparks/:id`, function (req, res) {
+  app.get(`/${process.env.API_VERSION}/skiSlopes/:id`, function (req, res) {
     try {
       connector
-        .getSnowparkById(req)
+        .getSkiSlopeById(req)
         .then((data) => res.json(data))
         .catch((error) => errors.handleError(error, req, res));
     } catch (error) {
@@ -29,21 +29,10 @@ module.exports = function (app) {
     }
   });
 
-  app.get(`/${process.env.API_VERSION}/snowparks/:id/categories`, function (req, res) {
+  app.get(`/${process.env.API_VERSION}/skiSlopes/:id/categories`, function (req, res) {
     try {
       connector
-        .getSnowparkCategories(req)
-        .then((data) => res.json(data))
-        .catch((error) => errors.handleError(error, req, res));
-    } catch (error) {
-      errors.handleError(error, req, res);
-    }
-  });
-  
-  app.get(`/${process.env.API_VERSION}/snowparks/:id/connections`, function (req, res) {
-    try {
-      connector
-        .getSnowparkConnections(req)
+        .getSkiSlopeCategories(req)
         .then((data) => res.json(data))
         .catch((error) => errors.handleError(error, req, res));
     } catch (error) {
@@ -51,10 +40,10 @@ module.exports = function (app) {
     }
   });
 
-  app.get(`/${process.env.API_VERSION}/snowparks/:id/features`, function (req, res) {
+  app.get(`/${process.env.API_VERSION}/skiSlopes/:id/connections`, function (req, res) {
     try {
       connector
-        .getSnowparkFeatures(req)
+        .getSkiSlopeConnections(req)
         .then((data) => res.json(data))
         .catch((error) => errors.handleError(error, req, res));
     } catch (error) {
@@ -62,10 +51,10 @@ module.exports = function (app) {
     }
   });
 
-  app.get(`/${process.env.API_VERSION}/snowparks/:id/multimediaDescriptions`, function (req, res) {
+  app.get(`/${process.env.API_VERSION}/skiSlopes/:id/multimediaDescriptions`, function (req, res) {
     try {
       connector
-        .getSnowparkMultimediaDescriptions(req)
+        .getSkiSlopeMultimediaDescriptions(req)
         .then((data) => res.json(data))
         .catch((error) => errors.handleError(error, req, res));
     } catch (error) {

@@ -67,8 +67,48 @@ class Resource {
 
     // TODO: test the links object when returning a relationship
     toJSON() {
-        const copy = Object.assign({}, this);
-        const { relationships } = this;
+        // const copy = Object.assign({}, this);
+        // const { relationships } = this;
+
+        // Object.entries(relationships).forEach(([name, relationship]) => {
+        //     if(_.isEmpty(relationship)) {
+        //         copy.relationships[name] = null;
+        //     } else {
+        //         const links = { self: `${this.links.self}/${name}` };
+        //         let data = null;
+    
+        //         if(Array.isArray(relationship)) {
+        //             data = relationship.map(target => target.getReference());
+        //         } else if(relationship instanceof Resource) {
+        //             data = relationship.getReference();
+        //         }
+                
+        //         copy.relationships[name] = { data, links };
+        //     }
+        // });
+
+        const copy = new this.constructor();
+
+        const { meta, links, attributes, relationships } = copy;
+
+        copy.id = this.id;
+        copy.type = this.type;
+
+        Object.entries(this.meta).forEach(([key,value]) => {
+            meta[key] = value;
+        });
+
+        Object.entries(this.links).forEach(([key,value]) => {
+            links[key] = value;
+        });
+
+        Object.entries(this.attributes).forEach(([key,value]) => {
+            attributes[key] = value;
+        });
+
+        Object.entries(this.relationships).forEach(([key,value]) => {
+            relationships[key] = value;
+        });
 
         Object.entries(relationships).forEach(([name, relationship]) => {
             if(_.isEmpty(relationship)) {

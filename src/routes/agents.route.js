@@ -1,35 +1,19 @@
 const errors = require('../errors');
 
 module.exports = function(app) {
-  app.get('/1.0/agents', function(req, res) {
+  app.get(`/${process.env.API_VERSION}/agents`, function(req, res) {
     errors.handleNotImplemented(req,res);
   });
 
-  app.get('/1.0/agents/:id', function(req, res) {
+  app.get(`/${process.env.API_VERSION}/agents/:id`, function(req, res) {
     errors.handleNotImplemented(req,res);
   });
 
-  app.get('/1.0/agents/:id/multimediaDescription', function(req, res) {
+  app.get(`/${process.env.API_VERSION}/agents/:id/categories`, function(req, res) {
     errors.handleNotImplemented(req,res);
   });
 
-  app.get('/2.0/agents', function(req, res) {
-    errors.handleNotImplemented(req,res);
-  });
-
-  app.get('/2.0/agents/:id', function(req, res) {
-    errors.handleNotImplemented(req,res);
-  });
-
-  app.get('/2.0/agents/:id/categories', function(req, res) {
-    errors.handleNotImplemented(req,res);
-  });
-
-  app.get('/2.0/agents/:id/features', function(req, res) {
-    errors.handleNotImplemented(req,res);
-  });
-
-  app.get('/2.0/agents/:id/multimediaDescription', function(req, res) {
+  app.get(`/${process.env.API_VERSION}/agents/:id/multimediaDescription`, function(req, res) {
     errors.handleNotImplemented(req,res);
   });
 }

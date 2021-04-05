@@ -6,7 +6,7 @@ const {
 } = require("./request-parser");
 
 module.exports = function (app) {
-  app.get("/1.0/mountainAreas", function (req, res) {
+  app.get(`/${process.env.API_VERSION}/mountainAreas`, function (req, res) {
     try {
       connector
         .getMountainAreas(parseCollectionRequest(req))
@@ -17,7 +17,7 @@ module.exports = function (app) {
     }
   });
 
-  app.get("/1.0/mountainAreas/:id", function (req, res) {
+  app.get(`/${process.env.API_VERSION}/mountainAreas/:id`, function (req, res) {
     try {
       connector
         .getMountainAreaById(parseResourceRequest(req))
@@ -28,7 +28,7 @@ module.exports = function (app) {
     }
   });
 
-  app.get("/1.0/mountainAreas/:id/areaOwner", function (req, res) {
+  app.get(`/${process.env.API_VERSION}/mountainAreas/:id/areaOwner`, function (req, res) {
     try {
       connector
         .getMountainAreaOwner(parseResourceRequest(req))
@@ -39,11 +39,15 @@ module.exports = function (app) {
     }
   });
 
-  app.get("/1.0/mountainAreas/:id/connections", function (req, res) {
+  app.get(`/${process.env.API_VERSION}/mountainAreas/:id/categories`, function (req, res) {
     errors.handleNotImplemented(req, res);
   });
 
-  app.get("/1.0/mountainAreas/:id/lifts", function (req, res) {
+  app.get(`/${process.env.API_VERSION}/mountainAreas/:id/connections`, function (req, res) {
+    errors.handleNotImplemented(req, res);
+  });
+
+  app.get(`/${process.env.API_VERSION}/mountainAreas/:id/lifts`, function (req, res) {
     try {
       connector
         .getMountainAreaLifts(parseResourceRequest(req))
@@ -54,7 +58,7 @@ module.exports = function (app) {
     }
   });
 
-  app.get("/1.0/mountainAreas/:id/multimediaDescriptions", function (req, res) {
+  app.get(`/${process.env.API_VERSION}/mountainAreas/:id/multimediaDescriptions`, function (req, res) {
     try {
       connector
         .getMountainAreaMedia(parseResourceRequest(req))
@@ -65,7 +69,7 @@ module.exports = function (app) {
     }
   });
 
-  app.get("/1.0/mountainAreas/:id/snowparks", function (req, res) {
+  app.get(`/${process.env.API_VERSION}/mountainAreas/:id/snowparks`, function (req, res) {
     try {
       connector
         .getMountainAreaSnowparks(parseResourceRequest(req))
@@ -76,104 +80,11 @@ module.exports = function (app) {
     }
   });
 
-  app.get("/1.0/mountainAreas/:id/subAreas", function (req, res) {
+  app.get(`/${process.env.API_VERSION}/mountainAreas/:id/subAreas`, function (req, res) {
     errors.handleNotImplemented(req, res);
   });
 
-  app.get("/1.0/mountainAreas/:id/trails", function (req, res) {
-    try {
-      connector
-        .getMountainAreaTrails(parseResourceRequest(req))
-        .then((data) => res.json(data))
-        .catch((error) => errors.handleError(error, req, res));
-    } catch (error) {
-      errors.handleError(error, req, res);
-    }
-  });
-
-  app.get("/2.0/mountainAreas", function (req, res) {
-    try {
-      connector
-        .getMountainAreas(parseCollectionRequest(req))
-        .then((data) => res.json(data))
-        .catch((error) => errors.handleError(error, req, res));
-    } catch (error) {
-      errors.handleError(error, req, res);
-    }
-  });
-
-  app.get("/2.0/mountainAreas/:id", function (req, res) {
-    try {
-      connector
-        .getMountainAreaById(parseResourceRequest(req))
-        .then((data) => res.json(data))
-        .catch((error) => errors.handleError(error, req, res));
-    } catch (error) {
-      errors.handleError(error, req, res);
-    }
-  });
-
-  app.get("/2.0/mountainAreas/:id/areaOwner", function (req, res) {
-    try {
-      connector
-        .getMountainAreaOwner(parseResourceRequest(req))
-        .then((data) => res.json(data))
-        .catch((error) => errors.handleError(error, req, res));
-    } catch (error) {
-      errors.handleError(error, req, res);
-    }
-  });
-
-  app.get("/2.0/mountainAreas/:id/categories", function (req, res) {
-    errors.handleNotImplemented(req, res);
-  });
-
-  app.get("/2.0/mountainAreas/:id/connections", function (req, res) {
-    errors.handleNotImplemented(req, res);
-  });
-
-  app.get("/2.0/mountainAreas/:id/features", function (req, res) {
-    errors.handleNotImplemented(req, res);
-  });
-
-  app.get("/2.0/mountainAreas/:id/lifts", function (req, res) {
-    try {
-      connector
-        .getMountainAreaLifts(parseResourceRequest(req))
-        .then((data) => res.json(data))
-        .catch((error) => errors.handleError(error, req, res));
-    } catch (error) {
-      errors.handleError(error, req, res);
-    }
-  });
-
-  app.get("/2.0/mountainAreas/:id/multimediaDescriptions", function (req, res) {
-    try {
-      connector
-        .getMountainAreaMedia(parseResourceRequest(req))
-        .then((data) => res.json(data))
-        .catch((error) => errors.handleError(error, req, res));
-    } catch (error) {
-      errors.handleError(error, req, res);
-    }
-  });
-
-  app.get("/2.0/mountainAreas/:id/snowparks", function (req, res) {
-    try {
-      connector
-        .getMountainAreaSnowparks(parseResourceRequest(req))
-        .then((data) => res.json(data))
-        .catch((error) => errors.handleError(error, req, res));
-    } catch (error) {
-      errors.handleError(error, req, res);
-    }
-  });
-
-  app.get("/2.0/mountainAreas/:id/subAreas", function (req, res) {
-    errors.handleNotImplemented(req, res);
-  });
-
-  app.get("/2.0/mountainAreas/:id/trails", function (req, res) {
+  app.get(`/${process.env.API_VERSION}/mountainAreas/:id/skiSlopes`, function (req, res) {
     try {
       connector
         .getMountainAreaTrails(parseResourceRequest(req))

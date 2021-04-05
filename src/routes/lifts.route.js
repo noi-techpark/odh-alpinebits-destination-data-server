@@ -1,4 +1,5 @@
 const connector = require("../connectors");
+const { Connector } = require("../connectors");
 const errors = require("../errors");
 const {
   parseCollectionRequest,
@@ -6,10 +7,10 @@ const {
 } = require("./request-parser");
 
 module.exports = function (app) {
-  app.get("/1.0/lifts", function (req, res) {
+  app.get(`/${process.env.API_VERSION}/lifts`, function (req, res) {
     try {
       connector
-        .getLifts(parseCollectionRequest(req))
+        .getLifts(req)
         .then((data) => res.json(data))
         .catch((error) => errors.handleError(error, req, res));
     } catch (error) {
@@ -17,10 +18,10 @@ module.exports = function (app) {
     }
   });
 
-  app.get("/1.0/lifts/:id", function (req, res) {
+  app.get(`/${process.env.API_VERSION}/lifts/:id`, function (req, res) {
     try {
       connector
-        .getLiftById(parseResourceRequest(req))
+        .getLiftById(req)
         .then((data) => res.json(data))
         .catch((error) => errors.handleError(error, req, res));
     } catch (error) {
@@ -28,14 +29,10 @@ module.exports = function (app) {
     }
   });
 
-  app.get("/1.0/lifts/:id/connections", function (req, res) {
-    errors.handleNotImplemented(req, res);
-  });
-
-  app.get("/1.0/lifts/:id/multimediaDescriptions", function (req, res) {
+  app.get(`/${process.env.API_VERSION}/lifts/:id/categories`, function (req, res) {
     try {
       connector
-        .getLiftMedia(parseResourceRequest(req))
+        .getLiftCategories(req)
         .then((data) => res.json(data))
         .catch((error) => errors.handleError(error, req, res));
     } catch (error) {
@@ -43,10 +40,10 @@ module.exports = function (app) {
     }
   });
 
-  app.get("/2.0/lifts", function (req, res) {
+  app.get(`/${process.env.API_VERSION}/lifts/:id/connections`, function (req, res) {
     try {
       connector
-        .getLifts(parseCollectionRequest(req))
+        .getLiftConnections(req)
         .then((data) => res.json(data))
         .catch((error) => errors.handleError(error, req, res));
     } catch (error) {
@@ -54,33 +51,10 @@ module.exports = function (app) {
     }
   });
 
-  app.get("/2.0/lifts/:id", function (req, res) {
+  app.get(`/${process.env.API_VERSION}/lifts/:id/multimediaDescriptions`, function (req, res) {
     try {
       connector
-        .getLiftById(parseResourceRequest(req))
-        .then((data) => res.json(data))
-        .catch((error) => errors.handleError(error, req, res));
-    } catch (error) {
-      errors.handleError(error, req, res);
-    }
-  });
-
-  app.get("/2.0/lifts/:id/categories", function (req, res) {
-    errors.handleNotImplemented(req, res);
-  });
-
-  app.get("/2.0/lifts/:id/connections", function (req, res) {
-    errors.handleNotImplemented(req, res);
-  });
-
-  app.get("/2.0/lifts/:id/features", function (req, res) {
-    errors.handleNotImplemented(req, res);
-  });
-
-  app.get("/2.0/lifts/:id/multimediaDescriptions", function (req, res) {
-    try {
-      connector
-        .getLiftMedia(parseResourceRequest(req))
+        .getLiftMultimediaDescriptions(req)
         .then((data) => res.json(data))
         .catch((error) => errors.handleError(error, req, res));
     } catch (error) {

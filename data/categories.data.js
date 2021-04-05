@@ -1,14 +1,13 @@
-const { Lift } = require('../src/model/destinationdata/lift');
-const {} = require('./../src/model/destinationdata/category');
+const { Category } = require('./../src/model/destinationdata/category');
 require('custom-env').env();
 
 // const selfUrl = process.env.REF_SERVER_URL + '/2021-04';
 
 // module.exports[''] = new Lift();
 
-module.exports = {
+const categoriesMap = {
   "0D25868CC23242D6AC97AEB2973CB3D6": {
-    id: "0D25868CC23242D6AC97AEB2973CB3D6",
+    id: "odh:meetings-and-lectures",
     type: "EventTopic",
     name: {
       cs: "Konference/prednášky",
@@ -30,7 +29,7 @@ module.exports = {
     parents: ["schema:BusinessEvent"],
   },
   "162C0067811B477DA725D2F5F2D98398": {
-    id: "162C0067811B477DA725D2F5F2D98398",
+    id: "odh:sport",
     type: "EventTopic",
     name: {
       cs: "Sport",
@@ -52,7 +51,7 @@ module.exports = {
     parents: ["schema:SportsEvent"],
   },
   "252200A028C8449D9A6205369A6D0D36": {
-    id: "252200A028C8449D9A6205369A6D0D36",
+    id: "odh:gastronomy-and-regional-products",
     type: "EventTopic",
     name: {
       cs: "Gastronomie/regionální výrobky",
@@ -74,7 +73,7 @@ module.exports = {
     parents: ["schema:FoodEvent"],
   },
   "33BDC54BD39946F4852B3394B00610AE": {
-    id: "33BDC54BD39946F4852B3394B00610AE",
+    id: "odh:handcrafts-and-traditions",
     type: "EventTopic",
     name: {
       cs: "Remesla/obyceje",
@@ -96,7 +95,7 @@ module.exports = {
     parents: null,
   },
   "4C4961D9FC5B48EEB73067BEB9D4402A": {
-    id: "4C4961D9FC5B48EEB73067BEB9D4402A",
+    id: "odh:fairs-and-markets",
     type: "EventTopic",
     name: {
       cs: "Veletrhy/trhy",
@@ -118,7 +117,7 @@ module.exports = {
     parents: null,
   },
   "6884FE362C88434B9F49725E3328112B": {
-    id: "6884FE362C88434B9F49725E3328112B",
+    id: "odh:theatre-cinema-and-performances",
     type: "EventTopic",
     name: {
       cs: "Divadlo/predstavení",
@@ -140,7 +139,7 @@ module.exports = {
     parents: ["schema:TheaterEvent"],
   },
   "767F6F43FC394CE9A3C8A9725C6FF134": {
-    id: "767F6F43FC394CE9A3C8A9725C6FF134",
+    id: "odh:courses-and-education",
     type: "EventTopic",
     name: {
       cs: "Kurzy/vzdelávání",
@@ -162,7 +161,7 @@ module.exports = {
     parents: ["schema:EducationEvent"],
   },
   "7E048074BA004EC58E29E330A9AA476B": {
-    id: "7E048074BA004EC58E29E330A9AA476B",
+    id: "odh:music-and-dance",
     type: "EventTopic",
     name: {
       cs: "Hudba/tanec",
@@ -184,7 +183,7 @@ module.exports = {
     parents: ["schema:MusicEvent"],
   },
   "9C3449EE278C4D94AA5A7C286729DEA0": {
-    id: "9C3449EE278C4D94AA5A7C286729DEA0",
+    id: "odh:festival",
     type: "EventTopic",
     name: {
       cs: "Lidové oslavy/festivaly",
@@ -206,7 +205,7 @@ module.exports = {
     parents: ["schema:Festival"],
   },
   ACE8B613F2074A7BB59C0B1DD40A43CD: {
-    id: "ACE8B613F2074A7BB59C0B1DD40A43CD",
+    id: "odh:hikes-and-tours",
     type: "EventTopic",
     name: {
       cs: "Peší túry/výlety",
@@ -228,7 +227,7 @@ module.exports = {
     parents: null,
   },
   B5467FEFE5C74FA5AD32B83793A76165: {
-    id: "B5467FEFE5C74FA5AD32B83793A76165",
+    id: "odh:guided-tours",
     type: "EventTopic",
     name: {
       cs: "Túry s pruvodcem/prohlídky",
@@ -250,7 +249,7 @@ module.exports = {
     parents: null,
   },
   C72CE969B98947FABC99CBC7B033F28E: {
-    id: "C72CE969B98947FABC99CBC7B033F28E",
+    id: "odh:art-and-exhibitions",
     type: "EventTopic",
     name: {
       cs: "Výstavy/umení",
@@ -272,7 +271,7 @@ module.exports = {
     parents: ["schema:VisualArtsEvent"],
   },
   D98B49DF24C342D09A8161836435CF86: {
-    id: "D98B49DF24C342D09A8161836435CF86",
+    id: "odh:family",
     type: "EventTopic",
     name: {
       cs: "Rodina",
@@ -714,7 +713,7 @@ module.exports = {
     parents: null,
   },
   skigebiete: {
-    id: "skigebiete",
+    id: "odh:skigebiete",
     type: "ODHTag",
     name: {
       cs: "Lyžařské oblasti",
@@ -737,7 +736,7 @@ module.exports = {
     parents: null,
   },
   "dolomiti superski": {
-    id: "dolomiti superski",
+    id: "odh:dolomiti-superski",
     type: "ODHTag",
     name: {
       cs: "Dolomiti Superski",
@@ -760,7 +759,7 @@ module.exports = {
     parents: null,
   },
   familientip: {
-    id: "familientip",
+    id: "odh:familientip",
     type: "ODHTag",
     name: {
       cs: "Tip pro rodiny",
@@ -783,7 +782,7 @@ module.exports = {
     parents: null,
   },
   skiexperience2016: {
-    id: "skiexperience2016",
+    id: "odh:skiexperience2016",
     type: "ODHTag",
     name: { de: "skiexperience2016" },
     namespace: "odh",
@@ -797,7 +796,7 @@ module.exports = {
     parents: null,
   },
   "kleine skigebiete": {
-    id: "kleine skigebiete",
+    id: "odh:kleine-skigebiete",
     type: "ODHTag",
     name: { de: "Kleine Skigebiete" },
     namespace: "odh",
@@ -811,7 +810,7 @@ module.exports = {
     parents: null,
   },
   "skiregion tauferer ahrntal": {
-    id: "skiregion tauferer ahrntal",
+    id: "odh:skiregion-tauferer-ahrntal",
     type: "ODHTag",
     name: {
       cs: "Skiworld Ahrntal",
@@ -834,7 +833,7 @@ module.exports = {
     parents: null,
   },
   "ortler skiarena": {
-    id: "ortler skiarena",
+    id: "odh:ortler-skiarena",
     type: "ODHTag",
     name: {
       cs: "Ortler Skiarena",
@@ -857,7 +856,7 @@ module.exports = {
     parents: null,
   },
   "skiverbund eisacktal-wipptal": {
-    id: "skiverbund eisacktal-wipptal",
+    id: "odh:skiverbund-eisacktal-wipptal",
     type: "ODHTag",
     name: {
       cs: "Lyžařské sdružení Südtiroler Wipptal",
@@ -880,11 +879,11 @@ module.exports = {
     parents: null,
   },
   Berg: {
-    id: "Berg",
+    id: "odh:Berg",
     type: "ActivityType",
     name: { de: "Berge", en: "Mountains", it: "Montagne" },
     namespace: "odh",
-    resourceTypes: ["lifts", "snowparks", "trails"],
+    resourceTypes: ["lifts", "snowparks", "skiSlopes"],
     abstract: null,
     description: null,
     shortName: null,
@@ -897,11 +896,11 @@ module.exports = {
     bitmask: 1,
   },
   Radfahren: {
-    id: "Radfahren",
+    id: "odh:Radfahren",
     type: "ActivityType",
     name: { de: "Radfahren", en: "Cycling", it: "Ciclismo" },
     namespace: "odh",
-    resourceTypes: ["lifts", "snowparks", "trails"],
+    resourceTypes: ["lifts", "snowparks", "skiSlopes"],
     abstract: null,
     description: null,
     shortName: null,
@@ -914,7 +913,7 @@ module.exports = {
     bitmask: 2,
   },
   Stadtrundgang: {
-    id: "Stadtrundgang",
+    id: "odh:Stadtrundgang",
     type: "ActivityType",
     name: {
       de: "Ortstouren",
@@ -922,7 +921,7 @@ module.exports = {
       it: "Percorsi cittadini e in paese",
     },
     namespace: "odh",
-    resourceTypes: ["lifts", "snowparks", "trails"],
+    resourceTypes: ["lifts", "snowparks", "skiSlopes"],
     abstract: null,
     description: null,
     shortName: null,
@@ -935,11 +934,11 @@ module.exports = {
     bitmask: 4,
   },
   Pferdesport: {
-    id: "Pferdesport",
+    id: "odh:Pferdesport",
     type: "ActivityType",
     name: { de: "Pferde", en: "Horses", it: "Cavalli" },
     namespace: "odh",
-    resourceTypes: ["lifts", "snowparks", "trails"],
+    resourceTypes: ["lifts", "snowparks", "skiSlopes"],
     abstract: null,
     description: null,
     shortName: null,
@@ -952,11 +951,11 @@ module.exports = {
     bitmask: 8,
   },
   Wandern: {
-    id: "Wandern",
+    id: "odh:Wandern",
     type: "ActivityType",
     name: { de: "Wandern", en: "Hiking", it: "Escursionismo" },
     namespace: "odh",
-    resourceTypes: ["lifts", "snowparks", "trails"],
+    resourceTypes: ["lifts", "snowparks", "skiSlopes"],
     abstract: null,
     description: null,
     shortName: null,
@@ -969,7 +968,7 @@ module.exports = {
     bitmask: 16,
   },
   "Laufen und Fitness": {
-    id: "Laufen und Fitness",
+    id: "odh:Laufen-und-Fitness",
     type: "ActivityType",
     name: {
       de: "Laufen und Fitness",
@@ -977,7 +976,7 @@ module.exports = {
       it: "Corsa e fitness",
     },
     namespace: "odh",
-    resourceTypes: ["lifts", "snowparks", "trails"],
+    resourceTypes: ["lifts", "snowparks", "skiSlopes"],
     abstract: null,
     description: null,
     shortName: null,
@@ -990,7 +989,7 @@ module.exports = {
     bitmask: 32,
   },
   Loipen: {
-    id: "Loipen",
+    id: "odh:Loipen",
     type: "ActivityType",
     name: {
       de: "Loipen",
@@ -998,7 +997,7 @@ module.exports = {
       it: "Piste da fondo",
     },
     namespace: "odh",
-    resourceTypes: ["lifts", "snowparks", "trails"],
+    resourceTypes: ["lifts", "snowparks", "skiSlopes"],
     abstract: null,
     description: null,
     shortName: null,
@@ -1011,11 +1010,11 @@ module.exports = {
     bitmask: 64,
   },
   Piste: {
-    id: "Piste",
+    id: "odh:Piste",
     type: "ActivityType",
     name: { de: "Pisten", en: "Slopes", it: "Piste" },
     namespace: "odh",
-    resourceTypes: ["lifts", "snowparks", "trails"],
+    resourceTypes: ["lifts", "snowparks", "skiSlopes"],
     abstract: null,
     description: null,
     shortName: null,
@@ -1028,11 +1027,11 @@ module.exports = {
     bitmask: 256,
   },
   Aufstiegsanlagen: {
-    id: "Aufstiegsanlagen",
+    id: "odh:Aufstiegsanlagen",
     type: "ActivityType",
     name: { de: "Aufstiegsanlagen", en: "Lifts", it: "Impianti di risalita" },
     namespace: "odh",
-    resourceTypes: ["lifts", "snowparks", "trails"],
+    resourceTypes: ["lifts", "snowparks", "skiSlopes"],
     abstract: null,
     description: null,
     shortName: null,
@@ -1045,7 +1044,7 @@ module.exports = {
     bitmask: 512,
   },
   Alpinklettern: {
-    id: "Alpinklettern",
+    id: "odh:Alpinklettern",
     type: "ActivityType",
     name: {
       de: "Alpinklettern",
@@ -1053,7 +1052,7 @@ module.exports = {
       it: "Arrampicate alpine",
     },
     namespace: "odh",
-    resourceTypes: ["lifts", "snowparks", "trails"],
+    resourceTypes: ["lifts", "snowparks", "skiSlopes"],
     abstract: null,
     description: null,
     shortName: null,
@@ -1066,7 +1065,7 @@ module.exports = {
     bitmask: 1,
   },
   Bergtouren: {
-    id: "Bergtouren",
+    id: "odh:Bergtouren",
     type: "ActivityType",
     name: {
       de: "Bergtouren",
@@ -1074,7 +1073,7 @@ module.exports = {
       it: "Escursioni in montagna",
     },
     namespace: "odh",
-    resourceTypes: ["lifts", "snowparks", "trails"],
+    resourceTypes: ["lifts", "snowparks", "skiSlopes"],
     abstract: null,
     description: null,
     shortName: null,
@@ -1087,7 +1086,7 @@ module.exports = {
     bitmask: 2,
   },
   Hochtouren: {
-    id: "Hochtouren",
+    id: "odh:Hochtouren",
     type: "ActivityType",
     name: {
       de: "Hochtouren",
@@ -1095,7 +1094,7 @@ module.exports = {
       it: "Escursioni in alta montagna",
     },
     namespace: "odh",
-    resourceTypes: ["lifts", "snowparks", "trails"],
+    resourceTypes: ["lifts", "snowparks", "skiSlopes"],
     abstract: null,
     description: null,
     shortName: null,
@@ -1108,11 +1107,11 @@ module.exports = {
     bitmask: 4,
   },
   Klettersteige: {
-    id: "Klettersteige",
+    id: "odh:Klettersteige",
     type: "ActivityType",
     name: { de: "Klettersteige", en: "Via ferrata", it: "Vie ferrate" },
     namespace: "odh",
-    resourceTypes: ["lifts", "snowparks", "trails"],
+    resourceTypes: ["lifts", "snowparks", "skiSlopes"],
     abstract: null,
     description: null,
     shortName: null,
@@ -1125,11 +1124,11 @@ module.exports = {
     bitmask: 8,
   },
   Schneeschuhtouren: {
-    id: "Schneeschuhtouren",
+    id: "odh:Schneeschuhtouren",
     type: "ActivityType",
     name: { de: "Schneeschuhtouren", en: "Snowshoe tours", it: "Ciaspolate" },
     namespace: "odh",
-    resourceTypes: ["lifts", "snowparks", "trails"],
+    resourceTypes: ["lifts", "snowparks", "skiSlopes"],
     abstract: null,
     description: null,
     shortName: null,
@@ -1142,11 +1141,11 @@ module.exports = {
     bitmask: 16,
   },
   Skitouren: {
-    id: "Skitouren",
+    id: "odh:Skitouren",
     type: "ActivityType",
     name: { de: "Skitouren", en: "Ski tours", it: "Escursioni sciistiche" },
     namespace: "odh",
-    resourceTypes: ["lifts", "snowparks", "trails"],
+    resourceTypes: ["lifts", "snowparks", "skiSlopes"],
     abstract: null,
     description: null,
     shortName: null,
@@ -1159,7 +1158,7 @@ module.exports = {
     bitmask: 32,
   },
   "Weitere Berge": {
-    id: "Weitere Berge",
+    id: "odh:Weitere-Berge",
     type: "ActivityType",
     name: {
       de: "Weitere Berge",
@@ -1167,7 +1166,7 @@ module.exports = {
       it: "Altre montagne",
     },
     namespace: "odh",
-    resourceTypes: ["lifts", "snowparks", "trails"],
+    resourceTypes: ["lifts", "snowparks", "skiSlopes"],
     abstract: null,
     description: null,
     shortName: null,
@@ -1180,7 +1179,7 @@ module.exports = {
     bitmask: 64,
   },
   Eisklettern: {
-    id: "Eisklettern",
+    id: "odh:Eisklettern",
     type: "ActivityType",
     name: {
       de: "Eisklettern",
@@ -1188,7 +1187,7 @@ module.exports = {
       it: "Arrampicate su ghiaccio",
     },
     namespace: "odh",
-    resourceTypes: ["lifts", "snowparks", "trails"],
+    resourceTypes: ["lifts", "snowparks", "skiSlopes"],
     abstract: null,
     description: null,
     shortName: null,
@@ -1201,11 +1200,11 @@ module.exports = {
     bitmask: 128,
   },
   Eistour: {
-    id: "Eistour",
+    id: "odh:Eistour",
     type: "ActivityType",
     name: { de: "Eistour", en: "Eistour", it: "Eistour" },
     namespace: "odh",
-    resourceTypes: ["lifts", "snowparks", "trails"],
+    resourceTypes: ["lifts", "snowparks", "skiSlopes"],
     abstract: null,
     description: null,
     shortName: null,
@@ -1218,11 +1217,11 @@ module.exports = {
     bitmask: 256,
   },
   Downhills: {
-    id: "Downhills",
+    id: "odh:Downhills",
     type: "ActivityType",
     name: { de: "Downhills", en: "Downhills", it: "Downhills" },
     namespace: "odh",
-    resourceTypes: ["lifts", "snowparks", "trails"],
+    resourceTypes: ["lifts", "snowparks", "skiSlopes"],
     abstract: null,
     description: null,
     shortName: null,
@@ -1235,11 +1234,11 @@ module.exports = {
     bitmask: 1,
   },
   "E-Bikes": {
-    id: "E-Bikes",
+    id: "odh:E-Bikes",
     type: "ActivityType",
     name: { de: "E-Bikes", en: "E-Bikes", it: "E-Bike" },
     namespace: "odh",
-    resourceTypes: ["lifts", "snowparks", "trails"],
+    resourceTypes: ["lifts", "snowparks", "skiSlopes"],
     abstract: null,
     description: null,
     shortName: null,
@@ -1252,7 +1251,7 @@ module.exports = {
     bitmask: 2,
   },
   Fernradwege: {
-    id: "Fernradwege",
+    id: "odh:Fernradwege",
     type: "ActivityType",
     name: {
       de: "Fernradwege",
@@ -1260,7 +1259,7 @@ module.exports = {
       it: "Percorsi lunghi per bici",
     },
     namespace: "odh",
-    resourceTypes: ["lifts", "snowparks", "trails"],
+    resourceTypes: ["lifts", "snowparks", "skiSlopes"],
     abstract: null,
     description: null,
     shortName: null,
@@ -1273,11 +1272,11 @@ module.exports = {
     bitmask: 4,
   },
   Mountainbikes: {
-    id: "Mountainbikes",
+    id: "odh:Mountainbikes",
     type: "ActivityType",
     name: { de: "Mountainbikes", en: "Mountain bikes", it: "Mountain bike" },
     namespace: "odh",
-    resourceTypes: ["lifts", "snowparks", "trails"],
+    resourceTypes: ["lifts", "snowparks", "skiSlopes"],
     abstract: null,
     description: null,
     shortName: null,
@@ -1290,7 +1289,7 @@ module.exports = {
     bitmask: 8,
   },
   "Mountainbike Transalps": {
-    id: "Mountainbike Transalps",
+    id: "odh:Mountainbike-Transalps",
     type: "ActivityType",
     name: {
       de: "Mountainbike Transalps",
@@ -1298,7 +1297,7 @@ module.exports = {
       it: "Mountain bike Transalp",
     },
     namespace: "odh",
-    resourceTypes: ["lifts", "snowparks", "trails"],
+    resourceTypes: ["lifts", "snowparks", "skiSlopes"],
     abstract: null,
     description: null,
     shortName: null,
@@ -1311,11 +1310,11 @@ module.exports = {
     bitmask: 16,
   },
   Radtouren: {
-    id: "Radtouren",
+    id: "odh:Radtouren",
     type: "ActivityType",
     name: { de: "Radtouren", en: "Bike trails", it: "Giri in bicicletta" },
     namespace: "odh",
-    resourceTypes: ["lifts", "snowparks", "trails"],
+    resourceTypes: ["lifts", "snowparks", "skiSlopes"],
     abstract: null,
     description: null,
     shortName: null,
@@ -1328,7 +1327,7 @@ module.exports = {
     bitmask: 32,
   },
   Rennräder: {
-    id: "Rennräder",
+    id: "odh:Rennräder",
     type: "ActivityType",
     name: {
       de: "Rennräder",
@@ -1336,7 +1335,7 @@ module.exports = {
       it: "Biciclette da corsa",
     },
     namespace: "odh",
-    resourceTypes: ["lifts", "snowparks", "trails"],
+    resourceTypes: ["lifts", "snowparks", "skiSlopes"],
     abstract: null,
     description: null,
     shortName: null,
@@ -1349,7 +1348,7 @@ module.exports = {
     bitmask: 64,
   },
   "Weitere Radfahren": {
-    id: "Weitere Radfahren",
+    id: "odh:Weitere-Radfahren",
     type: "ActivityType",
     name: {
       de: "Weitere Radfahren",
@@ -1357,7 +1356,7 @@ module.exports = {
       it: "Altri ciclismo",
     },
     namespace: "odh",
-    resourceTypes: ["lifts", "snowparks", "trails"],
+    resourceTypes: ["lifts", "snowparks", "skiSlopes"],
     abstract: null,
     description: null,
     shortName: null,
@@ -1370,11 +1369,11 @@ module.exports = {
     bitmask: 128,
   },
   Pumptrack: {
-    id: "Pumptrack",
+    id: "odh:Pumptrack",
     type: "ActivityType",
     name: { de: "Pumptrack", en: "Pumptrack", it: "Pumptrack" },
     namespace: "odh",
-    resourceTypes: ["lifts", "snowparks", "trails"],
+    resourceTypes: ["lifts", "snowparks", "skiSlopes"],
     abstract: null,
     description: null,
     shortName: null,
@@ -1387,7 +1386,7 @@ module.exports = {
     bitmask: 256,
   },
   "Singletrail / Freeride": {
-    id: "Singletrail / Freeride",
+    id: "odh:Singletrail-Freeride",
     type: "ActivityType",
     name: {
       de: "Singletrail / Freeride",
@@ -1395,7 +1394,7 @@ module.exports = {
       it: "Singletrail / Freeride",
     },
     namespace: "odh",
-    resourceTypes: ["lifts", "snowparks", "trails"],
+    resourceTypes: ["lifts", "snowparks", "skiSlopes"],
     abstract: null,
     description: null,
     shortName: null,
@@ -1408,7 +1407,7 @@ module.exports = {
     bitmask: 512,
   },
   Ortstouren: {
-    id: "Ortstouren",
+    id: "odh:Ortstouren",
     type: "ActivityType",
     name: {
       de: "Ortstouren",
@@ -1416,7 +1415,7 @@ module.exports = {
       it: "Percorsi cittadini e in paese",
     },
     namespace: "odh",
-    resourceTypes: ["lifts", "snowparks", "trails"],
+    resourceTypes: ["lifts", "snowparks", "skiSlopes"],
     abstract: null,
     description: null,
     shortName: null,
@@ -1429,7 +1428,7 @@ module.exports = {
     bitmask: 1,
   },
   "Weitere Ortstouren": {
-    id: "Weitere Ortstouren",
+    id: "odh:Weitere-Ortstouren",
     type: "ActivityType",
     name: {
       de: "Weitere Ortstouren",
@@ -1437,7 +1436,7 @@ module.exports = {
       it: "Altri percorsi",
     },
     namespace: "odh",
-    resourceTypes: ["lifts", "snowparks", "trails"],
+    resourceTypes: ["lifts", "snowparks", "skiSlopes"],
     abstract: null,
     description: null,
     shortName: null,
@@ -1450,7 +1449,7 @@ module.exports = {
     bitmask: 2,
   },
   "Trail für Kutschenfahrten": {
-    id: "Trail für Kutschenfahrten",
+    id: "odh:Trail-fur-Kutschenfahrten",
     type: "ActivityType",
     name: {
       de: "Trail für Kutschenfahrten",
@@ -1458,7 +1457,7 @@ module.exports = {
       it: "Trail per passeggiate in carrozza",
     },
     namespace: "odh",
-    resourceTypes: ["lifts", "snowparks", "trails"],
+    resourceTypes: ["lifts", "snowparks", "skiSlopes"],
     abstract: null,
     description: null,
     shortName: null,
@@ -1471,7 +1470,7 @@ module.exports = {
     bitmask: 1,
   },
   "Trail für Reitpferde": {
-    id: "Trail für Reitpferde",
+    id: "odh:Trail-fur-Reitpferde",
     type: "ActivityType",
     name: {
       de: "Trail für Reitpferde",
@@ -1479,7 +1478,7 @@ module.exports = {
       it: "Trail adatto per cavalli da equitazione",
     },
     namespace: "odh",
-    resourceTypes: ["lifts", "snowparks", "trails"],
+    resourceTypes: ["lifts", "snowparks", "skiSlopes"],
     abstract: null,
     description: null,
     shortName: null,
@@ -1492,11 +1491,11 @@ module.exports = {
     bitmask: 2,
   },
   "Weitere Pferde": {
-    id: "Weitere Pferde",
+    id: "odh:Weitere-Pferde",
     type: "ActivityType",
     name: { de: "Weitere Pferde", en: "Other horses", it: "Altri cavalli" },
     namespace: "odh",
-    resourceTypes: ["lifts", "snowparks", "trails"],
+    resourceTypes: ["lifts", "snowparks", "skiSlopes"],
     abstract: null,
     description: null,
     shortName: null,
@@ -1509,7 +1508,7 @@ module.exports = {
     bitmask: 4,
   },
   Barrierefrei: {
-    id: "Barrierefrei",
+    id: "odh:Barrierefrei",
     type: "ActivityType",
     name: {
       de: "Barrierefrei",
@@ -1517,7 +1516,7 @@ module.exports = {
       it: "Escursioni per diversamente abili",
     },
     namespace: "odh",
-    resourceTypes: ["lifts", "snowparks", "trails"],
+    resourceTypes: ["lifts", "snowparks", "skiSlopes"],
     abstract: null,
     description: null,
     shortName: null,
@@ -1530,7 +1529,7 @@ module.exports = {
     bitmask: 1,
   },
   Familienwanderungen: {
-    id: "Familienwanderungen",
+    id: "odh:Familienwanderungen",
     type: "ActivityType",
     name: {
       de: "Familienwanderungen",
@@ -1538,7 +1537,7 @@ module.exports = {
       it: "Escursioni per famiglie",
     },
     namespace: "odh",
-    resourceTypes: ["lifts", "snowparks", "trails"],
+    resourceTypes: ["lifts", "snowparks", "skiSlopes"],
     abstract: null,
     description: null,
     shortName: null,
@@ -1551,7 +1550,7 @@ module.exports = {
     bitmask: 2,
   },
   Fernwanderwege: {
-    id: "Fernwanderwege",
+    id: "odh:Fernwanderwege",
     type: "ActivityType",
     name: {
       de: "Fernwanderwege",
@@ -1559,7 +1558,7 @@ module.exports = {
       it: "Sentieri a lunga distanza",
     },
     namespace: "odh",
-    resourceTypes: ["lifts", "snowparks", "trails"],
+    resourceTypes: ["lifts", "snowparks", "skiSlopes"],
     abstract: null,
     description: null,
     shortName: null,
@@ -1572,11 +1571,11 @@ module.exports = {
     bitmask: 4,
   },
   Pilgerwege: {
-    id: "Pilgerwege",
+    id: "odh:Pilgerwege",
     type: "ActivityType",
     name: { de: "Pilgerwege", en: "Pilger route", it: "Pellegrinaggio" },
     namespace: "odh",
-    resourceTypes: ["lifts", "snowparks", "trails"],
+    resourceTypes: ["lifts", "snowparks", "skiSlopes"],
     abstract: null,
     description: null,
     shortName: null,
@@ -1589,7 +1588,7 @@ module.exports = {
     bitmask: 8,
   },
   Schneeschuhwanderungen: {
-    id: "Schneeschuhwanderungen",
+    id: "odh:Schneeschuhwanderungen",
     type: "ActivityType",
     name: {
       de: "Schneeschuhwanderungen",
@@ -1597,7 +1596,7 @@ module.exports = {
       it: "Ciaspolate",
     },
     namespace: "odh",
-    resourceTypes: ["lifts", "snowparks", "trails"],
+    resourceTypes: ["lifts", "snowparks", "skiSlopes"],
     abstract: null,
     description: null,
     shortName: null,
@@ -1610,7 +1609,7 @@ module.exports = {
     bitmask: 16,
   },
   Themenwanderungen: {
-    id: "Themenwanderungen",
+    id: "odh:Themenwanderungen",
     type: "ActivityType",
     name: {
       de: "Themenwanderungen",
@@ -1618,7 +1617,7 @@ module.exports = {
       it: "Percorsi tematici",
     },
     namespace: "odh",
-    resourceTypes: ["lifts", "snowparks", "trails"],
+    resourceTypes: ["lifts", "snowparks", "skiSlopes"],
     abstract: null,
     description: null,
     shortName: null,
@@ -1631,7 +1630,7 @@ module.exports = {
     bitmask: 32,
   },
   Winterwanderungen: {
-    id: "Winterwanderungen",
+    id: "odh:Winterwanderungen",
     type: "ActivityType",
     name: {
       de: "Winterwanderungen",
@@ -1639,7 +1638,7 @@ module.exports = {
       it: "Escursioni invernali",
     },
     namespace: "odh",
-    resourceTypes: ["lifts", "snowparks", "trails"],
+    resourceTypes: ["lifts", "snowparks", "skiSlopes"],
     abstract: null,
     description: null,
     shortName: null,
@@ -1652,7 +1651,7 @@ module.exports = {
     bitmask: 64,
   },
   "Kinderwagen tauglich": {
-    id: "Kinderwagen tauglich",
+    id: "odh:Kinderwagen-tauglich",
     type: "ActivityType",
     name: {
       de: "Kinderwagen tauglich",
@@ -1660,7 +1659,7 @@ module.exports = {
       it: "Adatto per passeggino",
     },
     namespace: "odh",
-    resourceTypes: ["lifts", "snowparks", "trails"],
+    resourceTypes: ["lifts", "snowparks", "skiSlopes"],
     abstract: null,
     description: null,
     shortName: null,
@@ -1673,11 +1672,11 @@ module.exports = {
     bitmask: 128,
   },
   Waalweg: {
-    id: "Waalweg",
+    id: "odh:Waalweg",
     type: "ActivityType",
     name: { de: "Waalweg", en: "Waalweg paths", it: "Sentieri di roggia" },
     namespace: "odh",
-    resourceTypes: ["lifts", "snowparks", "trails"],
+    resourceTypes: ["lifts", "snowparks", "skiSlopes"],
     abstract: null,
     description: null,
     shortName: null,
@@ -1690,7 +1689,7 @@ module.exports = {
     bitmask: 256,
   },
   "Weitere Wandern": {
-    id: "Weitere Wandern",
+    id: "odh:Weitere-Wandern",
     type: "ActivityType",
     name: {
       de: "Weitere Wandern",
@@ -1698,7 +1697,7 @@ module.exports = {
       it: "Altro escursionismo",
     },
     namespace: "odh",
-    resourceTypes: ["lifts", "snowparks", "trails"],
+    resourceTypes: ["lifts", "snowparks", "skiSlopes"],
     abstract: null,
     description: null,
     shortName: null,
@@ -1711,11 +1710,11 @@ module.exports = {
     bitmask: 512,
   },
   Bergläufe: {
-    id: "Bergläufe",
+    id: "odh:Berglaufe",
     type: "ActivityType",
     name: { de: "Bergläufe", en: "Mountain runs", it: "Corsa in montagna" },
     namespace: "odh",
-    resourceTypes: ["lifts", "snowparks", "trails"],
+    resourceTypes: ["lifts", "snowparks", "skiSlopes"],
     abstract: null,
     description: null,
     shortName: null,
@@ -1728,7 +1727,7 @@ module.exports = {
     bitmask: 1,
   },
   Fitnessparcours: {
-    id: "Fitnessparcours",
+    id: "odh:Fitnessparcours",
     type: "ActivityType",
     name: {
       de: "Fitnessparcours",
@@ -1736,7 +1735,7 @@ module.exports = {
       it: "Percorso fitness",
     },
     namespace: "odh",
-    resourceTypes: ["lifts", "snowparks", "trails"],
+    resourceTypes: ["lifts", "snowparks", "skiSlopes"],
     abstract: null,
     description: null,
     shortName: null,
@@ -1749,7 +1748,7 @@ module.exports = {
     bitmask: 2,
   },
   "Innline Skating": {
-    id: "Innline Skating",
+    id: "odh:Innline-Skating",
     type: "ActivityType",
     name: {
       de: "Innline Skating",
@@ -1757,7 +1756,7 @@ module.exports = {
       it: "Inline skating",
     },
     namespace: "odh",
-    resourceTypes: ["lifts", "snowparks", "trails"],
+    resourceTypes: ["lifts", "snowparks", "skiSlopes"],
     abstract: null,
     description: null,
     shortName: null,
@@ -1770,7 +1769,7 @@ module.exports = {
     bitmask: 4,
   },
   Laufstrecken: {
-    id: "Laufstrecken",
+    id: "odh:Laufstrecken",
     type: "ActivityType",
     name: {
       de: "Laufstrecken",
@@ -1778,7 +1777,7 @@ module.exports = {
       it: "Percorso da corsa",
     },
     namespace: "odh",
-    resourceTypes: ["lifts", "snowparks", "trails"],
+    resourceTypes: ["lifts", "snowparks", "skiSlopes"],
     abstract: null,
     description: null,
     shortName: null,
@@ -1791,7 +1790,7 @@ module.exports = {
     bitmask: 8,
   },
   "Nordic Walkings": {
-    id: "Nordic Walkings",
+    id: "odh:Nordic-Walkings",
     type: "ActivityType",
     name: {
       de: "Nordic Walkings",
@@ -1799,7 +1798,7 @@ module.exports = {
       it: "Nordic walking",
     },
     namespace: "odh",
-    resourceTypes: ["lifts", "snowparks", "trails"],
+    resourceTypes: ["lifts", "snowparks", "skiSlopes"],
     abstract: null,
     description: null,
     shortName: null,
@@ -1812,11 +1811,11 @@ module.exports = {
     bitmask: 16,
   },
   "Trail running": {
-    id: "Trail running",
+    id: "odh:Trail-running",
     type: "ActivityType",
     name: { de: "Trail running", en: "Trail running", it: "Trail running" },
     namespace: "odh",
-    resourceTypes: ["lifts", "snowparks", "trails"],
+    resourceTypes: ["lifts", "snowparks", "skiSlopes"],
     abstract: null,
     description: null,
     shortName: null,
@@ -1829,7 +1828,7 @@ module.exports = {
     bitmask: 32,
   },
   "Weitere Laufen und Fitness": {
-    id: "Weitere Laufen und Fitness",
+    id: "odh:Weitere-Laufen-und-Fitness",
     type: "ActivityType",
     name: {
       de: "Weitere Laufen und Fitness",
@@ -1837,7 +1836,7 @@ module.exports = {
       it: "Altri corsa e fitness",
     },
     namespace: "odh",
-    resourceTypes: ["lifts", "snowparks", "trails"],
+    resourceTypes: ["lifts", "snowparks", "skiSlopes"],
     abstract: null,
     description: null,
     shortName: null,
@@ -1850,11 +1849,11 @@ module.exports = {
     bitmask: 64,
   },
   Klassisch: {
-    id: "Klassisch",
+    id: "odh:Klassisch",
     type: "ActivityType",
     name: { de: "Klassisch", en: "Classic", it: "Classico" },
     namespace: "odh",
-    resourceTypes: ["lifts", "snowparks", "trails"],
+    resourceTypes: ["lifts", "snowparks", "skiSlopes"],
     abstract: null,
     description: null,
     shortName: null,
@@ -1867,11 +1866,11 @@ module.exports = {
     bitmask: 1,
   },
   Skating: {
-    id: "Skating",
+    id: "odh:Skating",
     type: "ActivityType",
     name: { de: "Skating", en: "Skating", it: "Skating" },
     namespace: "odh",
-    resourceTypes: ["lifts", "snowparks", "trails"],
+    resourceTypes: ["lifts", "snowparks", "skiSlopes"],
     abstract: null,
     description: null,
     shortName: null,
@@ -1884,7 +1883,7 @@ module.exports = {
     bitmask: 2,
   },
   "Klassisch und Skating": {
-    id: "Klassisch und Skating",
+    id: "odh:Klassisch-und-Skating",
     type: "ActivityType",
     name: {
       de: "Klassisch und Skating",
@@ -1892,7 +1891,7 @@ module.exports = {
       it: "Classico e skating",
     },
     namespace: "odh",
-    resourceTypes: ["lifts", "snowparks", "trails"],
+    resourceTypes: ["lifts", "snowparks", "skiSlopes"],
     abstract: null,
     description: null,
     shortName: null,
@@ -1905,7 +1904,7 @@ module.exports = {
     bitmask: 4,
   },
   Schienenrodelbahn: {
-    id: "Schienenrodelbahn",
+    id: "odh:Schienenrodelbahn",
     type: "ActivityType",
     name: {
       de: "Schienenrodelbahn",
@@ -1913,7 +1912,7 @@ module.exports = {
       it: "Slittino su rotaie",
     },
     namespace: "odh",
-    resourceTypes: ["lifts", "snowparks", "trails"],
+    resourceTypes: ["lifts", "snowparks", "skiSlopes"],
     abstract: null,
     description: null,
     shortName: null,
@@ -1926,11 +1925,11 @@ module.exports = {
     bitmask: 1,
   },
   Eisbahnen: {
-    id: "Eisbahnen",
+    id: "odh:Eisbahnen",
     type: "ActivityType",
     name: { de: "Eisbahnen", en: "Ice rinks", it: "Piste di ghiaccio" },
     namespace: "odh",
-    resourceTypes: ["lifts", "snowparks", "trails"],
+    resourceTypes: ["lifts", "snowparks", "skiSlopes"],
     abstract: null,
     description: null,
     shortName: null,
@@ -1943,11 +1942,11 @@ module.exports = {
     bitmask: 2,
   },
   Rodelbahnen: {
-    id: "Rodelbahnen",
+    id: "odh:Rodelbahnen",
     type: "ActivityType",
     name: { de: "Rodelbahnen", en: "Tobbogan run", it: "Piste per slitte" },
     namespace: "odh",
-    resourceTypes: ["lifts", "snowparks", "trails"],
+    resourceTypes: ["lifts", "snowparks", "skiSlopes"],
     abstract: null,
     description: null,
     shortName: null,
@@ -1960,11 +1959,11 @@ module.exports = {
     bitmask: 4,
   },
   Schneebahnen: {
-    id: "Schneebahnen",
+    id: "odh:Schneebahnen",
     type: "ActivityType",
     name: { de: "Schneebahnen", en: "Snow tracks", it: "Piste innevate" },
     namespace: "odh",
-    resourceTypes: ["lifts", "snowparks", "trails"],
+    resourceTypes: ["lifts", "snowparks", "skiSlopes"],
     abstract: null,
     description: null,
     shortName: null,
@@ -1977,7 +1976,7 @@ module.exports = {
     bitmask: 8,
   },
   "Weitere Rodeln": {
-    id: "Weitere Rodeln",
+    id: "odh:Weitere-Rodeln",
     type: "ActivityType",
     name: {
       de: "Weitere Rodeln",
@@ -1985,7 +1984,7 @@ module.exports = {
       it: "Altre piste da slittino",
     },
     namespace: "odh",
-    resourceTypes: ["lifts", "snowparks", "trails"],
+    resourceTypes: ["lifts", "snowparks", "skiSlopes"],
     abstract: null,
     description: null,
     shortName: null,
@@ -1998,11 +1997,11 @@ module.exports = {
     bitmask: 16,
   },
   "Ski alpin": {
-    id: "Ski alpin",
+    id: "odh:Ski-alpin",
     type: "ActivityType",
     name: { de: "Ski alpin", en: "alpine skiing", it: "sci alpino" },
     namespace: "odh",
-    resourceTypes: ["lifts", "snowparks", "trails"],
+    resourceTypes: ["lifts", "snowparks", "skiSlopes"],
     abstract: null,
     description: null,
     shortName: null,
@@ -2015,11 +2014,11 @@ module.exports = {
     bitmask: 2,
   },
   Snowpark: {
-    id: "Snowpark",
+    id: "odh:Snowpark",
     type: "ActivityType",
     name: { de: "Snowpark", en: "Snowpark", it: "Snowpark" },
     namespace: "odh",
-    resourceTypes: ["lifts", "snowparks", "trails"],
+    resourceTypes: ["lifts", "snowparks", "skiSlopes"],
     abstract: null,
     description: null,
     shortName: null,
@@ -2032,11 +2031,11 @@ module.exports = {
     bitmask: 4,
   },
   Rundkurs: {
-    id: "Rundkurs",
+    id: "odh:Rundkurs",
     type: "ActivityType",
     name: { de: "Rundkurs", en: "Circuit", it: "Circuito" },
     namespace: "odh",
-    resourceTypes: ["lifts", "snowparks", "trails"],
+    resourceTypes: ["lifts", "snowparks", "skiSlopes"],
     abstract: null,
     description: null,
     shortName: null,
@@ -2049,11 +2048,11 @@ module.exports = {
     bitmask: 8,
   },
   "Weitere Pisten": {
-    id: "Weitere Pisten",
+    id: "odh:Weitere-Pisten",
     type: "ActivityType",
     name: { de: "Weitere Pisten", en: "Other slopes", it: "Altre piste" },
     namespace: "odh",
-    resourceTypes: ["lifts", "snowparks", "trails"],
+    resourceTypes: ["lifts", "snowparks", "skiSlopes"],
     abstract: null,
     description: null,
     shortName: null,
@@ -2066,11 +2065,11 @@ module.exports = {
     bitmask: 16,
   },
   "nicht definiert": {
-    id: "nicht definiert",
+    id: "odh:nicht-definiert",
     type: "ActivityType",
     name: { de: "nicht definiert", en: "not defined", it: "non definito" },
     namespace: "odh",
-    resourceTypes: ["lifts", "snowparks", "trails"],
+    resourceTypes: ["lifts", "snowparks", "skiSlopes"],
     abstract: null,
     description: null,
     shortName: null,
@@ -2083,11 +2082,11 @@ module.exports = {
     bitmask: 1,
   },
   Seilbahn: {
-    id: "Seilbahn",
+    id: "odh:Seilbahn",
     type: "ActivityType",
     name: { de: "Seilbahn", en: "Ropeway", it: "Funivia" },
     namespace: "odh",
-    resourceTypes: ["lifts", "snowparks", "trails"],
+    resourceTypes: ["lifts", "snowparks", "skiSlopes"],
     abstract: null,
     description: null,
     shortName: null,
@@ -2100,11 +2099,11 @@ module.exports = {
     bitmask: 2,
   },
   Umlaufbahn: {
-    id: "Umlaufbahn",
+    id: "odh:Umlaufbahn",
     type: "ActivityType",
     name: { de: "Umlaufbahn", en: "Orbit", it: "Orbita" },
     namespace: "odh",
-    resourceTypes: ["lifts", "snowparks", "trails"],
+    resourceTypes: ["lifts", "snowparks", "skiSlopes"],
     abstract: null,
     description: null,
     shortName: null,
@@ -2117,11 +2116,11 @@ module.exports = {
     bitmask: 4,
   },
   Kabinenbahn: {
-    id: "Kabinenbahn",
+    id: "odh:Kabinenbahn",
     type: "ActivityType",
     name: { de: "Kabinenbahn", en: "Cabinet train", it: "Ferrovia a cabina" },
     namespace: "odh",
-    resourceTypes: ["lifts", "snowparks", "trails"],
+    resourceTypes: ["lifts", "snowparks", "skiSlopes"],
     abstract: null,
     description: null,
     shortName: null,
@@ -2134,7 +2133,7 @@ module.exports = {
     bitmask: 8,
   },
   "Unterirdische Bahn": {
-    id: "Unterirdische Bahn",
+    id: "odh:Unterirdische-Bahn",
     type: "ActivityType",
     name: {
       de: "Unterirdische Bahn",
@@ -2142,7 +2141,7 @@ module.exports = {
       it: "Ferrovia sotteranea",
     },
     namespace: "odh",
-    resourceTypes: ["lifts", "snowparks", "trails"],
+    resourceTypes: ["lifts", "snowparks", "skiSlopes"],
     abstract: null,
     description: null,
     shortName: null,
@@ -2155,11 +2154,11 @@ module.exports = {
     bitmask: 16,
   },
   Sessellift: {
-    id: "Sessellift",
+    id: "odh:Sessellift",
     type: "ActivityType",
     name: { de: "Sessellift", en: "Chairlift", it: "Seggiovia" },
     namespace: "odh",
-    resourceTypes: ["lifts", "snowparks", "trails"],
+    resourceTypes: ["lifts", "snowparks", "skiSlopes"],
     abstract: null,
     description: null,
     shortName: null,
@@ -2172,11 +2171,11 @@ module.exports = {
     bitmask: 32,
   },
   Skilift: {
-    id: "Skilift",
+    id: "odh:Skilift",
     type: "ActivityType",
     name: { de: "Skilift", en: "Ski lift", it: "Sciovia" },
     namespace: "odh",
-    resourceTypes: ["lifts", "snowparks", "trails"],
+    resourceTypes: ["lifts", "snowparks", "skiSlopes"],
     abstract: null,
     description: null,
     shortName: null,
@@ -2189,7 +2188,7 @@ module.exports = {
     bitmask: 64,
   },
   Schrägaufzug: {
-    id: "Schrägaufzug",
+    id: "odh:Schragaufzug",
     type: "ActivityType",
     name: {
       de: "Schrägaufzug",
@@ -2197,7 +2196,7 @@ module.exports = {
       it: "Ascensore inclinato",
     },
     namespace: "odh",
-    resourceTypes: ["lifts", "snowparks", "trails"],
+    resourceTypes: ["lifts", "snowparks", "skiSlopes"],
     abstract: null,
     description: null,
     shortName: null,
@@ -2210,7 +2209,7 @@ module.exports = {
     bitmask: 128,
   },
   "Standseilbahn/Zahnradbahn": {
-    id: "Standseilbahn/Zahnradbahn",
+    id: "odh:Standseilbahn-Zahnradbahn",
     type: "ActivityType",
     name: {
       de: "Standseilbahn/Zahnradbahn",
@@ -2218,7 +2217,7 @@ module.exports = {
       it: "Funicolare/Ferrovia a cremagliera",
     },
     namespace: "odh",
-    resourceTypes: ["lifts", "snowparks", "trails"],
+    resourceTypes: ["lifts", "snowparks", "skiSlopes"],
     abstract: null,
     description: null,
     shortName: null,
@@ -2231,11 +2230,11 @@ module.exports = {
     bitmask: 256,
   },
   Telemix: {
-    id: "Telemix",
+    id: "odh:Telemix",
     type: "ActivityType",
     name: { de: "Telemix", en: "Telemix", it: "Telemix" },
     namespace: "odh",
-    resourceTypes: ["lifts", "snowparks", "trails"],
+    resourceTypes: ["lifts", "snowparks", "skiSlopes"],
     abstract: null,
     description: null,
     shortName: null,
@@ -2248,11 +2247,11 @@ module.exports = {
     bitmask: 512,
   },
   Förderband: {
-    id: "Förderband",
+    id: "odh:Forderband",
     type: "ActivityType",
     name: { de: "Förderband", en: "Moving carpet", it: "Tappeto magico" },
     namespace: "odh",
-    resourceTypes: ["lifts", "snowparks", "trails"],
+    resourceTypes: ["lifts", "snowparks", "skiSlopes"],
     abstract: null,
     description: null,
     shortName: null,
@@ -2265,7 +2264,7 @@ module.exports = {
     bitmask: 1024,
   },
   "2er Sessellift kuppelbar": {
-    id: "2er Sessellift kuppelbar",
+    id: "odh:2er-Sessellift-kuppelbar",
     type: "ActivityType",
     name: {
       de: "2er Sessellift kuppelbar",
@@ -2273,7 +2272,7 @@ module.exports = {
       it: "Seggiovia a 2",
     },
     namespace: "odh",
-    resourceTypes: ["lifts", "snowparks", "trails"],
+    resourceTypes: ["lifts", "snowparks", "skiSlopes"],
     abstract: null,
     description: null,
     shortName: null,
@@ -2286,7 +2285,7 @@ module.exports = {
     bitmask: 2048,
   },
   "3er Sessellift kuppelbar": {
-    id: "3er Sessellift kuppelbar",
+    id: "odh:3er-Sessellift-kuppelbar",
     type: "ActivityType",
     name: {
       de: "3er Sessellift kuppelbar",
@@ -2294,7 +2293,7 @@ module.exports = {
       it: "Seggiovia a 3",
     },
     namespace: "odh",
-    resourceTypes: ["lifts", "snowparks", "trails"],
+    resourceTypes: ["lifts", "snowparks", "skiSlopes"],
     abstract: null,
     description: null,
     shortName: null,
@@ -2307,7 +2306,7 @@ module.exports = {
     bitmask: 4096,
   },
   "4er Sessellift kuppelbar": {
-    id: "4er Sessellift kuppelbar",
+    id: "odh:4er-Sessellift-kuppelbar",
     type: "ActivityType",
     name: {
       de: "4er Sessellift kuppelbar",
@@ -2315,7 +2314,7 @@ module.exports = {
       it: "Seggiovia a 4",
     },
     namespace: "odh",
-    resourceTypes: ["lifts", "snowparks", "trails"],
+    resourceTypes: ["lifts", "snowparks", "skiSlopes"],
     abstract: null,
     description: null,
     shortName: null,
@@ -2328,7 +2327,7 @@ module.exports = {
     bitmask: 8192,
   },
   "6er Sessellift kuppelbar": {
-    id: "6er Sessellift kuppelbar",
+    id: "odh:6er-Sessellift-kuppelbar",
     type: "ActivityType",
     name: {
       de: "6er Sessellift kuppelbar",
@@ -2336,7 +2335,7 @@ module.exports = {
       it: "Seggiovia a 6",
     },
     namespace: "odh",
-    resourceTypes: ["lifts", "snowparks", "trails"],
+    resourceTypes: ["lifts", "snowparks", "skiSlopes"],
     abstract: null,
     description: null,
     shortName: null,
@@ -2349,7 +2348,7 @@ module.exports = {
     bitmask: 16384,
   },
   "8er Sessellift kuppelbar": {
-    id: "8er Sessellift kuppelbar",
+    id: "odh:8er-Sessellift-kuppelbar",
     type: "ActivityType",
     name: {
       de: "8er Sessellift kuppelbar",
@@ -2357,7 +2356,7 @@ module.exports = {
       it: "Seggiovia a 8",
     },
     namespace: "odh",
-    resourceTypes: ["lifts", "snowparks", "trails"],
+    resourceTypes: ["lifts", "snowparks", "skiSlopes"],
     abstract: null,
     description: null,
     shortName: null,
@@ -2370,7 +2369,7 @@ module.exports = {
     bitmask: 32768,
   },
   "Klein-Skilift": {
-    id: "Klein-Skilift",
+    id: "odh:Klein-Skilift",
     type: "ActivityType",
     name: {
       de: "Klein-Skilift",
@@ -2378,7 +2377,7 @@ module.exports = {
       it: "Piccola sciovia",
     },
     namespace: "odh",
-    resourceTypes: ["lifts", "snowparks", "trails"],
+    resourceTypes: ["lifts", "snowparks", "skiSlopes"],
     abstract: null,
     description: null,
     shortName: null,
@@ -2391,11 +2390,11 @@ module.exports = {
     bitmask: 65536,
   },
   Skibus: {
-    id: "Skibus",
+    id: "odh:Skibus",
     type: "ActivityType",
     name: { de: "Skibus", en: "Skibus", it: "Skibus" },
     namespace: "odh",
-    resourceTypes: ["lifts", "snowparks", "trails"],
+    resourceTypes: ["lifts", "snowparks", "skiSlopes"],
     abstract: null,
     description: null,
     shortName: null,
@@ -2408,7 +2407,7 @@ module.exports = {
     bitmask: 131072,
   },
   "1er Sessellift kuppelbar": {
-    id: "1er Sessellift kuppelbar",
+    id: "odh:1er-Sessellift-kuppelbar",
     type: "ActivityType",
     name: {
       de: "1er Sessellift kuppelbar",
@@ -2416,7 +2415,7 @@ module.exports = {
       it: "Seggiovia per 1",
     },
     namespace: "odh",
-    resourceTypes: ["lifts", "snowparks", "trails"],
+    resourceTypes: ["lifts", "snowparks", "skiSlopes"],
     abstract: null,
     description: null,
     shortName: null,
@@ -2429,11 +2428,11 @@ module.exports = {
     bitmask: 262144,
   },
   Zug: {
-    id: "Zug",
+    id: "odh:Zug",
     type: "ActivityType",
     name: { de: "Zug", en: "Train", it: "Treno" },
     namespace: "odh",
-    resourceTypes: ["lifts", "snowparks", "trails"],
+    resourceTypes: ["lifts", "snowparks", "skiSlopes"],
     abstract: null,
     description: null,
     shortName: null,
@@ -2446,7 +2445,7 @@ module.exports = {
     bitmask: 524288,
   },
   "Weitere Aufstiegsanlagen": {
-    id: "Weitere Aufstiegsanlagen",
+    id: "odh:Weitere-Aufstiegsanlagen",
     type: "ActivityType",
     name: {
       de: "Weitere Aufstiegsanlagen",
@@ -2454,7 +2453,7 @@ module.exports = {
       it: "Altri impianti di risalita",
     },
     namespace: "odh",
-    resourceTypes: ["lifts", "snowparks", "trails"],
+    resourceTypes: ["lifts", "snowparks", "skiSlopes"],
     abstract: null,
     description: null,
     shortName: null,
@@ -2601,7 +2600,7 @@ module.exports = {
       en: "ski-slope",
     },
     namespace: "alpinebits",
-    resourceTypes: ["trails"],
+    resourceTypes: ["skiSlopes"],
     abstract: null,
     description: null,
     shortName: null,
@@ -2617,7 +2616,7 @@ module.exports = {
       en: "sledge-slope",
     },
     namespace: "alpinebits",
-    resourceTypes: ["trails"],
+    resourceTypes: ["skiSlopes"],
     abstract: null,
     description: null,
     shortName: null,
@@ -2633,7 +2632,7 @@ module.exports = {
       en: "cross-country",
     },
     namespace: "alpinebits",
-    resourceTypes: ["trails"],
+    resourceTypes: ["skiSlopes"],
     abstract: null,
     description: null,
     shortName: null,
@@ -2649,7 +2648,7 @@ module.exports = {
       en: "hiking",
     },
     namespace: "alpinebits",
-    resourceTypes: ["trails"],
+    resourceTypes: ["skiSlopes"],
     abstract: null,
     description: null,
     shortName: null,
@@ -2665,7 +2664,7 @@ module.exports = {
       en: "mountain-bike",
     },
     namespace: "alpinebits",
-    resourceTypes: ["trails"],
+    resourceTypes: ["skiSlopes"],
     abstract: null,
     description: null,
     shortName: null,
@@ -2681,7 +2680,7 @@ module.exports = {
       en: "climbing",
     },
     namespace: "alpinebits",
-    resourceTypes: ["trails"],
+    resourceTypes: ["skiSlopes"],
     abstract: null,
     description: null,
     shortName: null,
@@ -2691,3 +2690,65 @@ module.exports = {
     parents: null,
   },
 };
+
+const categories = [];
+const lastUpdate = new Date('2021-04-01');
+
+// A first iteration converts categories into instances of Category and re-populate "categoriesMap"
+Object.entries(categoriesMap).forEach(([id,raw]) => {
+  const category = new Category();
+  const { attributes, relationships } = category;
+
+  category.id = raw.id;
+
+  category.meta = { dataProvider: "http://tourism.opendatahub.bz.it/", lastUpdate };
+  category.links.self = `${process.env.REF_SERVER_URL}/${process.env.API_VERSION}/${category.id}`;
+
+  raw.resourceTypes.forEach(resourceType => 
+    category.links[resourceType] = `${process.env.REF_SERVER_URL}/${process.env.API_VERSION}/${resourceType}?filter[categories][all]=${category.id}`
+  );
+
+  attributes.abstract = raw.abstract;
+  attributes.description = raw.description;
+  attributes.name = raw.name;
+  attributes.shortName = raw.shortName;
+  attributes.url = raw.url;
+
+  attributes.namespace = raw.namespace;
+  attributes.resourceTypes = raw.resourceTypes;
+
+  relationships.children = raw.children ? raw.children : [];
+  relationships.parents = raw.parents ? raw.parents : [];
+
+  categoriesMap[id] = category;
+
+  if(id !== raw.id) {
+    categoriesMap[raw.id] = category;
+  }
+});
+
+// A second iteration converts the relationships "children" and "parents" into arrays of categories and populates the "categories" array
+Object.entries(categoriesMap).forEach(([id,category]) => {
+  const { children, parents } = category.relationships;
+
+  if(Array.isArray(children)) {
+    category.relationships.children = children
+      .map(child => typeof child === 'string' ? categoriesMap[child] : child)
+      .filter(child => !!child);
+  }
+
+  if(Array.isArray(parents)) {
+    category.relationships.parents = parents
+      .map(parent => typeof parent === 'string' ? categoriesMap[parent] : parent)
+      .filter(parent => !!parent);
+  }
+
+  categories.push(category);
+});
+
+// TODO: add agent categories
+
+module.exports = {
+  categoriesMap,
+  categories
+}

@@ -1,23 +1,20 @@
 const _ = require("lodash");
 
-class Collection {
+class DestinationDataResponse {
     constructor(base) {
         base = base || {};
 
         this.jsonapi = base.jsonapi || { version: '1.0' };
 
-        this.meta = base.meta || {
-            count: null,
-            pages: null
-        };
+        this.meta = base.meta || {}; // guarantees that meta appears early when present
 
         this.links = base.links || {
             self: null
         };
 
-        this.data = base.data || [];
+        this.data = base.data || null;
 
-        this.included = base.included || null;
+        this.included = base.included || [];
 
         /** A string of comma-separated relationships to include to the collection */
         this._include = null;
@@ -25,20 +22,22 @@ class Collection {
         this._fields = {};
     }
 
-    static getIncluded(collection) {
-        if(typeof collection._include !== 'string') {
-            return null;
+    static getIncluded(response) {
+        if(typeof response._include !== 'string') {
+            return [];
         }
         
-        const relationshipNames = collection._include.split(",");
+        const relationshipNames = response._include.split(",");
         const included = {};
         const include = [];
+        const data = Array.isArray(response.data) ? response.data : [ response.data ];
         let targets = [];
 
         // extract [ 'relationship name', 'relationship' ] arrays that should be included
-        for(const resource of collection.data) {
+        for(const resource of data) {
             const relationships = resource.relationships || {};
-
+            
+            // TODO: improve this loop
             targets.push(...Object.entries(relationships)
                 .flatMap(([name, relationship]) => {
                     if(relationshipNames.includes(name)) {
@@ -82,46 +81,51 @@ class Collection {
     }
 
     static exclusiveSelectFields(resource, fields) {
-        Collection.exclusiveSelectAttributes(resource, fields);
-        Collection.exclusiveSelectRelationships(resource, fields);
+        DestinationDataResponse.exclusiveSelectAttributes(resource, fields);
+        DestinationDataResponse.exclusiveSelectRelationships(resource, fields);
     }
 
-    static performFieldSelection(collection) {
-        if(_.isEmpty(collection._fields)) {
+    static performFieldSelection(response) {
+        if(_.isEmpty(response._fields)) {
             return ;
         }
 
-        const { _fields } = collection;
-        const resources = [ ...collection.data ];
+        const { _fields } = response;
+        const resources = Array.isArray(response.data) ? [ ...response.data ] : [ response.data ];
 
-        if(Array.isArray(collection.included)) {
-            resources.push(...collection.included)
+        if(Array.isArray(response.included)) {
+            resources.push(...response.included)
         }
 
-        resources.forEach(resource => {
+        resources
+          .filter((resource) => !!resource)
+          .forEach((resource) => {
             const { type } = resource;
 
-            if(_fields[type]) {
-                const fields = typeof _fields[type] === 'string' ? _fields[type].split(",") : _fields[type];
-                Collection.exclusiveSelectFields(resource,fields);
+            if (_fields[type]) {
+              const fields = typeof _fields[type] === "string" ? _fields[type].split(",") : _fields[type];
+              DestinationDataResponse.exclusiveSelectFields(resource, fields);
             }
-        });
+          });
     }
 
     toJSON() {
         const copy = Object.assign({},this);
 
-        copy.included = Collection.getIncluded(copy);
+        copy.included = DestinationDataResponse.getIncluded(copy);
 
-        copy.data = [ ...copy.data.map(resource => resource) ];
+        // creates copies of the arrays "data" and "included" to avoid altering them in the next steps
+        copy.data = Array.isArray(copy.data) ? [ ...copy.data.map(resource => resource) ] : copy.data;
         if(!_.isEmpty(copy.included)) {
             copy.included = [ ...copy.included.map(resource => resource) ];
         }
 
         // field selection must be performed after serializing data and included resources to avoid altering resources elsewhere (e.g., categories)
-        Collection.performFieldSelection(copy);
+        DestinationDataResponse.performFieldSelection(copy);
 
-        if(_.isEmpty(copy.included)) delete copy.included;
+        if(_.isEmpty(copy.meta) || Object.values(copy.meta).every(meta => !meta)) delete copy.meta;
+        if(_.isEmpty(copy.included) && !copy._include) delete copy.included;
+
         delete copy._include;
         delete copy._fields;
 
@@ -129,6 +133,33 @@ class Collection {
     }
 }
 
+class CollectionResponse extends DestinationDataResponse {
+    constructor(base) {
+        super(base);
+
+        base = base || {};
+
+        this.meta = base.meta || {
+            count: null,
+            pages: null
+        };
+
+        this.data = base.data || [];
+    }
+}
+
+class ObjectResponse extends DestinationDataResponse {
+    constructor(base) {
+        super(base);
+
+        base = base || {};
+
+        this.data = base.data || [];
+    }
+}
+
 module.exports = {
-    Collection
+    DestinationDataResponse,
+    CollectionResponse,
+    ObjectResponse,
 }

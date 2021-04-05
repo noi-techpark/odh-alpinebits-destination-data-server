@@ -15,7 +15,9 @@ app.use(cors(corsOptions));
 app.use(express.json());
 
 app.use( (req, res, next) => {
-  console.log('> Request received: ' + process.env.REF_SERVER_URL + req.originalUrl);
+  const timestamp = new Date().toISOString();
+  console.log(`[${timestamp}] -------------------------------------------------`);
+  console.log('  Request received: ' + process.env.REF_SERVER_URL + req.originalUrl);
   next();
 });
 
@@ -46,18 +48,18 @@ app.use( (req, res, next) => {
 });
 
 require('./routes/home.route.js')(app);
-require('./routes/events.route.js')(app);
-require('./routes/lifts.route.js')(app);
-require('./routes/trails.route.js')(app);
-require('./routes/snowparks.route.js')(app);
-require('./routes/mountain-areas.route.js')(app);
-require('./routes/event-series.route.js')(app);
 
-require('./routes/venues.route.js')(app);
 require('./routes/agents.route.js')(app);
-require('./routes/media-objects.route.js')(app);
 require('./routes/categories.route.js')(app);
+require('./routes/events.route.js')(app);
+require('./routes/event-series.route.js')(app);
 require('./routes/features.route.js')(app);
+require('./routes/lifts.route.js')(app);
+require('./routes/media-objects.route.js')(app);
+require('./routes/mountain-areas.route.js')(app);
+require('./routes/ski-slopes.route.js')(app);
+require('./routes/snowparks.route.js')(app);
+require('./routes/venues.route.js')(app);
 
 app.get('*', (req, res) => {
   errors.handleError(errors.notFound, req, res);
