@@ -37,6 +37,17 @@ class Request {
         this.query.page.size = size || 10;
         this.query.page.number = number || 1;
     }
+
+    static createRequest(expressRequest, expectedResourceTypes, supportedFeatures) {
+        console.log("  Validating request...");
+        const request = new Request(expressRequest, isCollectionRequest);
+
+        
+
+        request.validate();
+
+        return request;
+    }
     
     /** Returns the resource type in the "base" of the quest, independent of relationships
      * Example: "/2021-04/events/121323-asd_213/categories?page[size]=2" returns "events"
@@ -50,6 +61,12 @@ class Request {
     validate() {
         this.validateIncludeQuery();
         this.validateFieldsQuery();
+
+        // validate pagination
+        // validate filters
+        // validate sorting
+        // validate random sorting
+        // validate search
     }
 
     validateIncludeQuery() {

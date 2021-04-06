@@ -108,9 +108,9 @@ class Connector {
     return { data: null };
   }
 
-  static async handleSimpleRequest(expressRequest, fetchFn, transformFn, validateFn, schema) {
+  static async handleSimpleRequest(expressRequest, isCollectionRequest, fetchFn, transformFn, validateFn, schema) {
     console.log("  Validating request...");
-    const request = new Request(expressRequest, true);
+    const request = new Request(expressRequest, isCollectionRequest);
     request.validate();
 
     console.log("  Fetching ODH data...");
@@ -194,50 +194,51 @@ async function handleRequest(req, fetchFn, validateFn) {
   }
 }
 
+// TODO: implementing support for pagination in relationships is possible in most cases, even though irrelevant.
 module.exports = {
   Connector,
-  getEvents: (request, schema) => Connector.handleSimpleRequest(request, Connector.fetchOdhEvents, responseTransform.transformToEventCollection, Connector.simpleValidate, schema),
-  getEventById: (request, schema) => Connector.handleSimpleRequest(request, Connector.fetchOdhEvents, responseTransform.transformToEventObject, Connector.simpleValidate, schema),
-  getEventCategories: (request, schema) => Connector.handleSimpleRequest(request, Connector.fetchOdhEvents, responseTransform.transformToEventCategories, Connector.simpleValidate, schema),
-  getEventContributors: (request, schema) => Connector.handleSimpleRequest(request, Connector.fetchOdhEvents, responseTransform.transformToEventContributors, Connector.simpleValidate, schema),
-  getEventEventSeries: (request, schema) => Connector.handleSimpleRequest(request, Connector.fetchOdhEvents, responseTransform.transformToEventEventSeries, Connector.simpleValidate, schema),
-  getEventMultimediaDescriptions: (request, schema) => Connector.handleSimpleRequest(request, Connector.fetchOdhEvents, responseTransform.transformToEventMultimediaDescriptions, Connector.simpleValidate, schema),
-  getEventOrganizers: (request, schema) => Connector.handleSimpleRequest(request, Connector.fetchOdhEvents, responseTransform.transformToEventOrganizers, Connector.simpleValidate, schema),
-  getEventPublisher: (request, schema) => Connector.handleSimpleRequest(request, Connector.fetchOdhEvents, responseTransform.transformToEventPublisher, Connector.simpleValidate, schema),
-  getEventSponsors: (request, schema) => Connector.handleSimpleRequest(request, Connector.fetchOdhEvents, responseTransform.transformToEventSponsors, Connector.simpleValidate, schema),
-  getEventSubEvents: (request, schema) => Connector.handleSimpleRequest(request, Connector.fetchOdhEvents, responseTransform.transformToEventSubEvents, Connector.simpleValidate, schema),
-  getEventVenues: (request, schema) => Connector.handleSimpleRequest(request, Connector.fetchOdhEvents, responseTransform.transformToEventVenues, Connector.simpleValidate, schema),
+  getEvents: (request, schema) => Connector.handleSimpleRequest(request, true, Connector.fetchOdhEvents, responseTransform.transformToEventCollection, Connector.simpleValidate, schema),
+  getEventById: (request, schema) => Connector.handleSimpleRequest(request, false, Connector.fetchOdhEvents, responseTransform.transformToEventObject, Connector.simpleValidate, schema),
+  getEventCategories: (request, schema) => Connector.handleSimpleRequest(request, true, Connector.fetchOdhEvents, responseTransform.transformToEventCategories, Connector.simpleValidate, schema),
+  getEventContributors: (request, schema) => Connector.handleSimpleRequest(request, true, Connector.fetchOdhEvents, responseTransform.transformToEventContributors, Connector.simpleValidate, schema),
+  getEventEventSeries: (request, schema) => Connector.handleSimpleRequest(request, false, Connector.fetchOdhEvents, responseTransform.transformToEventEventSeries, Connector.simpleValidate, schema),
+  getEventMultimediaDescriptions: (request, schema) => Connector.handleSimpleRequest(request, true, Connector.fetchOdhEvents, responseTransform.transformToEventMultimediaDescriptions, Connector.simpleValidate, schema),
+  getEventOrganizers: (request, schema) => Connector.handleSimpleRequest(request, true, Connector.fetchOdhEvents, responseTransform.transformToEventOrganizers, Connector.simpleValidate, schema),
+  getEventPublisher: (request, schema) => Connector.handleSimpleRequest(request, false, Connector.fetchOdhEvents, responseTransform.transformToEventPublisher, Connector.simpleValidate, schema),
+  getEventSponsors: (request, schema) => Connector.handleSimpleRequest(request, true, Connector.fetchOdhEvents, responseTransform.transformToEventSponsors, Connector.simpleValidate, schema),
+  getEventSubEvents: (request, schema) => Connector.handleSimpleRequest(request, true, Connector.fetchOdhEvents, responseTransform.transformToEventSubEvents, Connector.simpleValidate, schema),
+  getEventVenues: (request, schema) => Connector.handleSimpleRequest(request, true, Connector.fetchOdhEvents, responseTransform.transformToEventVenues, Connector.simpleValidate, schema),
   
-  getLifts: (request, schema) => Connector.handleSimpleRequest(request, Connector.fetchOdhLifts, responseTransform.transformToLiftCollection, Connector.simpleValidate, schema),
-  getLiftById: (request, schema) => Connector.handleSimpleRequest(request, Connector.fetchOdhLifts, responseTransform.transformToLiftObject, Connector.simpleValidate, schema),
-  getLiftCategories: (request, schema) => Connector.handleSimpleRequest(request, Connector.fetchOdhLifts, responseTransform.transformToLiftCategories, Connector.simpleValidate, schema),
-  getLiftConnections: (request, schema) => Connector.handleSimpleRequest(request, Connector.fetchOdhLifts, responseTransform.transformToLiftConnections, Connector.simpleValidate, schema),
-  getLiftMultimediaDescriptions: (request, schema) => Connector.handleSimpleRequest(request, Connector.fetchOdhLifts, responseTransform.transformToLiftMultimediaDescriptions, Connector.simpleValidate, schema),
+  getLifts: (request, schema) => Connector.handleSimpleRequest(request, true, Connector.fetchOdhLifts, responseTransform.transformToLiftCollection, Connector.simpleValidate, schema),
+  getLiftById: (request, schema) => Connector.handleSimpleRequest(request, false, Connector.fetchOdhLifts, responseTransform.transformToLiftObject, Connector.simpleValidate, schema),
+  getLiftCategories: (request, schema) => Connector.handleSimpleRequest(request, true, Connector.fetchOdhLifts, responseTransform.transformToLiftCategories, Connector.simpleValidate, schema),
+  getLiftConnections: (request, schema) => Connector.handleSimpleRequest(request, true, Connector.fetchOdhLifts, responseTransform.transformToLiftConnections, Connector.simpleValidate, schema),
+  getLiftMultimediaDescriptions: (request, schema) => Connector.handleSimpleRequest(request, true, Connector.fetchOdhLifts, responseTransform.transformToLiftMultimediaDescriptions, Connector.simpleValidate, schema),
 
-  getSkiSlopes: (request, schema) => Connector.handleSimpleRequest(request, Connector.fetchOdhSkiSlopes, responseTransform.transformToSkiSlopeCollection, Connector.simpleValidate, schema),
-  getSkiSlopeById: (request, schema) => Connector.handleSimpleRequest(request, Connector.fetchOdhSkiSlopes, responseTransform.transformToSkiSlopeObject, Connector.simpleValidate, schema),
-  getSkiSlopeCategories: (request, schema) => Connector.handleSimpleRequest(request, Connector.fetchOdhSkiSlopes, responseTransform.transformToSkiSlopeCategories, Connector.simpleValidate, schema),
-  getSkiSlopeConnections: (request, schema) => Connector.handleSimpleRequest(request, Connector.fetchOdhSkiSlopes, responseTransform.transformToSkiSlopeConnections, Connector.simpleValidate, schema),
-  getSkiSlopeMultimediaDescriptions: (request, schema) => Connector.handleSimpleRequest(request, Connector.fetchOdhSkiSlopes, responseTransform.transformToSkiSlopeMultimediaDescriptions, Connector.simpleValidate, schema),
+  getSkiSlopes: (request, schema) => Connector.handleSimpleRequest(request, true, Connector.fetchOdhSkiSlopes, responseTransform.transformToSkiSlopeCollection, Connector.simpleValidate, schema),
+  getSkiSlopeById: (request, schema) => Connector.handleSimpleRequest(request, false, Connector.fetchOdhSkiSlopes, responseTransform.transformToSkiSlopeObject, Connector.simpleValidate, schema),
+  getSkiSlopeCategories: (request, schema) => Connector.handleSimpleRequest(request, true, Connector.fetchOdhSkiSlopes, responseTransform.transformToSkiSlopeCategories, Connector.simpleValidate, schema),
+  getSkiSlopeConnections: (request, schema) => Connector.handleSimpleRequest(request, true, Connector.fetchOdhSkiSlopes, responseTransform.transformToSkiSlopeConnections, Connector.simpleValidate, schema),
+  getSkiSlopeMultimediaDescriptions: (request, schema) => Connector.handleSimpleRequest(request, true, Connector.fetchOdhSkiSlopes, responseTransform.transformToSkiSlopeMultimediaDescriptions, Connector.simpleValidate, schema),
 
-  getSnowparks: (request, schema) => Connector.handleSimpleRequest(request, Connector.fetchOdhSnowparks, responseTransform.transformToSnowparkCollection, Connector.simpleValidate, schema),
-  getSnowparkById: (request, schema) => Connector.handleSimpleRequest(request, Connector.fetchOdhSnowparks, responseTransform.transformToSnowparkObject, Connector.simpleValidate, schema),
-  getSnowparkCategories: (request, schema) => Connector.handleSimpleRequest(request, Connector.fetchOdhSnowparks, responseTransform.transformToSnowparkCategories, Connector.simpleValidate, schema),
-  getSnowparkConnections: (request, schema) => Connector.handleSimpleRequest(request, Connector.fetchOdhSnowparks, responseTransform.transformToSnowparkConnections, Connector.simpleValidate, schema),
-  getSnowparkFeatures: (request, schema) => Connector.handleSimpleRequest(request, Connector.fetchOdhSnowparks, responseTransform.transformToSnowparkFeatures, Connector.simpleValidate, schema),
-  getSnowparkMultimediaDescriptions: (request, schema) => Connector.handleSimpleRequest(request, Connector.fetchOdhSnowparks, responseTransform.transformToSnowparkMultimediaDescriptions, Connector.simpleValidate, schema),
+  getSnowparks: (request, schema) => Connector.handleSimpleRequest(request, true, Connector.fetchOdhSnowparks, responseTransform.transformToSnowparkCollection, Connector.simpleValidate, schema),
+  getSnowparkById: (request, schema) => Connector.handleSimpleRequest(request, false, Connector.fetchOdhSnowparks, responseTransform.transformToSnowparkObject, Connector.simpleValidate, schema),
+  getSnowparkCategories: (request, schema) => Connector.handleSimpleRequest(request, true, Connector.fetchOdhSnowparks, responseTransform.transformToSnowparkCategories, Connector.simpleValidate, schema),
+  getSnowparkConnections: (request, schema) => Connector.handleSimpleRequest(request, true, Connector.fetchOdhSnowparks, responseTransform.transformToSnowparkConnections, Connector.simpleValidate, schema),
+  getSnowparkFeatures: (request, schema) => Connector.handleSimpleRequest(request, true, Connector.fetchOdhSnowparks, responseTransform.transformToSnowparkFeatures, Connector.simpleValidate, schema),
+  getSnowparkMultimediaDescriptions: (request, schema) => Connector.handleSimpleRequest(request, true, Connector.fetchOdhSnowparks, responseTransform.transformToSnowparkMultimediaDescriptions, Connector.simpleValidate, schema),
   
-  getCategories: (request, schema) => Connector.handleSimpleRequest(request, Connector.fetchCategories, responseTransform.transformToCategoryCollection, Connector.simpleValidate, schema),
-  getCategoryById: (request, schema) => Connector.handleSimpleRequest(request, Connector.fetchCategories, responseTransform.transformToCategoryObject, Connector.simpleValidate, schema),
-  getCategoryChildren: (request, schema) => Connector.handleSimpleRequest(request, Connector.fetchCategories, responseTransform.transformToCategoryChildren, Connector.simpleValidate, schema),
-  getCategoryMultimediaDescriptions: (request, schema) => Connector.handleSimpleRequest(request, Connector.fetchCategories, responseTransform.transformToCategoryMultimediaDescriptions, Connector.simpleValidate, schema),
-  getCategoryParents: (request, schema) => Connector.handleSimpleRequest(request, Connector.fetchCategories, responseTransform.transformToCategoryParents, Connector.simpleValidate, schema),
+  getCategories: (request, schema) => Connector.handleSimpleRequest(request, true, Connector.fetchCategories, responseTransform.transformToCategoryCollection, Connector.simpleValidate, schema),
+  getCategoryById: (request, schema) => Connector.handleSimpleRequest(request, false, Connector.fetchCategories, responseTransform.transformToCategoryObject, Connector.simpleValidate, schema),
+  getCategoryChildren: (request, schema) => Connector.handleSimpleRequest(request, true, Connector.fetchCategories, responseTransform.transformToCategoryChildren, Connector.simpleValidate, schema),
+  getCategoryMultimediaDescriptions: (request, schema) => Connector.handleSimpleRequest(request, true, Connector.fetchCategories, responseTransform.transformToCategoryMultimediaDescriptions, Connector.simpleValidate, schema),
+  getCategoryParents: (request, schema) => Connector.handleSimpleRequest(request, true, Connector.fetchCategories, responseTransform.transformToCategoryParents, Connector.simpleValidate, schema),
   
-  getFeatures: (request, schema) => Connector.handleSimpleRequest(request, Connector.fetchFeatures, responseTransform.transformToFeatureCollection, Connector.simpleValidate, schema),
-  getFeatureById: (request, schema) => Connector.handleSimpleRequest(request, Connector.fetchFeatures, responseTransform.transformToFeatureObject, Connector.simpleValidate, schema),
-  getFeatureChildren: (request, schema) => Connector.handleSimpleRequest(request, Connector.fetchFeatures, responseTransform.transformToFeatureChildren, Connector.simpleValidate, schema),
-  getFeatureMultimediaDescriptions: (request, schema) => Connector.handleSimpleRequest(request, Connector.fetchFeatures, responseTransform.transformToFeatureMultimediaDescriptions, Connector.simpleValidate, schema),
-  getFeatureParents: (request, schema) => Connector.handleSimpleRequest(request, Connector.fetchFeatures, responseTransform.transformToFeatureParents, Connector.simpleValidate, schema),
+  getFeatures: (request, schema) => Connector.handleSimpleRequest(request, true, Connector.fetchFeatures, responseTransform.transformToFeatureCollection, Connector.simpleValidate, schema),
+  getFeatureById: (request, schema) => Connector.handleSimpleRequest(request, false, Connector.fetchFeatures, responseTransform.transformToFeatureObject, Connector.simpleValidate, schema),
+  getFeatureChildren: (request, schema) => Connector.handleSimpleRequest(request, true, Connector.fetchFeatures, responseTransform.transformToFeatureChildren, Connector.simpleValidate, schema),
+  getFeatureMultimediaDescriptions: (request, schema) => Connector.handleSimpleRequest(request, true, Connector.fetchFeatures, responseTransform.transformToFeatureMultimediaDescriptions, Connector.simpleValidate, schema),
+  getFeatureParents: (request, schema) => Connector.handleSimpleRequest(request, true, Connector.fetchFeatures, responseTransform.transformToFeatureParents, Connector.simpleValidate, schema),
 
   getMountainAreas: req => handleRequest(req, odhCon.fetchMountainAreas, val.validateMountainAreas),
   getMountainAreaById: req => handleRequest(req, odhCon.fetchMountainAreaById, val.validateMountainAreasId),
