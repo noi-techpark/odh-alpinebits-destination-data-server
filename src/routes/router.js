@@ -1,12 +1,14 @@
 const errors = require("./../errors");
 
+const prefix = `/${process.env.API_VERSION}`;
+
 class Router {
   constructor() {
     this.getRoutes = {};
   }
 
   addGetRoute(path, handleRequestFn) {
-    this.getRoutes[path] = (request, response) => {
+    this.getRoutes[prefix+path] = (request, response) => {
       try {
         handleRequestFn(request)
           .then((data) => response.json(data))

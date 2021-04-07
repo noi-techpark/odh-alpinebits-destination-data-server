@@ -19,7 +19,7 @@ function testSchema(input, schema) {
 class Request {
   constructor(expressRequest) {
     this.baseUrl = `${process.env.REF_SERVER_URL}/${process.env.API_VERSION}`;
-    this.selfUrl = `${process.env.REF_SERVER_URL}/${expressRequest.originalUrl}`;
+    this.selfUrl = `${process.env.REF_SERVER_URL}${expressRequest.originalUrl}`;
     this.params = expressRequest.params;
 
     this.query = {};

@@ -10,32 +10,28 @@ const { Venue } = require("./../model/destinationdata/venue");
 const responseTransform = require("../model/odh2destinationdata/response_transform");
 const requestTransform = require("../model/request2odh/request_transform");
 
-const prefix = `/${process.env.API_VERSION}`;
-
 class EventsRouter extends Router {
   constructor(app) {
     super();
 
-    this.addGetRoute(`${prefix}/events`, (request) => this.getEvents(request));
-    this.addGetRoute(`${prefix}/events/:id`, (request) => this.getEventById(request));
-    this.addGetRoute(`${prefix}/events/:id/categories`, (request) => this.getEventCategories(request));
-    this.addGetRoute(`${prefix}/events/:id/contributors`, (request) => this.getEventContributors(request));
-    this.addGetRoute(`${prefix}/events/:id/multimediaDescriptions`, (request) =>
-      this.getEventMultimediaDescriptions(request)
-    );
-    this.addGetRoute(`${prefix}/events/:id/organizers`, (request) => this.getEventOrganizers(request));
-    this.addGetRoute(`${prefix}/events/:id/publisher`, (request) => this.getEventPublisher(request));
-    this.addGetRoute(`${prefix}/events/:id/series`, (request) => this.getEventEventSeries(request));
-    this.addGetRoute(`${prefix}/events/:id/sponsors`, (request) => this.getEventSponsors(request));
-    this.addGetRoute(`${prefix}/events/:id/subEvents`, (request) => this.getEventSubEvents(request));
-    this.addGetRoute(`${prefix}/events/:id/venues`, (request) => this.getEventVenues(request));
+    this.addGetRoute(`/events`, this.getEvents);
+    this.addGetRoute(`/events/:id`, this.getEventById);
+    this.addGetRoute(`/events/:id/categories`, this.getEventCategories);
+    this.addGetRoute(`/events/:id/contributors`, this.getEventContributors);
+    this.addGetRoute(`/events/:id/multimediaDescriptions`, this.getEventMultimediaDescriptions);
+    this.addGetRoute(`/events/:id/organizers`, this.getEventOrganizers);
+    this.addGetRoute(`/events/:id/publisher`, this.getEventPublisher);
+    this.addGetRoute(`/events/:id/series`, this.getEventEventSeries);
+    this.addGetRoute(`/events/:id/sponsors`, this.getEventSponsors);
+    this.addGetRoute(`/events/:id/subEvents`, this.getEventSubEvents);
+    this.addGetRoute(`/events/:id/venues`, this.getEventVenues);
 
     if (app) {
       this.installRoutes(app);
     }
   }
 
-  parseRequest(request, expectedTypes, supportedFeatures) {
+  parseRequest = (request, expectedTypes, supportedFeatures) => {
     const parsedRequest = new Request(request);
 
     parsedRequest.expectedTypes = expectedTypes || [];
@@ -50,7 +46,7 @@ class EventsRouter extends Router {
     return parsedRequest;
   }
 
-  getEvents(request) {
+  getEvents = (request) => {
     const parseRequestFn = (request) => {
       const expectedTypes = [Agent, Category, Event, EventSeries, MediaObject, Venue];
       const supportedFeatures = ["include", "fields", "filter", "page", "random", "search", "sort"];
@@ -68,7 +64,7 @@ class EventsRouter extends Router {
     );
   }
 
-  getEventById(request) {
+  getEventById = (request) => {
     const parseRequestFn = (request) => {
       const expectedTypes = [Agent, Category, Event, EventSeries, MediaObject, Venue];
       return this.parseRequest(request, expectedTypes);
@@ -84,7 +80,7 @@ class EventsRouter extends Router {
     );
   }
 
-  getEventCategories(request) {
+  getEventCategories = (request) => {
     const parseRequestFn = (request) => {
       const expectedTypes = [Category, MediaObject];
       return this.parseRequest(request, expectedTypes);
@@ -100,7 +96,7 @@ class EventsRouter extends Router {
     );
   }
 
-  getEventContributors(request) {
+  getEventContributors = (request) => {
     const parseRequestFn = (request) => {
       const expectedTypes = [Agent];
       return this.parseRequest(request, expectedTypes);
@@ -116,7 +112,7 @@ class EventsRouter extends Router {
     );
   }
 
-  getEventEventSeries(request) {
+  getEventEventSeries = (request) => {
     const parseRequestFn = (request) => {
       const expectedTypes = [Agent, Category, MediaObject];
       return this.parseRequest(request, expectedTypes);
@@ -132,7 +128,7 @@ class EventsRouter extends Router {
     );
   }
 
-  getEventMultimediaDescriptions(request) {
+  getEventMultimediaDescriptions = (request) => {
     const parseRequestFn = (request) => {
       const expectedTypes = [Category, Event, MediaObject];
       return this.parseRequest(request, expectedTypes);
@@ -148,7 +144,7 @@ class EventsRouter extends Router {
     );
   }
 
-  getEventOrganizers(request) {
+  getEventOrganizers = (request) => {
     const parseRequestFn = (request) => {
       const expectedTypes = [Agent];
       return this.parseRequest(request, expectedTypes);
@@ -164,7 +160,7 @@ class EventsRouter extends Router {
     );
   }
 
-  getEventPublisher(request) {
+  getEventPublisher = (request) => {
     const parseRequestFn = (request) => {
       const expectedTypes = [Agent];
       return this.parseRequest(request, expectedTypes);
@@ -180,7 +176,7 @@ class EventsRouter extends Router {
     );
   }
 
-  getEventSponsors(request) {
+  getEventSponsors = (request) => {
     const parseRequestFn = (request) => {
       const expectedTypes = [Agent];
       return this.parseRequest(request, expectedTypes);
@@ -196,7 +192,7 @@ class EventsRouter extends Router {
     );
   }
 
-  getEventSubEvents(request) {
+  getEventSubEvents = (request) => {
     const parseRequestFn = (request) => {
       const expectedTypes = [Agent, Category, Event, EventSeries, MediaObject, Venue];
       return this.parseRequest(request, expectedTypes);
@@ -212,7 +208,7 @@ class EventsRouter extends Router {
     );
   }
 
-  getEventVenues(request) {
+  getEventVenues = (request) => {
     const parseRequestFn = (request) => {
       const expectedTypes = [Category, MediaObject];
       return this.parseRequest(request, expectedTypes);
