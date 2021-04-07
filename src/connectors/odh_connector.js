@@ -2,12 +2,7 @@
 const { DestinationDataError: Error } = require("../errors");
 const axios = require("axios");
 
-const odhHostUrl = process.env.ODH_BASE_URL;
-const axiosOpts = {
-  baseURL: process.env.ODH_BASE_URL,
-  timeout: process.env.ODH_TIMEOUT,
-  headers: { Accept: "application/json" },
-};
+
 
 class OdhConnector {
   constructor(odhPath, request, requestTransformFn) {
@@ -17,6 +12,13 @@ class OdhConnector {
     this.id = odhItemId ? `/${odhItemId}` : "";
     this.queries = odhQueries ? `?${odhQueries}` : "";
     this.path = odhPath + this.id + this.queries;
+
+    this.odhHostUrl = process.env.ODH_BASE_URL;
+    this.axiosOpts = {
+      baseURL: process.env.ODH_BASE_URL,
+      timeout: process.env.ODH_TIMEOUT,
+      headers: { Accept: "application/json" },
+    };
   }
 
   async fetch() {
