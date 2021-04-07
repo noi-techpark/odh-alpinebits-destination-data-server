@@ -1,21 +1,105 @@
 const { Router } = require("./router");
-const connector = require("../connectors");
-const prefix = `/${process.env.API_VERSION}`;
+const { LiftConnector } = require("./../connectors/lift_connector");
+const { Agent } = require("./../model/destinationdata/agents");
+const { Category } = require("./../model/destinationdata/category");
+const { Lift } = require("../model/destinationdata/lift");
+const { MediaObject } = require("./../model/destinationdata/media_object");
+const { MountainArea } = require("../model/destinationdata/mountain_area");
+const { SkiSlope } = require("../model/destinationdata/ski_slope");
+const { Snowpark } = require("../model/destinationdata/snowpark");
+const responseTransform = require("../model/odh2destinationdata/response_transform");
+const requestTransform = require("../model/request2odh/request_transform");
 
 class LiftsRouter extends Router {
   constructor(app) {
     super();
 
-    this.addGetRoute(`${prefix}/lifts`, connector.getLifts);
-    this.addGetRoute(`${prefix}/lifts/:id`, connector.getLiftById);
-    this.addGetRoute(`${prefix}/lifts/:id/categories`, connector.getLiftCategories);
-    this.addGetRoute(`${prefix}/lifts/:id/connections`, connector.getLiftConnections);
-    this.addGetRoute(`${prefix}/lifts/:id/multimediaDescriptions`, connector.getLiftMultimediaDescriptions);
+    this.addGetRoute(`/lifts`, this.getLifts);
+    this.addGetRoute(`/lifts/:id`, this.getLiftById);
+    this.addGetRoute(`/lifts/:id/categories`, this.getLiftCategories);
+    this.addGetRoute(`/lifts/:id/connections`, this.getLiftConnections);
+    this.addGetRoute(`/lifts/:id/multimediaDescriptions`, this.getLiftMultimediaDescriptions);
 
     if (app) {
       this.installRoutes(app);
     }
   }
+
+  getLifts = (request) => {
+    const parseRequestFn = (request) => {
+      const expectedTypes = [Category, MediaObject, Lift, MountainArea, SkiSlope, Snowpark];
+      const supportedFeatures = ["include", "fields", "filter", "page", "random", "search", "sort"];
+      return this.parseRequest(request, expectedTypes, supportedFeatures);
+    };
+    const fetchFn = (parsedRequest) =>
+      new LiftConnector(parsedRequest, requestTransform.transformGetLiftsRequest).fetch();
+
+    return this.handleRequest(
+      request,
+      parseRequestFn,
+      fetchFn,
+      responseTransform.transformToLiftCollection,
+      this.validate
+    );
+  };
+
+  getLiftById = (request) => {
+    const parseRequestFn = (request) => {
+      const expectedTypes = [Category, MediaObject, Lift, MountainArea, SkiSlope, Snowpark];
+      return this.parseRequest(request, expectedTypes);
+    };
+    const fetchFn = (parsedRequest) => new LiftConnector(parsedRequest, null).fetch();
+
+    return this.handleRequest(request, parseRequestFn, fetchFn, responseTransform.transformToLiftObject, this.validate);
+  };
+
+  getLiftCategories = (request) => {
+    const parseRequestFn = (request) => {
+      const expectedTypes = [Category, MediaObject];
+      return this.parseRequest(request, expectedTypes);
+    };
+    const fetchFn = (parsedRequest) => new LiftConnector(parsedRequest, null).fetch();
+
+    return this.handleRequest(
+      request,
+      parseRequestFn,
+      fetchFn,
+      responseTransform.transformToLiftCategories,
+      this.validate
+    );
+  };
+
+  getLiftConnections = (request) => {
+    const parseRequestFn = (request) => {
+      const expectedTypes = [Agent, Category, MediaObject, Lift, MountainArea, SkiSlope, Snowpark];
+      return this.parseRequest(request, expectedTypes);
+    };
+    const fetchFn = (parsedRequest) => new LiftConnector(parsedRequest, null).fetch();
+
+    return this.handleRequest(
+      request,
+      parseRequestFn,
+      fetchFn,
+      responseTransform.transformToLiftConnections,
+      this.validate
+    );
+  };
+
+  getLiftMultimediaDescriptions = (request) => {
+    const parseRequestFn = (request) => {
+      const expectedTypes = [Agent, Category, MediaObject];
+      return this.parseRequest(request, expectedTypes);
+    };
+    const fetchFn = (parsedRequest) => new LiftConnector(parsedRequest, null).fetch();
+
+    return this.handleRequest(
+      request,
+      parseRequestFn,
+      fetchFn,
+      responseTransform.transformToLiftMultimediaDescriptions,
+      this.validate
+    );
+  };
 }
 
 module.exports = {

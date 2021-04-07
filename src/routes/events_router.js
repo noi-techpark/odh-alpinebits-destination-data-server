@@ -1,5 +1,4 @@
 const { Router } = require("./router");
-const { Request } = require("./../model/request/request");
 const { EventConnector } = require("./../connectors/event_connector");
 const { Agent } = require("./../model/destinationdata/agents");
 const { Category } = require("./../model/destinationdata/category");
@@ -31,21 +30,6 @@ class EventsRouter extends Router {
     }
   }
 
-  parseRequest = (request, expectedTypes, supportedFeatures) => {
-    const parsedRequest = new Request(request);
-
-    parsedRequest.expectedTypes = expectedTypes || [];
-
-    if (Array.isArray(supportedFeatures)) {
-      Object.keys(parsedRequest.supportedFeatures).forEach((feature) => {
-        parsedRequest.supportedFeatures[feature] = supportedFeatures.includes(feature);
-      });
-    }
-
-    parsedRequest.validate();
-    return parsedRequest;
-  }
-
   getEvents = (request) => {
     const parseRequestFn = (request) => {
       const expectedTypes = [Agent, Category, Event, EventSeries, MediaObject, Venue];
@@ -62,7 +46,7 @@ class EventsRouter extends Router {
       responseTransform.transformToEventCollection,
       this.validate
     );
-  }
+  };
 
   getEventById = (request) => {
     const parseRequestFn = (request) => {
@@ -78,7 +62,7 @@ class EventsRouter extends Router {
       responseTransform.transformToEventObject,
       this.validate
     );
-  }
+  };
 
   getEventCategories = (request) => {
     const parseRequestFn = (request) => {
@@ -94,7 +78,7 @@ class EventsRouter extends Router {
       responseTransform.transformToEventCategories,
       this.validate
     );
-  }
+  };
 
   getEventContributors = (request) => {
     const parseRequestFn = (request) => {
@@ -110,7 +94,7 @@ class EventsRouter extends Router {
       responseTransform.transformToEventContributors,
       this.validate
     );
-  }
+  };
 
   getEventEventSeries = (request) => {
     const parseRequestFn = (request) => {
@@ -126,7 +110,7 @@ class EventsRouter extends Router {
       responseTransform.transformToEventEventSeries,
       this.validate
     );
-  }
+  };
 
   getEventMultimediaDescriptions = (request) => {
     const parseRequestFn = (request) => {
@@ -142,7 +126,7 @@ class EventsRouter extends Router {
       responseTransform.transformToEventMultimediaDescriptions,
       this.validate
     );
-  }
+  };
 
   getEventOrganizers = (request) => {
     const parseRequestFn = (request) => {
@@ -158,7 +142,7 @@ class EventsRouter extends Router {
       responseTransform.transformToEventOrganizers,
       this.validate
     );
-  }
+  };
 
   getEventPublisher = (request) => {
     const parseRequestFn = (request) => {
@@ -174,7 +158,7 @@ class EventsRouter extends Router {
       responseTransform.transformToEventPublisher,
       this.validate
     );
-  }
+  };
 
   getEventSponsors = (request) => {
     const parseRequestFn = (request) => {
@@ -190,7 +174,7 @@ class EventsRouter extends Router {
       responseTransform.transformToEventSponsors,
       this.validate
     );
-  }
+  };
 
   getEventSubEvents = (request) => {
     const parseRequestFn = (request) => {
@@ -206,7 +190,7 @@ class EventsRouter extends Router {
       responseTransform.transformToEventSubEvents,
       this.validate
     );
-  }
+  };
 
   getEventVenues = (request) => {
     const parseRequestFn = (request) => {
@@ -222,7 +206,7 @@ class EventsRouter extends Router {
       responseTransform.transformToEventVenues,
       this.validate
     );
-  }
+  };
 }
 
 module.exports = {

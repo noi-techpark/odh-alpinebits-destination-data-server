@@ -1,4 +1,5 @@
 const errors = require("./../errors");
+const { Request } = require("./../model/request/request");
 
 const prefix = `/${process.env.API_VERSION}`;
 
@@ -8,7 +9,7 @@ class Router {
   }
 
   addGetRoute(path, handleRequestFn) {
-    this.getRoutes[prefix+path] = (request, response) => {
+    this.getRoutes[prefix + path] = (request, response) => {
       try {
         handleRequestFn(request)
           .then((data) => response.json(data))
@@ -72,6 +73,21 @@ class Router {
       console.error("  Schema validation skipped: no schema provided");
     }
   }
+
+  parseRequest = (request, expectedTypes, supportedFeatures) => {
+    const parsedRequest = new Request(request);
+
+    parsedRequest.expectedTypes = expectedTypes || [];
+
+    if (Array.isArray(supportedFeatures)) {
+      Object.keys(parsedRequest.supportedFeatures).forEach((feature) => {
+        parsedRequest.supportedFeatures[feature] = supportedFeatures.includes(feature);
+      });
+    }
+
+    parsedRequest.validate();
+    return parsedRequest;
+  };
 }
 
 module.exports = {

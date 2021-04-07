@@ -1,5 +1,6 @@
-const { Category } = require('./../src/model/destinationdata/category');
-require('custom-env').env();
+const { Category } = require("./../src/model/destinationdata/category");
+require("custom-env").env();
+const _ = require("lodash");
 
 // const selfUrl = process.env.REF_SERVER_URL + '/2021-04';
 
@@ -2692,10 +2693,10 @@ const categoriesMap = {
 };
 
 const categories = [];
-const lastUpdate = new Date('2021-04-01');
+const lastUpdate = new Date("2021-04-01");
 
 // A first iteration converts categories into instances of Category and re-populate "categoriesMap"
-Object.entries(categoriesMap).forEach(([id,raw]) => {
+Object.entries(categoriesMap).forEach(([id, raw]) => {
   const category = new Category();
   const { attributes, relationships } = category;
 
@@ -2704,8 +2705,11 @@ Object.entries(categoriesMap).forEach(([id,raw]) => {
   category.meta = { dataProvider: "http://tourism.opendatahub.bz.it/", lastUpdate };
   category.links.self = `${process.env.REF_SERVER_URL}/${process.env.API_VERSION}/${category.id}`;
 
-  raw.resourceTypes.forEach(resourceType => 
-    category.links[resourceType] = `${process.env.REF_SERVER_URL}/${process.env.API_VERSION}/${resourceType}?filter[categories][all]=${category.id}`
+  raw.resourceTypes.forEach(
+    (resourceType) =>
+      (category.links[
+        resourceType
+      ] = `${process.env.REF_SERVER_URL}/${process.env.API_VERSION}/${resourceType}?filter[categories][all]=${category.id}`)
   );
 
   attributes.abstract = raw.abstract;
@@ -2722,25 +2726,29 @@ Object.entries(categoriesMap).forEach(([id,raw]) => {
 
   categoriesMap[id] = category;
 
-  if(id !== raw.id) {
+  if (id !== raw.id) {
+    // in some places, the id is returned in lowercase so this mapping is important
+    categoriesMap[id.toLowerCase()] = category;
     categoriesMap[raw.id] = category;
   }
 });
 
 // A second iteration converts the relationships "children" and "parents" into arrays of categories and populates the "categories" array
-Object.entries(categoriesMap).forEach(([id,category]) => {
-  const { children, parents } = category.relationships;
+Object.entries(categoriesMap).forEach(([id, category]) => {
+  let { children, parents } = category.relationships;
 
-  if(Array.isArray(children)) {
-    category.relationships.children = children
-      .map(child => typeof child === 'string' ? categoriesMap[child] : child)
-      .filter(child => !!child);
+  if (Array.isArray(children)) {
+    children = children
+      .map((child) => (typeof child === "string" ? categoriesMap[child] : child))
+      .filter((child) => !!child);
+    category.relationships.children = children;
   }
 
-  if(Array.isArray(parents)) {
-    category.relationships.parents = parents
-      .map(parent => typeof parent === 'string' ? categoriesMap[parent] : parent)
-      .filter(parent => !!parent);
+  if (Array.isArray(parents)) {
+    parents = parents
+      .map((parent) => (typeof parent === "string" ? categoriesMap[parent] : parent))
+      .filter((parent) => !!parent);
+    category.relationships.parents = parents;
   }
 
   categories.push(category);
@@ -2750,5 +2758,5 @@ Object.entries(categoriesMap).forEach(([id,category]) => {
 
 module.exports = {
   categoriesMap,
-  categories
-}
+  categories,
+};
