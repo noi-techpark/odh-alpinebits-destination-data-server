@@ -5,11 +5,11 @@ class EventSeriesRouter extends Router {
   constructor(app) {
     super();
 
-    this.addGetUnimplementedRoute(`${prefix}/eventSeries`);
-    this.addGetUnimplementedRoute(`${prefix}/eventSeries/:id`);
-    this.addGetUnimplementedRoute(`${prefix}/eventSeries/:id/categories`);
-    this.addGetUnimplementedRoute(`${prefix}/eventSeries/:id/editions`);
-    this.addGetUnimplementedRoute(`${prefix}/eventSeries/:id/multimediaDescriptions`);
+    this.addUnimplementedGetRoute(`${prefix}/eventSeries`);
+    this.addUnimplementedGetRoute(`${prefix}/eventSeries/:id`);
+    this.addUnimplementedGetRoute(`${prefix}/eventSeries/:id/categories`);
+    this.addUnimplementedGetRoute(`${prefix}/eventSeries/:id/editions`);
+    this.addUnimplementedGetRoute(`${prefix}/eventSeries/:id/multimediaDescriptions`);
 
     if (app) {
       this.installRoutes(app);

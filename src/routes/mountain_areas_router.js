@@ -5,16 +5,16 @@ class MountainAreasRouter extends Router {
   constructor(app) {
     super();
 
-    this.addGetUnimplementedRoute(`${prefix}/mountainAreas`);
-    this.addGetUnimplementedRoute(`${prefix}/mountainAreas/:id`);
-    this.addGetUnimplementedRoute(`${prefix}/mountainAreas/:id/areaOwner`);
-    this.addGetUnimplementedRoute(`${prefix}/mountainAreas/:id/categories`);
-    this.addGetUnimplementedRoute(`${prefix}/mountainAreas/:id/connections`);
-    this.addGetUnimplementedRoute(`${prefix}/mountainAreas/:id/lifts`);
-    this.addGetUnimplementedRoute(`${prefix}/mountainAreas/:id/multimediaDescriptions`);
-    this.addGetUnimplementedRoute(`${prefix}/mountainAreas/:id/skiSlopes`);
-    this.addGetUnimplementedRoute(`${prefix}/mountainAreas/:id/snowparks`);
-    this.addGetUnimplementedRoute(`${prefix}/mountainAreas/:id/subAreas`);
+    this.addUnimplementedGetRoute(`${prefix}/mountainAreas`);
+    this.addUnimplementedGetRoute(`${prefix}/mountainAreas/:id`);
+    this.addUnimplementedGetRoute(`${prefix}/mountainAreas/:id/areaOwner`);
+    this.addUnimplementedGetRoute(`${prefix}/mountainAreas/:id/categories`);
+    this.addUnimplementedGetRoute(`${prefix}/mountainAreas/:id/connections`);
+    this.addUnimplementedGetRoute(`${prefix}/mountainAreas/:id/lifts`);
+    this.addUnimplementedGetRoute(`${prefix}/mountainAreas/:id/multimediaDescriptions`);
+    this.addUnimplementedGetRoute(`${prefix}/mountainAreas/:id/skiSlopes`);
+    this.addUnimplementedGetRoute(`${prefix}/mountainAreas/:id/snowparks`);
+    this.addUnimplementedGetRoute(`${prefix}/mountainAreas/:id/subAreas`);
 
     if (app) {
       this.installRoutes(app);

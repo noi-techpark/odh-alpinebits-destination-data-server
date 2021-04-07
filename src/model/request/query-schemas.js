@@ -1,198 +1,98 @@
 const commaSeparatedStrings = {
-    type: "string",
-    pattern: "^[a-zA-Z0-9](?:[-\\w]*[a-zA-Z0-9])?(,([a-zA-Z0-9](?:[-\\w]*[a-zA-Z0-9])?))*$"
-    // pattern borrowed from JSON:API's schema
-}
+  type: "string",
+  pattern: "^\\w(\\w|-)*((,|.)\\w(\\w|-)*)*$",
+};
 
-const include = commaSeparatedStrings
+const include = commaSeparatedStrings;
 
 const random = {
-    type: "string",
-    pattern: "(^[1-9]$)|(^[1-4][0-9]$)|(^50$)"
-}
+  type: "string",
+  pattern: "(^[1-9]$)|(^[1-4][0-9]$)|(^50$)",
+};
 
 const sort = {
-    type: "string",
-    pattern: "^(-?[a-zA-Z0-9](?:[-\\w]*[a-zA-Z0-9])?)(,(-?[a-zA-Z0-9](?:[-\\w]*[a-zA-Z0-9])?))*$"
-    // pattern borrowed from JSON:API's schema
-}
+  type: "string",
+  pattern: "^-?\\w(\\w|-)*(((,-?)|.)\\w(\\w|-)*)*$",
+};
 
 const page = {
-    type: "object",
-    properties: {
-        number: {
-            type: "string",
-            pattern: "^[1-9]"
-        },
-        size: {
-            type: "string",
-            pattern: "^[1-9]"
-        },
+  type: "object",
+  properties: {
+    number: {
+      type: "string",
+      pattern: "^[1-9]([0-9])*$",
     },
-    additionalProperties: false,
-    minProperties: 1
-}
+    size: {
+      type: "string",
+      pattern: "^[1-9]([0-9])*$",
+    },
+  },
+  additionalProperties: false,
+  minProperties: 1,
+};
 
 const search = {
-    type: "object",
-    additionalProperties: {
+  oneOf: [
+    {
+      type: "string",
+      minLength: 1,
+    },
+    {
+      type: "object",
+      additionalProperties: {
         type: "string",
         minLength: 1,
-        pattern: "^[^,]*$"
-    }
-}
-
-const langSchema = {
-    type: "string",
-    pattern: "^\\w{3}(,\\w{3})*$"
-}
-
-const lastUpdateSchema = {
-    type: "object",
-    properties: {
-        gt: {
-            type: "string",
-            format: "date"
-        }
+      },
     },
-    additionalProperties: false,
-    minProperties: 1
-}
-
-const categoriesSchema = {
-    type: "object",
-    properties: {
-        any: {
-            type: "string",
-            pattern: "^((\\w|-)+\\/(\\w|-)+)(,((\\w|-)+\\/(\\w|-)+))*$"
-        }
-    },
-    additionalProperties: false,
-    minProperties: 1
-}
-
-const locationSchema = {
-    type: "object",
-    properties: {
-        near: {
-            type: "string",
-            pattern: "^(-?\\d+(\\.\\d+)?),(-?\\d+(\\.\\d+)?),(\\d+)$"
-        }
-    },
-    additionalProperties: false,
-    minProperties: 1
-}
-
-
-const startDateSchema = {
-    type: "object",
-    properties: {
-        lte: {
-            type: "string",
-            format: "date"
-        }
-    },
-    additionalProperties: false,
-    minProperties: 1
-}
-
-const endDateSchema = {
-    type: "object",
-    properties: {
-        gte: {
-            type: "string",
-            format: "date"
-        }
-    },
-    additionalProperties: false,
-    minProperties: 1
-}
-
-const organizersSchema = {
-    type: "object",
-    properties: {
-        eq: {
-            type: "string",
-            pattern: "^[^,]+$"
-        }
-    },
-    additionalProperties: false,
-    minProperties: 1
-}
+  ],
+};
 
 const filter = {
-    events: {
+  type: "object",
+  propertyNames: {
+    pattern: "^\\w(\\w|-)*(.\\w(\\w|-)*)*$",
+  },
+  additionalProperties: {
+    oneOf: [
+      {
+        type: "string",
+      },
+      {
         type: "object",
-        properties: {
-            lang: langSchema,
-            lastUpdate: lastUpdateSchema,
-            categories: categoriesSchema,
-            venues: locationSchema,
-            startDate: startDateSchema,
-            endDate: endDateSchema,
-            organizers: organizersSchema,
+        propertyNames: {
+          pattern: "^exists|eq|neq|in|nin|any|all|gt|gte|lt|lte|near|intersects|within|starts|ends|regex$",
         },
-        additionalProperties: false,
-        minProperties: 1
-    },
-    lifts: {
-        type: "object",
-        properties: {
-            lang: langSchema,
-            lastUpdate: lastUpdateSchema,
-            categories: categoriesSchema,
-            geometries: locationSchema,
-        },
-        additionalProperties: false,
-        minProperties: 1
-    },
-    snowparks: {
-        type: "object",
-        properties: {
-            lang: langSchema,
-            lastUpdate: lastUpdateSchema,
-            geometries: locationSchema,
-        },
-        additionalProperties: false,
-        minProperties: 1
-    },
-    skiSlopes: {
-        type: "object",
-        properties: {
-            lang: langSchema,
-            lastUpdate: lastUpdateSchema,
-            geometries: locationSchema,
-        },
-        additionalProperties: false,
-        minProperties: 1
-    },
-}
+        additionalProperties: { type: "string" },
+        minProperties: 1,
+      },
+    ],
+  },
+  minProperties: 1,
+};
 
 const fields = {
-    type: "object",
-    properties: {
-        agents: commaSeparatedStrings,
-        categories: commaSeparatedStrings,
-        events: commaSeparatedStrings,
-        eventSeries: commaSeparatedStrings,
-        features: commaSeparatedStrings,
-        lifts: commaSeparatedStrings,
-        mediaObjects: commaSeparatedStrings,
-        mountainAreas: commaSeparatedStrings,
-        snowparks: commaSeparatedStrings,
-        skiSlopes: commaSeparatedStrings,
-        venues: commaSeparatedStrings,
-    },
-    additionalProperties: false,
-    minProperties: 1
-}
+  type: "object",
+  patternProperties: {
+    "^agents|categories|events|eventSeries|features|lifts|mediaObjects|mountainAreas|snowparks|skiSlopes|venues$": commaSeparatedStrings,
+  },
+  additionalProperties: false,
+  minProperties: 1,
+};
+
+const query = {
+  type: "object",
+  propertyNames: {
+    pattern: "^include|fields|page|random|sort|filter|search$",
+  },
+};
 
 module.exports = {
-    include,
-    random,
-    sort,
-    page,
-    fields,
-    search,
-    filter,
-}
+  query,
+  include,
+  random,
+  sort,
+  page,
+  fields,
+  search,
+  filter,
+};

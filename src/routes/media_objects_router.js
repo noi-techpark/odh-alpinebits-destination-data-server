@@ -6,10 +6,10 @@ class MediaObjectsRouter extends Router {
   constructor(app) {
     super();
 
-    this.addGetUnimplementedRoute(`${prefix}/mediaObjects`);
-    this.addGetUnimplementedRoute(`${prefix}/mediaObjects/:id`);
-    this.addGetUnimplementedRoute(`${prefix}/mediaObjects/:id/categories`);
-    this.addGetUnimplementedRoute(`${prefix}/mediaObjects/:id/copyrightOwner`);
+    this.addUnimplementedGetRoute(`${prefix}/mediaObjects`);
+    this.addUnimplementedGetRoute(`${prefix}/mediaObjects/:id`);
+    this.addUnimplementedGetRoute(`${prefix}/mediaObjects/:id/categories`);
+    this.addUnimplementedGetRoute(`${prefix}/mediaObjects/:id/copyrightOwner`);
 
     if (app) {
       this.installRoutes(app);

@@ -5,10 +5,10 @@ class AgentsRouter extends Router {
   constructor(app) {
     super();
 
-    this.addGetUnimplementedRoute(`${prefix}/agents`);
-    this.addGetUnimplementedRoute(`${prefix}/agents/:id`);
-    this.addGetUnimplementedRoute(`${prefix}/agents/:id/categories`);
-    this.addGetUnimplementedRoute(`${prefix}/agents/:id/multimediaDescriptions`);
+    this.addUnimplementedGetRoute(`${prefix}/agents`);
+    this.addUnimplementedGetRoute(`${prefix}/agents/:id`);
+    this.addUnimplementedGetRoute(`${prefix}/agents/:id/categories`);
+    this.addUnimplementedGetRoute(`${prefix}/agents/:id/multimediaDescriptions`);
 
     if (app) {
       this.installRoutes(app);
