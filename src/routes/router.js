@@ -1,4 +1,5 @@
 const errors = require("./../errors");
+const { DestinationDataError } = require("./../errors");
 const { Request } = require("./../model/request/request");
 
 const prefix = `/${process.env.API_VERSION}`;
