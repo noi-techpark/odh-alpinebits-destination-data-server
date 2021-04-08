@@ -30,6 +30,22 @@ class EventsRouter extends Router {
     }
   }
 
+  // TODO: use EventRequest
+  // parseRequest = (request, expectedTypes, supportedFeatures) => {
+  //   const parsedRequest = new Request(request);
+
+  //   parsedRequest.expectedTypes = expectedTypes || [];
+
+  //   if (Array.isArray(supportedFeatures)) {
+  //     Object.keys(parsedRequest.supportedFeatures).forEach((feature) => {
+  //       parsedRequest.supportedFeatures[feature] = supportedFeatures.includes(feature);
+  //     });
+  //   }
+
+  //   parsedRequest.validate();
+  //   return parsedRequest;
+  // };
+
   getEvents = (request) => {
     const parseRequestFn = (request) => {
       const expectedTypes = [Agent, Category, Event, EventSeries, MediaObject, Venue];

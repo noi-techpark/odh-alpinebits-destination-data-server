@@ -12,7 +12,7 @@ const featuresData = require("./../../../data/features.data");
 
 function transformCollectionMeta(odhCollection) {
   const { TotalResults, TotalPages } = odhCollection;
-  return { count: TotalResults, pages: TotalPages };
+  return { count: TotalResults, pages: TotalPages || 1 };
 }
 
 function transformCollectionLinks(odhCollection, request) {
@@ -111,13 +111,13 @@ function transformRelationshipToOne(odhItem, request, transformResourceFn, relat
 
 function transformCategoryCollectionMeta(request) {
   const count = categoriesData.categories.length;
-  const { size } = request.query.page;
+  const size = request.query.page ? request.query.page.size : 10;
   return { count, pages: Math.ceil(count / size) };
 }
 
 function transformCategoryCollectionLinks(meta, request) {
-  const { count, pages } = meta;
-  const { number, size } = request.query.page;
+  const { pages } = meta;
+  const { number } = request.query.page;
 
   const first = 1;
   const current = number;

@@ -2,8 +2,6 @@
 const { DestinationDataError: Error } = require("../errors");
 const axios = require("axios");
 
-
-
 class OdhConnector {
   constructor(odhPath, request, requestTransformFn) {
     const odhItemId = request.params.id;
@@ -23,8 +21,8 @@ class OdhConnector {
 
   async fetch() {
     try {
-      console.log(`  Fetching data from ${odhHostUrl + this.path}`);
-      const instance = axios.create(axiosOpts);
+      console.log(`  Fetching data from ${this.odhHostUrl + this.path}`);
+      const instance = axios.create(this.axiosOpts);
       const response = await instance.get(this.path);
 
       if (!response.data || response.status !== 200) {

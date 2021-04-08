@@ -1,5 +1,5 @@
 const { Router } = require("./router");
-const { MountainAreaConnector } = require("./../connector/mountain_area_connector");
+const { MountainAreaConnector } = require("./../connectors/mountain_area_connector");
 const { Agent } = require("./../model/destinationdata/agents");
 const { Category } = require("./../model/destinationdata/category");
 const { Lift } = require("../model/destinationdata/lift");
@@ -30,6 +30,7 @@ class MountainAreasRouter extends Router {
     }
   }
 
+  // TODO: [WIP] incomplete implementation
   getMountainAreas = (request) => {
     const parseRequestFn = (request) => {
       const expectedTypes = [Agent, Category, Lift, MediaObject, MountainArea, SkiSlope, Snowpark];

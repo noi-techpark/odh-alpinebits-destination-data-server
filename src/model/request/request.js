@@ -45,26 +45,6 @@ class Request {
     this.expectedTypes = [];
   }
 
-  setDefaultPagination(size, number) {
-    if (!this.query.page) {
-      this.query.page = {};
-    }
-
-    const { page } = this.query;
-
-    page.size = size || 10;
-    page.number = number || 1;
-  }
-
-  /** Returns the resource type in the "base" of the quest, independent of relationships
-   * Example: "/2021-04/events/121323-asd_213/categories?page[size]=2" returns "events"
-   */
-  getBaseResourceType() {
-    const regex = /^\/2021-04\/\w+/;
-    const matches = this.selfUrl ? this.selfUrl.match(regex) : null;
-    return matches ? matches[0] : null;
-  }
-
   validate() {
     const { query } = this;
 
@@ -133,7 +113,7 @@ class Request {
   }
 
   validatePageQuery() {
-    const { page } = this.query;
+    let { page } = this.query;
     const regex = /page([^&])*/;
 
     if (!this.supportedFeatures.page && page) {
@@ -146,6 +126,17 @@ class Request {
       const problematicQueries = this.selfUrl.match(regex).join("&");
       const description = `The "page" query contains issues: "${problematicQueries}"`;
       DestinationDataError.throwBadQueryError(description);
+    }
+
+    if (this.supportedFeatures.page) {
+      if (!page) {
+        page = { size: null, number: null };
+        this.query.page = page;
+      }
+      const { size, number } = page;
+
+      page.size = size ? parseInt(size) : 10;
+      page.number = number ? parseInt(number) : 1;
     }
   }
 

@@ -2693,6 +2693,7 @@ const categoriesMap = {
 };
 
 const categories = [];
+const categoriesToOdhIds = {};
 const lastUpdate = new Date("2021-04-01");
 
 // A first iteration converts categories into instances of Category and re-populate "categoriesMap"
@@ -2703,7 +2704,7 @@ Object.entries(categoriesMap).forEach(([id, raw]) => {
   category.id = raw.id;
 
   category.meta = { dataProvider: "http://tourism.opendatahub.bz.it/", lastUpdate };
-  category.links.self = `${process.env.REF_SERVER_URL}/${process.env.API_VERSION}/${category.id}`;
+  category.links.self = `${process.env.REF_SERVER_URL}/${process.env.API_VERSION}/categories/${category.id}`;
 
   raw.resourceTypes.forEach(
     (resourceType) =>
@@ -2730,6 +2731,16 @@ Object.entries(categoriesMap).forEach(([id, raw]) => {
     // in some places, the id is returned in lowercase so this mapping is important
     categoriesMap[id.toLowerCase()] = category;
     categoriesMap[raw.id] = category;
+    // TODO: review unreliable handling of "categoriesToOdhIds"
+    // it is was necessary to have the mapping from the category id back to the ODH id/topic/tag
+    categoriesToOdhIds[raw.id] = id;
+    if (Array.isArray(raw.parents)) {
+      raw.parents.forEach((parentId) => {
+        if (parentId.includes(":")) {
+          categoriesToOdhIds[parentId] = id;
+        }
+      });
+    }
   }
 });
 
@@ -2754,9 +2765,17 @@ Object.entries(categoriesMap).forEach(([id, category]) => {
   categories.push(category);
 });
 
+// console.log(
+//   Object.entries(categoriesMap).reduce((acc, [k, v]) => {
+//     acc[k] = v.id;
+//     return acc;
+//   }, {})
+// );
+
 // TODO: add agent categories
 
 module.exports = {
   categoriesMap,
   categories,
+  categoriesToOdhIds,
 };
