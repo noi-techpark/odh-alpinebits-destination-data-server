@@ -1,4 +1,15 @@
 const { DestinationDataError } = require("./../../errors");
+const { Agent } = require("./../destinationdata/agents");
+const { Category } = require("./../destinationdata/category");
+const { Event } = require("./../destinationdata/event");
+const { EventSeries } = require("./../destinationdata/event_series");
+const { Feature } = require("./../destinationdata/feature");
+const { Lift } = require("./../destinationdata/lift");
+const { MediaObject } = require("./../destinationdata/media_object");
+const { MountainArea } = require("./../destinationdata/mountain_area");
+const { SkiSlope } = require("./../destinationdata/ski_slope");
+const { Snowpark } = require("./../destinationdata/snowpark");
+const { Venue } = require("./../destinationdata/venue");
 const schemas = require("./query-schemas");
 const _ = require("lodash");
 const Ajv = require("ajv");
@@ -22,14 +33,14 @@ class Request {
     this.selfUrl = `${process.env.REF_SERVER_URL}${expressRequest.originalUrl}`;
     this.params = expressRequest.params;
 
-    this.query = {};
-    this.query.page = expressRequest.query.page ? expressRequest.query.page : null;
-    this.query.fields = expressRequest.query.fields ? expressRequest.query.fields : null;
-    this.query.include = expressRequest.query.include ? expressRequest.query.include : null;
-    this.query.filter = expressRequest.query.filter ? expressRequest.query.filter : null;
-    this.query.sort = expressRequest.query.sort ? expressRequest.query.sort : null;
-    this.query.random = expressRequest.query.random ? expressRequest.query.random : null;
-    this.query.search = expressRequest.query.search ? expressRequest.query.search : null;
+    this.query = Object.assign({}, expressRequest.query);
+    this.query.page = typeof expressRequest.query.page !== "undefined" ? expressRequest.query.page : null;
+    this.query.fields = typeof expressRequest.query.fields !== "undefined" ? expressRequest.query.fields : null;
+    this.query.include = typeof expressRequest.query.include !== "undefined" ? expressRequest.query.include : null;
+    this.query.filter = typeof expressRequest.query.filter !== "undefined" ? expressRequest.query.filter : null;
+    this.query.sort = typeof expressRequest.query.sort !== "undefined" ? expressRequest.query.sort : null;
+    this.query.random = typeof expressRequest.query.random !== "undefined" ? expressRequest.query.random : null;
+    this.query.search = typeof expressRequest.query.search !== "undefined" ? expressRequest.query.search : null;
 
     this.supportedFeatures = {
       include: true,
@@ -43,6 +54,10 @@ class Request {
 
     /** An array of the classes that requested resources may instantiate. The default value is `[]`. */
     this.expectedTypes = [];
+    /** An array of the classes that requested resources in the 'data' array may instantiate. The default value is `[]`. */
+    this.typesInData = [];
+    /** An array of the classes that requested resources in the 'included' array may instantiate. The default value is `[]`. */
+    this.typesInIncluded = [];
   }
 
   validate() {
@@ -57,12 +72,14 @@ class Request {
           ""
         );
       const description = !_.isEmpty(features)
-        ? `The request contains unknown queries. The list of supported queries in this endpoint is: ${features}`
+        ? `The request contains unknown or empty queries. The list of supported queries in this endpoint is: ${features}`
         : `The request contains unknown queries.`;
       DestinationDataError.throwUnknownQueryError(description);
     }
 
-    if ([query.sort && query.random].every((item) => item !== null && item !== undefined)) {
+    if ([query.sort, query.random].every((item) => item !== null)) {
+      console.log("query", query, [query.sort && query.random]);
+
       const regex = /(sort|random)([^&])*/;
       const problematicQueries = this.selfUrl.match(regex).join("&");
       const description = `The cannot request contain both "random" and "sort" queries: "${problematicQueries}"`;
@@ -93,11 +110,40 @@ class Request {
       const description = `The "include" contains issues: "${problematicQueries}"`;
       DestinationDataError.throwBadQueryError(description);
     }
+
+    if (include) {
+      const relationshipNames = this.typesInData.flatMap((ResourceType) => {
+        const _dummyResource = new ResourceType();
+        return _dummyResource.getRelationshipsNames();
+      });
+      const includeRelationships = include.split(",");
+
+      console.log("relationshipNames", relationshipNames);
+
+      if (includeRelationships.some((relationshipName) => !relationshipNames.includes(relationshipName))) {
+        DestinationDataError.throwBadQueryError(
+          `The 'include' contains relationship names that are not present in the 'relationships' object of the resource in 'data': 'include=${include}'`
+        );
+      }
+    }
   }
 
   validateFieldsQuery() {
     const { fields } = this.query;
     const regex = /fields([^&])*/;
+    const resourceTypeMap = {
+      agents: Agent,
+      categories: Category,
+      events: Event,
+      eventSeries: EventSeries,
+      features: Feature,
+      lifts: Lift,
+      mediaObjects: MediaObject,
+      mountainAreas: MountainArea,
+      skiSlopes: SkiSlope,
+      snowparks: Snowpark,
+      venues: Venue,
+    };
 
     if (!this.supportedFeatures.fields && fields) {
       const problematicQueries = this.selfUrl.match(regex).join("&");
@@ -109,6 +155,21 @@ class Request {
       const problematicQueries = this.selfUrl.match(regex).join("&");
       const description = `The "fields" contains issues: "${problematicQueries}"`;
       DestinationDataError.throwBadQueryError(description);
+    }
+
+    if (fields) {
+      Object.entries(fields).forEach(([resourceType, fieldNames]) => {
+        const fieldNamesArray = fieldNames.split(",");
+        const ResourceClass = resourceTypeMap[resourceType];
+        const _dummyInstance = new ResourceClass();
+        const allFields = _dummyInstance.getFieldsNames();
+
+        if (fieldNamesArray.some((fieldName) => !allFields.includes(fieldName))) {
+          DestinationDataError.throwBadQueryError(
+            `Some fields are not attributes or relationships in the resource type '${resourceType}': 'fields[${resourceType}]=${fieldNames}'`
+          );
+        }
+      });
     }
   }
 

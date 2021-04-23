@@ -9,6 +9,7 @@ const { SkiSlope } = require("../model/destinationdata/ski_slope");
 const { Snowpark } = require("../model/destinationdata/snowpark");
 const responseTransform = require("../model/odh2destinationdata/response_transform");
 const requestTransform = require("../model/request2odh/request_transform");
+const { Feature } = require("../model/destinationdata/feature");
 
 class LiftsRouter extends Router {
   constructor(app) {
@@ -27,9 +28,10 @@ class LiftsRouter extends Router {
 
   getLifts = (request) => {
     const parseRequestFn = (request) => {
-      const expectedTypes = [Category, MediaObject, Lift, MountainArea, SkiSlope, Snowpark];
+      const typesInData = [Lift];
+      const typesInIncluded = [Category, MediaObject, Lift, MountainArea, SkiSlope, Snowpark];
       const supportedFeatures = ["include", "fields", "filter", "page", "random", "search", "sort"];
-      return this.parseRequest(request, expectedTypes, supportedFeatures);
+      return this.parseRequest(request, typesInData, typesInIncluded, supportedFeatures);
     };
     const fetchFn = (parsedRequest) =>
       new LiftConnector(parsedRequest, requestTransform.transformGetLiftsRequest).fetch();
@@ -45,8 +47,9 @@ class LiftsRouter extends Router {
 
   getLiftById = (request) => {
     const parseRequestFn = (request) => {
-      const expectedTypes = [Category, MediaObject, Lift, MountainArea, SkiSlope, Snowpark];
-      return this.parseRequest(request, expectedTypes);
+      const typesInData = [Lift];
+      const typesInIncluded = [Category, MediaObject, Lift, MountainArea, SkiSlope, Snowpark];
+      return this.parseRequest(request, typesInData, typesInIncluded);
     };
     const fetchFn = (parsedRequest) => new LiftConnector(parsedRequest, null).fetch();
 
@@ -55,8 +58,9 @@ class LiftsRouter extends Router {
 
   getLiftCategories = (request) => {
     const parseRequestFn = (request) => {
-      const expectedTypes = [Category, MediaObject];
-      return this.parseRequest(request, expectedTypes);
+      const typesInData = [Category];
+      const typesInIncluded = [Category, MediaObject];
+      return this.parseRequest(request, typesInData, typesInIncluded);
     };
     const fetchFn = (parsedRequest) => new LiftConnector(parsedRequest, null).fetch();
 
@@ -71,8 +75,9 @@ class LiftsRouter extends Router {
 
   getLiftConnections = (request) => {
     const parseRequestFn = (request) => {
-      const expectedTypes = [Agent, Category, MediaObject, Lift, MountainArea, SkiSlope, Snowpark];
-      return this.parseRequest(request, expectedTypes);
+      const typesInData = [Lift, MountainArea, SkiSlope, Snowpark];
+      const typesInIncluded = [Category, Feature, MediaObject, Lift, MountainArea, SkiSlope, Snowpark];
+      return this.parseRequest(request, typesInData, typesInIncluded);
     };
     const fetchFn = (parsedRequest) => new LiftConnector(parsedRequest, null).fetch();
 
@@ -87,8 +92,9 @@ class LiftsRouter extends Router {
 
   getLiftMultimediaDescriptions = (request) => {
     const parseRequestFn = (request) => {
-      const expectedTypes = [Agent, Category, MediaObject];
-      return this.parseRequest(request, expectedTypes);
+      const typesInData = [MediaObject];
+      const typesInIncluded = [Agent, Category, MediaObject];
+      return this.parseRequest(request, typesInData, typesInIncluded);
     };
     const fetchFn = (parsedRequest) => new LiftConnector(parsedRequest, null).fetch();
 

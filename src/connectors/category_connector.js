@@ -7,8 +7,6 @@ class CategoryConnector {
     this.request = request;
   }
 
-  // Returning an object with a "data" field is a trick to keep using "handleSimpleRequest"
-  // It also requires that transformFn is aware it is getting instances of DestinationData resources already
   fetch() {
     try {
       const { id } = this.request.params;
@@ -23,8 +21,6 @@ class CategoryConnector {
         const { size, number } = page;
         const firstIndex = size && number ? size * (number - 1) : 0;
         const lastIndex = size ? firstIndex + size : 9;
-
-        console.log("retrieving from", firstIndex, "to", lastIndex);
 
         return categoriesData.categories.slice(firstIndex, lastIndex);
       }

@@ -22,9 +22,10 @@ class CategoriesRouter extends Router {
 
   getCategories = (request) => {
     const parseRequestFn = (request) => {
-      const expectedTypes = [Category, MediaObject];
+      const typesInData = [Category];
+      const typesInIncluded = [Category, MediaObject];
       const supportedFeatures = ["include", "fields", "filter", "page", "random", "search", "sort"];
-      return this.parseRequest(request, expectedTypes, supportedFeatures);
+      return this.parseRequest(request, typesInData, typesInIncluded, supportedFeatures);
     };
     const fetchFn = (parsedRequest) => new CategoryConnector(parsedRequest).fetch();
     return this.handleRequest(
@@ -38,8 +39,9 @@ class CategoriesRouter extends Router {
 
   getCategoryById = (request) => {
     const parseRequestFn = (request) => {
-      const expectedTypes = [Category, MediaObject];
-      return this.parseRequest(request, expectedTypes);
+      const typesInData = [Category];
+      const typesInIncluded = [Category, MediaObject];
+      return this.parseRequest(request, typesInData, typesInIncluded);
     };
     const fetchFn = (parsedRequest) => new CategoryConnector(parsedRequest).fetch();
     return this.handleRequest(
@@ -53,8 +55,9 @@ class CategoriesRouter extends Router {
 
   getCategoryChildren = (request) => {
     const parseRequestFn = (request) => {
-      const expectedTypes = [Category, MediaObject];
-      return this.parseRequest(request, expectedTypes);
+      const typesInData = [Category];
+      const typesInIncluded = [Category, MediaObject];
+      return this.parseRequest(request, typesInData, typesInIncluded);
     };
     const fetchFn = (parsedRequest) => new CategoryConnector(parsedRequest).fetch();
     return this.handleRequest(
@@ -68,8 +71,9 @@ class CategoriesRouter extends Router {
 
   getCategoryMultimediaDescriptions = (request) => {
     const parseRequestFn = (request) => {
-      const expectedTypes = [Agent, Category, MediaObject];
-      return this.parseRequest(request, expectedTypes);
+      const typesInData = [MediaObject];
+      const typesInIncluded = [Agent, Category];
+      return this.parseRequest(request, typesInData, typesInIncluded);
     };
     const fetchFn = (parsedRequest) => new CategoryConnector(parsedRequest).fetch();
     return this.handleRequest(
@@ -83,8 +87,9 @@ class CategoriesRouter extends Router {
 
   getCategoryParents = (request) => {
     const parseRequestFn = (request) => {
-      const expectedTypes = [Category, MediaObject];
-      return this.parseRequest(request, expectedTypes);
+      const typesInData = [Category];
+      const typesInIncluded = [Category, MediaObject];
+      return this.parseRequest(request, typesInData, typesInIncluded);
     };
     const fetchFn = (parsedRequest) => new CategoryConnector(parsedRequest).fetch();
     return this.handleRequest(

@@ -35,8 +35,11 @@ class MountainAreasRouter extends Router {
     const parseRequestFn = (request) => {
       const expectedTypes = [Agent, Category, Lift, MediaObject, MountainArea, SkiSlope, Snowpark];
       // TODO: Add additional features (filter, sort)
+      // TODO: updates expectedTypes
+      // const typesInData = [Snowpark];
+      // const typesInIncluded = [Category, Feature, MediaObject, Lift, MountainArea, SkiSlope, Snowpark];
       const supportedFeatures = ["include", "fields", "page"];
-      return this.parseRequest(request, expectedTypes, supportedFeatures);
+      return this.parseRequest(request, typesInData, typesInIncluded, supportedFeatures);
     };
 
     const fetchFn = (parsedRequest) =>
@@ -54,7 +57,7 @@ class MountainAreasRouter extends Router {
   getMountainAreaById = (request) => {
     const parseRequestFn = (request) => {
       const expectedTypes = [Category, MediaObject, Lift, MountainArea, SkiSlope, Snowpark];
-      return this.parseRequest(request, expectedTypes);
+      return this.parseRequest(request, typesInData, typesInIncluded);
     };
     const fetchFn = (parsedRequest) => new LiftConnector(parsedRequest, null).fetch();
 
@@ -64,7 +67,7 @@ class MountainAreasRouter extends Router {
   getCategories = (request) => {
     const parseRequestFn = (request) => {
       const expectedTypes = [Category, MediaObject];
-      return this.parseRequest(request, expectedTypes);
+      return this.parseRequest(request, typesInData, typesInIncluded);
     };
     const fetchFn = (parsedRequest) => new LiftConnector(parsedRequest, null).fetch();
 
@@ -80,7 +83,7 @@ class MountainAreasRouter extends Router {
   getConnections = (request) => {
     const parseRequestFn = (request) => {
       const expectedTypes = [Agent, Category, MediaObject, Lift, MountainArea, SkiSlope, Snowpark];
-      return this.parseRequest(request, expectedTypes);
+      return this.parseRequest(request, typesInData, typesInIncluded);
     };
     const fetchFn = (parsedRequest) => new LiftConnector(parsedRequest, null).fetch();
 
@@ -96,7 +99,7 @@ class MountainAreasRouter extends Router {
   getMultimediaDescriptions = (request) => {
     const parseRequestFn = (request) => {
       const expectedTypes = [Agent, Category, MediaObject];
-      return this.parseRequest(request, expectedTypes);
+      return this.parseRequest(request, typesInData, typesInIncluded);
     };
     const fetchFn = (parsedRequest) => new LiftConnector(parsedRequest, null).fetch();
 

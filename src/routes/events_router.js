@@ -30,27 +30,12 @@ class EventsRouter extends Router {
     }
   }
 
-  // TODO: use EventRequest
-  // parseRequest = (request, expectedTypes, supportedFeatures) => {
-  //   const parsedRequest = new Request(request);
-
-  //   parsedRequest.expectedTypes = expectedTypes || [];
-
-  //   if (Array.isArray(supportedFeatures)) {
-  //     Object.keys(parsedRequest.supportedFeatures).forEach((feature) => {
-  //       parsedRequest.supportedFeatures[feature] = supportedFeatures.includes(feature);
-  //     });
-  //   }
-
-  //   parsedRequest.validate();
-  //   return parsedRequest;
-  // };
-
   getEvents = (request) => {
     const parseRequestFn = (request) => {
-      const expectedTypes = [Agent, Category, Event, EventSeries, MediaObject, Venue];
+      const typesInData = [Event];
+      const typesInIncluded = [Agent, Category, Event, EventSeries, MediaObject, Venue];
       const supportedFeatures = ["include", "fields", "filter", "page", "random", "search", "sort"];
-      return this.parseRequest(request, expectedTypes, supportedFeatures);
+      return this.parseRequest(request, typesInData, typesInIncluded, supportedFeatures);
     };
     const fetchFn = (parsedRequest) =>
       new EventConnector(parsedRequest, requestTransform.transformGetEventsRequest).fetch();
@@ -66,8 +51,9 @@ class EventsRouter extends Router {
 
   getEventById = (request) => {
     const parseRequestFn = (request) => {
-      const expectedTypes = [Agent, Category, Event, EventSeries, MediaObject, Venue];
-      return this.parseRequest(request, expectedTypes);
+      const typesInData = [Event];
+      const typesInIncluded = [Agent, Category, Event, EventSeries, MediaObject, Venue];
+      return this.parseRequest(request, typesInData, typesInIncluded);
     };
     const fetchFn = (parsedRequest) => new EventConnector(parsedRequest, null).fetch();
 
@@ -82,8 +68,9 @@ class EventsRouter extends Router {
 
   getEventCategories = (request) => {
     const parseRequestFn = (request) => {
-      const expectedTypes = [Category, MediaObject];
-      return this.parseRequest(request, expectedTypes);
+      const typesInData = [Category];
+      const typesInIncluded = [Category, MediaObject];
+      return this.parseRequest(request, typesInData, typesInIncluded);
     };
     const fetchFn = (parsedRequest) => new EventConnector(parsedRequest, null).fetch();
 
@@ -98,8 +85,9 @@ class EventsRouter extends Router {
 
   getEventContributors = (request) => {
     const parseRequestFn = (request) => {
-      const expectedTypes = [Agent];
-      return this.parseRequest(request, expectedTypes);
+      const typesInData = [Agent];
+      const typesInIncluded = [Category, MediaObject];
+      return this.parseRequest(request, typesInData, typesInIncluded);
     };
     const fetchFn = (parsedRequest) => new EventConnector(parsedRequest, null).fetch();
 
@@ -114,8 +102,9 @@ class EventsRouter extends Router {
 
   getEventEventSeries = (request) => {
     const parseRequestFn = (request) => {
-      const expectedTypes = [Agent, Category, MediaObject];
-      return this.parseRequest(request, expectedTypes);
+      const typesInData = [EventSeries];
+      const typesInIncluded = [Category, Event, MediaObject];
+      return this.parseRequest(request, typesInData, typesInIncluded);
     };
     const fetchFn = (parsedRequest) => new EventConnector(parsedRequest, null).fetch();
 
@@ -130,8 +119,9 @@ class EventsRouter extends Router {
 
   getEventMultimediaDescriptions = (request) => {
     const parseRequestFn = (request) => {
-      const expectedTypes = [Category, Event, MediaObject];
-      return this.parseRequest(request, expectedTypes);
+      const typesInData = [MediaObject];
+      const typesInIncluded = [Agent, Category, MediaObject];
+      return this.parseRequest(request, typesInData, typesInIncluded);
     };
     const fetchFn = (parsedRequest) => new EventConnector(parsedRequest, null).fetch();
 
@@ -146,8 +136,9 @@ class EventsRouter extends Router {
 
   getEventOrganizers = (request) => {
     const parseRequestFn = (request) => {
-      const expectedTypes = [Agent];
-      return this.parseRequest(request, expectedTypes);
+      const typesInData = [Agent];
+      const typesInIncluded = [Category, MediaObject];
+      return this.parseRequest(request, typesInData, typesInIncluded);
     };
     const fetchFn = (parsedRequest) => new EventConnector(parsedRequest, null).fetch();
 
@@ -162,8 +153,9 @@ class EventsRouter extends Router {
 
   getEventPublisher = (request) => {
     const parseRequestFn = (request) => {
-      const expectedTypes = [Agent];
-      return this.parseRequest(request, expectedTypes);
+      const typesInData = [Agent];
+      const typesInIncluded = [Category, MediaObject];
+      return this.parseRequest(request, typesInData, typesInIncluded);
     };
     const fetchFn = (parsedRequest) => new EventConnector(parsedRequest, null).fetch();
 
@@ -178,8 +170,9 @@ class EventsRouter extends Router {
 
   getEventSponsors = (request) => {
     const parseRequestFn = (request) => {
-      const expectedTypes = [Agent];
-      return this.parseRequest(request, expectedTypes);
+      const typesInData = [Agent];
+      const typesInIncluded = [Category, MediaObject];
+      return this.parseRequest(request, typesInData, typesInIncluded);
     };
     const fetchFn = (parsedRequest) => new EventConnector(parsedRequest, null).fetch();
 
@@ -194,8 +187,9 @@ class EventsRouter extends Router {
 
   getEventSubEvents = (request) => {
     const parseRequestFn = (request) => {
-      const expectedTypes = [Agent, Category, Event, EventSeries, MediaObject, Venue];
-      return this.parseRequest(request, expectedTypes);
+      const typesInData = [Event];
+      const typesInIncluded = [Agent, Category, Event, EventSeries, MediaObject, Venue];
+      return this.parseRequest(request, typesInData, typesInIncluded);
     };
     const fetchFn = (parsedRequest) => new EventConnector(parsedRequest, null).fetch();
 
@@ -210,8 +204,9 @@ class EventsRouter extends Router {
 
   getEventVenues = (request) => {
     const parseRequestFn = (request) => {
-      const expectedTypes = [Category, MediaObject];
-      return this.parseRequest(request, expectedTypes);
+      const typesInData = [Venue];
+      const typesInIncluded = [Category, MediaObject];
+      return this.parseRequest(request, typesInData, typesInIncluded);
     };
     const fetchFn = (parsedRequest) => new EventConnector(parsedRequest, null).fetch();
 

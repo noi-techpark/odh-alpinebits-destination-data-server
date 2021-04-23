@@ -87,7 +87,7 @@ function transformGeometries(activity) {
     return null;
   } else if (coordinatesArray.length === 1) {
     const [longitude, latitude, altitude] = coordinatesArray[0];
-    geometries.push(datatypes.createPoint(longitude, latitude, altitude));;
+    geometries.push(datatypes.createPoint(longitude, latitude, altitude));
   } else {
     geometries.push(datatypes.createLineString(coordinatesArray));
   }
@@ -180,11 +180,11 @@ function transformAddress(item) {
 }
 
 function transformMinAltitude(activity) {
-  return activity.AltitudeLowestPoint && activity.AltitudeHighestPoint ? activity.AltitudeLowestPoint : null;
+  return activity.AltitudeLowestPoint ? activity.AltitudeLowestPoint : null;
 }
 
 function transformMaxAltitude(activity) {
-  return activity.AltitudeLowestPoint && activity.AltitudeHighestPoint ? activity.AltitudeHighestPoint : null;
+  return activity.AltitudeHighestPoint ? activity.AltitudeHighestPoint : null;
 }
 
 function transformSkiSlopeDifficulty(activity) {
@@ -195,8 +195,9 @@ function transformSkiSlopeDifficulty(activity) {
     6: "expert",
   };
 
-  return activity.Difficulty && difficultyMapping[activity.Difficulty] ? 
-        { eu: difficultyMapping[activity.Difficulty], us: null } : null;
+  return activity.Difficulty && difficultyMapping[activity.Difficulty]
+    ? { eu: difficultyMapping[activity.Difficulty], us: null }
+    : null;
 }
 
 function transformSnowparkDifficulty(activity) {
@@ -207,8 +208,7 @@ function transformSnowparkDifficulty(activity) {
     6: "expert",
   };
 
-  return activity.Difficulty && difficultyMapping[activity.Difficulty] ? 
-        difficultyMapping[activity.Difficulty] : null;
+  return activity.Difficulty && difficultyMapping[activity.Difficulty] ? difficultyMapping[activity.Difficulty] : null;
 }
 
 module.exports = {
@@ -228,5 +228,5 @@ module.exports = {
   transformMinAltitude,
   transformMaxAltitude,
   transformSkiSlopeDifficulty,
-  transformSnowparkDifficulty
+  transformSnowparkDifficulty,
 };

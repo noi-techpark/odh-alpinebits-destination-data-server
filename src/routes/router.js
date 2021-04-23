@@ -75,10 +75,12 @@ class Router {
     }
   }
 
-  parseRequest = (request, expectedTypes, supportedFeatures) => {
+  parseRequest = (request, typesInData, typesInIncluded, supportedFeatures) => {
     const parsedRequest = new Request(request);
 
-    parsedRequest.expectedTypes = expectedTypes || [];
+    parsedRequest.typesInData = typesInData || [];
+    parsedRequest.typesInIncluded = typesInIncluded || [];
+    parsedRequest.expectedTypes = [...parsedRequest.typesInData, ...parsedRequest.typesInIncluded];
 
     if (Array.isArray(supportedFeatures)) {
       Object.keys(parsedRequest.supportedFeatures).forEach((feature) => {

@@ -3,6 +3,7 @@ const { Agent } = require("./../model/destinationdata/agents");
 const { Feature } = require("./../model/destinationdata/feature");
 const { MediaObject } = require("./../model/destinationdata/media_object");
 const responseTransform = require("../model/odh2destinationdata/response_transform");
+const { Category } = require("../model/destinationdata/category");
 
 class FeaturesRouter extends Router {
   constructor(app) {
@@ -21,9 +22,10 @@ class FeaturesRouter extends Router {
 
   getFeatures = (request) => {
     const parseRequestFn = (request) => {
-      const expectedTypes = [Feature, MediaObject];
+      const typesInData = [Feature];
+      const typesInIncluded = [Feature, MediaObject];
       const supportedFeatures = ["include", "fields", "page"];
-      return this.parseRequest(request, expectedTypes, supportedFeatures);
+      return this.parseRequest(request, typesInData, typesInIncluded, supportedFeatures);
     };
     const fetchFn = () => [];
     return this.handleRequest(
@@ -37,8 +39,9 @@ class FeaturesRouter extends Router {
 
   getFeatureById = (request) => {
     const parseRequestFn = (request) => {
-      const expectedTypes = [Feature, MediaObject];
-      return this.parseRequest(request, expectedTypes);
+      const typesInData = [Feature];
+      const typesInIncluded = [Feature, MediaObject];
+      return this.parseRequest(request, typesInData, typesInIncluded);
     };
     const fetchFn = () => null;
     return this.handleRequest(
@@ -52,8 +55,9 @@ class FeaturesRouter extends Router {
 
   getFeatureChildren = (request) => {
     const parseRequestFn = (request) => {
-      const expectedTypes = [Feature, MediaObject];
-      return this.parseRequest(request, expectedTypes);
+      const typesInData = [Feature];
+      const typesInIncluded = [Feature, MediaObject];
+      return this.parseRequest(request, typesInData, typesInIncluded);
     };
     const fetchFn = () => [];
     return this.handleRequest(
@@ -67,8 +71,9 @@ class FeaturesRouter extends Router {
 
   getFeatureMultimediaDescriptions = (request) => {
     const parseRequestFn = (request) => {
-      const expectedTypes = [Agent, Feature, MediaObject];
-      return this.parseRequest(request, expectedTypes);
+      const typesInData = [MediaObject];
+      const typesInIncluded = [Agent, Category];
+      return this.parseRequest(request, typesInData, typesInIncluded);
     };
     const fetchFn = () => [];
     return this.handleRequest(
@@ -82,8 +87,9 @@ class FeaturesRouter extends Router {
 
   getFeatureParents = (request) => {
     const parseRequestFn = (request) => {
-      const expectedTypes = [Feature, MediaObject];
-      return this.parseRequest(request, expectedTypes);
+      const typesInData = [Feature];
+      const typesInIncluded = [Feature, MediaObject];
+      return this.parseRequest(request, typesInData, typesInIncluded);
     };
     const fetchFn = () => [];
     return this.handleRequest(

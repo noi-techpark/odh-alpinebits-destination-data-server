@@ -29,9 +29,10 @@ class SnowparksRouter extends Router {
 
   getSnowparks = (request) => {
     const parseRequestFn = (request) => {
-      const expectedTypes = [Category, MediaObject, Lift, MountainArea, SkiSlope, Snowpark];
+      const typesInData = [Snowpark];
+      const typesInIncluded = [Category, Feature, MediaObject, Lift, MountainArea, SkiSlope, Snowpark];
       const supportedFeatures = ["include", "fields", "filter", "page", "random", "search", "sort"];
-      return this.parseRequest(request, expectedTypes, supportedFeatures);
+      return this.parseRequest(request, typesInData, typesInIncluded, supportedFeatures);
     };
     const fetchFn = (parsedRequest) =>
       new SnowparkConnector(parsedRequest, requestTransform.transformGetSnowparksRequest).fetch();
@@ -47,8 +48,9 @@ class SnowparksRouter extends Router {
 
   getSnowparkById = (request) => {
     const parseRequestFn = (request) => {
-      const expectedTypes = [Category, Feature, MediaObject, Lift, MountainArea, SkiSlope, Snowpark];
-      return this.parseRequest(request, expectedTypes);
+      const typesInData = [Snowpark];
+      const typesInIncluded = [Category, Feature, MediaObject, Lift, MountainArea, SkiSlope, Snowpark];
+      return this.parseRequest(request, typesInData, typesInIncluded);
     };
     const fetchFn = (parsedRequest) => new SnowparkConnector(parsedRequest, null).fetch();
 
@@ -63,8 +65,9 @@ class SnowparksRouter extends Router {
 
   getSnowparkCategories = (request) => {
     const parseRequestFn = (request) => {
-      const expectedTypes = [Category, MediaObject];
-      return this.parseRequest(request, expectedTypes);
+      const typesInData = [Category];
+      const typesInIncluded = [Agent, Category, MediaObject];
+      return this.parseRequest(request, typesInData, typesInIncluded);
     };
     const fetchFn = (parsedRequest) => new SnowparkConnector(parsedRequest, null).fetch();
 
@@ -79,8 +82,9 @@ class SnowparksRouter extends Router {
 
   getSnowparkConnections = (request) => {
     const parseRequestFn = (request) => {
-      const expectedTypes = [Agent, Category, MediaObject, Lift, MountainArea, SkiSlope, Snowpark];
-      return this.parseRequest(request, expectedTypes);
+      const typesInData = [Lift, MountainArea, SkiSlope, Snowpark];
+      const typesInIncluded = [Category, Feature, MediaObject, Lift, MountainArea, SkiSlope, Snowpark];
+      return this.parseRequest(request, typesInData, typesInIncluded);
     };
     const fetchFn = (parsedRequest) => new SnowparkConnector(parsedRequest, null).fetch();
 
@@ -95,8 +99,9 @@ class SnowparksRouter extends Router {
 
   getSnowparkFeatures = (request) => {
     const parseRequestFn = (request) => {
-      const expectedTypes = [Feature, MediaObject];
-      return this.parseRequest(request, expectedTypes);
+      const typesInData = [Feature];
+      const typesInIncluded = [Feature, MediaObject];
+      return this.parseRequest(request, typesInData, typesInIncluded);
     };
     const fetchFn = (parsedRequest) => new SnowparkConnector(parsedRequest, null).fetch();
 
@@ -111,8 +116,9 @@ class SnowparksRouter extends Router {
 
   getSnowparkMultimediaDescriptions = (request) => {
     const parseRequestFn = (request) => {
-      const expectedTypes = [Agent, Category, MediaObject];
-      return this.parseRequest(request, expectedTypes);
+      const typesInData = [MediaObject];
+      const typesInIncluded = [Agent, Category];
+      return this.parseRequest(request, typesInData, typesInIncluded);
     };
     const fetchFn = (parsedRequest) => new SnowparkConnector(parsedRequest, null).fetch();
 

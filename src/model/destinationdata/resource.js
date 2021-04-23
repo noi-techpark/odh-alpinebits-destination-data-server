@@ -65,28 +65,7 @@ class Resource {
     return true;
   }
 
-  // TODO: test the links object when returning a relationship
   toJSON() {
-    // const copy = Object.assign({}, this);
-    // const { relationships } = this;
-
-    // Object.entries(relationships).forEach(([name, relationship]) => {
-    //     if(_.isEmpty(relationship)) {
-    //         copy.relationships[name] = null;
-    //     } else {
-    //         const links = { self: `${this.links.self}/${name}` };
-    //         let data = null;
-
-    //         if(Array.isArray(relationship)) {
-    //             data = relationship.map(target => target.getReference());
-    //         } else if(relationship instanceof Resource) {
-    //             data = relationship.getReference();
-    //         }
-
-    //         copy.relationships[name] = { data, links };
-    //     }
-    // });
-
     const copy = new this.constructor();
 
     const { meta, links, attributes, relationships } = copy;
@@ -145,6 +124,18 @@ class Resource {
 
   addUrl(language, content) {
     return Resource.addMultilingualTextField(this.attributes, "url", language, content);
+  }
+
+  getAttributesNames() {
+    return Object.keys(this.attributes);
+  }
+
+  getRelationshipsNames() {
+    return Object.keys(this.relationships);
+  }
+
+  getFieldsNames() {
+    return [...this.getAttributesNames(), ...this.getRelationshipsNames()];
   }
 }
 
