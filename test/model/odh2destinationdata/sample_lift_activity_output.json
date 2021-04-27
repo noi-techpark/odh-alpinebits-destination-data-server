@@ -151,7 +151,29 @@
     "personsPerChair": null
   },
   "relationships": {
-    "categories": null,
+    "categories": {
+      "data": [
+        {
+          "id": "odh:Aufstiegsanlagen",
+          "type": "categories"
+        },
+        {
+          "id": "odh:Weitere-Aufstiegsanlagen",
+          "type": "categories"
+        },
+        {
+          "id": "odh:Skilift",
+          "type": "categories"
+        },
+        {
+          "id": "alpinebits:skilift",
+          "type": "categories"
+        }
+      ],
+      "links": {
+        "self": "http://example.com/2021-04/lifts/7FC702D2210CFAA29E153BA9AB5ABB62/categories"
+      }
+    },
     "multimediaDescriptions": {
       "data": [
         {

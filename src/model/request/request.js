@@ -78,8 +78,6 @@ class Request {
     }
 
     if ([query.sort, query.random].every((item) => item !== null)) {
-      console.log("query", query, [query.sort && query.random]);
-
       const regex = /(sort|random)([^&])*/;
       const problematicQueries = this.selfUrl.match(regex).join("&");
       const description = `The cannot request contain both "random" and "sort" queries: "${problematicQueries}"`;
@@ -117,8 +115,6 @@ class Request {
         return _dummyResource.getRelationshipsNames();
       });
       const includeRelationships = include.split(",");
-
-      console.log("relationshipNames", relationshipNames);
 
       if (includeRelationships.some((relationshipName) => !relationshipNames.includes(relationshipName))) {
         DestinationDataError.throwBadQueryError(
@@ -248,10 +244,6 @@ class Request {
     if (search !== null && search !== undefined && !testSchema(search, schemas.search)) {
       const problematicQueries = this.selfUrl.match(regex).join("&");
       const description = `The "search" query contains issues: "${problematicQueries}"`;
-
-      console.log("this.selfUrl", this.selfUrl);
-      console.log("this.selfUrl.match(regex)", this.selfUrl.match(regex));
-
       DestinationDataError.throwBadQueryError(description);
     }
   }

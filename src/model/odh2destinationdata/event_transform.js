@@ -124,54 +124,130 @@ function transformOrganizers(eventContainer, odhSource, request) {
 
   const organizer = new Agent();
 
-  organizer.id = eventContainer.id + "_organizer";
+  organizer.id = OrgRID || eventContainer.id + "_organizer";
   organizer.meta = Object.assign({}, eventContainer.meta);
   organizer.links = utils.transformResourceLinks(request, organizer.type, organizer.id);
 
   // TODO: review organizers transformation with respect of name and category
   organizer.attributes.contactPoints = transformOrganizerContactPoints(odhSource);
-  organizer.attributes.name = {
-    deu: "LTS - Landesverband der Tourismusorganisationen Südtirols",
-    eng: "LTS - Landesverband der Tourismusorganisationen Südtirols",
-    ita: "LTS - Landesverband der Tourismusorganisationen Südtirols",
-  };
+  organizer.attributes.name = transformOrganizerName(odhSource);
   organizer.attributes.url = transformOrganizerUrl(odhSource);
+
+  organizer.relationships.categories = transformCategories(odhSource);
 
   // organizer.attributes.abstract - No data available
   // organizer.attributes.description - No data available
   // organizer.attributes.shortName - No data available
-  // organizer.relationships.categories - No data available
   // organizer.relationships.multimediaDescriptions - No data available
 
   return [organizer];
 }
 
 function transformOrganizerContactPoints(odhSource) {
-  const sourceCountryCode = odhSource.getOrganizerCountryCode();
-  const sourceZipCode = odhSource.getOrganizerZipCode();
-  const sourcePhonenumber = odhSource.getOrganizerPhonenumber();
-  const sourceEmail = odhSource.getOrganizerEmail();
-
+  const telephone = transformOrganizerTelephone(odhSource);
+  const email = transformOrganizerEmail(odhSource);
   const address = datatypes.createAddress();
-  address.street = utils.sanitizeAndConvertLanguageTags(odhSource.getOrganizerAddress());
-  address.city = utils.sanitizeAndConvertLanguageTags(odhSource.getOrganizerCity());
-  address.country = sourceCountryCode ? Object.values(sourceCountryCode)[0] : "IT"; // TODO: confirm if it's safe to assume the organizer to be in Italy
-  address.zipCode = sourceZipCode ? Object.values(sourceZipCode)[0] : null;
 
-  // TODO: improve tests for no available data
-  const telephone =
-    sourcePhonenumber && Object.values(sourcePhonenumber)[0]
-      ? Object.values(sourcePhonenumber)[0].replace(/\s/g, "")
-      : null;
-  const email = sourceEmail ? Object.values(sourceEmail)[0] : null;
+  address.street = transformOrganizerStreet(odhSource);
+  address.city = transformOrganizerCity(odhSource);
+  address.country = transformOrganizerCountry(odhSource);
+  address.zipCode = transformOrganizerZipCode(odhSource);
 
   const organizerContactPoint = datatypes.createContactPoints(address, null, email, telephone);
 
   return [organizerContactPoint];
 }
 
+function transformOrganizerStreet(odhEvent) {
+  const street = odhEvent.getOrganizerAddress();
+  const sanitized = utils.sanitizeAndConvertLanguageTags(street);
+
+  return _.isEmpty(sanitized) ? null : Object.values(sanitized)[0];
+}
+
+function transformOrganizerCity(odhEvent) {
+  const city = odhEvent.getOrganizerCity();
+  const sanitized = utils.sanitizeAndConvertLanguageTags(city);
+
+  return _.isEmpty(sanitized) ? null : Object.values(sanitized)[0];
+}
+
+function transformOrganizerCountry(odhEvent) {
+  const countryCode = odhEvent.getOrganizerCountryCode();
+  const sanitized = utils.sanitizeAndConvertLanguageTags(countryCode);
+
+  // Default: assume Italy
+  return _.isEmpty(sanitized) ? "IT" : Object.values(sanitized)[0];
+}
+
+function transformOrganizerZipCode(odhEvent) {
+  const zipCode = odhEvent.getOrganizerZipCode();
+  const sanitized = utils.sanitizeAndConvertLanguageTags(zipCode);
+
+  return _.isEmpty(sanitized) ? null : Object.values(sanitized)[0];
+}
+
+function transformOrganizerEmail(odhEvent) {
+  const email = odhEvent.getOrganizerEmail();
+  const sanitized = utils.sanitizeAndConvertLanguageTags(email);
+
+  return _.isEmpty(sanitized) ? null : Object.values(sanitized)[0];
+}
+
+function transformOrganizerTelephone(odhEvent) {
+  const telephone = odhEvent.getOrganizerPhonenumber();
+  const sanitized = utils.sanitizeAndConvertLanguageTags(telephone);
+
+  return _.isEmpty(sanitized) ? null : Object.values(sanitized)[0].replace(/\s/g, "");
+}
+
+function transformOrganizerName(odhEvent) {
+  const companyName = odhEvent.getOrganizerCompanyName();
+  const givenName = odhEvent.getOrganizerGivenname();
+  const surname = odhEvent.getOrganizerSurname();
+
+  if (!_.isEmpty(companyName)) {
+    return utils.sanitizeAndConvertLanguageTags(companyName);
+  } else if (!_.isEmpty(givenName) && !_.isEmpty(surname)) {
+    const name = {};
+
+    Object.keys(givenName).forEach((lang) => {
+      if (givenName[lang] && surname[lang]) name[lang] = `${givenName[lang]} ${surname[lang]}`;
+    });
+
+    return utils.sanitizeAndConvertLanguageTags(name);
+  } else {
+    return utils.sanitizeAndConvertLanguageTags({});
+  }
+}
+
+function isOrganizerOrganization(item) {
+  const companyName = item.getOrganizerCompanyName();
+  return !_.isEmpty(companyName);
+}
+
+function isOrganizerPerson(item) {
+  const givenName = item.getOrganizerGivenname();
+  const surname = item.getOrganizerSurname();
+  return !_.isEmpty(givenName) && !_.isEmpty(surname);
+}
+
 function transformOrganizerUrl(odhSource) {
   return utils.sanitizeAndConvertLanguageTags(odhSource.getOrganizerUrl());
+}
+
+function transformCategories(odhEvent) {
+  const categories = [];
+
+  if (isOrganizerOrganization(odhEvent)) {
+    const category = categoriesData.categoriesMap["alpinebits:organization"];
+    categories.push(category);
+  } else if (isOrganizerPerson(odhEvent)) {
+    const category = categoriesData.categoriesMap["alpinebits:person"];
+    categories.push(category);
+  }
+
+  return !_.isEmpty(categories) ? categories : null;
 }
 
 function transformVenues(eventContainer, odhSource, request) {

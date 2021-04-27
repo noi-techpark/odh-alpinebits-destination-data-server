@@ -2690,6 +2690,42 @@ const categoriesMap = {
     multimediaDescriptions: null,
     parents: null,
   },
+  "alpinebits:organization": {
+    id: "alpinebits:organization",
+    type: "categories",
+    name: {
+      de: "Organisation",
+      it: "Organizzazione",
+      en: "Organization",
+    },
+    namespace: "alpinebits",
+    resourceTypes: ["agents"],
+    abstract: null,
+    description: null,
+    shortName: null,
+    url: null,
+    children: null,
+    multimediaDescriptions: null,
+    parents: null,
+  },
+  "alpinebits:person": {
+    id: "alpinebits:person",
+    type: "categories",
+    name: {
+      de: "Person",
+      it: "Persona",
+      en: "Person",
+    },
+    namespace: "alpinebits",
+    resourceTypes: ["agents"],
+    abstract: null,
+    description: null,
+    shortName: null,
+    url: null,
+    children: null,
+    multimediaDescriptions: null,
+    parents: null,
+  },
 };
 
 const categories = [];
@@ -2764,15 +2800,6 @@ Object.entries(categoriesMap).forEach(([id, category]) => {
 
   categories.push(category);
 });
-
-// console.log(
-//   Object.entries(categoriesMap).reduce((acc, [k, v]) => {
-//     acc[k] = v.id;
-//     return acc;
-//   }, {})
-// );
-
-// TODO: add agent categories
 
 module.exports = {
   categoriesMap,

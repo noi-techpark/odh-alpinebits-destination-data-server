@@ -69,6 +69,80 @@ function transformHowToArrive(item) {
   return sanitizeAndConvertLanguageTags(item.getGetThereText());
 }
 
+function transformContactName(item) {
+  const companyName = item.getContactCompanyName();
+  const givenName = item.getContactGivenname();
+  const surname = item.getContactSurname();
+
+  if (!_.isEmpty(companyName)) {
+    return sanitizeAndConvertLanguageTags(companyName);
+  } else if (!_.isEmpty(givenName) && !_.isEmpty(surname)) {
+    const name = {};
+
+    Object.keys(givenName).forEach((lang) => {
+      if (givenName[lang] && surname[lang]) name[lang] = `${givenName[lang]} ${surname[lang]}`;
+    });
+
+    return sanitizeAndConvertLanguageTags(name);
+  } else {
+    return sanitizeAndConvertLanguageTags({});
+  }
+}
+
+function transformContactStreet(item) {
+  const street = item.getAddress();
+  const sanitized = sanitizeAndConvertLanguageTags(street);
+
+  return _.isEmpty(sanitized) ? null : Object.values(sanitized)[0];
+}
+
+function transformContactCity(item) {
+  const city = item.getCity();
+  const sanitized = sanitizeAndConvertLanguageTags(city);
+
+  return _.isEmpty(sanitized) ? null : Object.values(sanitized)[0];
+}
+
+function transformContactCountry(item) {
+  const countryCode = item.getCountryCode();
+  const sanitized = sanitizeAndConvertLanguageTags(countryCode);
+
+  // Default: assume Italy
+  return _.isEmpty(sanitized) ? "IT" : Object.values(sanitized)[0];
+}
+
+function transformContactEmail(item) {
+  const email = item.getContactEmail();
+  const sanitized = sanitizeAndConvertLanguageTags(email);
+
+  return _.isEmpty(sanitized) ? null : Object.values(sanitized)[0];
+}
+
+function transformContactTelephone(item) {
+  const telephone = item.getContactPhonenumber();
+  const sanitized = sanitizeAndConvertLanguageTags(telephone);
+
+  return _.isEmpty(sanitized) ? null : Object.values(sanitized)[0].replace(/\s/g, "");
+}
+
+function transformContactZipCode(item) {
+  const zipCode = item.getZipCode();
+  const sanitized = sanitizeAndConvertLanguageTags(zipCode);
+
+  return _.isEmpty(sanitized) ? null : Object.values(sanitized)[0];
+}
+
+function isContactOrganization(item) {
+  const companyName = item.getContactCompanyName();
+  return !_.isEmpty(companyName);
+}
+
+function isContactPerson(item) {
+  const givenName = item.getContactGivenname();
+  const surname = item.getContactSurname();
+  return !_.isEmpty(givenName) && !_.isEmpty(surname);
+}
+
 // This transformation simplifies the original version. I found no bad side-effects
 // Fields no longer used: "Gpstype", "GpsPoints", "GpsTrack"
 // The transformation loses information regarding direction (start/finish or vale/mountain station)
@@ -229,4 +303,13 @@ module.exports = {
   transformMaxAltitude,
   transformSkiSlopeDifficulty,
   transformSnowparkDifficulty,
+  transformContactName,
+  transformContactStreet,
+  transformContactCity,
+  transformContactCountry,
+  transformContactEmail,
+  transformContactTelephone,
+  transformContactZipCode,
+  isContactOrganization,
+  isContactPerson,
 };

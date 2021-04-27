@@ -2,77 +2,91 @@
   "type": "events",
   "id": "CDB3CC1EE2614488A451C467BE971571",
   "meta": {
-   "dataProvider": "http://tourism.opendatahub.bz.it/",
-   "lastUpdate": "2019-11-05T00:05:58.776531+01:00"
+    "dataProvider": "http://tourism.opendatahub.bz.it/",
+    "lastUpdate": "2019-11-05T00:05:58.776531+01:00"
   },
   "links": {
-   "self": "http://example.com/2021-04/events/CDB3CC1EE2614488A451C467BE971571"
+    "self": "http://example.com/2021-04/events/CDB3CC1EE2614488A451C467BE971571"
   },
   "attributes": {
-   "abstract": null,
-   "description": {
-    "deu": "20:00 Uhr Keschtn &amp; Kerner“ im Hotel Taubers Unterwirt in Feldthurns. Gehobene und geführte Vertikalverkostung von Kerner, präsentiert von Christine Mayr, Vorsitzende der Sommelier-Vereinigung Südtirols, mit kleinen Kastaniengerichten, anlässlich der 23. Keschtnigl's, ein Genusshighlight von HGV &amp; TV Feldthurns in Zusammenarbeit mit der Eisacktaler Kellerei. Preis: pro Person € 33,00.\nAnmeldung innerhalb 11.00 Uhr der Veranstaltung, Tel. +39 0472 855290.",
-    "ita": "Ore 20 \"Castagne e Kerner” im Hotel Taubers Unterwirt a Velturno. La presidente dell'Unione Sommelier dell'Alto Adige Christine Mayr presenta e conduce una degustazione verticale di vini Kerner. La degustazione sarà accompagnata da piccole pietanze a base di castagne in collaborazione della Cantina Valle Isarco. Prezzo a persona: € 33. Iscrizione entro le ore 11 del giorno della manifestazione, tel. 0472 855290."
-   },
-   "name": {
-    "deu": "23. Keschtniglwochen in Feldthurns - Vertikalverkostung \"Keschtn &amp; Kerner\"",
-    "eng": "23th Chest-nut weeks: Wine tasting",
-    "ita": "23° Settimane della castagna a Velturno - Sofisticata degustazione"
-   },
-   "shortName": null,
-   "url": null,
-   "capacity": null,
-   "endDate": "2019-11-05T23:00:00.000Z",
-   "startDate": "2019-11-05T23:00:00.000Z",
-   "status": null
+    "abstract": null,
+    "description": {
+      "deu": "20:00 Uhr Keschtn &amp; Kerner“ im Hotel Taubers Unterwirt in Feldthurns. Gehobene und geführte Vertikalverkostung von Kerner, präsentiert von Christine Mayr, Vorsitzende der Sommelier-Vereinigung Südtirols, mit kleinen Kastaniengerichten, anlässlich der 23. Keschtnigl's, ein Genusshighlight von HGV &amp; TV Feldthurns in Zusammenarbeit mit der Eisacktaler Kellerei. Preis: pro Person € 33,00.\nAnmeldung innerhalb 11.00 Uhr der Veranstaltung, Tel. +39 0472 855290.",
+      "ita": "Ore 20 \"Castagne e Kerner” im Hotel Taubers Unterwirt a Velturno. La presidente dell'Unione Sommelier dell'Alto Adige Christine Mayr presenta e conduce una degustazione verticale di vini Kerner. La degustazione sarà accompagnata da piccole pietanze a base di castagne in collaborazione della Cantina Valle Isarco. Prezzo a persona: € 33. Iscrizione entro le ore 11 del giorno della manifestazione, tel. 0472 855290."
+    },
+    "name": {
+      "deu": "23. Keschtniglwochen in Feldthurns - Vertikalverkostung \"Keschtn &amp; Kerner\"",
+      "eng": "23th Chest-nut weeks: Wine tasting",
+      "ita": "23° Settimane della castagna a Velturno - Sofisticata degustazione"
+    },
+    "shortName": null,
+    "url": null,
+    "capacity": null,
+    "endDate": "2019-11-05T23:00:00.000Z",
+    "startDate": "2019-11-05T23:00:00.000Z",
+    "status": null
   },
   "relationships": {
-   "categories": null,
-   "multimediaDescriptions": {
-    "data": [
-     {
-      "type": "mediaObjects",
-      "id": "c30be34c3b1046b2a1c88d6b003c6829"
-     }
-    ],
-    "links": {
-     "self": "http://example.com/2021-04/events/CDB3CC1EE2614488A451C467BE971571/multimediaDescriptions"
-    }
-   },
-   "contributors": null,
-   "organizers": {
-    "data": [
-     {
-      "type": "agents",
-      "id": "CDB3CC1EE2614488A451C467BE971571_organizer"
-     }
-    ],
-    "links": {
-     "self": "http://example.com/2021-04/events/CDB3CC1EE2614488A451C467BE971571/organizers"
-    }
-   },
-   "publisher": {
-    "data": {
-     "type": "agents",
-     "id": "CDB3CC1EE2614488A451C467BE971571_publisher"
+    "categories": {
+      "data": [
+        {
+          "id": "odh:gastronomy-and-regional-products",
+          "type": "categories"
+        },
+        {
+          "id": "schema:FoodEvent",
+          "type": "categories"
+        }
+      ],
+      "links": {
+        "self": "http://example.com/2021-04/events/CDB3CC1EE2614488A451C467BE971571/categories"
+      }
     },
-    "links": {
-     "self": "http://example.com/2021-04/events/CDB3CC1EE2614488A451C467BE971571/publisher"
+    "multimediaDescriptions": {
+      "data": [
+        {
+          "type": "mediaObjects",
+          "id": "c30be34c3b1046b2a1c88d6b003c6829"
+        }
+      ],
+      "links": {
+        "self": "http://example.com/2021-04/events/CDB3CC1EE2614488A451C467BE971571/multimediaDescriptions"
+      }
+    },
+    "contributors": null,
+    "organizers": {
+      "data": [
+        {
+          "type": "agents",
+          "id": "CDB3CC1EE2614488A451C467BE971571_organizer"
+        }
+      ],
+      "links": {
+        "self": "http://example.com/2021-04/events/CDB3CC1EE2614488A451C467BE971571/organizers"
+      }
+    },
+    "publisher": {
+      "data": {
+        "type": "agents",
+        "id": "CDB3CC1EE2614488A451C467BE971571_publisher"
+      },
+      "links": {
+        "self": "http://example.com/2021-04/events/CDB3CC1EE2614488A451C467BE971571/publisher"
+      }
+    },
+    "series": null,
+    "sponsors": null,
+    "subEvents": null,
+    "venues": {
+      "data": [
+        {
+          "type": "venues",
+          "id": "CDB3CC1EE2614488A451C467BE971571_venue"
+        }
+      ],
+      "links": {
+        "self": "http://example.com/2021-04/events/CDB3CC1EE2614488A451C467BE971571/venues"
+      }
     }
-   },
-   "series": null,
-   "sponsors": null,
-   "subEvents": null,
-   "venues": {
-    "data": [
-     {
-      "type": "venues",
-      "id": "CDB3CC1EE2614488A451C467BE971571_venue"
-     }
-    ],
-    "links": {
-     "self": "http://example.com/2021-04/events/CDB3CC1EE2614488A451C467BE971571/venues"
-    }
-   }
   }
- }
+}

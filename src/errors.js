@@ -125,8 +125,6 @@ class DestinationDataError {
       }
     }
 
-    console.log("Meta", meta);
-
     if (meta) {
       const { count, pages } = meta;
       const errorMeta = { count, pages };
@@ -137,6 +135,11 @@ class DestinationDataError {
     }
 
     throw error;
+  }
+
+  static throwNotFound(description) {
+    const { title, status } = types.notFound;
+    throw new DestinationDataError(title, status, description);
   }
 }
 

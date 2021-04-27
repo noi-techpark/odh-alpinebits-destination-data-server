@@ -23,10 +23,10 @@ class OdhConnector {
     try {
       console.log(`  Fetching data from ${this.odhHostUrl + this.path}`);
       const instance = axios.create(this.axiosOpts);
-      const response = await instance.get(this.path);
+      const response = await instance.get(this.path).catch((error) => error);
 
       if (!response.data || response.status !== 200) {
-        throw errors.notFound;
+        Error.throwNotFound();
       }
 
       return response.data;

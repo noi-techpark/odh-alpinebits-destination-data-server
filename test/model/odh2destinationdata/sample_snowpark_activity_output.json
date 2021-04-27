@@ -53,7 +53,21 @@
     "snowCondition": null
   },
   "relationships": {
-    "categories": null,
+    "categories": {
+      "data": [
+        {
+          "id": "odh:Piste",
+          "type": "categories"
+        },
+        {
+          "id": "odh:Snowpark",
+          "type": "categories"
+        }
+      ],
+      "links": {
+        "self": "http://example.com/2021-04/snowparks/8781EFB8EDC5216BBF7A80DEB565569C/categories"
+      }
+    },
     "multimediaDescriptions": null,
     "connections": null
   }
