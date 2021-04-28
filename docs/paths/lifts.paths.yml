@@ -1,0 +1,65 @@
+lifts:
+  get:
+    description: Retrieves a list of `lifts` resources.
+    tags:
+      - Lifts
+    parameters:
+      - $ref: ../parameters/index.yml#/parameters/page
+      - $ref: ../parameters/index.yml#/parameters/fields
+      - $ref: ../parameters/lifts.params.yml#/parameters/include
+      - $ref: ../parameters/lifts.params.yml#/parameters/filter
+      - $ref: ../parameters/index.yml#/parameters/search
+    responses:
+      '200':
+        description: OK
+        content:
+            application/vnd.api+json:
+              example:
+                $ref: ../examples/lifts.examples.yml#/lifts
+liftsId:
+  get:
+    description: Retrieves a single `lifts` resource.
+    tags:
+      - Lifts
+    parameters:
+      - $ref: ../parameters/index.yml#/parameters/id
+      - $ref: ../parameters/index.yml#/parameters/fields
+      - $ref: ../parameters/lifts.params.yml#/parameters/include
+      - $ref: ../parameters/index.yml#/parameters/search
+    responses:
+      '200':
+        description: OK
+        content:
+            application/vnd.api+json:
+              example:
+                $ref: ../examples/lifts.examples.yml#/liftsId
+liftsIdConnections:
+  get:
+    description: Retrieves all `connections` of the lift
+    tags:
+      - Lifts
+    parameters:
+      - $ref: ../parameters/index.yml#/parameters/id
+      - $ref: ../parameters/index.yml#/parameters/fields
+    responses:
+      '501':
+        description: Not Implemented
+        content:
+            application/vnd.api+json:
+              example:
+                $ref: ../examples/lifts.examples.yml#/liftsIdConnections
+liftsIdMultimediaDescriptions:
+  get:
+    description: Retrieves all `multimediaDescriptions` of the lift
+    tags:
+      - Lifts
+    parameters:
+      - $ref: ../parameters/index.yml#/parameters/id
+      - $ref: ../parameters/index.yml#/parameters/fields
+    responses:
+      '200':
+        description: OK
+        content:
+            application/vnd.api+json:
+              example:
+                $ref: ../examples/lifts.examples.yml#/liftsIdMultimediaDescriptions
