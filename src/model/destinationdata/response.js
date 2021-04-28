@@ -30,7 +30,7 @@ class DestinationDataResponse {
     const relationshipNames = response._include.split(",");
     const included = {};
     const include = [];
-    const data = Array.isArray(response.data) ? response.data : [response.data];
+    const data = Array.isArray(response.data) ? [...response.data] : [response.data];
     let targets = [];
 
     // extract [ 'relationship name', 'relationship' ] arrays that should be included
@@ -105,8 +105,10 @@ class DestinationDataResponse {
         const { type } = resource;
 
         if (_fields[type]) {
-          const fields = typeof _fields[type] === "string" ? _fields[type].split(",") : _fields[type];
-          DestinationDataResponse.exclusiveSelectFields(resource, fields);
+          resource._fields = typeof _fields[type] === "string" ? _fields[type].split(",") : _fields[type];
+          // console.log(`pass ${_fields[type]} to `, resource);
+          // const fields = typeof _fields[type] === "string" ? _fields[type].split(",") : _fields[type];
+          // DestinationDataResponse.exclusiveSelectFields(resource, fields);
         }
       });
   }
@@ -123,8 +125,6 @@ class DestinationDataResponse {
     }
 
     // field selection must be performed after serializing data and included resources to avoid altering resources elsewhere (e.g., categories)
-    // console.log(copy.data.attributes);
-    // console.log(copy.data.relationships);
     DestinationDataResponse.performFieldSelection(copy);
 
     if (_.isEmpty(copy.meta) || Object.values(copy.meta).every((meta) => !meta)) delete copy.meta;
@@ -133,39 +133,10 @@ class DestinationDataResponse {
     delete copy._include;
     delete copy._fields;
 
-    // console.log(copy.data.attributes);
-    // console.log(copy.data.relationships);
     return copy;
-  }
-}
-
-class CollectionResponse extends DestinationDataResponse {
-  constructor(base) {
-    super(base);
-
-    base = base || {};
-
-    this.meta = base.meta || {
-      count: null,
-      pages: null,
-    };
-
-    this.data = base.data || [];
-  }
-}
-
-class ObjectResponse extends DestinationDataResponse {
-  constructor(base) {
-    super(base);
-
-    base = base || {};
-
-    this.data = base.data || [];
   }
 }
 
 module.exports = {
   DestinationDataResponse,
-  CollectionResponse,
-  ObjectResponse,
 };

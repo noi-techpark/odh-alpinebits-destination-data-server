@@ -1,5 +1,4 @@
 const { Router } = require("./router");
-const connector = require("../connectors");
 const prefix = `/${process.env.API_VERSION}`;
 
 class MediaObjectsRouter extends Router {

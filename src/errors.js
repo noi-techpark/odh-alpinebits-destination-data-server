@@ -71,7 +71,7 @@ class DestinationDataError {
   constructor(title, status, description) {
     this.title = title || null;
     this.status = status || null;
-    this.description = description || null;
+    this.description = description;
   }
 
   static throwBadQueryError(description) {

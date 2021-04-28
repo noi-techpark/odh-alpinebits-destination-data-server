@@ -68,17 +68,21 @@ class Resource {
   toJSON() {
     const copy = new this.constructor();
 
-    const { meta, links, attributes, relationships } = copy;
-
     copy.id = this.id;
     copy.type = this.type;
 
-    copy.meta = this.meta ? JSON.parse(JSON.stringify(this.meta)) : this.meta;
-    copy.links = this.links ? JSON.parse(JSON.stringify(this.links)) : this.links;
-    copy.attributes = this.attributes ? JSON.parse(JSON.stringify(this.attributes)) : this.attributes;
+    copy.meta = this.meta ? JSON.parse(JSON.stringify(this.meta)) : {};
+    copy.links = this.links ? JSON.parse(JSON.stringify(this.links)) : {};
+    copy.attributes = this.attributes ? JSON.parse(JSON.stringify(this.attributes)) : {};
+
+    const { attributes, relationships } = copy;
 
     Object.entries(this.relationships).forEach(([key, value]) => {
-      relationships[key] = Array.isArray(value) ? [...value] : value;
+      if (Array.isArray(value)) {
+        relationships[key] = !_.isEmpty(value) ? [...value] : null;
+      } else {
+        relationships[key] = value;
+      }
     });
 
     Object.entries(relationships).forEach(([name, relationship]) => {
@@ -95,6 +99,22 @@ class Resource {
         copy.relationships[name] = { data, links };
       }
     });
+
+    if (Array.isArray(this._fields)) {
+      Object.keys(attributes).forEach((att) => {
+        if (!this._fields.includes(att)) {
+          delete attributes[att];
+        }
+      });
+
+      Object.keys(relationships).forEach((rel) => {
+        if (!this._fields.includes(rel)) {
+          delete relationships[rel];
+        }
+      });
+    }
+
+    delete this._fields;
 
     return copy;
   }

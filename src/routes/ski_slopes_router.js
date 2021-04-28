@@ -9,7 +9,6 @@ const { SkiSlope } = require("../model/destinationdata/ski_slope");
 const { Snowpark } = require("../model/destinationdata/snowpark");
 const responseTransform = require("../model/odh2destinationdata/response_transform");
 const requestTransform = require("../model/request2odh/request_transform");
-const connector = require("../connectors");
 const { Feature } = require("../model/destinationdata/feature");
 
 class SkiSlopesRouter extends Router {

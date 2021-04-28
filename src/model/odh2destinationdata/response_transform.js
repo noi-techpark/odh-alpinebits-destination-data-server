@@ -1,10 +1,8 @@
 const { Collection: OdhCollection } = require("../odh/collection");
 const { Item: OdhItem } = require("../odh/item");
 const { Event: OdhEvent } = require("../odh/event");
-const {
-  CollectionResponse: DestinationDataCollection,
-  ObjectResponse: DestinationDataObject,
-} = require("../destinationdata/collection");
+const { CollectionResponse: DestinationDataCollection } = require("../destinationdata/collection_response");
+const { ObjectResponse: DestinationDataObject } = require("../destinationdata/object_response");
 const { transformToEvent } = require("./event_transform");
 const { transformToMountainArea } = require("./mountain_area_transform");
 const { transformToLift, transformToSkiSlope, transformToSnowpark } = require("./activity_transform");

@@ -1,4 +1,5 @@
 // TODO: Rename "DestinationDataError" not to give the impression the error was caused by DestinationData exclusive aspects
+const errors = require("../errors");
 const { DestinationDataError: Error } = require("../errors");
 const categoriesData = require("./../../data/categories.data");
 
@@ -14,7 +15,13 @@ class CategoryConnector {
       console.log(`  Fetching local categories data: ${id ? `{ id: ${id} }` : ""} ${page ? JSON.stringify(page) : ""}`);
 
       if (id) {
-        return categoriesData.categoriesMap[id];
+        const category = categoriesData.categoriesMap[id];
+
+        if (!category) {
+          errors.DestinationDataError.throwNotFound();
+        }
+
+        return category;
       }
 
       if (page) {
