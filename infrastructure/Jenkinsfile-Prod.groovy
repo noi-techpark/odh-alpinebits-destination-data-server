@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        DOCKER_PROJECT_NAME = "alpinebits-destination-data-server"
+        DOCKER_PROJECT_NAME = "alpinebits-destination-data-v1.0-server"
         DOCKER_IMAGE = "755952719952.dkr.ecr.eu-west-1.amazonaws.com/alpinebits-destination-data-server"
         DOCKER_TAG = "prod-$BUILD_NUMBER"
         
