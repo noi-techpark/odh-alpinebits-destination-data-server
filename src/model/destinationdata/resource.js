@@ -83,7 +83,7 @@ class Resource {
 
     Object.entries(relationships).forEach(([name, relationship]) => {
       if (!_.isEmpty(relationship)) {
-        const links = { self: `${this.links.self}/${name}` };
+        const links = { related: `${this.links.self}/${name}` };
         let data = null;
 
         if (Array.isArray(relationship)) {

@@ -171,7 +171,7 @@
         }
       ],
       "links": {
-        "self": "http://example.com/2021-04/lifts/7FC702D2210CFAA29E153BA9AB5ABB62/categories"
+        "related":"http://example.com/2021-04/lifts/7FC702D2210CFAA29E153BA9AB5ABB62/categories"
       }
     },
     "multimediaDescriptions": {
@@ -186,7 +186,7 @@
         }
       ],
       "links": {
-        "self": "http://example.com/2021-04/lifts/7FC702D2210CFAA29E153BA9AB5ABB62/multimediaDescriptions"
+        "related":"http://example.com/2021-04/lifts/7FC702D2210CFAA29E153BA9AB5ABB62/multimediaDescriptions"
       }
     },
     "connections": null

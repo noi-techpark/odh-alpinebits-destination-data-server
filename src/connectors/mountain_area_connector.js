@@ -21,6 +21,8 @@ class MountainAreaConnector {
     this.skiAreaPath = SKI_AREA_PATH + this.id + this.queries;
     this.skiRegionPath = SKI_REGION_PATH + this.id + this.queries;
 
+    this.request = request;
+
     this.odhHostUrl = process.env.ODH_BASE_URL;
     this.axiosOpts = {
       baseURL: process.env.ODH_BASE_URL,
@@ -41,7 +43,7 @@ class MountainAreaConnector {
       }
 
       // Always an array. The router and the transformation shall check if the request was for one item or a collection
-      const data = fetched
+      const Items = fetched
         .filter((item) => !!item)
         .filter((item) => !(item instanceof Error)) // removes not found errors when fetching specific area
         .reduce((prev, current) => {
@@ -50,8 +52,27 @@ class MountainAreaConnector {
           return prev;
         }, []);
 
-      for (const item of data) {
-        item.subResources = await this.fetchSubResources(item);
+      const page = this.request.query.page || {};
+      const size = page.size || 10;
+      const number = page.number || 1;
+      const minIndex = (number - 1) * size;
+      const maxIndex = number * size;
+
+      const data = this.id
+        ? Items[0]
+        : {
+            TotalResults: Items.length,
+            TotalPages: Math.ceil(Items.length / size),
+            CurrentPage: number,
+            Items: Items.slice(minIndex, maxIndex),
+          };
+
+      if (Array.isArray(data.Items)) {
+        for (const item of data.Items) {
+          item.subResources = await this.fetchSubResources(item);
+        }
+      } else {
+        data.subResources = await this.fetchSubResources(data);
       }
 
       return data;

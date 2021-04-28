@@ -8,7 +8,6 @@ const { MountainArea } = require("../model/destinationdata/mountain_area");
 const { SkiSlope } = require("../model/destinationdata/ski_slope");
 const { Snowpark } = require("../model/destinationdata/snowpark");
 const responseTransform = require("../model/odh2destinationdata/response_transform");
-const requestTransform = require("../model/request2odh/request_transform");
 const { Feature } = require("../model/destinationdata/feature");
 
 class MountainAreasRouter extends Router {
@@ -29,25 +28,6 @@ class MountainAreasRouter extends Router {
     if (app) {
       this.installRoutes(app);
     }
-  }
-
-  // TODO: remove override
-  async handleRequest(request, requestFn, fetchFn, transformFn, validateFn) {
-    console.log("  Validating request...");
-    request = requestFn(request);
-
-    console.log("  Fetching data...");
-    const sourceData = await fetchFn(request);
-
-    console.log("  Transforming response into DestinationData format...");
-    const data = transformFn(sourceData, request);
-
-    // console.log("  Validating data...");
-    // validateFn(request, data);
-
-    console.log("  Request processed, sending to client");
-
-    return data;
   }
 
   getMountainAreas = (request) => {

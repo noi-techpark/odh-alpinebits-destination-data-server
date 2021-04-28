@@ -60,7 +60,7 @@ function transformCollection(odhItems, request, transformResourceFn) {
   collection.meta = transformCollectionMeta(odhCollection);
   collection.links = transformCollectionLinks(odhCollection, request);
 
-  odhCollection.getItems(OdhEvent).forEach((item) => collection.data.push(transformResourceFn(item, request)));
+  odhCollection.getItems().forEach((item) => collection.data.push(transformResourceFn(item, request)));
 
   return collection;
 }
@@ -239,118 +239,6 @@ function transformToFeatureRelationshipToMany(contextFeature, request, relations
   return collection;
 }
 
-function transformMountainAreaCollectionMeta(odhData, request) {
-  const page = request.query.page || {};
-  const pageSize = page.size || 10;
-  const count = odhData.length;
-  const pages = Math.ceil(odhData.length / pageSize) || 1;
-  return { count, pages };
-}
-
-function transformMountainAreaCollectionLinks(odhData, collection, request) {
-  const { pages } = collection.meta;
-  const page = request.query.page || {};
-  const pageNumber = page.number || 1;
-
-  const first = 1;
-  const current = pageNumber;
-  const next = current < pages ? current + 1 : pages;
-  const prev = current > 1 ? current - 1 : 1;
-  const last = pages ? pages : 1;
-
-  const { selfUrl } = request;
-  const links = {};
-  const regexPageQuery = /page\[number\]=[0-9]+/;
-  const pageQuery = "page[number]=";
-
-  if (regexPageQuery.test(selfUrl)) {
-    links.first = selfUrl.replace(regexPageQuery, pageQuery + first);
-    links.last = selfUrl.replace(regexPageQuery, pageQuery + last);
-    links.next = selfUrl.replace(regexPageQuery, pageQuery + next);
-    links.prev = selfUrl.replace(regexPageQuery, pageQuery + prev);
-    links.self = selfUrl.replace(regexPageQuery, pageQuery + current);
-  } else {
-    const regexQueries = /page|include|fields|filter|sort|search|random/;
-    const separator = regexQueries.test(selfUrl) ? "&" : "?";
-
-    links.self = selfUrl + separator + pageQuery + current;
-    links.first = selfUrl + separator + pageQuery + first;
-    links.next = selfUrl + separator + pageQuery + next;
-    links.prev = selfUrl + separator + pageQuery + prev;
-    links.last = selfUrl + separator + pageQuery + last;
-  }
-
-  return links;
-}
-
-function transformToMountainAreaCollection(odhData, request) {
-  const collection = new DestinationDataCollection();
-
-  const { include, fields } = request.query;
-  collection._include = include;
-  collection._fields = fields;
-
-  collection.meta = transformMountainAreaCollectionMeta(odhData, request);
-  collection.links = transformMountainAreaCollectionLinks(odhData, collection, request);
-
-  odhData.forEach((area, index) => {
-    const page = request.query.page || {};
-    const pageSize = page.size || 10;
-    const pageNumber = page.number || 1;
-    const indexMin = (pageNumber - 1) * pageSize;
-    const indexMax = indexMin + pageSize - 1;
-
-    if (index >= indexMin && index <= indexMax) collection.data.push(transformToMountainArea(area, request));
-  });
-
-  return collection;
-}
-
-function transformToMountainAreaObject(odhData, request) {
-  const object = new DestinationDataObject();
-  const resource = transformToMountainArea(odhData[0], request);
-
-  const { include, fields } = request.query;
-  object._include = include;
-  object._fields = fields;
-
-  object.data = resource;
-  object.links = { self: request.selfUrl };
-
-  return object;
-}
-
-function transformToMountainAreaAreaOwner(odhData, request) {
-  const object = new DestinationDataObject();
-  const context = transformToMountainArea(odhData[0], request);
-  const target = context.relationships.areaOwner;
-
-  const { include, fields } = request.query;
-  object._include = include;
-  object._fields = fields;
-
-  object.links = { self: request.selfUrl };
-  object.data = target;
-
-  return object;
-}
-
-function transformMountainAreaRelationshipToMany(odhData, request, relationshipName) {
-  const collection = new DestinationDataCollection();
-  const context = transformToMountainArea(odhData[0], request);
-  let targets = context.relationships[relationshipName];
-  targets = targets ? targets : [];
-
-  const { include, fields } = request.query;
-  collection._include = include;
-  collection._fields = fields;
-
-  collection.links = { self: request.selfUrl };
-  collection.data = targets;
-
-  return collection;
-}
-
 module.exports = {
   transformToEventCollection: (odhItems, request) => transformCollection(odhItems, request, transformToEvent),
   transformToEventObject: (odhItem, request) => transformObject(odhItem, request, transformToEvent),
@@ -420,21 +308,23 @@ module.exports = {
   transformToFeatureParents: (contextFeature, request) =>
     transformToFeatureRelationshipToMany(contextFeature, request, "parents"),
 
-  transformToMountainAreaCollection,
-  transformToMountainAreaObject,
-  transformToMountainAreaAreaOwner,
-  transformToMountainAreaCategories: (odhData, request) =>
-    transformMountainAreaRelationshipToMany(odhData, request, "categories"),
-  transformToMountainAreaConnections: (odhData, request) =>
-    transformMountainAreaRelationshipToMany(odhData, request, "connections"),
-  transformToMountainAreaLifts: (odhData, request) =>
-    transformMountainAreaRelationshipToMany(odhData, request, "lifts"),
-  transformToMountainAreaMultimediaDescriptions: (odhData, request) =>
-    transformMountainAreaRelationshipToMany(odhData, request, "multimediaDescriptions"),
-  transformToMountainAreaSkiSlopes: (odhData, request) =>
-    transformMountainAreaRelationshipToMany(odhData, request, "skiSlopes"),
-  transformToMountainAreaSnowparks: (odhData, request) =>
-    transformMountainAreaRelationshipToMany(odhData, request, "snowparks"),
-  transformToMountainAreaSubAreas: (odhData, request) =>
-    transformMountainAreaRelationshipToMany(odhData, request, "subAreas"),
+  transformToMountainAreaCollection: (odhItems, request) =>
+    transformCollection(odhItems, request, transformToMountainArea),
+  transformToMountainAreaObject: (odhItem, request) => transformObject(odhItem, request, transformToMountainArea),
+  transformToMountainAreaAreaOwner: (odhItem, request) =>
+    transformRelationshipToOne(odhItem, request, transformToMountainArea, "areaOwner"),
+  transformToMountainAreaCategories: (odhItem, request) =>
+    transformRelationshipToMany(odhItem, request, transformToMountainArea, "categories"),
+  transformToMountainAreaConnections: (odhItem, request) =>
+    transformRelationshipToMany(odhItem, request, transformToMountainArea, "connections"),
+  transformToMountainAreaLifts: (odhItem, request) =>
+    transformRelationshipToMany(odhItem, request, transformToMountainArea, "lifts"),
+  transformToMountainAreaMultimediaDescriptions: (odhItem, request) =>
+    transformRelationshipToMany(odhItem, request, transformToMountainArea, "multimediaDescriptions"),
+  transformToMountainAreaSkiSlopes: (odhItem, request) =>
+    transformRelationshipToMany(odhItem, request, transformToMountainArea, "skiSlopes"),
+  transformToMountainAreaSnowparks: (odhItem, request) =>
+    transformRelationshipToMany(odhItem, request, transformToMountainArea, "snowparks"),
+  transformToMountainAreaSubAreas: (odhItem, request) =>
+    transformRelationshipToMany(odhItem, request, transformToMountainArea, "subAreas"),
 };

@@ -34,7 +34,7 @@ function itShouldBeOptional(fieldName, field) {
 
 function itShouldMatch(actualOutput, expectedOutput) {
   it("The serialized output should match the expected output", () => {
-    const serializedOutput = actualOutput.toJSON();
+    const serializedOutput = JSON.parse(JSON.stringify(actualOutput));
     expect(serializedOutput).toMatchObject(expectedOutput);
   });
 }
@@ -267,87 +267,88 @@ describe('Test transformation ODH "items" into DestinationData resources', () =>
     itShouldMatch(organizer, sampleOrganizer);
   });
 
-  // describe("Test transformation from ODH activity into DestinationData agents (publisher)", () => {
-  //   const sampleOdhEvent = require("./sample_event_input.json");
-  //   const samplePublisher = require("./sample_publisher_output.json");
-  //   const request = {
-  //     baseUrl: "http://example.com/2021-04",
-  //     selfUrl: "http://example.com/2021-04/events/CDB3CC1EE2614488A451C467BE971571",
-  //   };
-  //   const event = OdhEvent2DestinationData.transformToEvent(sampleOdhEvent, request);
-  //   const publisher = event.relationships.publisher;
-  //   const { attributes, relationships } = publisher;
+  describe("Test transformation from ODH activity into DestinationData agents (publisher)", () => {
+    const sampleOdhEvent = require("./sample_event_input.json");
+    const samplePublisher = require("./sample_publisher_output.json");
+    const request = {
+      baseUrl: "http://example.com/2021-04",
+      selfUrl: "http://example.com/2021-04/events/CDB3CC1EE2614488A451C467BE971571",
+    };
+    const event = OdhEvent2DestinationData.transformToEvent(sampleOdhEvent, request);
+    const publisher = event.relationships.publisher;
+    const { attributes, relationships } = publisher;
 
-  //   itShouldBeMandatory("name", attributes.name);
+    itShouldBeMandatory("name", attributes.name);
 
-  //   itShouldBeOptional("abstract", attributes.abstract);
-  //   itShouldBeOptional("contactPoints", attributes.contactPoints);
-  //   itShouldBeOptional("description", attributes.description);
-  //   itShouldBeOptional("shortName", attributes.shortName);
-  //   itShouldBeOptional("url", attributes.url);
+    itShouldBeOptional("abstract", attributes.abstract);
+    itShouldBeOptional("contactPoints", attributes.contactPoints);
+    itShouldBeOptional("description", attributes.description);
+    itShouldBeOptional("shortName", attributes.shortName);
+    itShouldBeOptional("url", attributes.url);
 
-  //   itShouldBeOptional("categories", relationships.categories);
-  //   itShouldBeOptional("multimediaDescriptions", relationships.multimediaDescriptions);
+    itShouldBeOptional("categories", relationships.categories);
+    itShouldBeOptional("multimediaDescriptions", relationships.multimediaDescriptions);
 
-  //   itShouldMatch(publisher, samplePublisher);
-  // });
+    itShouldMatch(publisher, samplePublisher);
+  });
 
-  // describe("Test transformation from ODH activity into DestinationData venues (venues)", () => {
-  //   const sampleOdhEvent = require("./sample_event_input.json");
-  //   const sampleVenue = require("./sample_venue_output.json");
-  //   // TODO: review "selfUrl" in tests' requests
-  //   const request = {
-  //     baseUrl: "http://example.com/2021-04",
-  //     selfUrl: "http://example.com/2021-04/events/CDB3CC1EE2614488A451C467BE971571",
-  //   };
-  //   const event = OdhEvent2DestinationData.transformToEvent(sampleOdhEvent, request);
-  //   const venue = event.relationships.venues[0];
-  //   const { attributes, relationships } = venue;
+  describe("Test transformation from ODH activity into DestinationData venues (venues)", () => {
+    const sampleOdhEvent = require("./sample_event_input.json");
+    const sampleVenue = require("./sample_venue_output.json");
+    // TODO: review "selfUrl" in tests' requests
+    const request = {
+      baseUrl: "http://example.com/2021-04",
+      selfUrl: "http://example.com/2021-04/events/CDB3CC1EE2614488A451C467BE971571",
+    };
+    const event = OdhEvent2DestinationData.transformToEvent(sampleOdhEvent, request);
+    const venue = event.relationships.venues[0];
+    const { attributes, relationships } = venue;
 
-  //   itShouldBeMandatory("name", attributes.name);
+    itShouldBeMandatory("name", attributes.name);
 
-  //   itShouldBeOptional("abstract", attributes.abstract);
-  //   itShouldBeOptional("address", attributes.address);
-  //   itShouldBeOptional("description", attributes.description);
-  //   itShouldBeOptional("geometries", attributes.geometries);
-  //   itShouldBeOptional("howToArrive", attributes.howToArrive);
-  //   itShouldBeOptional("shortName", attributes.shortName);
-  //   itShouldBeOptional("url", attributes.url);
+    itShouldBeOptional("abstract", attributes.abstract);
+    itShouldBeOptional("address", attributes.address);
+    itShouldBeOptional("description", attributes.description);
+    itShouldBeOptional("geometries", attributes.geometries);
+    itShouldBeOptional("howToArrive", attributes.howToArrive);
+    itShouldBeOptional("shortName", attributes.shortName);
+    itShouldBeOptional("url", attributes.url);
 
-  //   itShouldBeOptional("categories", relationships.categories);
-  //   itShouldBeOptional("multimediaDescriptions", relationships.multimediaDescriptions);
+    itShouldBeOptional("categories", relationships.categories);
+    itShouldBeOptional("multimediaDescriptions", relationships.multimediaDescriptions);
 
-  //   itShouldMatch(venue, sampleVenue);
-  // });
+    itShouldMatch(venue, sampleVenue);
+  });
 
-  // describe("Test transformation from a collection of ODH events into a collection DestinationData events", () => {
-  //   const sampleOdhEventCollection = require("./collection_sample_event_input.json");
-  //   const sampleEventCollection = require("./collection_sample_event_output.json");
-  //   const request = {
-  //     baseUrl: "http://example.com/2021-04",
-  //     selfUrl: "http://example.com/2021-04/events?page[number]=15&include=publisher&fields[agents]=name",
-  //     include: "publisher",
-  //     fields: {
-  //       agents: "name",
-  //     },
-  //   };
-  //   const eventCollection = OdhCollection2DestinationData.transformToEventCollection(sampleOdhEventCollection, request);
-  //   const { jsonapi, meta, links, data, included } = eventCollection;
+  describe("Test transformation from a collection of ODH events into a collection DestinationData events", () => {
+    const sampleOdhEventCollection = require("./collection_sample_event_input.json");
+    const sampleEventCollection = require("./collection_sample_event_output.json");
+    const request = {
+      baseUrl: "http://example.com/2021-04",
+      selfUrl: "http://example.com/2021-04/events?page[number]=15&include=publisher&fields[agents]=name",
+      query: {
+        include: "publisher",
+        fields: {
+          agents: "name",
+        },
+      },
+    };
+    const eventCollection = OdhCollection2DestinationData.transformToEventCollection(sampleOdhEventCollection, request);
+    const { jsonapi, meta, links, data, included } = eventCollection;
 
-  //   itShouldBeMandatory("jsonapi", jsonapi);
+    itShouldBeMandatory("jsonapi", jsonapi);
 
-  //   itShouldBeMandatory("count", meta.count);
-  //   itShouldBeMandatory("pages", meta.pages);
+    itShouldBeMandatory("count", meta.count);
+    itShouldBeMandatory("pages", meta.pages);
 
-  //   itShouldBeMandatory("self", links.self);
-  //   itShouldBeMandatory("prev", links.prev);
-  //   itShouldBeMandatory("next", links.next);
-  //   itShouldBeMandatory("first", links.first);
-  //   itShouldBeMandatory("last", links.last);
+    itShouldBeMandatory("self", links.self);
+    itShouldBeMandatory("prev", links.prev);
+    itShouldBeMandatory("next", links.next);
+    itShouldBeMandatory("first", links.first);
+    itShouldBeMandatory("last", links.last);
 
-  //   itShouldBeOptional("data", data);
-  //   itShouldBeOptional("included", included);
+    itShouldBeOptional("data", data);
 
-  //   itShouldMatch(eventCollection, sampleEventCollection);
-  // });
+    itShouldMatch(eventCollection, sampleEventCollection);
+  });
 });

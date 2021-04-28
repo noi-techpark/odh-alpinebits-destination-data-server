@@ -3,28 +3,24 @@ const { basicRouteTests } = require("./route.test");
 const { basicSchemaTests } = require("./route.schema.test");
 const { basicQueriesTest } = require("./queries.test");
 
-const arraySchema = require("../src/validator/schemas/lifts.schema.json");
-const resourceSchema = require("../src/validator/schemas/lifts.id.schema.json");
+const arraySchema = require("../src/validator/schemas/trails.schema.json");
+const resourceSchema = require("../src/validator/schemas/trails.id.schema.json");
 
 let opts = {
-  route: "lifts",
-  resourceType: "lifts",
-  sampleAttributes: ["name", "address", "geometries", "openingHours"],
+  route: "skiSlopes",
+  resourceType: "skiSlopes",
+  sampleAttributes: ["name", "address", "geometries", "openingHours", "difficulty"],
   sampleRelationships: ["connections", "multimediaDescriptions"],
   schema: {
     resourceSchema,
     arraySchema,
     pageStart: 1,
-    pageEnd: 10,
-    pageSize: 50,
+    pageEnd: 7,
+    pageSize: 20,
   },
   queries: [
     {
       query: "filter[lang]=eng",
-      expectStatus: 200,
-    },
-    {
-      query: "filter[categories][any]=alpinebits:skilift,odh:sessellift",
       expectStatus: 200,
     },
     {
@@ -36,7 +32,7 @@ let opts = {
       expectStatus: 200,
     },
     {
-      query: "search[name]=renon",
+      query: "search[name]=cross",
       expectStatus: 200,
     },
   ],

@@ -133,7 +133,7 @@ function transformOrganizers(eventContainer, odhSource, request) {
   organizer.attributes.name = transformOrganizerName(odhSource);
   organizer.attributes.url = transformOrganizerUrl(odhSource);
 
-  organizer.relationships.categories = transformCategories(odhSource);
+  organizer.relationships.categories = transformOrganizerCategories(odhSource);
 
   // organizer.attributes.abstract - No data available
   // organizer.attributes.description - No data available
@@ -159,17 +159,11 @@ function transformOrganizerContactPoints(odhSource) {
 }
 
 function transformOrganizerStreet(odhEvent) {
-  const street = odhEvent.getOrganizerAddress();
-  const sanitized = utils.sanitizeAndConvertLanguageTags(street);
-
-  return _.isEmpty(sanitized) ? null : Object.values(sanitized)[0];
+  return utils.sanitizeAndConvertLanguageTags(odhEvent.getOrganizerAddress());
 }
 
 function transformOrganizerCity(odhEvent) {
-  const city = odhEvent.getOrganizerCity();
-  const sanitized = utils.sanitizeAndConvertLanguageTags(city);
-
-  return _.isEmpty(sanitized) ? null : Object.values(sanitized)[0];
+  return utils.sanitizeAndConvertLanguageTags(odhEvent.getOrganizerCity());
 }
 
 function transformOrganizerCountry(odhEvent) {
@@ -232,11 +226,11 @@ function isOrganizerPerson(item) {
   return !_.isEmpty(givenName) && !_.isEmpty(surname);
 }
 
-function transformOrganizerUrl(odhSource) {
-  return utils.sanitizeAndConvertLanguageTags(odhSource.getOrganizerUrl());
+function transformOrganizerUrl(odhEvent) {
+  return utils.sanitizeAndConvertLanguageTags(odhEvent.getOrganizerUrl());
 }
 
-function transformCategories(odhEvent) {
+function transformOrganizerCategories(odhEvent) {
   const categories = [];
 
   if (isOrganizerOrganization(odhEvent)) {

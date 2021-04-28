@@ -70,7 +70,7 @@ function combineOrFilters(filters) {
   if (filters.length === 1) {
     return filters[0];
   } else {
-    return `or(${filters.join(",")})`;
+    return `or(${filters.filter((item) => !!item).join(",")})`;
   }
 }
 
@@ -81,7 +81,7 @@ function combineAndFilters(filters) {
   if (filters.length === 1) {
     return filters[0];
   } else {
-    return `and(${filters.join(",")})`;
+    return `and(${filters.filter((item) => !!item).join(",")})`;
   }
 }
 
@@ -197,7 +197,7 @@ function extractEventFilter(queriesArray, request) {
       }
 
       if (Object.keys(value).every((operand) => !supportedFilters.includes(`${filterName}.${operand}`))) {
-        errors.DestinationDataError.throwBadQueryError(`Filter not supported: 'filter[${filterName}][${operand}]'`);
+        errors.DestinationDataError.throwBadQueryError(`Filter not supported: 'filter[${filterName}]'`);
       }
     });
 

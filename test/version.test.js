@@ -14,18 +14,7 @@ test("Version home route returns correct body", () => {
   expect(links).toBeDefined();
   expect(links["self"]).toBeDefined();
 
-  let validEndpoints = [
-    "self",
-    "events",
-    "eventSeries",
-    "venues",
-    "mountainAreas",
-    "lifts",
-    "trails",
-    "snowparks",
-    "agents",
-    "mediaObjects",
-  ];
+  let validEndpoints = ["self", "categories", "events", "features", "lifts", "mountainAreas", "skiSlopes", "snowparks"];
   let linksKeys = Object.keys(links);
 
   let pointsToSomeEndpoint = validEndpoints.some((r) => linksKeys.includes(r));

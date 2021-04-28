@@ -1,5 +1,5 @@
-// todo: replace with env variable
-const apiVersion = "2021-04";
+require("custom-env").env();
+const apiVersion = process.env.API_VERSION;
 
 module.exports.basicResourceRouteTests = (opts) => {
   const utils = require("./utils");

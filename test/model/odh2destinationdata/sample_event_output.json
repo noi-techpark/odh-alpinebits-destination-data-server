@@ -39,7 +39,7 @@
         }
       ],
       "links": {
-        "self": "http://example.com/2021-04/events/CDB3CC1EE2614488A451C467BE971571/categories"
+        "related": "http://example.com/2021-04/events/CDB3CC1EE2614488A451C467BE971571/categories"
       }
     },
     "multimediaDescriptions": {
@@ -50,7 +50,7 @@
         }
       ],
       "links": {
-        "self": "http://example.com/2021-04/events/CDB3CC1EE2614488A451C467BE971571/multimediaDescriptions"
+        "related": "http://example.com/2021-04/events/CDB3CC1EE2614488A451C467BE971571/multimediaDescriptions"
       }
     },
     "contributors": null,
@@ -58,11 +58,11 @@
       "data": [
         {
           "type": "agents",
-          "id": "CDB3CC1EE2614488A451C467BE971571_organizer"
+          "id": "4D5C298097824D4484BA35C2CAC57DE0"
         }
       ],
       "links": {
-        "self": "http://example.com/2021-04/events/CDB3CC1EE2614488A451C467BE971571/organizers"
+        "related": "http://example.com/2021-04/events/CDB3CC1EE2614488A451C467BE971571/organizers"
       }
     },
     "publisher": {
@@ -71,7 +71,7 @@
         "id": "CDB3CC1EE2614488A451C467BE971571_publisher"
       },
       "links": {
-        "self": "http://example.com/2021-04/events/CDB3CC1EE2614488A451C467BE971571/publisher"
+        "related": "http://example.com/2021-04/events/CDB3CC1EE2614488A451C467BE971571/publisher"
       }
     },
     "series": null,
@@ -85,7 +85,7 @@
         }
       ],
       "links": {
-        "self": "http://example.com/2021-04/events/CDB3CC1EE2614488A451C467BE971571/venues"
+        "related": "http://example.com/2021-04/events/CDB3CC1EE2614488A451C467BE971571/venues"
       }
     }
   }

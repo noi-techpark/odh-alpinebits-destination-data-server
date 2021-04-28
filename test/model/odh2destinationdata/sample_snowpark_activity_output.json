@@ -65,7 +65,7 @@
         }
       ],
       "links": {
-        "self": "http://example.com/2021-04/snowparks/8781EFB8EDC5216BBF7A80DEB565569C/categories"
+        "related":"http://example.com/2021-04/snowparks/8781EFB8EDC5216BBF7A80DEB565569C/categories"
       }
     },
     "multimediaDescriptions": null,

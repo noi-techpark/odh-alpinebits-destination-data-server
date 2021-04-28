@@ -81,7 +81,7 @@
         }
       ],
       "links": {
-        "self": "http://example.com/2021-04/skiSlopes/4DA19B2B1328127FC062FB79F6F435A5/categories"
+        "related":"http://example.com/2021-04/skiSlopes/4DA19B2B1328127FC062FB79F6F435A5/categories"
       }
     },
     "multimediaDescriptions": null,

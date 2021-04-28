@@ -48,18 +48,44 @@
         "status": null
       },
       "relationships": {
-        "categories": null,
+        "categories": {
+          "data": [
+            {
+              "id": "odh:gastronomy-and-regional-products",
+              "type": "categories"
+            },
+            {
+              "id": "schema:FoodEvent",
+              "type": "categories"
+            },
+            {
+              "id": "odh:music-and-dance",
+              "type": "categories"
+            },
+            {
+              "id": "schema:MusicEvent",
+              "type": "categories"
+            },
+            {
+              "id": "odh:guided-tours",
+              "type": "categories"
+            }
+          ],
+          "links": {
+            "related": "http://example.com/2021-04/events/47FD17D2DE264AAEBF6E44B3C32D1367/categories"
+          }
+        },
         "multimediaDescriptions": null,
         "contributors": null,
         "organizers": {
           "data": [
             {
               "type": "agents",
-              "id": "47FD17D2DE264AAEBF6E44B3C32D1367_organizer"
+              "id": "BE0C0655D12747A6B7D60E1BB41C324D"
             }
           ],
           "links": {
-            "self": "http://example.com/2021-04/events/47FD17D2DE264AAEBF6E44B3C32D1367/organizers"
+            "related": "http://example.com/2021-04/events/47FD17D2DE264AAEBF6E44B3C32D1367/organizers"
           }
         },
         "publisher": {
@@ -68,7 +94,7 @@
             "id": "47FD17D2DE264AAEBF6E44B3C32D1367_publisher"
           },
           "links": {
-            "self": "http://example.com/2021-04/events/47FD17D2DE264AAEBF6E44B3C32D1367/publisher"
+            "related": "http://example.com/2021-04/events/47FD17D2DE264AAEBF6E44B3C32D1367/publisher"
           }
         },
         "series": null,
@@ -82,7 +108,7 @@
             }
           ],
           "links": {
-            "self": "http://example.com/2021-04/events/47FD17D2DE264AAEBF6E44B3C32D1367/venues"
+            "related": "http://example.com/2021-04/events/47FD17D2DE264AAEBF6E44B3C32D1367/venues"
           }
         }
       }
@@ -121,18 +147,48 @@
         "status": null
       },
       "relationships": {
-        "categories": null,
+        "categories": {
+          "data":  [
+            {
+              "id": "odh:meetings-and-lectures",
+              "type": "categories"
+            },
+            {
+              "id": "schema:BusinessEvent",
+              "type": "categories"
+            },
+            {
+              "id": "odh:sport",
+              "type": "categories"
+            },
+            {
+              "id": "schema:SportsEvent",
+              "type": "categories"
+            },
+            {
+              "id": "odh:courses-and-education",
+              "type": "categories"
+            },
+            {
+              "id": "schema:EducationEvent",
+              "type": "categories"
+            }
+          ],
+          "links": {
+            "related": "http://example.com/2021-04/events/BFF16EC65D344F66BC1AB47D20347D74/categories"
+          }
+        },
         "multimediaDescriptions": null,
         "contributors": null,
         "organizers": {
           "data": [
             {
               "type": "agents",
-              "id": "BFF16EC65D344F66BC1AB47D20347D74_organizer"
+              "id": "24B24F080F464557A53B73008174ECE9"
             }
           ],
           "links": {
-            "self": "http://example.com/2021-04/events/BFF16EC65D344F66BC1AB47D20347D74/organizers"
+            "related": "http://example.com/2021-04/events/BFF16EC65D344F66BC1AB47D20347D74/organizers"
           }
         },
         "publisher": {
@@ -141,7 +197,7 @@
             "id": "BFF16EC65D344F66BC1AB47D20347D74_publisher"
           },
           "links": {
-            "self": "http://example.com/2021-04/events/BFF16EC65D344F66BC1AB47D20347D74/publisher"
+            "related": "http://example.com/2021-04/events/BFF16EC65D344F66BC1AB47D20347D74/publisher"
           }
         },
         "series": null,
@@ -155,7 +211,7 @@
             }
           ],
           "links": {
-            "self": "http://example.com/2021-04/events/BFF16EC65D344F66BC1AB47D20347D74/venues"
+            "related": "http://example.com/2021-04/events/BFF16EC65D344F66BC1AB47D20347D74/venues"
           }
         }
       }
