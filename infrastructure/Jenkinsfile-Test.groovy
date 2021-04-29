@@ -3,10 +3,10 @@ pipeline {
 
     environment {
         DOCKER_PROJECT_NAME = "alpinebits-destination-data-v2021-04-server"
-        DOCKER_IMAGE = "755952719952.dkr.ecr.eu-west-1.amazonaws.com/alpinebits-destination-data-v2021-04-server"
+        DOCKER_IMAGE = "755952719952.dkr.ecr.eu-west-1.amazonaws.com/alpinebits-destination-data-server"
         DOCKER_TAG = "test-$BUILD_NUMBER"
         
-        SERVER_PORT = "1005"
+        SERVER_PORT = "1006"
         
         REF_SERVER_CORS_ORIGIN = "*"
         REF_SERVER_URL = "https://destinationdata.alpinebits.opendatahub.testingmachine.eu"
