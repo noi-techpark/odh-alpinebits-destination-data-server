@@ -1,6 +1,9 @@
 {
   "name": "reference-server",
   "version": "0.0.1",
+  "engines": {
+    "node": "14.x"
+  },
   "scripts": {
     "dev-server": "nodemon src/server.js",
     "server": "node src/server.js",
@@ -31,11 +34,19 @@
     "express-basic-auth": "^1.2.0",
     "iso-639-3": "^2.2.0",
     "jsonapi-serializer": "^3.6.5",
+    "lodash": "^4.17.21",
+    "module-alias": "^2.2.2",
+    "object-path": "^0.11.5",
     "sanitize-html": "^1.20.1",
     "sha.js": "^2.4.11"
   },
   "devDependencies": {
+    "@types/jest": "^26.0.22",
     "jest": "^24.9.0",
     "nodemon": "^1.19.2"
+  },
+  "_moduleAliases": {
+    "@src": "src",
+    "@destinationdata": "src/model/destinationdata"
   }
 }

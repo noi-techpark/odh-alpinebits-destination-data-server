@@ -1,0 +1,194 @@
+{
+  "type": "lifts",
+  "id": "7FC702D2210CFAA29E153BA9AB5ABB62",
+  "meta": {
+    "dataProvider": "http://tourism.opendatahub.bz.it/",
+    "lastUpdate": "2021-03-10T13:09:12.1985011+01:00"
+  },
+  "links": {
+    "self": "http://example.com/2021-04/lifts/7FC702D2210CFAA29E153BA9AB5ABB62"
+  },
+  "attributes": {
+    "abstract": null,
+    "description": {
+      "deu": "Der Schlepplift Abrahamwiese befindet sich direkt neben der Talstation von Ratschings. Vor allem für Kinder eignet sich die Anfängerpiste, auf der sie die ersten Erfahrungen mit den Skiern bzw. dem Snowboard sammeln können.",
+      "eng": "The Abrahamwiese skilift is located directly next to the valley station of Ratschings/Racines. The beginners' slope is especially suitable for children, where they can gain their first experience with skis or snowboard.",
+      "ita": "La sciovia Abrahamwiese si trova direttamente accanto alla stazione a valle di Racines. La pista per principianti è particolarmente adatta ai bambini, dove possono fare le prime esperienze con gli sci o lo snowboard."
+    },
+    "name": {
+      "deu": "Abrahamwiese",
+      "eng": "Abrahamwiese",
+      "ita": "Prato Abraham"
+    },
+    "shortName": null,
+    "url": {
+      "deu": "http://www.ratschings-jaufen.it",
+      "eng": "http://www.ratschings-jaufen.it",
+      "ita": "http://www.ratschings-jaufen.it"
+    },
+    "address": {
+      "street": {
+        "deu": "Innerratschings 18a",
+        "eng": "Innerratschings / Racines di Dentro 18a",
+        "ita": "Racines di Dentro 18a"
+      },
+      "city": {
+        "deu": "Ratschings",
+        "eng": "Ratschings/Racines",
+        "ita": "Racines"
+      },
+      "region": null,
+      "country": "IT",
+      "complement": null,
+      "categories": null,
+      "zipcode": "39040"
+    },
+    "capacity": null,
+    "geometries": [
+      {
+        "type": "LineString",
+        "coordinates": [
+          [11.309652, 46.863848, 1298],
+          [11.309296, 46.861944, 1342]
+        ]
+      }
+    ],
+    "howToArrive": {
+      "deu": "Von Sterzing kommend in Richtung Ratschingstal fahren. Im Dorf Stange nach links in das Ratschingstal einbiegen und der Straße für ca. 7 km bis nach Innerratschings folgen.",
+      "eng": "Coming from Sterzing / Vipiteno, drive in the direction of Ratschingstal / Val Racines. In the village of Stange/Stanghe turn left into the Ratschingstal and follow the road for about 7 km to Innerratschings / Racines di Dentro.",
+      "ita": "Venendo da Vipiteno, proseguire in direzione di Val Racines. Nel villaggio di Stanghe svoltare a sinistra nella Val Racines e seguire la strada per circa 7 km fino a Racines di Dentro."
+    },
+    "length": 290,
+    "maxAltitude": null,
+    "minAltitude": null,
+    "openingHours": {
+      "dailySchedules": null,
+      "weeklySchedules": [
+        {
+          "validFrom": "2018-10-27",
+          "validTo": "2020-05-02",
+          "monday": [
+            {
+              "opens": "08:30:00",
+              "closes": "16:00:00"
+            }
+          ],
+          "tuesday": [
+            {
+              "opens": "08:30:00",
+              "closes": "16:00:00"
+            }
+          ],
+          "wednesday": [
+            {
+              "opens": "08:30:00",
+              "closes": "16:00:00"
+            }
+          ],
+          "thursday": null,
+          "friday": [
+            {
+              "opens": "08:30:00",
+              "closes": "16:00:00"
+            }
+          ],
+          "saturday": [
+            {
+              "opens": "08:30:00",
+              "closes": "16:00:00"
+            }
+          ],
+          "sunday": [
+            {
+              "opens": "08:30:00",
+              "closes": "16:00:00"
+            }
+          ]
+        },
+        {
+          "validFrom": "2018-10-27",
+          "validTo": "2020-05-02",
+          "monday": [
+            {
+              "opens": "08:30:00",
+              "closes": "16:00:00"
+            }
+          ],
+          "tuesday": [
+            {
+              "opens": "08:30:00",
+              "closes": "16:00:00"
+            }
+          ],
+          "wednesday": [
+            {
+              "opens": "08:30:00",
+              "closes": "16:00:00"
+            }
+          ],
+          "thursday": null,
+          "friday": [
+            {
+              "opens": "08:30:00",
+              "closes": "16:00:00"
+            }
+          ],
+          "saturday": [
+            {
+              "opens": "08:30:00",
+              "closes": "16:00:00"
+            }
+          ],
+          "sunday": [
+            {
+              "opens": "08:30:00",
+              "closes": "16:00:00"
+            }
+          ]
+        }
+      ]
+    },
+    "personsPerChair": null
+  },
+  "relationships": {
+    "categories": {
+      "data": [
+        {
+          "id": "odh:Aufstiegsanlagen",
+          "type": "categories"
+        },
+        {
+          "id": "odh:Weitere-Aufstiegsanlagen",
+          "type": "categories"
+        },
+        {
+          "id": "odh:Skilift",
+          "type": "categories"
+        },
+        {
+          "id": "alpinebits:skilift",
+          "type": "categories"
+        }
+      ],
+      "links": {
+        "related":"http://example.com/2021-04/lifts/7FC702D2210CFAA29E153BA9AB5ABB62/categories"
+      }
+    },
+    "multimediaDescriptions": {
+      "data": [
+        {
+          "type": "mediaObjects",
+          "id": "bc59f5dd810efdceb1fc673567d02a2f"
+        },
+        {
+          "type": "mediaObjects",
+          "id": "89dc0b89a1c5f6fdde746674c4b332f1"
+        }
+      ],
+      "links": {
+        "related":"http://example.com/2021-04/lifts/7FC702D2210CFAA29E153BA9AB5ABB62/multimediaDescriptions"
+      }
+    },
+    "connections": null
+  }
+}

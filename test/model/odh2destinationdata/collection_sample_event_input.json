@@ -1,0 +1,718 @@
+{
+    "TotalResults": 24791,
+    "TotalPages": 12396,
+    "CurrentPage": 15,
+    "PreviousPage": "http://tourism.api.opendatahub.bz.it/v1/Event?pagesize=2&pagenumber=14",
+    "NextPage": "http://tourism.api.opendatahub.bz.it/v1/Event?pagesize=2&pagenumber=16",
+    "Seed": null,
+    "Items": [
+      {
+        "Id": "47FD17D2DE264AAEBF6E44B3C32D1367",
+        "Ranc": 0,
+        "Self": "http://tourism.api.opendatahub.bz.it/v1/Event/47FD17D2DE264AAEBF6E44B3C32D1367",
+        "Type": "1",
+        "Active": true,
+        "Detail": {
+          "de": {
+            "Title": "10 years \"Dolomites UNESCO\" Fest",
+            "Header": null,
+            "BaseText": "2019 feiert das Dolomiten UNESCO Welterbe sein zehnjähriges Jubiläum. Das Dolomites UNESCO Fest in St.Vigil/San Vigilio ist die Hauptveranstaltung der Jubiläumsfeierlichkeiten. \n10:00 Uhr: Heilige Messe mit Paul Renner und Pfarrer Heinrich Perathoner<br>\n11:00-17.00 Uhr: Das Herzstück des Festes bilden die Beiträge verschiedener Institutionen und Vereine, die auf der Erlebnismeile mit einem vielseitigen Programm, mit Spielen, kulinarische Köstlichkeiten und geführten Wanderungen für Kinder und Erwachsene für das Welterbe sensibilisieren und informieren. <br>\n11:30 Uhr: Offizielle Reden<br>\n14:30 Uhr: Großer Festumzug der Sagen des Fanesreiches<br>\nAb 18:00 Uhr: Musikalischer Unterhaltung mit Alexander d’Al Plan und Ermes Costa und kulinarische Köstlichkeiten.<br>\nAb 20:00 Uhr: Konzert der Band Volxrock <br>",
+            "Keywords": null,
+            "Language": "de",
+            "MetaDesc": null,
+            "IntroText": null,
+            "MetaTitle": null,
+            "SubHeader": null,
+            "GetThereText": null,
+            "AdditionalText": null
+          },
+          "en": {
+            "Title": "10 years \"Dolomites UNESCO\" Fest",
+            "Header": null,
+            "BaseText": "On 29.06.2019 the official <b> 10th anniversary of Dolomiti UNESCO </b> will take place in St. Vigil in Enneberg. With this great event, St. Vigil can point out the importance and great importance of the UNESCO trademark for our landscape, above all for the local population and, consequently, for all visitors. <P>\n10:00 am: Holy Mass with Paul Renner and Pastor Heinrich Perathoner <br>\n10 am - 6pm: <b>Cultural, gastronomy & musical programme for kids and adults:</b> <br>\n\n2:30 pm: Big  parade of the legends of the Fanes empire <br>\n6 pm: Music intertaiment with Alexander d’Al Plan & Ermes Costa and culinary dishes<br>\n8 pm: Concert with the band Volkrock <br>",
+            "Keywords": null,
+            "Language": "en",
+            "MetaDesc": null,
+            "IntroText": null,
+            "MetaTitle": null,
+            "SubHeader": null,
+            "GetThereText": null,
+            "AdditionalText": null
+          },
+          "it": {
+            "Title": "10 years \"Dolomites UNESCO\" Fest",
+            "Header": null,
+            "BaseText": "Il 29.06.2019 si svolgerà il <b> 10 ° anniversario ufficiale delle Dolomiti UNESCO </b> a San Vigilio. Con questo grande evento, San Vigilio può sottolineare l'importanza e la grande importanza del marchio UNESCO per il nostro paesaggio, soprattutto per la popolazione locale e, di conseguenza, per tutti gli ospiti. <p>\nOre 10:00:  Santa Messa con Paul Renner e Heinrich Perathoner <br>\nOre 11:00-17:00: Il cuore della manifestazione è il miglio esplorativo; qui grandi e piccini potranno visitare ed esplorare i diversi stand informativi, culinari e naturalistici offerti dalle istituzioni ed associazioni, come anche partecipare a delle escursioni guidate. <br>\nOre 11:30: discorsi ufficiali <br>\nOre 14:30: Grande sfilata delle leggende del Fanes <br>\nOre 18:00: Intrattenimento con Alexander d’Al Plan e Ermes Costa e gustosità culinarie.<br>\nOre 20:00: Concerto con il gruppo Volkrock <br>",
+            "Keywords": null,
+            "Language": "it",
+            "MetaDesc": null,
+            "IntroText": null,
+            "MetaTitle": null,
+            "SubHeader": null,
+            "GetThereText": null,
+            "AdditionalText": null
+          }
+        },
+        "OrgRID": "BE0C0655D12747A6B7D60E1BB41C324D",
+        "PayMet": "3",
+        "SignOn": "0",
+        "Source": "lts",
+        "Ticket": "0",
+        "Topics": [
+          {
+            "Self": "http://tourism.api.opendatahub.bz.it/v1/EventTopics/252200A028C8449D9A6205369A6D0D36",
+            "TopicRID": "252200A028C8449D9A6205369A6D0D36",
+            "TopicInfo": "Gastronomie/Typische Produkte"
+          },
+          {
+            "Self": "http://tourism.api.opendatahub.bz.it/v1/EventTopics/7E048074BA004EC58E29E330A9AA476B",
+            "TopicRID": "7E048074BA004EC58E29E330A9AA476B",
+            "TopicInfo": "Musik/Tanz"
+          },
+          {
+            "Self": "http://tourism.api.opendatahub.bz.it/v1/EventTopics/B5467FEFE5C74FA5AD32B83793A76165",
+            "TopicRID": "B5467FEFE5C74FA5AD32B83793A76165",
+            "TopicInfo": "Führungen/Besichtigungen"
+          }
+        ],
+        "DateEnd": "2019-06-29T00:00:00",
+        "Gpstype": "position",
+        "ODHTags": [
+          {
+            "Id": "eventi 10 anni unesco",
+            "Self": "http://tourism.api.opendatahub.bz.it/v1/ODHTag/eventi%2010%20anni%20unesco"
+          },
+          {
+            "Id": "eventi super",
+            "Self": "http://tourism.api.opendatahub.bz.it/v1/ODHTag/eventi%20super"
+          }
+        ],
+        "SmgTags": [
+          "eventi 10 anni unesco",
+          "eventi super"
+        ],
+        "Altitude": null,
+        "Latitude": 46.6864,
+        "DateBegin": "2019-06-29T00:00:00",
+        "Districts": [
+          {
+            "Id": "79CBD7D251C911D18F1400A02427D15E",
+            "Self": "http://tourism.api.opendatahub.bz.it/v1/District/79CBD7D251C911D18F1400A02427D15E"
+          }
+        ],
+        "EventDate": [
+          {
+            "To": "2019-06-29T00:00:00",
+            "End": "00:00:00",
+            "From": "2019-06-29T00:00:00",
+            "Begin": "10:00:00",
+            "Ticket": true,
+            "GpsEast": 0.0,
+            "Entrance": "00:00:00",
+            "GpsNorth": 0.0,
+            "MaxPersons": 0,
+            "MinPersons": 0,
+            "SingleDays": false
+          }
+        ],
+        "Longitude": 11.9503,
+        "OdhActive": true,
+        "Shortname": "10 years \"Dolomites UNESCO\" Fest",
+        "SmgActive": true,
+        "TopicRIDs": [
+          "252200A028C8449D9A6205369A6D0D36",
+          "7E048074BA004EC58E29E330A9AA476B",
+          "B5467FEFE5C74FA5AD32B83793A76165"
+        ],
+        "DistrictId": "79CBD7D251C911D18F1400A02427D15E",
+        "EventPrice": {},
+        "LastChange": "2019-07-27T00:05:53.8397873",
+        "DistrictIds": [
+          "79CBD7D251C911D18F1400A02427D15E"
+        ],
+        "FirstImport": "2019-01-22T00:05:18.6611654",
+        "HasLanguage": [
+          "de",
+          "it",
+          "en"
+        ],
+        "LicenseInfo": {
+          "Author": "",
+          "License": "CC0",
+          "ClosedData": false,
+          "LicenseHolder": "https://www.lts.it"
+        },
+        "ContactInfos": {
+          "de": {
+            "Tax": null,
+            "Url": "https://www.sanvigilio.com",
+            "Vat": null,
+            "City": "St. Vigil in Enneberg",
+            "Email": "info@sanvigilio.com",
+            "Address": "",
+            "LogoUrl": null,
+            "Surname": null,
+            "ZipCode": "39030",
+            "Language": "de",
+            "Faxnumber": null,
+            "Givenname": null,
+            "NamePrefix": null,
+            "CompanyName": "",
+            "CountryCode": null,
+            "CountryName": null,
+            "Phonenumber": "+39 0474 501037"
+          },
+          "en": {
+            "Tax": null,
+            "Url": "https://www.sanvigilio.com",
+            "Vat": null,
+            "City": "San Vigilio di Marebbe",
+            "Email": "info@sanvigilio.com",
+            "Address": "",
+            "LogoUrl": null,
+            "Surname": null,
+            "ZipCode": "39030",
+            "Language": "en",
+            "Faxnumber": null,
+            "Givenname": null,
+            "NamePrefix": null,
+            "CompanyName": "Daksy's natural workshop",
+            "CountryCode": null,
+            "CountryName": null,
+            "Phonenumber": "+39 0474 501037"
+          },
+          "it": {
+            "Tax": null,
+            "Url": "https://www.sanvigilio.com",
+            "Vat": null,
+            "City": "San Vigilio di Marebbe",
+            "Email": "info@sanvigilio.com",
+            "Address": "",
+            "LogoUrl": null,
+            "Surname": null,
+            "ZipCode": "39030",
+            "Language": "it",
+            "Faxnumber": null,
+            "Givenname": null,
+            "NamePrefix": null,
+            "CompanyName": "",
+            "CountryCode": null,
+            "CountryName": null,
+            "Phonenumber": "+39 0474 501037"
+          }
+        },
+        "ImageGallery": [],
+        "LocationInfo": {
+          "TvInfo": {
+            "Id": "522822BA51CA11D18F1400A02427D15E",
+            "Name": {
+              "cs": "Dolomites San Vigilio - San Martin",
+              "de": "Dolomites San Vigilio - San Martin",
+              "en": "Dolomites San Vigilio - San Martin",
+              "fr": "Dolomites San Vigilio - San Martin",
+              "it": "Dolomites San Vigilio - San Martin",
+              "nl": "Dolomites San Vigilio - San Martin",
+              "pl": "Dolomites San Vigilio - San Martin",
+              "ru": "Dolomites Сан-Виджилио-Сан-Мартино"
+            },
+            "Self": "http://tourism.api.opendatahub.bz.it/v1/TourismAssociation/522822BA51CA11D18F1400A02427D15E"
+          },
+          "AreaInfo": null,
+          "RegionInfo": {
+            "Id": "D2633BBBB456F18F2A008088B4770B",
+            "Name": {
+              "cs": "San Vigilio Dolomites",
+              "de": "Dolomites San Vigilio",
+              "en": "San Vigilio Dolomites",
+              "fr": "San Vigilio Dolomites",
+              "it": "Dolomites San Vigilio",
+              "nl": "San Vigilio Dolomites",
+              "pl": "San Vigilio Dolomites",
+              "ru": "Сан Вижилио Доломитес/San Vigilio Dolomites"
+            },
+            "Self": "http://tourism.api.opendatahub.bz.it/v1/Region/D2633BBBB456F18F2A008088B4770B"
+          },
+          "DistrictInfo": {
+            "Id": "79CBD7D251C911D18F1400A02427D15E",
+            "Name": {
+              "cs": "San Vigilio",
+              "de": "San Vigilio",
+              "en": "San Vigilio",
+              "fr": "San Vigilio",
+              "it": "San Vigilio",
+              "nl": "San Vigilio",
+              "pl": "San Vigilio",
+              "ru": "Сан-Виджилио"
+            },
+            "Self": "http://tourism.api.opendatahub.bz.it/v1/District/79CBD7D251C911D18F1400A02427D15E"
+          },
+          "MunicipalityInfo": {
+            "Id": "1465A460C04946EFAD3D479EDC3329EB",
+            "Name": {
+              "cs": "San Vigilio",
+              "de": "San Vigilio",
+              "en": "San Vigilio",
+              "fr": "San Vigilio",
+              "it": "San Vigilio",
+              "nl": "San Vigilio",
+              "pl": "San Vigilio",
+              "ru": "San Vigilio"
+            },
+            "Self": "http://tourism.api.opendatahub.bz.it/v1/Municipality/1465A460C04946EFAD3D479EDC3329EB"
+          }
+        },
+        "EventDatesEnd": [
+          "2019-06-29T00:00:00"
+        ],
+        "NextBeginDate": "2019-06-29T10:00:00",
+        "EventPublisher": null,
+        "OrganizerInfos": {
+          "de": {
+            "Tax": "01538840214",
+            "Url": "http://www.sanvigilio.com",
+            "Vat": "01538840214",
+            "City": "St.Vigil in Enneberg",
+            "Email": "info@sanvigilio.com",
+            "Address": "Str. Catarina Lanz 14",
+            "LogoUrl": null,
+            "Surname": "Call",
+            "ZipCode": "39030",
+            "Language": "de",
+            "Faxnumber": "+39 0474 501566",
+            "Givenname": "Werner",
+            "NamePrefix": null,
+            "CompanyName": "Tourismusverein San Vigilio|San Martin - Dolomites",
+            "CountryCode": null,
+            "CountryName": null,
+            "Phonenumber": "+39 0474 501037"
+          },
+          "en": {
+            "Tax": "01538840214",
+            "Url": "http://www.sanvigilio.com",
+            "Vat": "01538840214",
+            "City": "S. Vigilio di Marebbe",
+            "Email": "info@sanvigilio.com",
+            "Address": "Str. Catarina Lanz 14",
+            "LogoUrl": null,
+            "Surname": "Call",
+            "ZipCode": "39030",
+            "Language": "en",
+            "Faxnumber": "+39 0474 501566",
+            "Givenname": "Werner",
+            "NamePrefix": null,
+            "CompanyName": "Tourist Office San Vigilio|San Martin - Dolomites",
+            "CountryCode": null,
+            "CountryName": null,
+            "Phonenumber": "+39 0474 501037"
+          },
+          "it": {
+            "Tax": "01538840214",
+            "Url": "http://www.sanvigilio.com",
+            "Vat": "01538840214",
+            "City": "S. Vigilio di Marebbe",
+            "Email": "info@sanvigilio.com",
+            "Address": "Str. Catarina Lanz, 14",
+            "LogoUrl": null,
+            "Surname": "Call",
+            "ZipCode": "39030",
+            "Language": "it",
+            "Faxnumber": "+39 0474 501566",
+            "Givenname": "Werner",
+            "NamePrefix": null,
+            "CompanyName": "Associazione Turistica San Vigilio|San Martin - Dolomites",
+            "CountryCode": null,
+            "CountryName": null,
+            "Phonenumber": "+39 0474 501037"
+          }
+        },
+        "EventDatesBegin": [
+          "2019-06-29T00:00:00"
+        ],
+        "EventDateCounter": 1,
+        "EventAdditionalInfos": {
+          "de": {
+            "Reg": "",
+            "Mplace": "",
+            "Language": "de",
+            "Location": ""
+          },
+          "en": {
+            "Reg": "",
+            "Mplace": "Daksy's natural workshop",
+            "Language": "en",
+            "Location": ""
+          },
+          "it": {
+            "Reg": "",
+            "Mplace": "",
+            "Language": "it",
+            "Location": ""
+          }
+        },
+        "AltitudeUnitofMeasure": null
+      },
+      {
+        "Id": "BFF16EC65D344F66BC1AB47D20347D74",
+        "Ranc": 0,
+        "Self": "http://tourism.api.opendatahub.bz.it/v1/Event/BFF16EC65D344F66BC1AB47D20347D74",
+        "Type": "",
+        "Active": true,
+        "Detail": {
+          "de": {
+            "Title": "10. Yoga-Meeting \"Merano in Yoga\"",
+            "Header": null,
+            "BaseText": "International angesehene Lehrmeister der verschiedensten Disziplinen leiten Seminare und vielfältige Zusammenkünfte. Ob nun kostenlose Yoga-Lektionen oder Vorträge, ob Konzerte, Ausstellungen, Darbietungen oder spezielle Yoga Einheiten für Kinder: „Merano in Yoga“ ist ein Festival für Einsteiger und Fortgeschrittene gleichermaßen. Auch die vegetarische bzw. vegane Küche ist ein wesentlicher Bestandteil der Veranstaltung. Ein großer Ausstellerbereich im Kursaal rundet die 10. Ausgabe ab. \nMasterclass € 25,00, Workshop | Green Yoga € 20,00, Watsu € 35,00, Open Class (Tagescarnet) € 10,00.",
+            "Keywords": null,
+            "Language": "de",
+            "MetaDesc": null,
+            "IntroText": null,
+            "MetaTitle": null,
+            "SubHeader": null,
+            "GetThereText": null,
+            "AdditionalText": null
+          },
+          "en": {
+            "Title": "10th Merano in Yoga meeting",
+            "Header": null,
+            "BaseText": "Important international teachers of different arts keep seminars and meetings. There will be free lessons, lectures, concerts, exhibitions, shows, children-yoga, vegetarian and vegan cuisine, a holistic area and a shop spot. It’s a festival for everyone, beginners, lovers and those already introduced to oriental doctrines and techniques to find some well-being.\nMasterclass € 25.00, Workshop | Green Yoga € 20.00, Watsu € 35.00, Open Class (carnet for a whole day) € 10.00.",
+            "Keywords": null,
+            "Language": "en",
+            "MetaDesc": null,
+            "IntroText": null,
+            "MetaTitle": null,
+            "SubHeader": null,
+            "GetThereText": null,
+            "AdditionalText": null
+          },
+          "it": {
+            "Title": "10a edizione di \"Merano in Yoga\"",
+            "Header": null,
+            "BaseText": "Importanti maestri internazionali di diverse discipline conducono seminari e incontri. Lezioni gratuite, conferenze, concerti, mostre, spettacoli, yoga-bimbi, cucina vegetariana e vegana, un’area olistica e una zona emporio: un festival per tutti, principianti, appassionati e praticanti delle discipline orientali e di tecniche per la ricerca del benessere.\nMasterclass € 25,00, Workshop | Green Yoga € 20,00, Watsu € 35,00, Open Class (carnet per un intera giornata) € 10,00.",
+            "Keywords": null,
+            "Language": "it",
+            "MetaDesc": null,
+            "IntroText": null,
+            "MetaTitle": null,
+            "SubHeader": null,
+            "GetThereText": null,
+            "AdditionalText": null
+          }
+        },
+        "OrgRID": "24B24F080F464557A53B73008174ECE9",
+        "PayMet": "0",
+        "SignOn": "0",
+        "Source": "lts",
+        "Ticket": "0",
+        "Topics": [
+          {
+            "Self": "http://tourism.api.opendatahub.bz.it/v1/EventTopics/0D25868CC23242D6AC97AEB2973CB3D6",
+            "TopicRID": "0D25868CC23242D6AC97AEB2973CB3D6",
+            "TopicInfo": "Tagungen Vorträge"
+          },
+          {
+            "Self": "http://tourism.api.opendatahub.bz.it/v1/EventTopics/162C0067811B477DA725D2F5F2D98398",
+            "TopicRID": "162C0067811B477DA725D2F5F2D98398",
+            "TopicInfo": "Sport"
+          },
+          {
+            "Self": "http://tourism.api.opendatahub.bz.it/v1/EventTopics/767F6F43FC394CE9A3C8A9725C6FF134",
+            "TopicRID": "767F6F43FC394CE9A3C8A9725C6FF134",
+            "TopicInfo": "Kurse/Bildung"
+          }
+        ],
+        "DateEnd": "2021-04-11T00:00:00",
+        "Gpstype": "position",
+        "ODHTags": [],
+        "SmgTags": null,
+        "Altitude": null,
+        "Latitude": 46.6704,
+        "DateBegin": "2021-04-09T00:00:00",
+        "Districts": [
+          {
+            "Id": "79CBD7ED51C911D18F1400A02427D15E",
+            "Self": "http://tourism.api.opendatahub.bz.it/v1/District/79CBD7ED51C911D18F1400A02427D15E"
+          }
+        ],
+        "EventDate": [
+          {
+            "To": "2021-04-09T00:00:00",
+            "End": "00:00:00",
+            "From": "2021-04-09T00:00:00",
+            "Begin": "00:00:00",
+            "Ticket": true,
+            "GpsEast": 0.0,
+            "Entrance": "00:00:00",
+            "GpsNorth": 0.0,
+            "MaxPersons": 0,
+            "MinPersons": 0,
+            "SingleDays": false
+          },
+          {
+            "To": "2021-04-10T00:00:00",
+            "End": "00:00:00",
+            "From": "2021-04-10T00:00:00",
+            "Begin": "00:00:00",
+            "Ticket": true,
+            "GpsEast": 0.0,
+            "Entrance": "00:00:00",
+            "GpsNorth": 0.0,
+            "MaxPersons": 0,
+            "MinPersons": 0,
+            "SingleDays": false
+          },
+          {
+            "To": "2021-04-11T00:00:00",
+            "End": "00:00:00",
+            "From": "2021-04-11T00:00:00",
+            "Begin": "00:00:00",
+            "Ticket": true,
+            "GpsEast": 0.0,
+            "Entrance": "00:00:00",
+            "GpsNorth": 0.0,
+            "MaxPersons": 0,
+            "MinPersons": 0,
+            "SingleDays": false
+          }
+        ],
+        "Longitude": 11.1629,
+        "OdhActive": false,
+        "Shortname": "10. Yoga-Meeting \"Merano in Yoga\"",
+        "SmgActive": false,
+        "TopicRIDs": [
+          "0D25868CC23242D6AC97AEB2973CB3D6",
+          "162C0067811B477DA725D2F5F2D98398",
+          "767F6F43FC394CE9A3C8A9725C6FF134"
+        ],
+        "DistrictId": "79CBD7ED51C911D18F1400A02427D15E",
+        "EventPrice": {},
+        "LastChange": "2020-08-12T00:05:26.4618267",
+        "DistrictIds": [
+          "79CBD7ED51C911D18F1400A02427D15E"
+        ],
+        "FirstImport": "2019-06-12T00:05:29.4683321",
+        "HasLanguage": [
+          "de",
+          "it",
+          "en"
+        ],
+        "LicenseInfo": {
+          "Author": "",
+          "License": "CC0",
+          "ClosedData": false,
+          "LicenseHolder": "https://www.lts.it"
+        },
+        "ContactInfos": {
+          "de": {
+            "Tax": null,
+            "Url": "http://www.yogameeting.org/",
+            "Vat": null,
+            "City": "Meran",
+            "Email": "info@meran.eu",
+            "Address": "Freiheitsstraße 31",
+            "LogoUrl": null,
+            "Surname": null,
+            "ZipCode": "39012",
+            "Language": "de",
+            "Faxnumber": null,
+            "Givenname": null,
+            "NamePrefix": null,
+            "CompanyName": "",
+            "CountryCode": null,
+            "CountryName": null,
+            "Phonenumber": "+39 02 58113382"
+          },
+          "en": {
+            "Tax": null,
+            "Url": "http://www.yogameeting.org/",
+            "Vat": null,
+            "City": "Merano",
+            "Email": "info@merano.eu",
+            "Address": "Corso Libertà 31",
+            "LogoUrl": null,
+            "Surname": null,
+            "ZipCode": "39012",
+            "Language": "en",
+            "Faxnumber": null,
+            "Givenname": null,
+            "NamePrefix": null,
+            "CompanyName": "",
+            "CountryCode": null,
+            "CountryName": null,
+            "Phonenumber": "+39 02 58113382"
+          },
+          "it": {
+            "Tax": null,
+            "Url": "http://www.yogameeting.org/",
+            "Vat": null,
+            "City": "Merano",
+            "Email": "info@merano.eu",
+            "Address": "Corso Libertà 31",
+            "LogoUrl": null,
+            "Surname": null,
+            "ZipCode": "39012",
+            "Language": "it",
+            "Faxnumber": null,
+            "Givenname": null,
+            "NamePrefix": null,
+            "CompanyName": "",
+            "CountryCode": null,
+            "CountryName": null,
+            "Phonenumber": "+39 02 58113382"
+          }
+        },
+        "ImageGallery": [],
+        "LocationInfo": {
+          "TvInfo": {
+            "Id": "522822BE51CA11D18F1400A02427D15E",
+            "Name": {
+              "cs": "Meran/Merano",
+              "de": "Meran",
+              "en": "Meran/Merano",
+              "fr": "Meran/Merano",
+              "it": "Merano",
+              "nl": "Meran/Merano",
+              "pl": "Meran/Merano",
+              "ru": "Меран/Merano"
+            },
+            "Self": "http://tourism.api.opendatahub.bz.it/v1/TourismAssociation/522822BE51CA11D18F1400A02427D15E"
+          },
+          "AreaInfo": null,
+          "RegionInfo": {
+            "Id": "D2633A20C24E11D18F1B006097B8970B",
+            "Name": {
+              "cs": "Meran/Merano a okolí",
+              "de": "Meran und Umgebung",
+              "en": "Meran/Merano and environs",
+              "fr": "Meran/Merano et environs",
+              "it": "Merano e dintorni",
+              "nl": "Meran/Merano en omgeving",
+              "pl": "Meran/Merano i okolice",
+              "ru": "Меран/Merano и окрестности"
+            },
+            "Self": "http://tourism.api.opendatahub.bz.it/v1/Region/D2633A20C24E11D18F1B006097B8970B"
+          },
+          "DistrictInfo": {
+            "Id": "79CBD7ED51C911D18F1400A02427D15E",
+            "Name": {
+              "cs": "Meran/Merano",
+              "de": "Meran",
+              "en": "Merano/Meran",
+              "fr": "Merano/Meran",
+              "it": "Merano",
+              "nl": "Merano/Meran",
+              "pl": "Merano/Meran",
+              "ru": "Мерано"
+            },
+            "Self": "http://tourism.api.opendatahub.bz.it/v1/District/79CBD7ED51C911D18F1400A02427D15E"
+          },
+          "MunicipalityInfo": {
+            "Id": "418E5CC913764648802DD2BE30AD91AC",
+            "Name": {
+              "cs": "Meran/Merano",
+              "de": "Meran",
+              "en": "Meran/Merano",
+              "fr": "Meran/Merano",
+              "it": "Merano",
+              "nl": "Meran/Merano",
+              "pl": "Meran/Merano",
+              "ru": "Меран/Merano"
+            },
+            "Self": "http://tourism.api.opendatahub.bz.it/v1/Municipality/418E5CC913764648802DD2BE30AD91AC"
+          }
+        },
+        "EventDatesEnd": [
+          "2021-04-09T00:00:00",
+          "2021-04-10T00:00:00",
+          "2021-04-11T00:00:00"
+        ],
+        "NextBeginDate": "2021-04-09T00:00:00",
+        "EventPublisher": null,
+        "OrganizerInfos": {
+          "de": {
+            "Tax": "",
+            "Url": "http://www.yogameeting.org",
+            "Vat": "",
+            "City": "Mailand",
+            "Email": "infoarteyoga@gmail.com",
+            "Address": "Via Meda 25",
+            "LogoUrl": null,
+            "Surname": "",
+            "ZipCode": "20136",
+            "Language": "de",
+            "Faxnumber": "",
+            "Givenname": "",
+            "NamePrefix": null,
+            "CompanyName": "Associazione Arté",
+            "CountryCode": null,
+            "CountryName": null,
+            "Phonenumber": "+39 02 58113382"
+          },
+          "en": {
+            "Tax": "",
+            "Url": "http://www.yogameeting.org",
+            "Vat": "",
+            "City": "Milano",
+            "Email": "infoarteyoga@gmail.com",
+            "Address": "Via Meda 25",
+            "LogoUrl": null,
+            "Surname": "",
+            "ZipCode": "20136",
+            "Language": "en",
+            "Faxnumber": "",
+            "Givenname": "",
+            "NamePrefix": null,
+            "CompanyName": "Associazione Arté",
+            "CountryCode": null,
+            "CountryName": null,
+            "Phonenumber": "+39 02 58113382"
+          },
+          "it": {
+            "Tax": "",
+            "Url": "http://www.yogameeting.org",
+            "Vat": "",
+            "City": "Milano",
+            "Email": "infoarteyoga@gmail.com",
+            "Address": "Via Meda 25",
+            "LogoUrl": null,
+            "Surname": "",
+            "ZipCode": "20136",
+            "Language": "it",
+            "Faxnumber": "",
+            "Givenname": "",
+            "NamePrefix": null,
+            "CompanyName": "Associazione Arté",
+            "CountryCode": null,
+            "CountryName": null,
+            "Phonenumber": "+39 02 58113382"
+          }
+        },
+        "EventDatesBegin": [
+          "2021-04-09T00:00:00",
+          "2021-04-10T00:00:00",
+          "2021-04-11T00:00:00"
+        ],
+        "EventDateCounter": 3,
+        "EventAdditionalInfos": {
+          "de": {
+            "Reg": "",
+            "Mplace": "",
+            "Language": "de",
+            "Location": "Kurhaus"
+          },
+          "en": {
+            "Reg": "",
+            "Mplace": "",
+            "Language": "en",
+            "Location": "Kurhaus"
+          },
+          "it": {
+            "Reg": "",
+            "Mplace": "",
+            "Language": "it",
+            "Location": "Kurhaus"
+          }
+        },
+        "AltitudeUnitofMeasure": null
+      }
+    ]
+  }

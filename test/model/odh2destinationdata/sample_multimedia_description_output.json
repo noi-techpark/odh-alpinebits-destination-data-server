@@ -1,0 +1,43 @@
+{
+  "type": "mediaObjects",
+  "id": "bc59f5dd810efdceb1fc673567d02a2f",
+  "meta": {
+    "dataProvider": "http://tourism.opendatahub.bz.it/",
+    "lastUpdate": "2021-03-10T13:09:12.1985011+01:00"
+  },
+  "links": {
+    "self": "http://example.com/2021-04/mediaObjects/bc59f5dd810efdceb1fc673567d02a2f"
+  },
+  "attributes": {
+    "abstract": null,
+    "description": {
+      "deu": "Albions",
+      "eng": "Albions",
+      "ita": "Albions"
+    },
+    "name": {
+      "deu": "95BEE3DCCD31B7F02E43FE9FB527D244",
+      "eng": "95BEE3DCCD31B7F02E43FE9FB527D244",
+      "ita": "95BEE3DCCD31B7F02E43FE9FB527D244"
+    },
+    "shortName": null,
+    "url": "https://doc.lts.it/docsite/ImageRender.aspx?ID=bc59f5dd810efdceb1fc673567d02a2f",
+    "contentType": "image/jpeg",
+    "duration": null,
+    "height": 767,
+    "license": "CC0-1.0",
+    "width": 1023
+  },
+  "relationships": {
+    "categories": null,
+    "copyrightOwner": {
+      "data": {
+        "type": "agents",
+        "id": "bc59f5dd810efdceb1fc673567d02a2f_copyrightOwner"
+      },
+      "links": {
+        "related": "http://example.com/2021-04/mediaObjects/bc59f5dd810efdceb1fc673567d02a2f/copyrightOwner"
+      }
+    }
+  }
+}

@@ -67,6 +67,8 @@ module.exports = {
   validateEventSeires: (message) => validate(eventSeriesValidator, message),
   validateEventSeiresId: (message) => validate(eventSeriesIdValidator, message),
   validateEventSeiresMedia: (message) => validate(eventSeriesMediaValidator, message),
+  validateCategories: (message) => { throw new Error('Category validation is not yet implemented.') },
+  validateCategoriesId: (message) => { throw new Error('Category validation is not yet implemented.') },
 }
 
 function validate(validation, message) {

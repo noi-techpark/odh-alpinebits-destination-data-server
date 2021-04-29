@@ -1,0 +1,64 @@
+{
+  "type": "agents",
+  "id": "4D5C298097824D4484BA35C2CAC57DE0",
+  "meta": {
+    "dataProvider": "http://tourism.opendatahub.bz.it/",
+    "lastUpdate": "2019-11-05T00:05:58.776531+01:00"
+  },
+  "links": {
+    "self": "http://example.com/2021-04/agents/4D5C298097824D4484BA35C2CAC57DE0"
+  },
+  "attributes": {
+    "abstract": null,
+    "description": null,
+    "name": {
+      "deu": "Info Feldthurns - Tourismusgen. Klausen,Barbian,Feldthurns&amp;Villanders",
+      "eng": ".",
+      "ita": "Info Velturno - Soc. Coop. Turistica Chiusa, Barbiano, Velturno e Villandro"
+    },
+    "shortName": null,
+    "url": {
+      "deu": "http://www.feldthurns.info",
+      "eng": "http://www.feldthurns.info",
+      "ita": "http://www.feldthurns.info"
+    },
+    "contactPoints": [
+      {
+        "address": {
+          "street": {
+            "deu": "Marktplatz 1",
+            "eng": ".",
+            "ita": "Piazza Mercato 1"
+          },
+          "city": {
+            "deu": "Klausen",
+            "eng": ".",
+            "ita": "Chiusa"
+          },
+          "region": null,
+          "complement": null,
+          "categories": null,
+          "zipcode": null,
+          "zipCode": "39040"
+        },
+        "availableHours": null,
+        "email": "info@feldthurns.info",
+        "telephone": "+390472855290"
+      }
+    ]
+  },
+  "relationships": {
+    "categories": {
+      "data": [
+        {
+          "id": "alpinebits:organization",
+          "type": "categories"
+        }
+      ],
+      "links": {
+        "related": "http://example.com/2021-04/agents/4D5C298097824D4484BA35C2CAC57DE0/categories"
+      }
+    },
+    "multimediaDescriptions": null
+  }
+}
