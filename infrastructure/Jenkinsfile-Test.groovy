@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         DOCKER_PROJECT_NAME = "alpinebits-destination-data-v2021-04-server"
-        DOCKER_IMAGE = "755952719952.dkr.ecr.eu-west-1.amazonaws.com/alpinebits-destination-data-server"
+        DOCKER_IMAGE = "755952719952.dkr.ecr.eu-west-1.amazonaws.com/alpinebits-destination-data-v2021-server"
         DOCKER_TAG = "test-$BUILD_NUMBER"
         
         SERVER_PORT = "1005"
