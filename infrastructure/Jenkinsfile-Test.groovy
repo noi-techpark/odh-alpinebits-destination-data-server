@@ -2,15 +2,15 @@ pipeline {
     agent any
 
     environment {
-        DOCKER_PROJECT_NAME = "alpinebits-destination-data-server"
+        DOCKER_PROJECT_NAME = "alpinebits-destination-data-v2021-04-server"
         DOCKER_IMAGE = "755952719952.dkr.ecr.eu-west-1.amazonaws.com/alpinebits-destination-data-server"
         DOCKER_TAG = "test-$BUILD_NUMBER"
         
-        SERVER_PORT = "1003"
+        SERVER_PORT = "1005"
         
         REF_SERVER_CORS_ORIGIN = "*"
         REF_SERVER_URL = "https://destinationdata.alpinebits.opendatahub.testingmachine.eu"
-        ODH_BASE_URL = "https://tourism.opendatahub.bz.it/api/"
+        ODH_BASE_URL = "https://api.tourism.testingmachine.eu/v1/"
         ODH_TIMEOUT = "60000"
     }
 
