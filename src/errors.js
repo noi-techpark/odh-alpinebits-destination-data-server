@@ -1,5 +1,5 @@
-// TODO: add about link to OpenAPI documentation on syntactical errors
-// TODO: add detail to syntactical errors
+require("custom-env").env();
+
 const types = {
   unknownQuery: {
     title: "Query parameter is not supported in the given endpoint",
@@ -174,13 +174,18 @@ function getSelfUrl(request) {
 function handleError(err, req, res) {
   console.log("  Handling error", err, "");
 
-  const errorMessage = {
-    jsonapi: { version: "1.0" },
-    links: getSelfUrl(req) ? { self: getSelfUrl(req) } : undefined,
-    errors: [err instanceof DestinationDataError ? err : types.serverFailedToProcessError],
+  const links = {
+    self: getSelfUrl(req) ? getSelfUrl(req) : undefined,
+    describedby: process.env.SWAGGER_URL,
   };
 
-  res.status((err && err.status) || 500);
+  const errorMessage = {
+    jsonapi: { version: "1.0" },
+    links,
+    errors: ["status" in err && "title" in err ? err : types.serverFailedToProcessError],
+  };
+
+  res.status(errorMessage.errors[0].status);
   res.json(errorMessage);
 }
 
