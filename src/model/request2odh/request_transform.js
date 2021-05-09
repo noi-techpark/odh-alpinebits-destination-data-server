@@ -49,7 +49,12 @@ function extractEventSort(queriesArray, request) {
     });
   }
 
-  queriesArray.push(`rawsort=${_.isEmpty(rawSort) ? "-DateBegin" : rawSort.join(",")}`);
+  // queriesArray.push(`rawsort=${_.isEmpty(rawSort) ? "-DateBegin" : rawSort.join(",")}`);
+  if (_.isEmpty(rawSort)) {
+    queriesArray.push(`sort=desc`);
+  } else {
+    queriesArray.push(`rawsort=${rawSort.join(",")}`);
+  }
 }
 
 function extractRandom(queriesArray, request) {
