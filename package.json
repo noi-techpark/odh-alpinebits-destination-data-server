@@ -7,10 +7,7 @@
   "scripts": {
     "dev-server": "nodemon src/server.js",
     "server": "node src/server.js",
-    "test": "jest",
-    "swagger:bundle": "swagger-cli bundle docs/index.yml -o ./docs/full.yml -t yaml",
-    "swagger:host": "docker run -p 3000:8080 -e SWAGGER_JSON=/docs/full.yml -v `pwd`/docs:/docs swaggerapi/swagger-ui",
-    "swagger:generate": "openapi-generator generate -i docs/index.yml -g html -o dist"
+    "test": "jest"
   },
   "repository": {
     "type": "git",
