@@ -44,12 +44,19 @@ function extractEventSort(queriesArray, request) {
       } else if (/^-?endDate$/.test(field)) {
         return field.replace("endDate", "DateEnd");
       } else {
-        errors.DestinationDataError.throwBadQueryError(`Sort query criteria not support: 'sort=${sort}'.`);
+        errors.DestinationDataError.throwBadQueryError(
+          `Sort query does not support the selected field: 'sort=${sort}'.`
+        );
       }
     });
   }
 
-  queriesArray.push(`rawsort=${_.isEmpty(rawSort) ? "-DateBegin" : rawSort.join(",")}`);
+  // queriesArray.push(`rawsort=${_.isEmpty(rawSort) ? "-DateBegin" : rawSort.join(",")}`);
+  if (_.isEmpty(rawSort)) {
+    queriesArray.push(`sort=desc`);
+  } else {
+    queriesArray.push(`rawsort=${rawSort.join(",")}`);
+  }
 }
 
 function extractRandom(queriesArray, request) {
@@ -148,7 +155,9 @@ function extractLocationFilter(filterString, area, dedicatedFilters) {
   const [longitude, latitude, radius] = typeof area === "string" ? area.split(",") : [];
 
   if (isNaN(longitude) || isNaN(latitude) || isNaN(radius)) {
-    errors.DestinationDataError.throwBadQueryError(`Bad query parameters: '${filterString}=${area}'`);
+    errors.DestinationDataError.throwBadQueryError(
+      `Bad area value (longitude, latitude, distance in meters): '${filterString}=${area}'`
+    );
   }
 
   dedicatedFilters.push(`longitude=${longitude}&latitude=${latitude}&radius=${radius}`);
@@ -339,7 +348,9 @@ function extractSearch(queriesArray, request) {
 
   if (search) {
     if (typeof search === "string" || Object.keys(search).some((searchField) => searchField !== "name")) {
-      errors.DestinationDataError.throwBadQueryError(`The search query only supports searches over the 'name' field.`);
+      errors.DestinationDataError.throwBadQueryError(
+        `The 'search' query only supports searches over the 'name' field.`
+      );
     }
 
     if (objectPath.has(search, "name")) {

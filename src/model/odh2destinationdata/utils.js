@@ -38,6 +38,10 @@ function sanitizeAndConvertLanguageTags(multilingualObject) {
 
     if (threeLetterLang) {
       output[threeLetterLang] = sanitizeHtml(multilingualObject[twoLetterLang], htmlSanitizeOpts);
+
+      if (typeof output[threeLetterLang] === "string") {
+        output[threeLetterLang] = output[threeLetterLang].replace(/&amp;/g, "&");
+      }
     }
   }
 

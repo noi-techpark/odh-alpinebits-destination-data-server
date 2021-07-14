@@ -7,14 +7,11 @@
   "scripts": {
     "dev-server": "nodemon src/server.js",
     "server": "node src/server.js",
-    "test": "jest",
-    "swagger:bundle": "swagger-cli bundle docs/index.yml -o ./docs/full.yml -t yaml",
-    "swagger:host": "docker run -p 3000:8080 -e SWAGGER_JSON=/docs/full.yml -v `pwd`/docs:/docs swaggerapi/swagger-ui",
-    "swagger:generate": "openapi-generator generate -i docs/index.yml -g html -o dist"
+    "test": "jest"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/tgoprince/odh-alpinebits-destination-data-server.git"
+    "url": "git+https://github.com/noi-techpark/odh-alpinebits-destination-data-server.git"
   },
   "author": "Tiago Prince Sales <tiago.princesales@unibz.it>",
   "contributors": [
@@ -22,9 +19,9 @@
     "Claudenir Morais Fonseca <cmoraisfonseca@unibz.it>"
   ],
   "bugs": {
-    "url": "https://github.com/tgoprince/odh-alpinebits-destination-data-server/issues"
+    "url": "https://github.com/noi-techpark/odh-alpinebits-destination-data-server/issues"
   },
-  "homepage": "https://github.com/tgoprince/odh-alpinebits-destination-data-server#readme",
+  "homepage": "https://github.com/noi-techpark/odh-alpinebits-destination-data-server#readme",
   "dependencies": {
     "ajv": "^6.10.2",
     "axios": "^0.19.0",

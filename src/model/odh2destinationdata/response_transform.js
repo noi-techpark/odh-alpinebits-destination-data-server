@@ -8,6 +8,7 @@ const { transformToMountainArea } = require("./mountain_area_transform");
 const { transformToLift, transformToSkiSlope, transformToSnowpark } = require("./activity_transform");
 const categoriesData = require("./../../../data/categories.data");
 const featuresData = require("./../../../data/features.data");
+require("custom-env").env();
 
 function transformCollectionMeta(odhCollection) {
   const { TotalResults, TotalPages } = odhCollection;
@@ -23,7 +24,7 @@ function transformCollectionLinks(odhCollection, request) {
   const last = TotalPages ? TotalPages : 1;
 
   const { selfUrl } = request;
-  const links = {};
+  const links = { swagger: process.env.SWAGGER_URL };
   const regexPageQuery = /page\[number\]=[0-9]+/;
   const pageQuery = "page[number]=";
 
@@ -72,7 +73,7 @@ function transformObject(odhItem, request, transformResourceFn) {
   object._fields = fields;
 
   object.data = resource;
-  object.links = { self: request.selfUrl };
+  object.links = { self: request.selfUrl, swagger: process.env.SWAGGER_URL };
 
   return object;
 }
@@ -125,7 +126,7 @@ function transformCategoryCollectionLinks(meta, request) {
   const last = pages ? pages : 1;
 
   const { selfUrl } = request;
-  const links = {};
+  const links = { swagger: process.env.SWAGGER_URL };
   const regexPageQuery = /page\[number\]=[0-9]+/;
   const pageQuery = "page[number]=";
 
@@ -172,7 +173,7 @@ function transformToCategoryObject(category, request) {
   object._fields = fields;
 
   object.data = category;
-  object.links = { self: request.selfUrl };
+  object.links = { self: request.selfUrl, swagger: process.env.SWAGGER_URL };
 
   return object;
 }
@@ -216,7 +217,7 @@ function transformToFeatureObject(feature, request) {
   object._fields = fields;
 
   object.data = null;
-  object.links = { self: request.selfUrl };
+  object.links = { self: request.selfUrl, swagger: process.env.SWAGGER_URL };
 
   return object;
 }

@@ -273,8 +273,8 @@ function transformVenueAddress(odhSource) {
   const address = datatypes.createAddress();
   address.street = utils.sanitizeAndConvertLanguageTags(odhSource.getContactInfosAddress());
   address.city = utils.sanitizeAndConvertLanguageTags(odhSource.getContactInfosCity());
-  address.country = sourceCountryCode ? Object.values(sourceCountryCode)[0] : "IT"; // TODO: confirm if it's safe to assume the organizer to be in Italy
-  address.zipCode = sourceZipCode ? Object.values(sourceZipCode)[0] : null;
+  address.country = !_.isEmpty(sourceCountryCode) ? Object.values(sourceCountryCode)[0] : "IT"; // TODO: confirm if it's safe to assume the organizer to be in Italy
+  address.zipcode = !_.isEmpty(sourceZipCode) ? Object.values(sourceZipCode)[0] : null;
 
   return address;
 }
