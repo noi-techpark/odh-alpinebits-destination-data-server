@@ -6,7 +6,7 @@ const types = {
     status: 400,
   },
   badQuery: {
-    title: "Query parameter does not have valid values",
+    title: "Query parameter contains bad values",
     status: 400,
   },
   queryConflict: {
@@ -176,7 +176,7 @@ function handleError(err, req, res) {
 
   const links = {
     self: getSelfUrl(req) ? getSelfUrl(req) : undefined,
-    describedby: process.env.SWAGGER_URL,
+    swagger: process.env.SWAGGER_URL,
   };
 
   const errorMessage = {

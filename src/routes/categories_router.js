@@ -24,7 +24,7 @@ class CategoriesRouter extends Router {
     const parseRequestFn = (request) => {
       const typesInData = [Category];
       const typesInIncluded = [Category, MediaObject];
-      const supportedFeatures = ["include", "fields", "filter", "page", "random", "search", "sort"];
+      const supportedFeatures = ["include", "fields", "page"];
       return this.parseRequest(request, typesInData, typesInIncluded, supportedFeatures);
     };
     const fetchFn = (parsedRequest) => new CategoryConnector(parsedRequest).fetch();
