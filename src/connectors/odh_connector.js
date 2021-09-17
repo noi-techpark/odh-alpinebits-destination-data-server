@@ -15,7 +15,10 @@ class OdhConnector {
     this.axiosOpts = {
       baseURL: process.env.ODH_BASE_URL,
       timeout: process.env.ODH_TIMEOUT,
-      headers: { Accept: "application/json" },
+      headers: {
+        Accept: "application/json",
+        Referer: "Destinationdata",
+      },
     };
   }
 
