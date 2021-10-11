@@ -4,10 +4,10 @@ services:
     hostname: pgdb
     image: postgres
     environment:
-      POSTGRES_USER: root
-      POSTGRES_PASSWORD: root
+      POSTGRES_USER: "${DB_USERNAME}"
+      POSTGRES_PASSWORD: "${DB_PASSWORD}"
       POSTGRES_DB: test_db
     ports:
-      - "5432:5432"
+      - "5432:${DB_EXT_PORT}"
     volumes:
       - ./postgres-data:/var/lib/postgresql/data
