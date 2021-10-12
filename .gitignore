@@ -11,7 +11,7 @@
 /build
 
 # db volume
-.postgres-data
+/postgres-data
 
 # misc
 .DS_Store

@@ -8,8 +8,8 @@
     "dev-server": "nodemon src/server.js",
     "server": "node src/server.js",
     "test": "jest",
-    "setupdb": "docker-compose -f docker-compose_setupdb.yml up -d",
-    "pgadmin": "docker-compose -f docker-compose_pgadmin.yml up -d"
+    "db": "docker-compose -f docker-compose_postgres.yml up",
+    "pgadmin": "docker-compose -f docker-compose_pgadmin.yml up"
   },
   "repository": {
     "type": "git",
