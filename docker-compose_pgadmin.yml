@@ -9,5 +9,4 @@ services:
     ports:
       - "${PGADMIN_PORT}:${PGADMIN_EXT_PORT}"
     volumes:
-      - ./pgadmin/servers.json:/pgadmin4/servers.json
-      - ./pgadmin/pgpass:/pgpass
+      - ./pgadmin-servers.json:/pgadmin4/servers.json
