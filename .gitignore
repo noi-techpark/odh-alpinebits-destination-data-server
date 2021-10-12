@@ -12,6 +12,8 @@
 
 # db volume
 /postgres-data
+# pgadmin configuration
+pgadmin-servers.json
 
 # misc
 .DS_Store
