@@ -7,7 +7,9 @@
   "scripts": {
     "dev-server": "nodemon src/server.js",
     "server": "node src/server.js",
-    "test": "jest"
+    "test": "jest",
+    "db": "docker-compose -f docker-compose_postgres.yml up",
+    "pgadmin": "node pgadmin-setup.js && docker-compose -f docker-compose_pgadmin.yml up"
   },
   "repository": {
     "type": "git",
