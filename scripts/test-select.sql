@@ -50,5 +50,10 @@
 -- SELECT * FROM categories WHERE category_id = 'alpinebits:BusinessEvent';
 
 -- DELETE FROM events RETURNING *;
-DELETE FROM resources WHERE resource_id = '493bfb50-e179-4dda-ab22-4e30bf9b2f3f' RETURNING *;
-SELECT * FROM resources_categories;
+-- DELETE FROM resources WHERE resource_id = '493bfb50-e179-4dda-ab22-4e30bf9b2f3f' RETURNING *;
+-- SELECT * FROM resources_categories;
+
+SELECT *
+FROM resources
+WHERE name @? '$ ? (exists(@.eng))';
+-- LEFT JOIN resources ON resoureces.resource_id = agent_id

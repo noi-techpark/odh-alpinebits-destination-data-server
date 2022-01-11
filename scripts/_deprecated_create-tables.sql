@@ -30,25 +30,25 @@ CREATE TABLE IF NOT EXISTS resources (
   --   ON DELETE CASCADE
 );
 
--- CREATE TABLE IF NOT EXISTS language_codes (
---   lang CHAR ( 3 ) PRIMARY KEY,
---   english_label VARCHAR ( 50 ) NOT NULL,
---   german_label VARCHAR ( 50 ),
---   italian_label VARCHAR ( 50 )
--- );
+CREATE TABLE IF NOT EXISTS language_codes (
+  lang CHAR ( 3 ) PRIMARY KEY,
+  english_label VARCHAR ( 50 ) NOT NULL,
+  german_label VARCHAR ( 50 ),
+  italian_label VARCHAR ( 50 )
+);
 
--- CREATE TABLE IF NOT EXISTS abstracts (
---   resource_id UUID NOT NULL,
---   lang CHAR ( 3 ) NOT NULL,
---   content TEXT,
---   PRIMARY KEY (resource_id, lang),
---   FOREIGN KEY (resource_id)
---     REFERENCES resources (resource_id)
---     ON DELETE CASCADE,
---   FOREIGN KEY (lang)
---     REFERENCES language_codes (lang)
---     ON DELETE CASCADE
--- );
+CREATE TABLE IF NOT EXISTS abstracts (
+  resource_id UUID NOT NULL,
+  lang CHAR ( 3 ) NOT NULL,
+  content TEXT,
+  PRIMARY KEY (resource_id, lang),
+  FOREIGN KEY (resource_id)
+    REFERENCES resources (resource_id)
+    ON DELETE CASCADE,
+  FOREIGN KEY (lang)
+    REFERENCES language_codes (lang)
+    ON DELETE CASCADE
+);
 
 -- CREATE TABLE IF NOT EXISTS descriptions (
 --   resource_id UUID NOT NULL,
