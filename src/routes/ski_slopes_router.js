@@ -36,7 +36,7 @@ class SkiSlopesRouter extends Router {
     const fetchFn = (parsedRequest) =>
       new SkiSlopeConnector(parsedRequest, requestTransform.transformGetSkiSlopesRequest).fetch();
 
-    return this.handleRequest(
+    return this.handleGetRequest(
       request,
       parseRequestFn,
       fetchFn,
@@ -53,7 +53,7 @@ class SkiSlopesRouter extends Router {
     };
     const fetchFn = (parsedRequest) => new SkiSlopeConnector(parsedRequest, null).fetch();
 
-    return this.handleRequest(
+    return this.handleGetRequest(
       request,
       parseRequestFn,
       fetchFn,
@@ -70,7 +70,7 @@ class SkiSlopesRouter extends Router {
     };
     const fetchFn = (parsedRequest) => new SkiSlopeConnector(parsedRequest, null).fetch();
 
-    return this.handleRequest(
+    return this.handleGetRequest(
       request,
       parseRequestFn,
       fetchFn,
@@ -87,7 +87,7 @@ class SkiSlopesRouter extends Router {
     };
     const fetchFn = (parsedRequest) => new SkiSlopeConnector(parsedRequest, null).fetch();
 
-    return this.handleRequest(
+    return this.handleGetRequest(
       request,
       parseRequestFn,
       fetchFn,
@@ -104,7 +104,7 @@ class SkiSlopesRouter extends Router {
     };
     const fetchFn = (parsedRequest) => new SkiSlopeConnector(parsedRequest, null).fetch();
 
-    return this.handleRequest(
+    return this.handleGetRequest(
       request,
       parseRequestFn,
       fetchFn,

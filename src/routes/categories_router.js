@@ -28,7 +28,7 @@ class CategoriesRouter extends Router {
       return this.parseRequest(request, typesInData, typesInIncluded, supportedFeatures);
     };
     const fetchFn = (parsedRequest) => new CategoryConnector(parsedRequest).fetch();
-    return this.handleRequest(
+    return this.handleGetRequest(
       request,
       parseRequestFn,
       fetchFn,
@@ -44,7 +44,7 @@ class CategoriesRouter extends Router {
       return this.parseRequest(request, typesInData, typesInIncluded);
     };
     const fetchFn = (parsedRequest) => new CategoryConnector(parsedRequest).fetch();
-    return this.handleRequest(
+    return this.handleGetRequest(
       request,
       parseRequestFn,
       fetchFn,
@@ -60,7 +60,7 @@ class CategoriesRouter extends Router {
       return this.parseRequest(request, typesInData, typesInIncluded);
     };
     const fetchFn = (parsedRequest) => new CategoryConnector(parsedRequest).fetch();
-    return this.handleRequest(
+    return this.handleGetRequest(
       request,
       parseRequestFn,
       fetchFn,
@@ -76,7 +76,7 @@ class CategoriesRouter extends Router {
       return this.parseRequest(request, typesInData, typesInIncluded);
     };
     const fetchFn = (parsedRequest) => new CategoryConnector(parsedRequest).fetch();
-    return this.handleRequest(
+    return this.handleGetRequest(
       request,
       parseRequestFn,
       fetchFn,
@@ -92,7 +92,7 @@ class CategoriesRouter extends Router {
       return this.parseRequest(request, typesInData, typesInIncluded);
     };
     const fetchFn = (parsedRequest) => new CategoryConnector(parsedRequest).fetch();
-    return this.handleRequest(
+    return this.handleGetRequest(
       request,
       parseRequestFn,
       fetchFn,

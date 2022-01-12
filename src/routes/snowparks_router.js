@@ -37,7 +37,7 @@ class SnowparksRouter extends Router {
     const fetchFn = (parsedRequest) =>
       new SnowparkConnector(parsedRequest, requestTransform.transformGetSnowparksRequest).fetch();
 
-    return this.handleRequest(
+    return this.handleGetRequest(
       request,
       parseRequestFn,
       fetchFn,
@@ -54,7 +54,7 @@ class SnowparksRouter extends Router {
     };
     const fetchFn = (parsedRequest) => new SnowparkConnector(parsedRequest, null).fetch();
 
-    return this.handleRequest(
+    return this.handleGetRequest(
       request,
       parseRequestFn,
       fetchFn,
@@ -71,7 +71,7 @@ class SnowparksRouter extends Router {
     };
     const fetchFn = (parsedRequest) => new SnowparkConnector(parsedRequest, null).fetch();
 
-    return this.handleRequest(
+    return this.handleGetRequest(
       request,
       parseRequestFn,
       fetchFn,
@@ -88,7 +88,7 @@ class SnowparksRouter extends Router {
     };
     const fetchFn = (parsedRequest) => new SnowparkConnector(parsedRequest, null).fetch();
 
-    return this.handleRequest(
+    return this.handleGetRequest(
       request,
       parseRequestFn,
       fetchFn,
@@ -105,7 +105,7 @@ class SnowparksRouter extends Router {
     };
     const fetchFn = (parsedRequest) => new SnowparkConnector(parsedRequest, null).fetch();
 
-    return this.handleRequest(
+    return this.handleGetRequest(
       request,
       parseRequestFn,
       fetchFn,
@@ -122,7 +122,7 @@ class SnowparksRouter extends Router {
     };
     const fetchFn = (parsedRequest) => new SnowparkConnector(parsedRequest, null).fetch();
 
-    return this.handleRequest(
+    return this.handleGetRequest(
       request,
       parseRequestFn,
       fetchFn,

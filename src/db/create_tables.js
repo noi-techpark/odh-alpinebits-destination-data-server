@@ -306,8 +306,9 @@ async function createComplementsTable() {
   return knex.schema.createTable(complements._name, function (table) {
     table.string(complements.lang, 3).references(languageCodes.lang).inTable(languageCodes._name).onDelete(CASCADE);
     table.integer(complements.addressId).references(addresses.addressId).inTable(addresses._name).onDelete(CASCADE);
-    table.text(complements.content).notNullable();
     table.primary([complements.lang, complements.addressId]);
+
+    table.text(complements.content).notNullable();
   });
 }
 
@@ -315,8 +316,9 @@ async function createRegionsTable() {
   return knex.schema.createTable(regions._name, function (table) {
     table.string(regions.lang, 3).references(languageCodes.lang).inTable(languageCodes._name).onDelete(CASCADE);
     table.integer(regions.addressId).references(addresses.addressId).inTable(addresses._name).onDelete(CASCADE);
-    table.text(regions.content).notNullable();
     table.primary([regions.lang, regions.addressId]);
+
+    table.text(regions.content).notNullable();
   });
 }
 
@@ -324,16 +326,20 @@ async function createStreetsTable() {
   return knex.schema.createTable(streets._name, function (table) {
     table.string(streets.lang, 3).references(languageCodes.lang).inTable(languageCodes._name).onDelete(CASCADE);
     table.integer(streets.addressId).references(addresses.addressId).inTable(addresses._name).onDelete(CASCADE);
-    table.text(streets.content).notNullable();
     table.primary([streets.lang, streets.addressId]);
+
+    table.text(streets.content).notNullable();
   });
 }
 
 async function createContactPointsTable() {
   return knex.schema.createTable(contactPoints._name, function (table) {
     table.increments(contactPoints.contactPointId);
+
     table.uuid(contactPoints.agentId).references(agents.agentId).inTable(agents._name).notNullable().onDelete(CASCADE);
     table.integer(contactPoints.addressId).references(addresses.addressId).inTable(addresses._name).onDelete(SET_NULL);
+
+    table.jsonb(contactPoints.availableHours);
     table.string(contactPoints.email, 100);
     table.string(contactPoints.telephone, 100);
   });

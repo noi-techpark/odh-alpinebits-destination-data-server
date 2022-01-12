@@ -2,15 +2,54 @@ const errors = require("./../errors");
 const { DestinationDataError } = require("./../errors");
 const { Request } = require("./../model/request/request");
 
-const prefix = `/${process.env.API_VERSION}`;
+const version_prefix = `/${process.env.API_VERSION}`;
 
 class Router {
   constructor() {
     this.getRoutes = {};
+    this.postRoutes = {};
+    this.patchRoutes = {};
+    this.deleteRoutes = {};
   }
 
   addGetRoute(path, handleRequestFn) {
-    this.getRoutes[prefix + path] = (request, response) => {
+    this.getRoutes[version_prefix + path] = (request, response) => {
+      try {
+        handleRequestFn(request)
+          .then((data) => response.json(data))
+          .catch((error) => errors.handleError(error, request, response));
+      } catch (error) {
+        errors.handleError(error, request, response);
+      }
+    };
+  }
+
+  addPostRoute(path, handleRequestFn) {
+    this.postRoutes[version_prefix + path] = (request, response) => {
+      try {
+        handleRequestFn(request)
+          .then((data) => response.json(data))
+          .catch((error) => errors.handleError(error, request, response));
+      } catch (error) {
+        errors.handleError(error, request, response);
+      }
+    };
+  }
+
+  addPostRoute(path, handleRequestFn) {
+    this.getRoutes[version_prefix + path] = (request, response) => {
+      try {
+        handleRequestFn(request)
+          .then((data) => response.json(data))
+          .catch((error) => errors.handleError(error, request, response));
+      } catch (error) {
+        errors.handleError(error, request, response);
+      }
+    };
+  }
+
+  addPostRoute(path, handleRequestFn) {
+    this.postRoutes[version_prefix + path] = (request, response) => {
       try {
         handleRequestFn(request)
           .then((data) => response.json(data))
@@ -22,14 +61,17 @@ class Router {
   }
 
   addUnimplementedGetRoute(path) {
-    this.getRoutes[path] = (request, response) => errors.handleNotImplemented(request, response);
+    this.getRoutes[version_prefix + path] = (request, response) => errors.handleNotImplemented(request, response);
   }
 
   installRoutes(app) {
     Object.entries(this.getRoutes).forEach(([path, routeFn]) => app.get(path, routeFn));
+    Object.entries(this.postRoutes).forEach(([path, routeFn]) => app.post(path, routeFn));
+    Object.entries(this.patchRoutes).forEach(([path, routeFn]) => app.patch(path, routeFn));
+    Object.entries(this.deleteRoutes).forEach(([path, routeFn]) => app.delete(path, routeFn));
   }
 
-  async handleRequest(request, requestFn, fetchFn, transformFn, validateFn) {
+  async handleGetRequest(request, requestFn, fetchFn, transformFn, validateFn) {
     console.log("  Validating request...");
     request = requestFn(request);
 

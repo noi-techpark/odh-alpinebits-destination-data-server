@@ -36,7 +36,7 @@ class LiftsRouter extends Router {
     const fetchFn = (parsedRequest) =>
       new LiftConnector(parsedRequest, requestTransform.transformGetLiftsRequest).fetch();
 
-    return this.handleRequest(
+    return this.handleGetRequest(
       request,
       parseRequestFn,
       fetchFn,
@@ -53,7 +53,13 @@ class LiftsRouter extends Router {
     };
     const fetchFn = (parsedRequest) => new LiftConnector(parsedRequest, null).fetch();
 
-    return this.handleRequest(request, parseRequestFn, fetchFn, responseTransform.transformToLiftObject, this.validate);
+    return this.handleGetRequest(
+      request,
+      parseRequestFn,
+      fetchFn,
+      responseTransform.transformToLiftObject,
+      this.validate
+    );
   };
 
   getLiftCategories = (request) => {
@@ -64,7 +70,7 @@ class LiftsRouter extends Router {
     };
     const fetchFn = (parsedRequest) => new LiftConnector(parsedRequest, null).fetch();
 
-    return this.handleRequest(
+    return this.handleGetRequest(
       request,
       parseRequestFn,
       fetchFn,
@@ -81,7 +87,7 @@ class LiftsRouter extends Router {
     };
     const fetchFn = (parsedRequest) => new LiftConnector(parsedRequest, null).fetch();
 
-    return this.handleRequest(
+    return this.handleGetRequest(
       request,
       parseRequestFn,
       fetchFn,
@@ -98,7 +104,7 @@ class LiftsRouter extends Router {
     };
     const fetchFn = (parsedRequest) => new LiftConnector(parsedRequest, null).fetch();
 
-    return this.handleRequest(
+    return this.handleGetRequest(
       request,
       parseRequestFn,
       fetchFn,

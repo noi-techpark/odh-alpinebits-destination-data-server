@@ -10,7 +10,7 @@ const {
   insertSeriesFrequency,
   insertEventStatus,
   insertLanguageCode,
-} = require("./insert");
+} = require("./functions");
 
 const {
   abstracts,

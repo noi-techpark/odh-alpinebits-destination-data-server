@@ -41,7 +41,7 @@ class MountainAreasRouter extends Router {
 
     const fetchFn = (parsedRequest) => new MountainAreaConnector(parsedRequest).fetch();
 
-    return this.handleRequest(
+    return this.handleGetRequest(
       request,
       parseRequestFn,
       fetchFn,
@@ -58,7 +58,7 @@ class MountainAreasRouter extends Router {
     };
     const fetchFn = (parsedRequest) => new MountainAreaConnector(parsedRequest).fetch();
 
-    return this.handleRequest(
+    return this.handleGetRequest(
       request,
       parseRequestFn,
       fetchFn,
@@ -75,7 +75,7 @@ class MountainAreasRouter extends Router {
     };
     const fetchFn = (parsedRequest) => new MountainAreaConnector(parsedRequest).fetch();
 
-    return this.handleRequest(
+    return this.handleGetRequest(
       request,
       parseRequestFn,
       fetchFn,
@@ -92,7 +92,7 @@ class MountainAreasRouter extends Router {
     };
     const fetchFn = (parsedRequest) => new MountainAreaConnector(parsedRequest).fetch();
 
-    return this.handleRequest(
+    return this.handleGetRequest(
       request,
       parseRequestFn,
       fetchFn,
@@ -109,7 +109,7 @@ class MountainAreasRouter extends Router {
     };
     const fetchFn = (parsedRequest) => new MountainAreaConnector(parsedRequest).fetch();
 
-    return this.handleRequest(
+    return this.handleGetRequest(
       request,
       parseRequestFn,
       fetchFn,
@@ -126,7 +126,7 @@ class MountainAreasRouter extends Router {
     };
     const fetchFn = (parsedRequest) => new MountainAreaConnector(parsedRequest).fetch();
 
-    return this.handleRequest(
+    return this.handleGetRequest(
       request,
       parseRequestFn,
       fetchFn,
@@ -143,7 +143,7 @@ class MountainAreasRouter extends Router {
     };
     const fetchFn = (parsedRequest) => new MountainAreaConnector(parsedRequest).fetch();
 
-    return this.handleRequest(
+    return this.handleGetRequest(
       request,
       parseRequestFn,
       fetchFn,
@@ -160,7 +160,7 @@ class MountainAreasRouter extends Router {
     };
     const fetchFn = (parsedRequest) => new MountainAreaConnector(parsedRequest).fetch();
 
-    return this.handleRequest(
+    return this.handleGetRequest(
       request,
       parseRequestFn,
       fetchFn,
@@ -177,7 +177,7 @@ class MountainAreasRouter extends Router {
     };
     const fetchFn = (parsedRequest) => new MountainAreaConnector(parsedRequest).fetch();
 
-    return this.handleRequest(
+    return this.handleGetRequest(
       request,
       parseRequestFn,
       fetchFn,
@@ -194,7 +194,7 @@ class MountainAreasRouter extends Router {
     };
     const fetchFn = (parsedRequest) => new MountainAreaConnector(parsedRequest).fetch();
 
-    return this.handleRequest(
+    return this.handleGetRequest(
       request,
       parseRequestFn,
       fetchFn,

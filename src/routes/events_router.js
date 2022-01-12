@@ -40,7 +40,7 @@ class EventsRouter extends Router {
     const fetchFn = (parsedRequest) =>
       new EventConnector(parsedRequest, requestTransform.transformGetEventsRequest).fetch();
 
-    return this.handleRequest(
+    return this.handleGetRequest(
       request,
       parseRequestFn,
       fetchFn,
@@ -57,7 +57,7 @@ class EventsRouter extends Router {
     };
     const fetchFn = (parsedRequest) => new EventConnector(parsedRequest, null).fetch();
 
-    return this.handleRequest(
+    return this.handleGetRequest(
       request,
       parseRequestFn,
       fetchFn,
@@ -74,7 +74,7 @@ class EventsRouter extends Router {
     };
     const fetchFn = (parsedRequest) => new EventConnector(parsedRequest, null).fetch();
 
-    return this.handleRequest(
+    return this.handleGetRequest(
       request,
       parseRequestFn,
       fetchFn,
@@ -91,7 +91,7 @@ class EventsRouter extends Router {
     };
     const fetchFn = (parsedRequest) => new EventConnector(parsedRequest, null).fetch();
 
-    return this.handleRequest(
+    return this.handleGetRequest(
       request,
       parseRequestFn,
       fetchFn,
@@ -108,7 +108,7 @@ class EventsRouter extends Router {
     };
     const fetchFn = (parsedRequest) => new EventConnector(parsedRequest, null).fetch();
 
-    return this.handleRequest(
+    return this.handleGetRequest(
       request,
       parseRequestFn,
       fetchFn,
@@ -125,7 +125,7 @@ class EventsRouter extends Router {
     };
     const fetchFn = (parsedRequest) => new EventConnector(parsedRequest, null).fetch();
 
-    return this.handleRequest(
+    return this.handleGetRequest(
       request,
       parseRequestFn,
       fetchFn,
@@ -142,7 +142,7 @@ class EventsRouter extends Router {
     };
     const fetchFn = (parsedRequest) => new EventConnector(parsedRequest, null).fetch();
 
-    return this.handleRequest(
+    return this.handleGetRequest(
       request,
       parseRequestFn,
       fetchFn,
@@ -159,7 +159,7 @@ class EventsRouter extends Router {
     };
     const fetchFn = (parsedRequest) => new EventConnector(parsedRequest, null).fetch();
 
-    return this.handleRequest(
+    return this.handleGetRequest(
       request,
       parseRequestFn,
       fetchFn,
@@ -176,7 +176,7 @@ class EventsRouter extends Router {
     };
     const fetchFn = (parsedRequest) => new EventConnector(parsedRequest, null).fetch();
 
-    return this.handleRequest(
+    return this.handleGetRequest(
       request,
       parseRequestFn,
       fetchFn,
@@ -193,7 +193,7 @@ class EventsRouter extends Router {
     };
     const fetchFn = (parsedRequest) => new EventConnector(parsedRequest, null).fetch();
 
-    return this.handleRequest(
+    return this.handleGetRequest(
       request,
       parseRequestFn,
       fetchFn,
@@ -210,7 +210,7 @@ class EventsRouter extends Router {
     };
     const fetchFn = (parsedRequest) => new EventConnector(parsedRequest, null).fetch();
 
-    return this.handleRequest(
+    return this.handleGetRequest(
       request,
       parseRequestFn,
       fetchFn,
