@@ -1,3 +1,4 @@
+const _ = require("lodash");
 const { Resource } = require("./resource");
 
 class IndividualResource extends Resource {
@@ -6,6 +7,15 @@ class IndividualResource extends Resource {
 
     this.categories = null;
     this.multimediaDescriptions = null;
+  }
+
+  addCategoryReference(categoryId) {
+    const reference = {
+      type: "categories",
+      id: categoryId,
+    };
+
+    this.categories = this.categories?.push(reference) ?? [reference];
   }
 }
 

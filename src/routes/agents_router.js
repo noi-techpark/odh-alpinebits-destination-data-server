@@ -1,22 +1,39 @@
 const { Router } = require("./router");
 const { AgentConnector } = require("../connectors/destinationdata2022/agent_connector");
 const { deserializeAgent } = require("../model/destinationdata2022");
+const { Request } = require("../model/request/request");
 
 class AgentsRouter extends Router {
   constructor(app) {
     super();
 
     this.addUnimplementedGetRoute(`/agents`);
-    this.addUnimplementedGetRoute(`/agents/:id`);
     this.addUnimplementedGetRoute(`/agents/:id/categories`);
     this.addUnimplementedGetRoute(`/agents/:id/multimediaDescriptions`);
 
+    this.addGetRoute(`/agents/:id`, this.getAgent);
     this.addPostRoute(`/agents`, this.postAgent);
 
     if (app) {
       this.installRoutes(app);
     }
   }
+
+  getAgent = async (request) => {
+    // Process request and authentication
+    // Retrieve data
+    const parsedRequest = new Request(request);
+    const connector = new AgentConnector(parsedRequest);
+    console.log("get agent");
+
+    // Return to the client
+    try {
+      return connector.retrieve();
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  };
 
   postAgent = async (request) => {
     // Process request and authentication

@@ -3,6 +3,7 @@ class Resource {
     this.type = null;
     this.id = null;
     this.dataProvider = null;
+    this.lastUpdate = null;
     this.abstract = null;
     this.description = null;
     this.name = null;

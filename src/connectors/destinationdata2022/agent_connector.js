@@ -2,6 +2,8 @@ const _ = require("lodash");
 const dbFn = require("../../db/functions");
 const { schemas } = require("../../db");
 const { ResourceConnector } = require("./resource_connector");
+const { ContactPoint, Address, Text } = require("../../model/destinationdata2022/datatypes");
+const { Agent } = require("../../model/destinationdata2022/agent");
 
 class AgentConnector extends ResourceConnector {
   constructor(request) {
@@ -10,8 +12,21 @@ class AgentConnector extends ResourceConnector {
     this.request = request;
   }
 
+  retrieve() {
+    return this.runTransaction(() => this.retrieveAgent());
+  }
+
   save(agent) {
     return this.runTransaction(() => this.insertAgent(agent));
+  }
+
+  retrieveAgent() {
+    const agent = new Agent();
+    const agentId = this.request?.params?.id;
+
+    return this.selectResourceFromId(agentId, agent)
+      .then(() => this.selectAgentRelatedDataFromId(agentId, agent))
+      .then(() => agent);
   }
 
   insertAgent(agent) {
@@ -20,7 +35,6 @@ class AgentConnector extends ResourceConnector {
       .then(() => this.mapAgentToColumns(agent))
       .then((columns) => dbFn.insertAgent(this.connection, columns))
       .then(() => this.insertContactPoints(agent))
-      .then(() => this.insertCategories(agent))
       .then(() => agent.id);
   }
 
@@ -29,23 +43,10 @@ class AgentConnector extends ResourceConnector {
     return Promise.all(inserts);
   }
 
-  insertCategories(agent) {
-    const inserts = agent?.categories?.map((category) => this.insertCategory(category, agent));
-    return Promise.all(inserts);
-  }
-
   insertContactPoint(point, agent) {
     return this.insertAddress(point.address)
       .then((addressId) => this.mapContactPointToColumns(point, addressId, agent.id))
       .then((columns) => dbFn.insertContactPoint(this.connection, columns));
-  }
-
-  insertCategory(category, agent) {
-    if (!_.isObject(category) || !_.size(category) === 2) throw new Error("Bad category reference.");
-
-    const columns = this.mapResourceCategoryToColumns(category.id, agent.id);
-
-    return dbFn.insertResourceCategory(this.connection, columns);
   }
 
   mapAgentToColumns(agent) {
@@ -62,11 +63,35 @@ class AgentConnector extends ResourceConnector {
     };
   }
 
-  mapResourceCategoryToColumns(categoryId, agentId) {
-    return {
-      [schemas.resourceCategories.categoryId]: categoryId,
-      [schemas.resourceCategories.categorizedResourceId]: agentId,
-    };
+  selectAgentRelatedDataFromId(agentId, agent) {
+    return Promise.all([this.selectContactPointsFromId(agentId, agent)]);
+  }
+
+  selectContactPointsFromId(agentId, agent) {
+    return dbFn
+      .selectContactPointsFromId(this.connection, agentId)
+      .then((rows) =>
+        rows?.map((row) => {
+          const contact = this.mapRowToContactPoint(row, agent);
+          const addressId = row[schemas.contactPoints.addressId];
+          return [addressId, contact.address];
+        })
+      )
+      .then((ret) => ret?.map(([addressId, address]) => this.selectAddressTextsFromId(addressId, address)))
+      .then(() => agent);
+  }
+
+  mapRowToContactPoint(row, agent) {
+    const contact = new ContactPoint();
+
+    contact.availableHours = row[schemas.contactPoints.availableHours] ?? null;
+    contact.email = row[schemas.contactPoints.email] ?? null;
+    contact.telephone = row[schemas.contactPoints.telephone] ?? null;
+    contact.address = new Address();
+
+    agent.addContactPoint(contact);
+
+    return contact;
   }
 }
 
