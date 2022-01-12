@@ -10,6 +10,7 @@ const {
   insertSeriesFrequency,
   insertEventStatus,
   insertLanguageCode,
+  deleteCategories,
 } = require("./functions");
 
 const {

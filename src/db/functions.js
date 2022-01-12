@@ -52,6 +52,12 @@ async function deleteLanguageCodes(knex) {
   return knex(languageCodes._name).del();
 }
 
+async function deleteCategories(knex) {
+  return knex(categories._name)
+    .del(categories.resourceId)
+    .then((resourceIds) => knex(resources._name).whereIn(resources.resourceId, resourceIds).del());
+}
+
 function checkNotNullable(field, field_name) {
   if (!field && typeof field !== "boolean") throw new Error(`Missing not nullable field: ${field_name}`);
 }
@@ -135,7 +141,6 @@ async function insertUrl(knex, url) {
 }
 
 async function insertCity(knex, city) {
-  console.log("inserting city", city);
   const content = _.get(city, cities.content);
 
   checkNotNullable(content, cities.content);
@@ -144,7 +149,6 @@ async function insertCity(knex, city) {
 }
 
 async function insertComplement(knex, complement) {
-  console.log("inserting complement", complement);
   const content = _.get(complement, complements.content);
 
   checkNotNullable(content, complements.content);
@@ -207,11 +211,26 @@ async function insertAgent(knex, agent) {
   return insert(knex, agents._name, agent, agents.agentId).then((array) => _.first(array));
 }
 
+async function insertCategory(knex, category) {
+  const categoryId = category[categories.categoryId];
+  const resourceId = category[categories.resourceId];
+
+  checkNotNullable(categoryId, categories.categoryId);
+  checkNotNullable(resourceId, categories.resourceId);
+
+  return insert(knex, categories._name, category, categories.categoryId).then((array) => _.first(array));
+}
+
+async function insertResourceCategory(knex, resourceCategory) {
+  return insert(knex, resourceCategories._name, resourceCategory);
+}
+
 module.exports = {
   deleteResourceTypes,
   deleteAllEventsStatus,
   deleteSeriesFrequencies,
   deleteLanguageCodes,
+  deleteCategories,
   insert,
   insertResourceType,
   insertSeriesFrequency,
@@ -230,4 +249,6 @@ module.exports = {
   insertAddress,
   insertResource,
   insertAgent,
+  insertCategory,
+  insertResourceCategory,
 };

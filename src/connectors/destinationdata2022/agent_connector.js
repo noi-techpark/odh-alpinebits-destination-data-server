@@ -10,35 +10,42 @@ class AgentConnector extends ResourceConnector {
     this.request = request;
   }
 
-  async save(agent) {
-    this.runTransaction(() => this.insertAgent(agent));
+  save(agent) {
+    return this.runTransaction(() => this.insertAgent(agent));
   }
 
-  async insertAgent(agent) {
-    agent.id = await this.insertResource(agent);
-
-    const columns = this.mapAgentToColumns(agent);
-    await dbFn.insertAgent(this.connection, columns);
-
-    this.insertContactPoints(agent);
-
-    return agent.id;
+  insertAgent(agent) {
+    return this.insertResource(agent)
+      .then((agentId) => (agent.id = agentId))
+      .then(() => this.mapAgentToColumns(agent))
+      .then((columns) => dbFn.insertAgent(this.connection, columns))
+      .then(() => this.insertContactPoints(agent))
+      .then(() => this.insertCategories(agent))
+      .then(() => agent.id);
   }
 
-  async insertContactPoints(agent) {
+  insertContactPoints(agent) {
     const inserts = agent?.contactPoints?.map((point) => this.insertContactPoint(point, agent));
     return Promise.all(inserts);
   }
 
-  async insertContactPoint(point, agent) {
-    let addressId;
-    console.log("beep");
-    if (_.has(point, "address")) {
-      addressId = await this.insertAddress(point.address);
-    }
+  insertCategories(agent) {
+    const inserts = agent?.categories?.map((category) => this.insertCategory(category, agent));
+    return Promise.all(inserts);
+  }
 
-    const columns = this.mapContactPointToColumns(point, addressId, agent.id);
-    return dbFn.insertContactPoint(this.connection, columns);
+  insertContactPoint(point, agent) {
+    return this.insertAddress(point.address)
+      .then((addressId) => this.mapContactPointToColumns(point, addressId, agent.id))
+      .then((columns) => dbFn.insertContactPoint(this.connection, columns));
+  }
+
+  insertCategory(category, agent) {
+    if (!_.isObject(category) || !_.size(category) === 2) throw new Error("Bad category reference.");
+
+    const columns = this.mapResourceCategoryToColumns(category.id, agent.id);
+
+    return dbFn.insertResourceCategory(this.connection, columns);
   }
 
   mapAgentToColumns(agent) {
@@ -52,6 +59,13 @@ class AgentConnector extends ResourceConnector {
       [schemas.contactPoints.availableHours]: point?.availableHours,
       [schemas.contactPoints.email]: point?.email,
       [schemas.contactPoints.telephone]: point?.telephone,
+    };
+  }
+
+  mapResourceCategoryToColumns(categoryId, agentId) {
+    return {
+      [schemas.resourceCategories.categoryId]: categoryId,
+      [schemas.resourceCategories.categorizedResourceId]: agentId,
     };
   }
 }

@@ -29,7 +29,12 @@ class AgentsRouter extends Router {
     console.log("post agent", agent);
 
     // Return to the client
-    return connector.save(agent);
+    try {
+      return connector.save(agent);
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
   };
 
   validate(agentMessage) {

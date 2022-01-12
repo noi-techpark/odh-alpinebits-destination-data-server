@@ -10,21 +10,23 @@ class ResourceConnector {
     this.connection = knex;
   }
 
-  async runTransaction(fn) {
+  runTransaction(fn) {
+    let returnValue = Promise.resolve();
+
     return knex
-      .transaction(async (trx) => {
+      .transaction((trx) =>
         Promise.resolve((this.connection = trx))
           .then(fn)
+          .then((ret) => (returnValue = ret))
+          .then(() => console.log("transaction function completed", returnValue))
           .catch((err) => {
-            console.log("error 19", err);
-          });
-      })
-      .then((asd) => {
-        console.log("transaction complete", asd);
-        this.connection.commit();
-      })
+            throw err;
+          })
+      )
+      .then(() => console.log("transaction complete"))
+      .then(() => this.connection.commit())
+      .then(() => returnValue)
       .catch((err) => {
-        console.log("error", err);
         this.connection.rollback();
         throw err;
       })
@@ -34,94 +36,97 @@ class ResourceConnector {
       });
   }
 
-  async insertResource(resource) {
+  insertResource(resource) {
     const columns = this.mapResourceToColumns(resource);
 
-    resource.id = await dbFn.insertResource(this.connection, columns);
-
-    this.insertResourceAbstract(resource);
-    this.insertResourceDescription(resource);
-    this.insertResourceName(resource);
-    this.insertResourceShortName(resource);
-    this.insertResourceUrl(resource);
-
-    return resource.id;
+    return dbFn
+      .insertResource(this.connection, columns)
+      .then((resourceId) => (resource.id = resourceId))
+      .then(() => this.insertResourceAbstract(resource))
+      .then(() => this.insertResourceDescription(resource))
+      .then(() => this.insertResourceName(resource))
+      .then(() => this.insertResourceShortName(resource))
+      .then(() => this.insertResourceUrl(resource))
+      .then(() => resource.id);
   }
 
-  async insertResourceAbstract(resource) {
+  insertResourceAbstract(resource) {
     const inserts = _.keys(resource.abstract)
-      .map((lang) => this.mapTextToColumns(resource.id, lang, _.get(resource.abstract, lang)))
+      .map((lang) => this.mapResourceTextToColumns(resource.id, lang, _.get(resource.abstract, lang)))
       .map((columns) => dbFn.insertAbstract(this.connection, columns));
     return Promise.all(inserts);
   }
 
-  async insertResourceDescription(resource) {
+  insertResourceDescription(resource) {
     const inserts = _.keys(resource.description)
-      .map((lang) => this.mapTextToColumns(resource.id, lang, _.get(resource.description, lang)))
+      .map((lang) => this.mapResourceTextToColumns(resource.id, lang, _.get(resource.description, lang)))
       .map((columns) => dbFn.insertDescription(this.connection, columns));
     return Promise.all(inserts);
   }
 
-  async insertResourceName(resource) {
+  insertResourceName(resource) {
     const inserts = _.keys(resource.name)
-      .map((lang) => this.mapTextToColumns(resource.id, lang, _.get(resource.name, lang)))
+      .map((lang) => this.mapResourceTextToColumns(resource.id, lang, _.get(resource.name, lang)))
       .map((columns) => dbFn.insertName(this.connection, columns));
     return Promise.all(inserts);
   }
 
-  async insertResourceShortName(resource) {
+  insertResourceShortName(resource) {
     const inserts = _.keys(resource.shortName)
-      .map((lang) => this.mapTextToColumns(resource.id, lang, _.get(resource.shortName, lang)))
+      .map((lang) => this.mapResourceTextToColumns(resource.id, lang, _.get(resource.shortName, lang)))
       .map((columns) => dbFn.insertShortName(this.connection, columns));
     return Promise.all(inserts);
   }
 
-  async insertResourceUrl(resource) {
+  insertResourceUrl(resource) {
     if (!_.isObject(resource.url)) return;
 
     const inserts = _.keys(resource.url)
-      .map((lang) => this.mapTextToColumns(resource.id, lang, _.get(resource.url, lang)))
+      .map((lang) => this.mapResourceTextToColumns(resource.id, lang, _.get(resource.url, lang)))
       .map((columns) => dbFn.insertUrl(this.connection, columns));
     return Promise.all(inserts);
   }
 
-  async insertAddress(address) {
+  insertAddress(address) {
+    if (!address) return Promise.resolve();
+
     const columns = this.mapAddressToColumns(address);
-    const addressId = await dbFn.insertAddress(this.connection, columns);
-    console.log("returning address id", addressId);
+    let addressId;
 
-    // this.insertAddressCity(address, addressId);
-    // this.insertAddressComplement(address, addressId);
-    // this.insertAddressRegion(address, addressId);
-    // this.insertAddressStreet(address, addressId);
-
-    return addressId;
+    return dbFn
+      .insertAddress(this.connection, columns)
+      .then((ret) => (addressId = _.first(ret)))
+      .then(() => this.insertAddressCity(address, addressId))
+      .then(() => this.insertAddressComplement(address, addressId))
+      .then(() => this.insertAddressRegion(address, addressId))
+      .then(() => this.insertAddressStreet(address, addressId))
+      .then(() => addressId);
   }
 
-  async insertAddressCity(address, addressId) {
+  insertAddressCity(address, addressId) {
     const inserts = _.keys(address.city)
-      .map((lang) => this.mapTextToColumns(addressId, lang, _.get(address.city, lang)))
+      .map((lang) => this.mapAddressTextToColumns(addressId, lang, _.get(address.city, lang)))
       .map((columns) => dbFn.insertCity(this.connection, columns));
     return Promise.all(inserts);
   }
 
-  async insertAddressComplement(address, addressId) {
+  insertAddressComplement(address, addressId) {
     const inserts = _.keys(address.complement)
-      .map((lang) => this.mapTextToColumns(addressId, lang, _.get(address.complement, lang)))
+      .map((lang) => this.mapAddressTextToColumns(addressId, lang, _.get(address.complement, lang)))
       .map((columns) => dbFn.insertComplement(this.connection, columns));
     return Promise.all(inserts);
   }
 
-  async insertAddressRegion(address, addressId) {
+  insertAddressRegion(address, addressId) {
     const inserts = _.keys(address.region)
-      .map((lang) => this.mapTextToColumns(addressId, lang, _.get(address.region, lang)))
+      .map((lang) => this.mapAddressTextToColumns(addressId, lang, _.get(address.region, lang)))
       .map((columns) => dbFn.insertRegion(this.connection, columns));
     return Promise.all(inserts);
   }
 
-  async insertAddressStreet(address, addressId) {
+  insertAddressStreet(address, addressId) {
     const inserts = _.keys(address.street)
-      .map((lang) => this.mapTextToColumns(addressId, lang, _.get(address.street, lang)))
+      .map((lang) => this.mapAddressTextToColumns(addressId, lang, _.get(address.street, lang)))
       .map((columns) => dbFn.insertStreet(this.connection, columns));
     return Promise.all(inserts);
   }
@@ -136,11 +141,19 @@ class ResourceConnector {
     };
   }
 
-  mapTextToColumns(resourceId, lang, content) {
+  mapResourceTextToColumns(resourceId, lang, content) {
     return {
       [schemas.names.resourceId]: resourceId,
       [schemas.names.lang]: lang,
       [schemas.names.content]: content,
+    };
+  }
+
+  mapAddressTextToColumns(addressId, lang, content) {
+    return {
+      [schemas.cities.addressId]: addressId,
+      [schemas.cities.lang]: lang,
+      [schemas.cities.content]: content,
     };
   }
 
