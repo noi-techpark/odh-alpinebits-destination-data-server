@@ -36,8 +36,8 @@ class Router {
     };
   }
 
-  addPostRoute(path, handleRequestFn) {
-    this.getRoutes[version_prefix + path] = (request, response) => {
+  addPatchRoute(path, handleRequestFn) {
+    this.patchRoutes[version_prefix + path] = (request, response) => {
       try {
         handleRequestFn(request)
           .then((data) => response.json(data))
@@ -48,8 +48,8 @@ class Router {
     };
   }
 
-  addPostRoute(path, handleRequestFn) {
-    this.postRoutes[version_prefix + path] = (request, response) => {
+  addDeleteRoute(path, handleRequestFn) {
+    this.deleteRoutes[version_prefix + path] = (request, response) => {
       try {
         handleRequestFn(request)
           .then((data) => response.json(data))

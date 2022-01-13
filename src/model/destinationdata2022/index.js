@@ -7,6 +7,8 @@ const { MediaObject } = require("./media_object");
 const { Venue } = require("./venue");
 
 const _ = require("lodash");
+const { Resource } = require("../destinationdata/resource");
+const paths = require("../../connectors/destinationdata2022/paths");
 
 function containsReferences(data) {
   return isReferenceObject(data) || isReferenceArray(data);
@@ -156,6 +158,30 @@ function deserializeVenue(json) {
   venue.geometries = attributes?.geometries;
 
   return venue;
+}
+
+function serialize(versionUrl) {
+  const resource = new Resource();
+  const json = {};
+
+  json.id = resource.id;
+  json.type = resource.type;
+  json.meta = extractMeta(resource);
+  json.links = extractLinks(resource);
+  json.attributes = extract;
+}
+
+function extractMeta(resource) {
+  return {
+    dataProvider: resource.dataProvider,
+    lastUpdate: resource.lastUpdate,
+  };
+}
+
+function extractLinks(resource) {
+  return {
+    self: versionUrl + paths.agentsId.replace(":id", resource.id),
+  };
 }
 
 module.exports = {

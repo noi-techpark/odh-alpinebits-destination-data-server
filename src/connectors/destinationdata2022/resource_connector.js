@@ -3,7 +3,6 @@ const knex = require("../../db/connect");
 const dbFn = require("../../db/functions");
 const { schemas } = require("../../db");
 const db = require("../../db");
-const { Resource } = require("../../model/destinationdata2022/resource");
 const { Text } = require("../../model/destinationdata2022/datatypes");
 
 class ResourceConnector {
@@ -41,8 +40,23 @@ class ResourceConnector {
       });
   }
 
-  retrieveResource() {
-    const resourceId = this.request?.params?.id;
+  retrieveOne() {
+    throw new Error("Unimplemented");
+  }
+
+  save() {
+    throw new Error("Unimplemented");
+  }
+
+  deleteOne() {
+    throw new Error("Unimplemented");
+  }
+
+  deleteResource(id, type) {
+    return dbFn.deleteResource(this.connection, id, type);
+  }
+
+  retrieveResource(resourceId) {
     console.log(resourceId);
 
     return Promise.resolve("done");

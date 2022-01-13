@@ -12,17 +12,25 @@ class AgentConnector extends ResourceConnector {
     this.request = request;
   }
 
-  retrieve() {
-    return this.runTransaction(() => this.retrieveAgent());
+  retrieveOne() {
+    return this.runTransaction(() => this.retrieveAgent(this.request?.params?.id));
   }
 
   save(agent) {
-    return this.runTransaction(() => this.insertAgent(agent));
+    return this.runTransaction(() => this.insertAgent(agent).then((id) => this.retrieveAgent(id)));
   }
 
-  retrieveAgent() {
+  deleteOne(agent) {
+    const id = agent?.id ?? this.request?.params?.id;
+    return this.runTransaction(() => this.deleteAgent(id));
+  }
+
+  deleteAgent(id) {
+    return this.deleteResource(id, "agents");
+  }
+
+  retrieveAgent(agentId) {
     const agent = new Agent();
-    const agentId = this.request?.params?.id;
 
     return this.selectResourceFromId(agentId, agent)
       .then(() => this.selectAgentRelatedDataFromId(agentId, agent))
