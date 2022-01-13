@@ -55,7 +55,7 @@ function deleteLanguageCodes(connection) {
 function deleteCategories(connection) {
   return connection(categories._name)
     .del(categories.resourceId)
-    .then((resourceIds) => connection(resources._name).whereIn(resources.resourceId, resourceIds).del());
+    .then((resourceIds) => connection(resources._name).whereIn(resources.id, resourceIds).del());
 }
 
 function checkNotNullable(field, field_name) {
@@ -185,7 +185,7 @@ function insertAddress(connection, address) {
 
   checkNotNullable(country, addresses.country);
 
-  return insert(connection, addresses._name, address, addresses.addressId);
+  return insert(connection, addresses._name, address, addresses.id);
 }
 
 function getReturningColumns(returning) {
@@ -204,21 +204,21 @@ function insertResource(connection, resource) {
   checkNotNullable(type, resources.type);
   checkNotNullable(dataProvider, resources.dataProvider);
 
-  return insert(connection, resources._name, resource, resources.resourceId).then((array) => _.first(array));
+  return insert(connection, resources._name, resource, resources.id).then((array) => _.first(array));
 }
 
 function insertAgent(connection, agent) {
-  return insert(connection, agents._name, agent, agents.agentId).then((array) => _.first(array));
+  return insert(connection, agents._name, agent, agents.id).then((array) => _.first(array));
 }
 
 function insertCategory(connection, category) {
-  const categoryId = category[categories.categoryId];
+  const categoryId = category[categories.id];
   const resourceId = category[categories.resourceId];
 
-  checkNotNullable(categoryId, categories.categoryId);
+  checkNotNullable(categoryId, categories.id);
   checkNotNullable(resourceId, categories.resourceId);
 
-  return insert(connection, categories._name, category, categories.categoryId).then((array) => _.first(array));
+  return insert(connection, categories._name, category, categories.id).then((array) => _.first(array));
 }
 
 function insertResourceCategory(connection, resourceCategory) {
@@ -231,12 +231,12 @@ function select(connection, tableName, where, selection) {
 }
 
 function selectResourceFromId(connection, resourceId) {
-  const columns = { [resources.resourceId]: resourceId };
+  const columns = { [resources.id]: resourceId };
   return select(connection, resources._name, columns);
 }
 
 function selectAgentFromId(connection, agentId) {
-  const columns = { [agents.agentId]: agentId };
+  const columns = { [agents.id]: agentId };
   return select(connection, agents._name, columns);
 }
 
@@ -296,7 +296,7 @@ function selectContactPointsFromId(connection, agentId) {
     .select()
     .leftJoin(
       addresses._name,
-      `${addresses._name}.${addresses.addressId}`,
+      `${addresses._name}.${addresses.id}`,
       `${contactPoints._name}.${contactPoints.addressId}`
     )
     .where(columns);
@@ -304,7 +304,7 @@ function selectContactPointsFromId(connection, agentId) {
 
 function deleteResource(connection, resourceId, type) {
   const columns = {
-    [resources.resourceId]: resourceId,
+    [resources.id]: resourceId,
     [resources.type]: type,
   };
   return connection(resources._name).where(columns).del();
@@ -317,7 +317,7 @@ function deleteResource(connection, resourceId, type) {
 //     .select()
 //     .innerJoin(
 //       addresses._name,
-//       `${addresses._name}.${addresses.addressId}`,
+//       `${addresses._name}.${addresses.id}`,
 //       `${contactPoints._name}.${contactPoints.addressId}`
 //     )
 //     .where(agentIdFilter);

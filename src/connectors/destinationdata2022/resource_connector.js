@@ -40,7 +40,7 @@ class ResourceConnector {
       });
   }
 
-  retrieveOne() {
+  retrieve() {
     throw new Error("Unimplemented");
   }
 
@@ -48,7 +48,7 @@ class ResourceConnector {
     throw new Error("Unimplemented");
   }
 
-  deleteOne() {
+  delete() {
     throw new Error("Unimplemented");
   }
 
@@ -171,7 +171,7 @@ class ResourceConnector {
 
   mapResourceToColumns(resource) {
     return {
-      [schemas.resources.resourceId]: resource?.id,
+      [schemas.resources.id]: resource?.id,
       [schemas.resources.type]: resource?.type,
       [schemas.resources.dataProvider]: resource?.dataProvider,
       [schemas.resources.lastUpdate]: resource?.lastUpdate,
@@ -300,7 +300,7 @@ class ResourceConnector {
   }
 
   mapRowToResource(row, resource) {
-    resource.id = row[schemas.resources.resourceId] ?? null;
+    resource.id = row[schemas.resources.id] ?? null;
     resource.type = row[schemas.resources.type] ?? null;
     resource.dataProvider = row[schemas.resources.dataProvider] ?? null;
     resource.lastUpdate = row[schemas.resources.lastUpdate] ?? null;

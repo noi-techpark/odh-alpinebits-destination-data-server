@@ -12,7 +12,7 @@ class AgentConnector extends ResourceConnector {
     this.request = request;
   }
 
-  retrieveOne() {
+  retrieve() {
     return this.runTransaction(() => this.retrieveAgent(this.request?.params?.id));
   }
 
@@ -20,7 +20,7 @@ class AgentConnector extends ResourceConnector {
     return this.runTransaction(() => this.insertAgent(agent).then((id) => this.retrieveAgent(id)));
   }
 
-  deleteOne(agent) {
+  delete(agent) {
     const id = agent?.id ?? this.request?.params?.id;
     return this.runTransaction(() => this.deleteAgent(id));
   }
@@ -58,7 +58,7 @@ class AgentConnector extends ResourceConnector {
   }
 
   mapAgentToColumns(agent) {
-    return { [schemas.agents.agentId]: agent?.id };
+    return { [schemas.agents.id]: agent?.id };
   }
 
   mapContactPointToColumns(point, addressId, agentId) {

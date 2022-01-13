@@ -14,6 +14,7 @@ class AgentsRouter extends Router {
     this.addPostRoute(`/agents`, this.postAgent);
     this.addGetRoute(`/agents/:id`, this.getAgent);
     this.addDeleteRoute(`/agents/:id`, this.deleteAgent);
+    this.addPatchRoute(`/agents/:id`, this.patchAgent);
 
     if (app) {
       this.installRoutes(app);
@@ -28,7 +29,7 @@ class AgentsRouter extends Router {
 
     // Return to the client
     try {
-      return connector.retrieveOne();
+      return connector.retrieve();
     } catch (error) {
       console.error(error);
       throw error;
@@ -53,6 +54,24 @@ class AgentsRouter extends Router {
     }
   };
 
+  patchAgent = async (request) => {
+    // Process request and authentication
+    const { body } = request;
+    // Validate object
+    this.validate(body);
+    // Store data
+    const agent = deserializeAgent(body.data);
+    const connector = new AgentConnector();
+
+    // Return to the client
+    try {
+      return connector.update(agent);
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  };
+
   deleteAgent = async (request) => {
     // Process request and authentication
     // Retrieve data
@@ -62,7 +81,7 @@ class AgentsRouter extends Router {
 
     // Return to the client
     try {
-      return connector.deleteOne();
+      return connector.delete();
     } catch (error) {
       console.error(error);
       throw error;
