@@ -2,59 +2,7 @@ const _ = require("lodash");
 const dbFn = require("../../db/functions");
 const { schemas } = require("../../db");
 const { ResourceConnector } = require("./resource_connector");
-const { ContactPoint, Address, Text } = require("../../model/destinationdata2022/datatypes");
 const { Agent } = require("../../model/destinationdata2022/agent");
-
-const colors = {
-  FgBlack: "\x1b[30m",
-  FgRed: "\x1b[31m",
-  FgGreen: "\x1b[32m",
-  FgYellow: "\x1b[33m",
-  FgWhite: "\x1b[37m",
-};
-
-function shouldUpdate(_old, _new) {
-  let result = false;
-
-  for (const key of _.keys(_old)) {
-    if (["lastUpdate", "contactPoints"].includes(key)) continue;
-
-    const oldValue = _.get(_old, key);
-    const newValue = _.get(_new, key);
-
-    if (!_.isNil(newValue) && _.isNull(oldValue)) {
-      logAddition(key, oldValue, newValue);
-      result = true;
-    } else if (_.isNull(newValue) && !_.isNil(oldValue)) {
-      logRemoval(key, oldValue, newValue);
-      result = true;
-    } else if (!_.isNil(newValue) && !_.isEqual(oldValue, newValue)) {
-      logUpdate(key, oldValue, newValue);
-      result = true;
-    } else {
-      logNoChange(key);
-    }
-  }
-
-  return result;
-}
-
-function logNoChange(key) {
-  console.log("NO CHANGE ON", key);
-}
-
-function logAddition(key, oldValue, newValue) {
-  console.log(`${colors.FgGreen}ADD ${key}${colors.FgWhite}`, oldValue, "=>", newValue);
-}
-
-function logRemoval(key, oldValue, newValue) {
-  console.log(`${colors.FgRed}REMOVE ${key}${colors.FgWhite}`, oldValue, "=>", newValue);
-}
-
-function logUpdate(key, oldValue, newValue) {
-  console.log(`${colors.FgYellow}UPDATE ${key}${colors.FgWhite}`, oldValue, "=>", newValue);
-}
-
 class AgentConnector extends ResourceConnector {
   constructor(request) {
     super(request);
@@ -104,11 +52,14 @@ class AgentConnector extends ResourceConnector {
     // TODO: re-enable
     // this.checkLastUpdate(oldAgent, newAgent);
 
-    if (shouldUpdate(oldAgent, newAgent)) {
-      return this.updateResource(newAgent);
+    if (this.shouldUpdate(oldAgent, newAgent)) {
+      return Promise.all([this.updateResource(newAgent), this.updateContactPoints(newAgent)]).then((promises) => {
+        newAgent.lastUpdate = _.first(_.flatten(promises))[schemas.resources.lastUpdate];
+        return newAgent;
+      });
     }
 
-    return "nope";
+    return Promise.resolve("nope");
     // TODO: re-enable
     // this.throwNoUpdate(oldAgent);
   }
@@ -133,24 +84,29 @@ class AgentConnector extends ResourceConnector {
     return Promise.all(inserts ?? []);
   }
 
-  insertContactPoint(point, agent) {
-    return this.insertAddress(point.address).then((addressId) => {
-      const columns = this.mapContactPointToColumns(point, addressId, agent.id);
+  insertContactPoint(contact, agent) {
+    return this.insertAddress(contact.address).then((addressId) => {
+      const columns = this.mapContactPointToColumns(contact, addressId, agent.id);
       return dbFn.insertContactPoint(this.connection, columns);
     });
+  }
+
+  updateContactPoints(agent) {
+    const inserts = agent?.contactPoints?.map((contact) => this.insertContactPoint(contact, agent));
+    return dbFn.deleteContactPoints(this.connection, agent.id).then(() => Promise.all(inserts ?? []));
   }
 
   mapAgentToColumns(agent) {
     return { [schemas.agents.id]: agent?.id };
   }
 
-  mapContactPointToColumns(point, addressId, agentId) {
+  mapContactPointToColumns(contact, addressId, agentId) {
     return {
       [schemas.contactPoints.addressId]: addressId || undefined,
       [schemas.contactPoints.agentId]: agentId,
-      [schemas.contactPoints.availableHours]: point?.availableHours,
-      [schemas.contactPoints.email]: point?.email,
-      [schemas.contactPoints.telephone]: point?.telephone,
+      [schemas.contactPoints.availableHours]: contact?.availableHours,
+      [schemas.contactPoints.email]: contact?.email,
+      [schemas.contactPoints.telephone]: contact?.telephone,
     };
   }
 }

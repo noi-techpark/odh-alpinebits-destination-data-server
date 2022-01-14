@@ -3,6 +3,30 @@ const knex = require("../../db/connect");
 const dbFn = require("../../db/functions");
 const { schemas } = require("../../db");
 
+const colors = {
+  FgBlack: "\x1b[30m",
+  FgRed: "\x1b[31m",
+  FgGreen: "\x1b[32m",
+  FgYellow: "\x1b[33m",
+  FgWhite: "\x1b[37m",
+};
+
+function logNoChange(key) {
+  console.log("NO CHANGE ON", key);
+}
+
+function logAddition(key, oldValue, newValue) {
+  console.log(`${colors.FgGreen}ADD ${key}${colors.FgWhite}`, oldValue, "=>", newValue);
+}
+
+function logRemoval(key, oldValue, newValue) {
+  console.log(`${colors.FgRed}REMOVE ${key}${colors.FgWhite}`, oldValue, "=>", newValue);
+}
+
+function logUpdate(key, oldValue, newValue) {
+  console.log(`${colors.FgYellow}UPDATE ${key}${colors.FgWhite}`, oldValue, "=>", newValue);
+}
+
 class ResourceConnector {
   constructor(request) {
     this.request = request;
@@ -188,11 +212,9 @@ class ResourceConnector {
       this.updateResourceName(resource),
       this.updateResourceShortName(resource),
       this.updateResourceUrl(resource),
-      // this.updateResourceCategories(resource),
-    ]).then((promises) => {
-      console.log("promises", JSON.stringify(promises, null, 2));
-      return promises;
-    });
+      // TODO: process categories relationship
+      // TODO: process multimediaDescriptions relationship
+    ]).then(_.flatten);
   }
 
   updateResourceAbstract(resource) {
@@ -234,6 +256,8 @@ class ResourceConnector {
   }
 
   updateResourceUrl(resource) {
+    if (_.isString(resource.url)) return dbFn.deleteUrls(this.connection, resource.id);
+
     const updates = _.keys(resource.url)?.map((lang) => {
       const columns = this.mapResourceTextToColumns(resource.id, lang, _.get(resource.url, lang));
       return dbFn.deleteUrls(this.connection, resource.id).then(() => dbFn.insertUrl(this.connection, columns));
@@ -247,7 +271,7 @@ class ResourceConnector {
       [schemas.resources.type]: resource?.type,
       [schemas.resources.dataProvider]: resource?.dataProvider,
       [schemas.resources.lastUpdate]: resource?.lastUpdate,
-      [schemas.resources.simpleUrl]: _.isString(resource?.url) ? resource?.url : undefined,
+      [schemas.resources.simpleUrl]: _.isString(resource?.url) ? resource?.url : null,
     };
   }
 
@@ -297,6 +321,44 @@ class ResourceConnector {
     const err = new Error("Not updated: no effective change");
     err.resource = serversResource;
     throw err;
+  }
+
+  shouldUpdate(_old, _new) {
+    let result = false;
+
+    for (const key of _.keys(_old)) {
+      if (["lastUpdate"].includes(key)) continue;
+
+      const oldValue = _.get(_old, key);
+      const newValue = _.get(_new, key);
+
+      if (this.isAddition(oldValue, newValue)) {
+        logAddition(key, oldValue, newValue);
+        result = true;
+      } else if (this.isRemoval(oldValue, newValue)) {
+        logRemoval(key, oldValue, newValue);
+        result = true;
+      } else if (this.isUpdate(oldValue, newValue)) {
+        logUpdate(key, oldValue, newValue);
+        result = true;
+      } else {
+        logNoChange(key);
+      }
+    }
+
+    return result;
+  }
+
+  isAddition(oldValue, newValue) {
+    return !_.isNil(newValue) && _.isNull(oldValue);
+  }
+
+  isRemoval(oldValue, newValue) {
+    return _.isNull(newValue) && !_.isNil(oldValue);
+  }
+
+  isUpdate(oldValue, newValue) {
+    return !_.isNil(newValue) && !_.isEqual(oldValue, newValue);
   }
 }
 

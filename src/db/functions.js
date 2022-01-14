@@ -445,6 +445,13 @@ function deleteUrls(connection, id) {
   return _delete(connection, urls._name, where);
 }
 
+function deleteContactPoints(connection, id) {
+  checkNotNullable(id, resources.id);
+
+  const where = { [contactPoints.agentId]: id };
+  return _delete(connection, contactPoints._name, where);
+}
+
 function _delete(connection, tableName, where, returning) {
   const ret = getReturningColumns(returning);
   return connection(tableName).where(where).del(ret);
@@ -496,4 +503,5 @@ module.exports = {
   deleteNames,
   deleteShortNames,
   deleteUrls,
+  deleteContactPoints,
 };
