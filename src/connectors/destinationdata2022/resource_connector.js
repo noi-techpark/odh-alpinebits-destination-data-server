@@ -2,8 +2,6 @@ const _ = require("lodash");
 const knex = require("../../db/connect");
 const dbFn = require("../../db/functions");
 const { schemas } = require("../../db");
-const db = require("../../db");
-const { Text } = require("../../model/destinationdata2022/datatypes");
 
 class ResourceConnector {
   constructor(request) {
@@ -40,26 +38,24 @@ class ResourceConnector {
       });
   }
 
-  retrieve() {
+  create(resource) {
     throw new Error("Unimplemented");
   }
 
-  save() {
+  retrieve(id) {
     throw new Error("Unimplemented");
   }
 
-  delete() {
+  update(resource) {
+    throw new Error("Unimplemented");
+  }
+
+  delete(id) {
     throw new Error("Unimplemented");
   }
 
   deleteResource(id, type) {
     return dbFn.deleteResource(this.connection, id, type);
-  }
-
-  retrieveResource(resourceId) {
-    console.log(resourceId);
-
-    return Promise.resolve("done");
   }
 
   insertResource(resource) {
@@ -208,203 +204,6 @@ class ResourceConnector {
       [schemas.addresses.type]: address?.type,
       [schemas.addresses.zipcode]: address?.zipcode,
     };
-  }
-
-  selectResourceFromId(resourceId, resource) {
-    return dbFn
-      .selectResourceFromId(this.connection, resourceId)
-      .then(_.first)
-      .then((row) => this.mapRowToResource(row, resource))
-      .then(() => this.selectResourceRelatedDataFromId(resourceId, resource))
-      .then(() => resource);
-  }
-
-  selectResourceRelatedDataFromId(resourceId, resource) {
-    return Promise.all([
-      this.selectAbstractsFromId(resourceId, resource),
-      this.selectDescriptionsFromId(resourceId, resource),
-      this.selectNamesFromId(resourceId, resource),
-      this.selectShortNamesFromId(resourceId, resource),
-      this.selectUrlsFromId(resourceId, resource),
-      this.selectCategoriesFromId(resourceId, resource),
-    ]);
-  }
-
-  selectAbstractsFromId(resourceId, resource) {
-    return dbFn
-      .selectAbstractsFromId(this.connection, resourceId)
-      .then((rows) => rows.map((row) => this.mapRowToResourceAbstract(row, resource)));
-  }
-
-  selectDescriptionsFromId(resourceId, resource) {
-    return dbFn
-      .selectDescriptionsFromId(this.connection, resourceId)
-      .then((rows) => rows.map((row) => this.mapRowToResourceDescription(row, resource)));
-  }
-
-  selectNamesFromId(resourceId, resource) {
-    return dbFn
-      .selectNamesFromId(this.connection, resourceId)
-      .then((rows) => rows.map((row) => this.mapRowToResourceName(row, resource)));
-  }
-
-  selectShortNamesFromId(resourceId, resource) {
-    return dbFn
-      .selectShortNamesFromId(this.connection, resourceId)
-      .then((rows) => rows.map((row) => this.mapRowToResourceShortName(row, resource)));
-  }
-
-  selectUrlsFromId(resourceId, resource) {
-    return dbFn
-      .selectUrlsFromId(this.connection, resourceId)
-      .then((rows) => rows.map((row) => this.mapRowToResourceUrl(row, resource)));
-  }
-
-  selectCategoriesFromId(resourceId, resource) {
-    return dbFn
-      .selectCategoriesFromId(this.connection, resourceId)
-      .then((rows) => rows.map((row) => this.mapRowToResourceCategory(row, resource)));
-  }
-
-  selectAddressTextsFromId(addressId, address) {
-    return Promise.all([
-      this.selectCitiesFromId(addressId, address),
-      this.selectComplementsFromId(addressId, address),
-      this.selectRegionsFromId(addressId, address),
-      this.selectStreetsFromId(addressId, address),
-    ]);
-  }
-
-  selectCitiesFromId(addressId, address) {
-    return dbFn
-      .selectCitiesFromId(this.connection, addressId)
-      .then((rows) => rows.map((row) => this.mapRowToAddressCity(row, address)));
-  }
-
-  selectComplementsFromId(addressId, address) {
-    return dbFn
-      .selectComplementsFromId(this.connection, addressId)
-      .then((rows) => rows.map((row) => this.mapRowToAddressComplement(row, address)));
-  }
-
-  selectRegionsFromId(addressId, address) {
-    return dbFn
-      .selectRegionsFromId(this.connection, addressId)
-      .then((rows) => rows.map((row) => this.mapRowToAddressRegion(row, address)));
-  }
-
-  selectStreetsFromId(addressId, address) {
-    return dbFn
-      .selectStreetsFromId(this.connection, addressId)
-      .then((rows) => rows.map((row) => this.mapRowToAddressStreet(row, address)));
-  }
-
-  mapRowToResource(row, resource) {
-    resource.id = row[schemas.resources.id] ?? null;
-    resource.type = row[schemas.resources.type] ?? null;
-    resource.dataProvider = row[schemas.resources.dataProvider] ?? null;
-    resource.lastUpdate = row[schemas.resources.lastUpdate] ?? null;
-    resource.url = row[schemas.resources.simpleUrl] ?? null;
-
-    return resource;
-  }
-
-  mapRowToResourceAbstract(row, resource) {
-    const lang = row[schemas.abstracts.lang];
-    const content = row[schemas.abstracts.content];
-
-    resource.abstract = resource.abstract ?? new Text();
-    resource.abstract.addContent(lang, content);
-
-    return resource;
-  }
-
-  mapRowToResourceDescription(row, resource) {
-    const lang = row[schemas.descriptions.lang];
-    const content = row[schemas.descriptions.content];
-
-    resource.descriptions = resource.descriptions ?? new Text();
-    resource.descriptions.addContent(lang, content);
-
-    return resource;
-  }
-
-  mapRowToResourceName(row, resource) {
-    const lang = row[schemas.names.lang];
-    const content = row[schemas.names.content];
-
-    resource.name = resource.name ?? new Text();
-    resource.name.addContent(lang, content);
-
-    return resource;
-  }
-
-  mapRowToResourceShortName(row, resource) {
-    const lang = row[schemas.shortNames.lang];
-    const content = row[schemas.shortNames.content];
-
-    resource.shortName = resource.shortName ?? new Text();
-    resource.shortName.addContent(lang, content);
-
-    return resource;
-  }
-
-  mapRowToResourceUrl(row, resource) {
-    if (!_.isEmpty(resource.url)) return resource;
-
-    const lang = row[schemas.urls.lang];
-    const content = row[schemas.urls.content];
-
-    resource.url = resource.url ?? new Text();
-    resource.url.addContent(lang, content);
-
-    return resource;
-  }
-
-  mapRowToResourceCategory(row, resource) {
-    const categoryId = row[schemas.resourceCategories.categoryId];
-    resource.addCategoryReference(categoryId);
-    return resource;
-  }
-
-  mapRowToAddressCity(row, address) {
-    const lang = row[schemas.cities.lang];
-    const content = row[schemas.cities.content];
-
-    address.city = address.city ?? new Text();
-    address.city.addContent(lang, content);
-
-    return address;
-  }
-
-  mapRowToAddressComplement(row, address) {
-    const lang = row[schemas.complements.lang];
-    const content = row[schemas.complements.content];
-
-    address.complement = address.complement ?? new Text();
-    address.complement.addContent(lang, content);
-
-    return address;
-  }
-
-  mapRowToAddressRegion(row, address) {
-    const lang = row[schemas.regions.lang];
-    const content = row[schemas.regions.content];
-
-    address.region = address.region ?? new Text();
-    address.region.addContent(lang, content);
-
-    return address;
-  }
-
-  mapRowToAddressStreet(row, address) {
-    const lang = row[schemas.streets.lang];
-    const content = row[schemas.streets.content];
-
-    address.street = address.street ?? new Text();
-    address.street.addContent(lang, content);
-
-    return address;
   }
 }
 

@@ -47,7 +47,7 @@ class AgentsRouter extends Router {
 
     // Return to the client
     try {
-      return connector.save(agent);
+      return connector.create(agent);
     } catch (error) {
       console.error(error);
       throw error;

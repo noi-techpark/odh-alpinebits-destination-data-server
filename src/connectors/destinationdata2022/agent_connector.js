@@ -8,33 +8,33 @@ const { Agent } = require("../../model/destinationdata2022/agent");
 class AgentConnector extends ResourceConnector {
   constructor(request) {
     super(request);
-
     this.request = request;
   }
 
-  retrieve() {
-    return this.runTransaction(() => this.retrieveAgent(this.request?.params?.id));
-  }
-
-  save(agent) {
+  create(agent) {
     return this.runTransaction(() => this.insertAgent(agent).then((id) => this.retrieveAgent(id)));
   }
 
-  delete(agent) {
-    const id = agent?.id ?? this.request?.params?.id;
-    return this.runTransaction(() => this.deleteAgent(id));
+  retrieve(id) {
+    const agentId = id ?? this?.request?.params?.id;
+    return this.runTransaction(() => this.retrieveAgent(agentId));
+  }
+
+  delete(id) {
+    const agentId = id ?? this.request?.params?.id;
+    return this.runTransaction(() => this.deleteAgent(agentId));
   }
 
   deleteAgent(id) {
     return this.deleteResource(id, "agents");
   }
 
-  retrieveAgent(agentId) {
-    const agent = new Agent();
-
-    return this.selectResourceFromId(agentId, agent)
-      .then(() => this.selectAgentRelatedDataFromId(agentId, agent))
-      .then(() => agent);
+  retrieveAgent(id) {
+    return dbFn.selectAgentFromId(this.connection, id).then((rows) => {
+      const agent = new Agent();
+      console.log("agent's class: ", agent.constructor.name);
+      return agent;
+    });
   }
 
   insertAgent(agent) {
@@ -69,37 +69,6 @@ class AgentConnector extends ResourceConnector {
       [schemas.contactPoints.email]: point?.email,
       [schemas.contactPoints.telephone]: point?.telephone,
     };
-  }
-
-  selectAgentRelatedDataFromId(agentId, agent) {
-    return Promise.all([this.selectContactPointsFromId(agentId, agent)]);
-  }
-
-  selectContactPointsFromId(agentId, agent) {
-    return dbFn
-      .selectContactPointsFromId(this.connection, agentId)
-      .then((rows) =>
-        rows?.map((row) => {
-          const contact = this.mapRowToContactPoint(row, agent);
-          const addressId = row[schemas.contactPoints.addressId];
-          return [addressId, contact.address];
-        })
-      )
-      .then((ret) => ret?.map(([addressId, address]) => this.selectAddressTextsFromId(addressId, address)))
-      .then(() => agent);
-  }
-
-  mapRowToContactPoint(row, agent) {
-    const contact = new ContactPoint();
-
-    contact.availableHours = row[schemas.contactPoints.availableHours] ?? null;
-    contact.email = row[schemas.contactPoints.email] ?? null;
-    contact.telephone = row[schemas.contactPoints.telephone] ?? null;
-    contact.address = new Address();
-
-    agent.addContactPoint(contact);
-
-    return contact;
   }
 }
 
