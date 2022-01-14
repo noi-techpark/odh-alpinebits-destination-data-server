@@ -12,7 +12,8 @@ class AgentsRouter extends Router {
     this.addUnimplementedGetRoute(`/agents/:id/multimediaDescriptions`);
 
     this.addPostRoute(`/agents`, this.postAgent);
-    this.addGetRoute(`/agents/:id`, this.getAgent);
+    this.addGetRoute(`/agents`, this.getAgent);
+    this.addGetRoute(`/agents/:id`, this.getAgentById);
     this.addDeleteRoute(`/agents/:id`, this.deleteAgent);
     this.addPatchRoute(`/agents/:id`, this.patchAgent);
 
@@ -22,6 +23,20 @@ class AgentsRouter extends Router {
   }
 
   getAgent = async (request) => {
+    // Process request and authentication
+    // Retrieve data
+    const connector = new AgentConnector();
+
+    // Return to the client
+    try {
+      return connector.retrieve();
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  };
+
+  getAgentById = async (request) => {
     // Process request and authentication
     // Retrieve data
     const parsedRequest = new Request(request);

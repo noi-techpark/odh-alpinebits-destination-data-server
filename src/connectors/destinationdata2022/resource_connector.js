@@ -205,6 +205,23 @@ class ResourceConnector {
       [schemas.addresses.zipcode]: address?.zipcode,
     };
   }
+
+  checkLastUpdate(serversResource, clientsResource) {
+    const clientLastUpdate = clientsResource?.lastUpdate?.toISOString();
+    const serverLastUpdate = serversResource?.lastUpdate?.toISOString();
+
+    if (clientLastUpdate < serverLastUpdate) {
+      throw new Error("Outdated: expected last update at " + serversResource.lastUpdate);
+    } else if (clientLastUpdate > serverLastUpdate) {
+      throw new Error("Ahead: expected last update at " + serversResource.lastUpdate);
+    }
+  }
+
+  throwNoUpdate(serversResource) {
+    const err = new Error("Not updated: no effective change");
+    err.resource = serversResource;
+    throw err;
+  }
 }
 
 module.exports = { ResourceConnector };

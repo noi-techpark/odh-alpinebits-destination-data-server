@@ -1,6 +1,7 @@
 const iso6393 = require("iso-639-3");
-const { schemas } = require(".");
 const knex = require("./connect");
+let connection;
+
 const {
   deleteResourceTypes,
   deleteAllEventsStatus,
@@ -10,101 +11,87 @@ const {
   insertSeriesFrequency,
   insertEventStatus,
   insertLanguageCode,
-  deleteCategories,
 } = require("./functions");
 
-const {
-  abstracts,
-  addresses,
-  categoryCoveredTypes,
-  categorySpecializations,
-  agents,
-  categories,
-  cities,
-  complements,
-  contactPoints,
-  contributors,
-  descriptions,
-  eventStatus,
-  events,
-  eventSeries,
-  features,
-  featureCoveredTypes,
-  featureSpecializations,
-  languageCodes,
-  mediaObjects,
-  multimediaDescriptions,
-  names,
-  organizers,
-  regions,
-  resourceCategories,
-  resources,
-  resourceTypes,
-  seriesFrequencies,
-  shortNames,
-  sponsors,
-  streets,
-  urls,
-} = schemas;
+knex
+  .transaction(function (trx) {
+    connection = trx;
 
-async function deletePredefinedRecords() {
-  return deleteResourceTypes(knex)
-    .then(() => deleteAllEventsStatus(knex))
-    .then(() => deleteSeriesFrequencies(knex))
-    .then(() => deleteLanguageCodes(knex));
+    deletePredefinedRecords()
+      .then(() => insertPredefinedRecords())
+      .then(() => {
+        console.log("Default records successfully (re)inserted.");
+        return connection.commit();
+      })
+      .catch((err) => {
+        console.error("Failed to (re)insert tables.");
+        console.log(err);
+        return connection.rollback();
+      })
+      .finally(() => (connection = null));
+  })
+  .finally(() => knex.destroy());
+
+function deletePredefinedRecords() {
+  return deleteResourceTypes(connection)
+    .then(() => deleteAllEventsStatus(connection))
+    .then(() => deleteSeriesFrequencies(connection))
+    .then(() => deleteLanguageCodes(connection))
+    .then((ret) => {
+      console.log("All records deleted", ret);
+      return ret;
+    });
 }
 
-async function insertResourceTypes() {
-  return insertResourceType(knex, { type: "agents", title: "Agents" })
-    .then(() => insertResourceType(knex, { type: "categories", title: "Categories" }))
-    .then(() => insertResourceType(knex, { type: "events", title: "Events" }))
-    .then(() => insertResourceType(knex, { type: "eventSeries", title: "Event Series" }))
-    .then(() => insertResourceType(knex, { type: "features", title: "Features" }))
-    .then(() => insertResourceType(knex, { type: "lifts", title: "Lifts" }))
-    .then(() => insertResourceType(knex, { type: "mediaObjects", title: "Media Objects" }))
-    .then(() => insertResourceType(knex, { type: "mountainAreas", title: "Mountain Areas" }))
-    .then(() => insertResourceType(knex, { type: "skiSlopes", title: "Ski Slopes" }))
-    .then(() => insertResourceType(knex, { type: "snowparks", title: "Snowparks" }))
-    .then(() => insertResourceType(knex, { type: "venues", title: "Venues" }));
+function insertResourceTypes() {
+  return insertResourceType(connection, { type: "agents", title: "Agents" })
+    .then(() => insertResourceType(connection, { type: "categories", title: "Categories" }))
+    .then(() => insertResourceType(connection, { type: "events", title: "Events" }))
+    .then(() => insertResourceType(connection, { type: "eventSeries", title: "Event Series" }))
+    .then(() => insertResourceType(connection, { type: "features", title: "Features" }))
+    .then(() => insertResourceType(connection, { type: "lifts", title: "Lifts" }))
+    .then(() => insertResourceType(connection, { type: "mediaObjects", title: "Media Objects" }))
+    .then(() => insertResourceType(connection, { type: "mountainAreas", title: "Mountain Areas" }))
+    .then(() => insertResourceType(connection, { type: "skiSlopes", title: "Ski Slopes" }))
+    .then(() => insertResourceType(connection, { type: "snowparks", title: "Snowparks" }))
+    .then(() => insertResourceType(connection, { type: "venues", title: "Venues" }));
 }
 
-async function insertSeriesFrequencies() {
-  return insertSeriesFrequency(knex, { frequency: "daily", title: "Daily" })
-    .then(() => insertSeriesFrequency(knex, { frequency: "weekly", title: "Weekly" }))
-    .then(() => insertSeriesFrequency(knex, { frequency: "monthly", title: "Monthly" }))
-    .then(() => insertSeriesFrequency(knex, { frequency: "bimonthly", title: "Bimonthly" }))
-    .then(() => insertSeriesFrequency(knex, { frequency: "quarterly", title: "Quarterly" }))
-    .then(() => insertSeriesFrequency(knex, { frequency: "annual", title: "Annual" }))
-    .then(() => insertSeriesFrequency(knex, { frequency: "biennial", title: "Biennial" }))
-    .then(() => insertSeriesFrequency(knex, { frequency: "triennial", title: "Triennial" }));
+function insertSeriesFrequencies() {
+  return insertSeriesFrequency(connection, { frequency: "daily", title: "Daily" })
+    .then(() => insertSeriesFrequency(connection, { frequency: "weekly", title: "Weekly" }))
+    .then(() => insertSeriesFrequency(connection, { frequency: "monthly", title: "Monthly" }))
+    .then(() => insertSeriesFrequency(connection, { frequency: "bimonthly", title: "Bimonthly" }))
+    .then(() => insertSeriesFrequency(connection, { frequency: "quarterly", title: "Quarterly" }))
+    .then(() => insertSeriesFrequency(connection, { frequency: "annual", title: "Annual" }))
+    .then(() => insertSeriesFrequency(connection, { frequency: "biennial", title: "Biennial" }))
+    .then(() => insertSeriesFrequency(connection, { frequency: "triennial", title: "Triennial" }));
 }
 
-async function insertAllEventStatus() {
-  return insertEventStatus(knex, { status: "canceled", title: "Canceled" }).then(() =>
-    insertEventStatus(knex, { status: "published", title: "Published" })
+function insertAllEventStatus() {
+  return insertEventStatus(connection, { status: "canceled", title: "Canceled" }).then(() =>
+    insertEventStatus(connection, { status: "published", title: "Published" })
   );
 }
 
-async function insertLanguageCodes() {
+function insertLanguageCodes() {
+  const inserts = [];
   for (const { iso6393: code, name, scope, type } of iso6393) {
     if (type === "living" && scope === "individual") {
-      try {
-        await insertLanguageCode(knex, { lang: code, title: name });
-      } catch (err) {
-        throw err;
-      }
+      inserts.push(insertLanguageCode(knex, { lang: code, title: name }));
     }
   }
+
+  return Promise.all(inserts);
 }
 
-async function insertPredefinedRecords() {
+function insertPredefinedRecords() {
   return insertAllEventStatus()
     .then(() => insertResourceTypes())
     .then(() => insertSeriesFrequencies())
-    .then(() => insertLanguageCodes());
+    .then(() => insertLanguageCodes())
+    .then((ret) => {
+      console.log("All default records inserted");
+      return ret;
+    });
 }
-
-deletePredefinedRecords()
-  .then(() => insertPredefinedRecords())
-  .catch((err) => console.log(err))
-  .finally(() => knex.destroy());

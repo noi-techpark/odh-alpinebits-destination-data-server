@@ -1,5 +1,6 @@
 const { schemas } = require(".");
 const knex = require("./connect");
+let connection;
 
 const {
   abstracts,
@@ -39,27 +40,48 @@ const UUID_GENERATE = "uuid_generate_v4()";
 const SET_NULL = "SET NULL";
 const CASCADE = "CASCADE";
 
-async function setupDatabase() {
+knex
+  .transaction(function (trx) {
+    connection = trx;
+
+    setupDatabase()
+      .then(() => dropAllTables())
+      .then(() => createAllTables())
+      .then(() => createAllTriggers())
+      .then(() => {
+        console.log("Tables successfully (re)created.");
+        return connection.commit();
+      })
+      .catch((err) => {
+        console.error("Failed to (re)create tables.");
+        console.log(err);
+        return connection.rollback();
+      })
+      .finally(() => (connection = null));
+  })
+  .finally(() => knex.destroy());
+
+function setupDatabase() {
   return addUuidGenerator();
 }
 
-async function addUuidGenerator() {
-  return knex.raw('CREATE EXTENSION IF NOT EXISTS "uuid-ossp";');
+function addUuidGenerator() {
+  return connection.raw('CREATE EXTENSION IF NOT EXISTS "uuid-ossp";');
 }
 
-async function dropTableIfExists(tableName) {
-  return knex.raw(`DROP TABLE IF EXISTS ${tableName} CASCADE;`);
+function dropTableIfExists(tableName) {
+  return connection.raw(`DROP TABLE IF EXISTS ${tableName} CASCADE;`);
 }
 
-async function createResourceTypesTable() {
-  return knex.schema.createTable(resourceTypes._name, function (table) {
+function createResourceTypesTable() {
+  return connection.schema.createTable(resourceTypes._name, function (table) {
     table.string(resourceTypes.type, 50).primary();
     table.string(resourceTypes.title, 50);
   });
 }
 
-async function createResourcesTable() {
-  return knex.raw(`
+function createResourcesTable() {
+  return connection.raw(`
     CREATE TABLE ${resources._name} (
       ${resources.id} UUID DEFAULT ${UUID_GENERATE} PRIMARY KEY,
       ${resources.type} VARCHAR ( 50 ) NOT NULL,
@@ -75,22 +97,22 @@ async function createResourcesTable() {
     );`);
 }
 
-async function createAgentsTable() {
-  return knex.schema.createTable(agents._name, function (table) {
+function createAgentsTable() {
+  return connection.schema.createTable(agents._name, function (table) {
     table.uuid(agents.id).primary().references(resources.id).inTable(resources._name).onDelete(CASCADE);
   });
 }
 
-async function createCategoriesTable() {
-  return knex.schema.createTable(categories._name, function (table) {
+function createCategoriesTable() {
+  return connection.schema.createTable(categories._name, function (table) {
     table.string(categories.id, 100).primary();
     table.uuid(categories.resourceId).notNullable().references(resources.id).inTable(resources._name).onDelete(CASCADE);
     table.string(categories.namespace, 50).notNullable();
   });
 }
 
-async function createCategoryCoveredTypesTable() {
-  return knex.schema.createTable(categoryCoveredTypes._name, function (table) {
+function createCategoryCoveredTypesTable() {
+  return connection.schema.createTable(categoryCoveredTypes._name, function (table) {
     table
       .string(categoryCoveredTypes.categoryId, 100)
       .references(categories.id)
@@ -105,8 +127,8 @@ async function createCategoryCoveredTypesTable() {
   });
 }
 
-async function createCategorySpecializationsTable() {
-  return knex.schema.createTable(categorySpecializations._name, function (table) {
+function createCategorySpecializationsTable() {
+  return connection.schema.createTable(categorySpecializations._name, function (table) {
     table
       .string(categorySpecializations.parentId, 100)
       .references(categories.id)
@@ -121,9 +143,9 @@ async function createCategorySpecializationsTable() {
   });
 }
 
-async function createFeaturesTable() {
+function createFeaturesTable() {
   // TODO: update the relationship to snowparks
-  return knex.schema.createTable(features._name, function (table) {
+  return connection.schema.createTable(features._name, function (table) {
     table.string(features.id, 100).primary();
     table.uuid(features.resourceId).notNullable().references(resources.id).inTable(resources._name).onDelete(CASCADE);
     table.string(features.namespace, 50).notNullable();
@@ -131,8 +153,8 @@ async function createFeaturesTable() {
 }
 
 // At the moment, this should always be "snowparks"
-async function createFeatureCoveredTypesTable() {
-  return knex.schema.createTable(featureCoveredTypes._name, function (table) {
+function createFeatureCoveredTypesTable() {
+  return connection.schema.createTable(featureCoveredTypes._name, function (table) {
     table.string(featureCoveredTypes.featureId, 100).references(features.id).inTable(features._name).onDelete(CASCADE);
     table
       .string(featureCoveredTypes.type, 50)
@@ -143,8 +165,8 @@ async function createFeatureCoveredTypesTable() {
   });
 }
 
-async function createFeatureSpecializationsTable() {
-  return knex.schema.createTable(featureSpecializations._name, function (table) {
+function createFeatureSpecializationsTable() {
+  return connection.schema.createTable(featureSpecializations._name, function (table) {
     table
       .string(featureSpecializations.parentId, 100)
       .references(features.categoryId)
@@ -159,8 +181,8 @@ async function createFeatureSpecializationsTable() {
   });
 }
 
-async function createMediaObjectsTable() {
-  return knex.schema.createTable(mediaObjects._name, function (table) {
+function createMediaObjectsTable() {
+  return connection.schema.createTable(mediaObjects._name, function (table) {
     table.uuid(mediaObjects.id).primary().references(resources.id).inTable(resources._name).onDelete(CASCADE);
     table.uuid(mediaObjects.copyrightOwnerId).references(agents.id).inTable(agents._name).onDelete(SET_NULL);
     table.string(mediaObjects.contentType);
@@ -171,15 +193,15 @@ async function createMediaObjectsTable() {
   });
 }
 
-async function createSeriesFrequenciesTable() {
-  return knex.schema.createTable(seriesFrequencies._name, function (table) {
+function createSeriesFrequenciesTable() {
+  return connection.schema.createTable(seriesFrequencies._name, function (table) {
     table.string(seriesFrequencies.frequency, 50).primary();
     table.string(seriesFrequencies.title, 50);
   });
 }
 
-async function createEventSeriesTable() {
-  return knex.schema.createTable(eventSeries._name, function (table) {
+function createEventSeriesTable() {
+  return connection.schema.createTable(eventSeries._name, function (table) {
     table.uuid(eventSeries.id).primary().references(resources.id).inTable(resources._name).onDelete(CASCADE);
     table
       .string(eventSeries.frequency, 50)
@@ -189,15 +211,15 @@ async function createEventSeriesTable() {
   });
 }
 
-async function createEventStatusTable() {
-  return knex.schema.createTable(eventStatus._name, function (table) {
+function createEventStatusTable() {
+  return connection.schema.createTable(eventStatus._name, function (table) {
     table.string(eventStatus.status, 50).primary();
     table.string(eventStatus.title, 50);
   });
 }
 
-async function createEventsTable() {
-  return knex.schema.createTable(events._name, function (table) {
+function createEventsTable() {
+  return connection.schema.createTable(events._name, function (table) {
     table.uuid(events.id).primary().references(resources.id).inTable(resources._name).onDelete(CASCADE);
     table.integer(events.capacity);
     table.timestamp(events.endDate, { useTz: true });
@@ -208,15 +230,15 @@ async function createEventsTable() {
   });
 }
 
-async function createLanguageCodesTable() {
-  return knex.schema.createTable(languageCodes._name, function (table) {
+function createLanguageCodesTable() {
+  return connection.schema.createTable(languageCodes._name, function (table) {
     table.string(languageCodes.lang, 3).primary();
     table.string(languageCodes.title, 100);
   });
 }
 
-async function createAbstractsTable() {
-  return knex.schema.createTable(abstracts._name, function (table) {
+function createAbstractsTable() {
+  return connection.schema.createTable(abstracts._name, function (table) {
     table.string(abstracts.lang, 3).references(languageCodes.lang).inTable(languageCodes._name).onDelete(CASCADE);
     table.uuid(abstracts.resourceId).references(resources.id).inTable(resources._name).onDelete(CASCADE);
     table.text(abstracts.content).notNullable();
@@ -224,8 +246,8 @@ async function createAbstractsTable() {
   });
 }
 
-async function createDescriptionsTable() {
-  return knex.schema.createTable(descriptions._name, function (table) {
+function createDescriptionsTable() {
+  return connection.schema.createTable(descriptions._name, function (table) {
     table.string(descriptions.lang, 3).references(languageCodes.lang).inTable(languageCodes._name).onDelete(CASCADE);
     table.uuid(descriptions.resourceId).references(resources.id).inTable(resources._name).onDelete(CASCADE);
     table.text(descriptions.content).notNullable();
@@ -233,8 +255,8 @@ async function createDescriptionsTable() {
   });
 }
 
-async function createNamesTable() {
-  return knex.schema.createTable(names._name, function (table) {
+function createNamesTable() {
+  return connection.schema.createTable(names._name, function (table) {
     table.string(names.lang, 3).references(languageCodes.lang).inTable(languageCodes._name).onDelete(CASCADE);
     table.uuid(names.resourceId).references(resources.id).inTable(resources._name).onDelete(CASCADE);
     table.text(names.content).notNullable();
@@ -242,8 +264,8 @@ async function createNamesTable() {
   });
 }
 
-async function createShortNamesTable() {
-  return knex.schema.createTable(shortNames._name, function (table) {
+function createShortNamesTable() {
+  return connection.schema.createTable(shortNames._name, function (table) {
     table.string(shortNames.lang, 3).references(languageCodes.lang).inTable(languageCodes._name).onDelete(CASCADE);
     table.uuid(shortNames.resourceId).references(resources.id).inTable(resources._name).onDelete(CASCADE);
     table.text(shortNames.content).notNullable();
@@ -251,8 +273,8 @@ async function createShortNamesTable() {
   });
 }
 
-async function createUrlsTable() {
-  return knex.schema.createTable(urls._name, function (table) {
+function createUrlsTable() {
+  return connection.schema.createTable(urls._name, function (table) {
     table.string(urls.lang, 3).references(languageCodes.lang).inTable(languageCodes._name).onDelete(CASCADE);
     table.uuid(urls.resourceId).references(resources.id).inTable(resources._name).onDelete(CASCADE);
     table.text(urls.content).notNullable();
@@ -260,8 +282,8 @@ async function createUrlsTable() {
   });
 }
 
-async function createAddressesTable() {
-  return knex.schema.createTable(addresses._name, function (table) {
+function createAddressesTable() {
+  return connection.schema.createTable(addresses._name, function (table) {
     table.increments(addresses.id);
     table.string(addresses.country, 2).notNullable();
     table.string(addresses.zipcode, 20);
@@ -269,8 +291,8 @@ async function createAddressesTable() {
   });
 }
 
-async function createCitiesTable() {
-  return knex.schema.createTable(cities._name, function (table) {
+function createCitiesTable() {
+  return connection.schema.createTable(cities._name, function (table) {
     table.string(cities.lang, 3).references(languageCodes.lang).inTable(languageCodes._name).onDelete(CASCADE);
     table.integer(cities.addressId).references(addresses.id).inTable(addresses._name).onDelete(CASCADE);
     table.text(cities.content).notNullable();
@@ -278,8 +300,8 @@ async function createCitiesTable() {
   });
 }
 
-async function createComplementsTable() {
-  return knex.schema.createTable(complements._name, function (table) {
+function createComplementsTable() {
+  return connection.schema.createTable(complements._name, function (table) {
     table.string(complements.lang, 3).references(languageCodes.lang).inTable(languageCodes._name).onDelete(CASCADE);
     table.integer(complements.addressId).references(addresses.id).inTable(addresses._name).onDelete(CASCADE);
     table.primary([complements.lang, complements.addressId]);
@@ -288,8 +310,8 @@ async function createComplementsTable() {
   });
 }
 
-async function createRegionsTable() {
-  return knex.schema.createTable(regions._name, function (table) {
+function createRegionsTable() {
+  return connection.schema.createTable(regions._name, function (table) {
     table.string(regions.lang, 3).references(languageCodes.lang).inTable(languageCodes._name).onDelete(CASCADE);
     table.integer(regions.addressId).references(addresses.id).inTable(addresses._name).onDelete(CASCADE);
     table.primary([regions.lang, regions.addressId]);
@@ -298,8 +320,8 @@ async function createRegionsTable() {
   });
 }
 
-async function createStreetsTable() {
-  return knex.schema.createTable(streets._name, function (table) {
+function createStreetsTable() {
+  return connection.schema.createTable(streets._name, function (table) {
     table.string(streets.lang, 3).references(languageCodes.lang).inTable(languageCodes._name).onDelete(CASCADE);
     table.integer(streets.addressId).references(addresses.id).inTable(addresses._name).onDelete(CASCADE);
     table.primary([streets.lang, streets.addressId]);
@@ -308,8 +330,8 @@ async function createStreetsTable() {
   });
 }
 
-async function createContactPointsTable() {
-  return knex.schema.createTable(contactPoints._name, function (table) {
+function createContactPointsTable() {
+  return connection.schema.createTable(contactPoints._name, function (table) {
     table.increments(contactPoints.id);
 
     table.uuid(contactPoints.agentId).references(agents.id).inTable(agents._name).notNullable().onDelete(CASCADE);
@@ -321,8 +343,8 @@ async function createContactPointsTable() {
   });
 }
 
-async function createResourceCategoriesTable() {
-  return knex.schema.createTable(resourceCategories._name, function (table) {
+function createResourceCategoriesTable() {
+  return connection.schema.createTable(resourceCategories._name, function (table) {
     table
       .string(resourceCategories.categoryId, 100)
       .references(categories.id)
@@ -337,40 +359,40 @@ async function createResourceCategoriesTable() {
   });
 }
 
-async function createContributorsTable() {
-  return knex.schema.createTable(contributors._name, function (table) {
+function createContributorsTable() {
+  return connection.schema.createTable(contributors._name, function (table) {
     table.uuid(contributors.contributorId).references(agents.id).inTable(agents._name).onDelete(CASCADE);
     table.uuid(contributors.eventId).references(events.id).inTable(events._name).onDelete(CASCADE);
     table.primary([contributors.contributorId, contributors.eventId]);
   });
 }
 
-async function createOrganizersTable() {
-  return knex.schema.createTable(organizers._name, function (table) {
+function createOrganizersTable() {
+  return connection.schema.createTable(organizers._name, function (table) {
     table.uuid(organizers.organizerId).references(agents.id).inTable(agents._name).onDelete(CASCADE);
     table.uuid(organizers.eventId).references(events.id).inTable(events._name).onDelete(CASCADE);
     table.primary([organizers.organizerId, organizers.eventId]);
   });
 }
 
-async function createSponsorsTable() {
-  return knex.schema.createTable(sponsors._name, function (table) {
+function createSponsorsTable() {
+  return connection.schema.createTable(sponsors._name, function (table) {
     table.uuid(sponsors.sponsorId).references(agents.id).inTable(agents._name).onDelete(CASCADE);
     table.uuid(sponsors.eventId).references(events.id).inTable(events._name).onDelete(CASCADE);
     table.primary([sponsors.sponsorId, sponsors.eventId]);
   });
 }
 
-async function createSponsorsTable() {
-  return knex.schema.createTable(sponsors._name, function (table) {
+function createSponsorsTable() {
+  return connection.schema.createTable(sponsors._name, function (table) {
     table.uuid(sponsors.sponsorId).references(agents.id).inTable(agents._name).onDelete(CASCADE);
     table.uuid(sponsors.eventId).references(events.id).inTable(events._name).onDelete(CASCADE);
     table.primary([sponsors.sponsorId, sponsors.eventId]);
   });
 }
 
-async function createMultimediaDescriptionsTable() {
-  return knex.schema.createTable(multimediaDescriptions._name, function (table) {
+function createMultimediaDescriptionsTable() {
+  return connection.schema.createTable(multimediaDescriptions._name, function (table) {
     table.uuid(multimediaDescriptions.resourceId).references(resources.id).inTable(resources._name).onDelete(CASCADE);
     table
       .uuid(multimediaDescriptions.mediaObjectId)
@@ -381,8 +403,8 @@ async function createMultimediaDescriptionsTable() {
   });
 }
 
-async function createDeleteContactPointAddressTrigger() {
-  return knex.raw(`
+function createDeleteContactPointAddressTrigger() {
+  return connection.raw(`
     CREATE OR REPLACE FUNCTION delete_contact_points_address()
       RETURNS TRIGGER AS
     $$
@@ -402,11 +424,29 @@ async function createDeleteContactPointAddressTrigger() {
   `);
 }
 
-async function createAllTriggers() {
-  return createDeleteContactPointAddressTrigger();
+function createSyncLastUpdateTrigger() {
+  return connection.raw(`
+    CREATE OR REPLACE FUNCTION sync_last_update() RETURNS trigger AS $$
+    BEGIN
+      NEW.${resources.lastUpdate} := NOW();
+      RETURN NEW;
+    END;
+    $$ LANGUAGE plpgsql;
+
+    CREATE TRIGGER
+      sync_last_update
+    BEFORE UPDATE ON
+      ${resources._name}
+    FOR EACH ROW EXECUTE PROCEDURE
+      sync_last_update();
+  `);
 }
 
-async function dropAllTables() {
+function createAllTriggers() {
+  return createDeleteContactPointAddressTrigger().then(() => createSyncLastUpdateTrigger());
+}
+
+function dropAllTables() {
   return dropTableIfExists(resourceTypes._name)
     .then(() => dropTableIfExists(languageCodes._name))
     .then(() => dropTableIfExists(resources._name))
@@ -440,7 +480,7 @@ async function dropAllTables() {
     .then(() => dropTableIfExists(multimediaDescriptions._name));
 }
 
-async function createAllTables() {
+function createAllTables() {
   return createResourceTypesTable()
     .then(() => createResourcesTable())
     .then(() => createAgentsTable())
@@ -473,10 +513,3 @@ async function createAllTables() {
     .then(() => createSponsorsTable())
     .then(() => createMultimediaDescriptionsTable());
 }
-
-setupDatabase()
-  .then(() => dropAllTables())
-  .then(() => createAllTables())
-  .then(() => createAllTriggers())
-  .catch((err) => console.log(err))
-  .finally(() => knex.destroy());

@@ -7,8 +7,6 @@ const { MediaObject } = require("./media_object");
 const { Venue } = require("./venue");
 
 const _ = require("lodash");
-const { Resource } = require("../destinationdata/resource");
-const paths = require("../../connectors/destinationdata2022/paths");
 
 function containsReferences(data) {
   return isReferenceObject(data) || isReferenceArray(data);
@@ -25,17 +23,17 @@ function isReferenceObject(data) {
 function deserializeResourceFields(resource, json) {
   const { id, type, meta, attributes } = json;
 
-  resource.id = id;
-  resource.type = type;
+  resource.id = id ?? resource.id;
+  resource.type = type ?? resource.type;
 
-  resource.dataProvider = meta?.dataProvider;
-  resource.lastUpdate = meta?.lastUpdate; // TODO: review whether we should deserialize by creating an instance of Date();
+  resource.dataProvider = meta?.dataProvider ?? resource.dataProvider;
+  resource.lastUpdate = (meta?.lastUpdate && new Date(meta?.lastUpdate)) ?? resource.lastUpdate; // TODO: review whether we should deserialize by creating an instance of Date() ?? resource;
 
-  resource.abstract = attributes?.abstract;
-  resource.description = attributes?.description;
-  resource.name = attributes?.name;
-  resource.shortName = attributes?.shortName;
-  resource.url = attributes?.url;
+  resource.abstract = attributes?.abstract ?? resource.abstract;
+  resource.description = attributes?.description ?? resource.description;
+  resource.name = attributes?.name ?? resource.name;
+  resource.shortName = attributes?.shortName ?? resource.shortName;
+  resource.url = attributes?.url ?? resource.url;
 
   return resource;
 }
@@ -43,8 +41,9 @@ function deserializeResourceFields(resource, json) {
 function deserializeIndividualResourceFields(individualResource, json) {
   const { relationships } = json;
 
-  individualResource.categories = relationships?.categories?.data;
-  individualResource.multimediaDescriptions = relationships?.multimediaDescriptions?.data;
+  individualResource.categories = relationships?.categories?.data ?? individualResource.categories;
+  individualResource.multimediaDescriptions =
+    relationships?.multimediaDescriptions?.data ?? individualResource.multimediaDescriptions;
 
   return individualResource;
 }
@@ -56,7 +55,7 @@ function deserializeAgent(json) {
   deserializeResourceFields(agent, json);
   deserializeIndividualResourceFields(agent, json);
 
-  agent.contactPoints = attributes?.contactPoints;
+  agent.contactPoints = attributes?.contactPoints ?? agent.contactPoints;
 
   return agent;
 }
@@ -67,12 +66,12 @@ function deserializeCategory(json) {
 
   deserializeResourceFields(category, json);
 
-  category.namespace = attributes?.namespace;
-  category.resourceTypes = attributes?.resourceTypes;
+  category.namespace = attributes?.namespace ?? category.namespace;
+  category.resourceTypes = attributes?.resourceTypes ?? category.resourceTypes;
 
-  category.children = relationships?.children;
-  category.multimediaDescriptions = relationships?.multimediaDescriptions;
-  category.parents = relationships?.parents;
+  category.children = relationships?.children ?? category.children;
+  category.multimediaDescriptions = relationships?.multimediaDescriptions ?? category.multimediaDescriptions;
+  category.parents = relationships?.parents ?? category.parents;
 
   return category;
 }
@@ -84,9 +83,9 @@ function deserializeEventSeries(json) {
   deserializeResourceFields(eventSeries, json);
   deserializeIndividualResourceFields(eventSeries, json);
 
-  eventSeries.frequency = attributes?.frequency;
+  eventSeries.frequency = attributes?.frequency ?? eventSeries.frequency;
 
-  eventSeries.editions = relationships?.editions;
+  eventSeries.editions = relationships?.editions ?? eventSeries.editions;
 
   return eventSeries;
 }
@@ -98,16 +97,16 @@ function deserializeEvent(json) {
   deserializeResourceFields(event, json);
   deserializeIndividualResourceFields(event, json);
 
-  event.capacity = attributes?.capacity;
-  event.endDate = attributes?.endDate;
-  event.startDate = attributes?.startDate;
-  event.status = attributes?.status;
+  event.capacity = attributes?.capacity ?? event.capacity;
+  event.endDate = attributes?.endDate ?? event.endDate;
+  event.startDate = attributes?.startDate ?? event.startDate;
+  event.status = attributes?.status ?? event.status;
 
-  event.organizers = relationships?.organizers;
-  event.publisher = relationships?.publisher;
-  event.series = relationships?.series;
-  event.subEvents = relationships?.subEvents;
-  event.venues = relationships?.venues;
+  event.organizers = relationships?.organizers ?? event.organizers;
+  event.publisher = relationships?.publisher ?? event.publisher;
+  event.series = relationships?.series ?? event.series;
+  event.subEvents = relationships?.subEvents ?? event.subEvents;
+  event.venues = relationships?.venues ?? event.venues;
 
   return event;
 }
@@ -118,12 +117,12 @@ function deserializeFeature(json) {
 
   deserializeResourceFields(feature, json);
 
-  feature.namespace = attributes?.namespace;
-  feature.resourceTypes = attributes?.resourceTypes;
+  feature.namespace = attributes?.namespace ?? feature.namespace;
+  feature.resourceTypes = attributes?.resourceTypes ?? feature.resourceTypes;
 
-  feature.children = relationships?.children;
-  feature.multimediaDescriptions = relationships?.multimediaDescriptions;
-  feature.parents = relationships?.parents;
+  feature.children = relationships?.children ?? feature.children;
+  feature.multimediaDescriptions = relationships?.multimediaDescriptions ?? feature.multimediaDescriptions;
+  feature.parents = relationships?.parents ?? feature.parents;
 
   return feature;
 }
@@ -134,14 +133,14 @@ function deserializeMediaObject(json) {
 
   deserializeResourceFields(mediaObject, json);
 
-  mediaObject.contentType = attributes?.contentType;
-  mediaObject.duration = attributes?.duration;
-  mediaObject.height = attributes?.height;
-  mediaObject.license = attributes?.license;
-  mediaObject.width = attributes?.width;
+  mediaObject.contentType = attributes?.contentType ?? mediaObject.contentType;
+  mediaObject.duration = attributes?.duration ?? mediaObject.duration;
+  mediaObject.height = attributes?.height ?? mediaObject.height;
+  mediaObject.license = attributes?.license ?? mediaObject.license;
+  mediaObject.width = attributes?.width ?? mediaObject.width;
 
-  mediaObject.categories = relationships?.categories;
-  mediaObject.copyrightOwner = relationships?.copyrightOwner;
+  mediaObject.categories = relationships?.categories ?? mediaObject.categories;
+  mediaObject.copyrightOwner = relationships?.copyrightOwner ?? mediaObject.copyrightOwner;
 
   return mediaObject;
 }
@@ -153,35 +152,11 @@ function deserializeVenue(json) {
   deserializeResourceFields(venue, json);
   deserializeIndividualResourceFields(venue, json);
 
-  venue.address = attributes?.address;
-  venue.howToArrive = attributes?.howToArrive;
-  venue.geometries = attributes?.geometries;
+  venue.address = attributes?.address ?? venue.address;
+  venue.howToArrive = attributes?.howToArrive ?? venue.howToArrive;
+  venue.geometries = attributes?.geometries ?? venue.geometries;
 
   return venue;
-}
-
-function serialize(versionUrl) {
-  const resource = new Resource();
-  const json = {};
-
-  json.id = resource.id;
-  json.type = resource.type;
-  json.meta = extractMeta(resource);
-  json.links = extractLinks(resource);
-  json.attributes = extract;
-}
-
-function extractMeta(resource) {
-  return {
-    dataProvider: resource.dataProvider,
-    lastUpdate: resource.lastUpdate,
-  };
-}
-
-function extractLinks(resource) {
-  return {
-    self: versionUrl + paths.agentsId.replace(":id", resource.id),
-  };
 }
 
 module.exports = {

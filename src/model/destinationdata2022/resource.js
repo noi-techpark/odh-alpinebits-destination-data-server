@@ -1,3 +1,5 @@
+const _ = require("lodash");
+
 class Resource {
   constructor() {
     this.type = null;

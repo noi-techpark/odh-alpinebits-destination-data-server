@@ -5,6 +5,47 @@ const { ResourceConnector } = require("./resource_connector");
 const { ContactPoint, Address, Text } = require("../../model/destinationdata2022/datatypes");
 const { Agent } = require("../../model/destinationdata2022/agent");
 
+const colors = {
+  FgBlack: "\x1b[30m",
+  FgRed: "\x1b[31m",
+  FgGreen: "\x1b[32m",
+  FgYellow: "\x1b[33m",
+  FgWhite: "\x1b[37m",
+};
+
+function logDiff(_old, _new) {
+  _.keys(_old).forEach((key) => {
+    const oldValue = _.get(_old, key);
+    const newValue = _.get(_new, key);
+
+    if (_.isEqual(oldValue, newValue)) {
+      logNoChange(key);
+    } else if (_.isEmpty(oldValue)) {
+      logAddition(key, newValue);
+    } else if (_.isNull(newValue)) {
+      logRemoval(key, oldValue, newValue);
+    } else {
+      logUpdate(key, oldValue, newValue);
+    }
+  });
+}
+
+function logNoChange(key) {
+  console.log("NO CHANGE ON", key);
+}
+
+function logAddition(key, newValue) {
+  console.log(`${colors.FgGreen}ADD ${key}${colors.FgWhite}`, newValue);
+}
+
+function logRemoval(key, oldValue, newValue) {
+  console.log(`${colors.FgRed}REMOVE ${key}${colors.FgWhite}`, oldValue);
+}
+
+function logUpdate(key, oldValue, newValue) {
+  console.log(`${colors.FgYellow}UPDATE ${key}${colors.FgWhite}`, oldValue, newValue);
+}
+
 class AgentConnector extends ResourceConnector {
   constructor(request) {
     super(request);
@@ -20,6 +61,12 @@ class AgentConnector extends ResourceConnector {
     return this.runTransaction(() => this.retrieveAgent(agentId));
   }
 
+  update(agent) {
+    return this.runTransaction(() =>
+      this.retrieveAgent(agent.id).then((oldAgent) => this.updateAgent(oldAgent, agent))
+    );
+  }
+
   delete(id) {
     const agentId = id ?? this.request?.params?.id;
     return this.runTransaction(() => this.deleteAgent(agentId));
@@ -31,10 +78,34 @@ class AgentConnector extends ResourceConnector {
 
   retrieveAgent(id) {
     return dbFn.selectAgentFromId(this.connection, id).then((rows) => {
-      const agent = new Agent();
-      console.log("agent's class: ", agent.constructor.name);
-      return agent;
+      if (_.isString(id)) {
+        if (_.size(rows) === 1) {
+          return this.mapRowToAgent(_.first(rows));
+        }
+        throw new Error("Not found");
+      } else {
+        return rows?.map(this.mapRowToAgent);
+      }
     });
+  }
+
+  updateAgent(oldAgent, newInput) {
+    logDiff(oldAgent, newInput);
+    const newAgent = _.create(oldAgent, newInput);
+
+    this.checkLastUpdate(oldAgent, newAgent);
+
+    if (!_.isEqual(newAgent, oldAgent)) {
+      return newAgent;
+    }
+
+    this.throwNoUpdate(oldAgent);
+  }
+
+  mapRowToAgent(row) {
+    const agent = new Agent();
+    Object.assign(agent, row);
+    return agent;
   }
 
   insertAgent(agent) {
@@ -48,7 +119,7 @@ class AgentConnector extends ResourceConnector {
 
   insertContactPoints(agent) {
     const inserts = agent?.contactPoints?.map((point) => this.insertContactPoint(point, agent));
-    return Promise.all(inserts);
+    return Promise.all(inserts ?? []);
   }
 
   insertContactPoint(point, agent) {
