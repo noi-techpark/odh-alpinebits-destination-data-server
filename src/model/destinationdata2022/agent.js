@@ -5,7 +5,7 @@ class Agent extends IndividualResource {
   constructor() {
     super();
 
-    this.contactPoints = null;
+    this.contactPoints = undefined;
   }
 
   addContactPoint(contact) {

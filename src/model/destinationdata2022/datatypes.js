@@ -8,22 +8,22 @@ class Text {
 
 class Address {
   constructor() {
-    this.city = null;
-    this.country = null;
-    this.complement = null;
-    this.region = null;
-    this.street = null;
-    this.type = null;
-    this.zipcode = null;
+    this.city = undefined;
+    this.country = undefined;
+    this.complement = undefined;
+    this.region = undefined;
+    this.street = undefined;
+    this.type = undefined;
+    this.zipcode = undefined;
   }
 }
 
 class ContactPoint {
   constructor() {
-    this.address = null;
-    this.availableHours = null;
-    this.email = null;
-    this.telephone = null;
+    this.address = undefined;
+    this.availableHours = undefined;
+    this.email = undefined;
+    this.telephone = undefined;
   }
 }
 

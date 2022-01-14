@@ -4,12 +4,12 @@ class Category extends Resource {
   constructor() {
     super();
 
-    this.namespace = null;
-    this.resourceTypes = null;
+    this.namespace = undefined;
+    this.resourceTypes = undefined;
 
-    this.children = null;
-    this.multimediaDescriptions = null;
-    this.parents = null;
+    this.children = undefined;
+    this.multimediaDescriptions = undefined;
+    this.parents = undefined;
   }
 }
 

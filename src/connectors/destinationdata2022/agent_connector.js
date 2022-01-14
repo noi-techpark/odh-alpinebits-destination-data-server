@@ -13,37 +13,46 @@ const colors = {
   FgWhite: "\x1b[37m",
 };
 
-function logDiff(_old, _new) {
-  _.keys(_old).forEach((key) => {
+function shouldUpdate(_old, _new) {
+  let result = false;
+
+  for (const key of _.keys(_old)) {
+    if (["lastUpdate", "contactPoints"].includes(key)) continue;
+
     const oldValue = _.get(_old, key);
     const newValue = _.get(_new, key);
 
-    if (_.isEqual(oldValue, newValue)) {
-      logNoChange(key);
-    } else if (_.isEmpty(oldValue)) {
-      logAddition(key, newValue);
-    } else if (_.isNull(newValue)) {
+    if (!_.isNil(newValue) && _.isNull(oldValue)) {
+      logAddition(key, oldValue, newValue);
+      result = true;
+    } else if (_.isNull(newValue) && !_.isNil(oldValue)) {
       logRemoval(key, oldValue, newValue);
-    } else {
+      result = true;
+    } else if (!_.isNil(newValue) && !_.isEqual(oldValue, newValue)) {
       logUpdate(key, oldValue, newValue);
+      result = true;
+    } else {
+      logNoChange(key);
     }
-  });
+  }
+
+  return result;
 }
 
 function logNoChange(key) {
   console.log("NO CHANGE ON", key);
 }
 
-function logAddition(key, newValue) {
-  console.log(`${colors.FgGreen}ADD ${key}${colors.FgWhite}`, newValue);
+function logAddition(key, oldValue, newValue) {
+  console.log(`${colors.FgGreen}ADD ${key}${colors.FgWhite}`, oldValue, "=>", newValue);
 }
 
 function logRemoval(key, oldValue, newValue) {
-  console.log(`${colors.FgRed}REMOVE ${key}${colors.FgWhite}`, oldValue);
+  console.log(`${colors.FgRed}REMOVE ${key}${colors.FgWhite}`, oldValue, "=>", newValue);
 }
 
 function logUpdate(key, oldValue, newValue) {
-  console.log(`${colors.FgYellow}UPDATE ${key}${colors.FgWhite}`, oldValue, newValue);
+  console.log(`${colors.FgYellow}UPDATE ${key}${colors.FgWhite}`, oldValue, "=>", newValue);
 }
 
 class AgentConnector extends ResourceConnector {
@@ -90,16 +99,18 @@ class AgentConnector extends ResourceConnector {
   }
 
   updateAgent(oldAgent, newInput) {
-    logDiff(oldAgent, newInput);
     const newAgent = _.create(oldAgent, newInput);
 
-    this.checkLastUpdate(oldAgent, newAgent);
+    // TODO: re-enable
+    // this.checkLastUpdate(oldAgent, newAgent);
 
-    if (!_.isEqual(newAgent, oldAgent)) {
-      return newAgent;
+    if (shouldUpdate(oldAgent, newAgent)) {
+      return this.updateResource(newAgent);
     }
 
-    this.throwNoUpdate(oldAgent);
+    return "nope";
+    // TODO: re-enable
+    // this.throwNoUpdate(oldAgent);
   }
 
   mapRowToAgent(row) {
@@ -123,9 +134,10 @@ class AgentConnector extends ResourceConnector {
   }
 
   insertContactPoint(point, agent) {
-    return this.insertAddress(point.address)
-      .then((addressId) => this.mapContactPointToColumns(point, addressId, agent.id))
-      .then((columns) => dbFn.insertContactPoint(this.connection, columns));
+    return this.insertAddress(point.address).then((addressId) => {
+      const columns = this.mapContactPointToColumns(point, addressId, agent.id);
+      return dbFn.insertContactPoint(this.connection, columns);
+    });
   }
 
   mapAgentToColumns(agent) {

@@ -2,15 +2,15 @@ const _ = require("lodash");
 
 class Resource {
   constructor() {
-    this.type = null;
-    this.id = null;
-    this.dataProvider = null;
-    this.lastUpdate = null;
-    this.abstract = null;
-    this.description = null;
-    this.name = null;
-    this.shortName = null;
-    this.url = null;
+    this.type = undefined;
+    this.id = undefined;
+    this.dataProvider = undefined;
+    this.lastUpdate = undefined;
+    this.abstract = undefined;
+    this.description = undefined;
+    this.name = undefined;
+    this.shortName = undefined;
+    this.url = undefined;
   }
 }
 

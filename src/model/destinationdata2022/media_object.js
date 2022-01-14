@@ -4,14 +4,14 @@ class MediaObject extends Resource {
   constructor() {
     super();
 
-    this.contentType = null;
-    this.duration = null;
-    this.height = null;
-    this.license = null;
-    this.width = null;
+    this.contentType = undefined;
+    this.duration = undefined;
+    this.height = undefined;
+    this.license = undefined;
+    this.width = undefined;
 
-    this.categories = null;
-    this.copyrightOwner = null;
+    this.categories = undefined;
+    this.copyrightOwner = undefined;
   }
 }
 

@@ -4,9 +4,9 @@ class EventSeries extends IndividualResource {
   constructor() {
     super();
 
-    this.frequency = null;
+    this.frequency = undefined;
 
-    this.editions = null;
+    this.editions = undefined;
   }
 }
 

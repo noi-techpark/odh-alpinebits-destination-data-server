@@ -59,6 +59,8 @@ class AgentsRouter extends Router {
     // Store data
     const agent = deserializeAgent(body.data);
     const connector = new AgentConnector();
+    console.log("body", body);
+    console.log("post agent", agent);
 
     // Return to the client
     try {
@@ -77,6 +79,7 @@ class AgentsRouter extends Router {
     // Store data
     const agent = deserializeAgent(body.data);
     const connector = new AgentConnector();
+    console.log("patch agent", agent);
 
     // Return to the client
     try {

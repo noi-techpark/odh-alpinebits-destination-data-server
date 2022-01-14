@@ -281,11 +281,11 @@ function selectAgentFromId(connection, id) {
               'email', contact_points.email,
               'telephone', contact_points.telephone,
               'address', json_build_object(
-                'country', contactAddress.city,
-                'country', contactAddress.complement,
+                'city', contactAddress.city,
+                'complement', contactAddress.complement,
                 'country', contactAddress.country,
-                'country', contactAddress.region,
-                'country', contactAddress.street,
+                'region', contactAddress.region,
+                'street', contactAddress.street,
                 'type', contactAddress.type,
                 'zipcode', contactAddress.zipcode
               )
@@ -325,11 +325,6 @@ function selectResourceFromId(connection, resourceId) {
   const columns = { [resources.id]: resourceId };
   return select(connection, resources._name, columns);
 }
-
-// function selectAgentFromId(connection, agentId) {
-//   const columns = { [agents.id]: agentId };
-//   return select(connection, agents._name, columns);
-// }
 
 function selectAbstractsFromId(connection, resourceId) {
   const columns = { [abstracts.resourceId]: resourceId };
@@ -401,6 +396,60 @@ function deleteResource(connection, resourceId, type) {
   return connection(resources._name).where(columns).del();
 }
 
+function update(connection, tableName, where, columns, returning) {
+  const returnColumns = getReturningColumns(returning);
+  return connection(tableName).where(where).update(columns).returning(returnColumns);
+}
+
+function updateResource(connection, resource) {
+  const id = resource[resources.id];
+
+  checkNotNullable(id, resources.id);
+
+  const where = { [resources.id]: id };
+  return update(connection, resources._name, where, resource);
+}
+
+function deleteAbstracts(connection, id) {
+  checkNotNullable(id, resources.id);
+
+  const where = { [abstracts.resourceId]: id };
+  return _delete(connection, abstracts._name, where);
+}
+
+function deleteDescriptions(connection, id) {
+  checkNotNullable(id, resources.id);
+
+  const where = { [descriptions.resourceId]: id };
+  return _delete(connection, descriptions._name, where);
+}
+
+function deleteNames(connection, id) {
+  checkNotNullable(id, resources.id);
+
+  const where = { [names.resourceId]: id };
+  return _delete(connection, names._name, where);
+}
+
+function deleteShortNames(connection, id) {
+  checkNotNullable(id, resources.id);
+
+  const where = { [shortNames.resourceId]: id };
+  return _delete(connection, shortNames._name, where);
+}
+
+function deleteUrls(connection, id) {
+  checkNotNullable(id, resources.id);
+
+  const where = { [urls.resourceId]: id };
+  return _delete(connection, urls._name, where);
+}
+
+function _delete(connection, tableName, where, returning) {
+  const ret = getReturningColumns(returning);
+  return connection(tableName).where(where).del(ret);
+}
+
 module.exports = {
   deleteResourceTypes,
   deleteAllEventsStatus,
@@ -441,4 +490,10 @@ module.exports = {
   selectCategoriesFromId,
   selectContactPointsFromId,
   deleteResource,
+  updateResource,
+  deleteAbstracts,
+  deleteDescriptions,
+  deleteNames,
+  deleteShortNames,
+  deleteUrls,
 };

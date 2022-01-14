@@ -4,18 +4,18 @@ class Event extends IndividualResource {
   constructor() {
     super();
 
-    this.capacity = null;
-    this.endDate = null;
-    this.startDate = null;
-    this.status = null;
+    this.capacity = undefined;
+    this.endDate = undefined;
+    this.startDate = undefined;
+    this.status = undefined;
 
-    this.contributors = null;
-    this.organizers = null;
-    this.publisher = null;
-    this.series = null;
-    this.sponsors = null;
-    this.subEvents = null;
-    this.venues = null;
+    this.contributors = undefined;
+    this.organizers = undefined;
+    this.publisher = undefined;
+    this.series = undefined;
+    this.sponsors = undefined;
+    this.subEvents = undefined;
+    this.venues = undefined;
   }
 }
 

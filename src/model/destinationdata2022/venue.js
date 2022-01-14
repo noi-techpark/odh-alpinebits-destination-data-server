@@ -4,9 +4,9 @@ class Venue extends IndividualResource {
   constructor() {
     super();
 
-    this.address = null;
-    this.howToArrive = null;
-    this.geometries = null;
+    this.address = undefined;
+    this.howToArrive = undefined;
+    this.geometries = undefined;
   }
 }
 

@@ -5,8 +5,8 @@ class IndividualResource extends Resource {
   constructor() {
     super();
 
-    this.categories = null;
-    this.multimediaDescriptions = null;
+    this.categories = undefined;
+    this.multimediaDescriptions = undefined;
   }
 
   addCategoryReference(categoryId) {
