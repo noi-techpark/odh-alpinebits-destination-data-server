@@ -424,6 +424,33 @@ function createDeleteContactPointAddressTrigger() {
   `);
 }
 
+function createDeleteCategoryResourceTrigger() {
+  const categoriesTable = categories._name;
+  const categoriesId = categories.resourceId;
+
+  const resourcesTable = resources._name;
+  const resourcesId = resourcesTable + "." + resources.id;
+
+  return connection.raw(`
+    CREATE OR REPLACE FUNCTION delete_category_resource()
+      RETURNS TRIGGER AS
+    $$
+    BEGIN
+      DELETE FROM ${resourcesTable} WHERE OLD.${categoriesId} = ${resourcesId};
+      RETURN OLD;
+    END;
+    $$ LANGUAGE PLPGSQL;
+
+    DROP TRIGGER IF EXISTS category_resource_deletion ON ${categoriesTable};
+
+    CREATE TRIGGER category_resource_deletion
+      AFTER DELETE
+      ON ${categoriesTable}
+      FOR EACH ROW
+      EXECUTE PROCEDURE delete_category_resource();
+  `);
+}
+
 function createSyncLastUpdateTrigger() {
   return connection.raw(`
     CREATE OR REPLACE FUNCTION sync_last_update() RETURNS trigger AS $$
@@ -443,41 +470,47 @@ function createSyncLastUpdateTrigger() {
 }
 
 function createAllTriggers() {
-  return createDeleteContactPointAddressTrigger().then(() => createSyncLastUpdateTrigger());
+  return Promise.all([
+    createDeleteContactPointAddressTrigger(),
+    createDeleteCategoryResourceTrigger(),
+    createSyncLastUpdateTrigger(),
+  ]);
 }
 
 function dropAllTables() {
-  return dropTableIfExists(resourceTypes._name)
-    .then(() => dropTableIfExists(languageCodes._name))
-    .then(() => dropTableIfExists(resources._name))
-    .then(() => dropTableIfExists(abstracts._name))
-    .then(() => dropTableIfExists(descriptions._name))
-    .then(() => dropTableIfExists(names._name))
-    .then(() => dropTableIfExists(shortNames._name))
-    .then(() => dropTableIfExists(urls._name))
-    .then(() => dropTableIfExists(agents._name))
-    .then(() => dropTableIfExists(addresses._name))
-    .then(() => dropTableIfExists(cities._name))
-    .then(() => dropTableIfExists(complements._name))
-    .then(() => dropTableIfExists(regions._name))
-    .then(() => dropTableIfExists(streets._name))
-    .then(() => dropTableIfExists(contactPoints._name))
-    .then(() => dropTableIfExists(categories._name))
-    .then(() => dropTableIfExists(features._name))
-    .then(() => dropTableIfExists(mediaObjects._name))
-    .then(() => dropTableIfExists(seriesFrequencies._name))
-    .then(() => dropTableIfExists(eventSeries._name))
-    .then(() => dropTableIfExists(eventStatus._name))
-    .then(() => dropTableIfExists(events._name))
-    .then(() => dropTableIfExists(resourceCategories._name))
-    .then(() => dropTableIfExists(categoryCoveredTypes._name))
-    .then(() => dropTableIfExists(categorySpecializations._name))
-    .then(() => dropTableIfExists(featureCoveredTypes._name))
-    .then(() => dropTableIfExists(featureSpecializations._name))
-    .then(() => dropTableIfExists(contributors._name))
-    .then(() => dropTableIfExists(organizers._name))
-    .then(() => dropTableIfExists(sponsors._name))
-    .then(() => dropTableIfExists(multimediaDescriptions._name));
+  return Promise.all([
+    dropTableIfExists(resourceTypes._name),
+    dropTableIfExists(languageCodes._name),
+    dropTableIfExists(resources._name),
+    dropTableIfExists(abstracts._name),
+    dropTableIfExists(descriptions._name),
+    dropTableIfExists(names._name),
+    dropTableIfExists(shortNames._name),
+    dropTableIfExists(urls._name),
+    dropTableIfExists(agents._name),
+    dropTableIfExists(addresses._name),
+    dropTableIfExists(cities._name),
+    dropTableIfExists(complements._name),
+    dropTableIfExists(regions._name),
+    dropTableIfExists(streets._name),
+    dropTableIfExists(contactPoints._name),
+    dropTableIfExists(categories._name),
+    dropTableIfExists(features._name),
+    dropTableIfExists(mediaObjects._name),
+    dropTableIfExists(seriesFrequencies._name),
+    dropTableIfExists(eventSeries._name),
+    dropTableIfExists(eventStatus._name),
+    dropTableIfExists(events._name),
+    dropTableIfExists(resourceCategories._name),
+    dropTableIfExists(categoryCoveredTypes._name),
+    dropTableIfExists(categorySpecializations._name),
+    dropTableIfExists(featureCoveredTypes._name),
+    dropTableIfExists(featureSpecializations._name),
+    dropTableIfExists(contributors._name),
+    dropTableIfExists(organizers._name),
+    dropTableIfExists(sponsors._name),
+    dropTableIfExists(multimediaDescriptions._name),
+  ]);
 }
 
 function createAllTables() {

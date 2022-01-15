@@ -6,7 +6,6 @@ const { Agent } = require("../../model/destinationdata2022/agent");
 class AgentConnector extends ResourceConnector {
   constructor(request) {
     super(request);
-    this.request = request;
   }
 
   create(agent) {

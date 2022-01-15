@@ -12,7 +12,7 @@ class AgentsRouter extends Router {
     this.addUnimplementedGetRoute(`/agents/:id/multimediaDescriptions`);
 
     this.addPostRoute(`/agents`, this.postAgent);
-    this.addGetRoute(`/agents`, this.getAgent);
+    this.addGetRoute(`/agents`, this.getAgents);
     this.addGetRoute(`/agents/:id`, this.getAgentById);
     this.addDeleteRoute(`/agents/:id`, this.deleteAgent);
     this.addPatchRoute(`/agents/:id`, this.patchAgent);
@@ -22,7 +22,7 @@ class AgentsRouter extends Router {
     }
   }
 
-  getAgent = async (request) => {
+  getAgents = async (request) => {
     // Process request and authentication
     // Retrieve data
     const connector = new AgentConnector();

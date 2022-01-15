@@ -69,9 +69,9 @@ function deserializeCategory(json) {
   category.namespace = attributes?.namespace ?? category?.namespace;
   category.resourceTypes = attributes?.resourceTypes ?? category?.resourceTypes;
 
-  category.children = relationships?.children ?? category?.children;
-  category.multimediaDescriptions = relationships?.multimediaDescriptions ?? category?.multimediaDescriptions;
-  category.parents = relationships?.parents ?? category?.parents;
+  category.children = relationships?.children?.data ?? category?.children;
+  category.multimediaDescriptions = relationships?.multimediaDescriptions?.data ?? category?.multimediaDescriptions;
+  category.parents = relationships?.parents?.data ?? category?.parents;
 
   return category;
 }
@@ -85,7 +85,7 @@ function deserializeEventSeries(json) {
 
   eventSeries.frequency = attributes?.frequency ?? eventSeries?.frequency;
 
-  eventSeries.editions = relationships?.editions ?? eventSeries?.editions;
+  eventSeries.editions = relationships?.editions?.data ?? eventSeries?.editions;
 
   return eventSeries;
 }
@@ -102,11 +102,11 @@ function deserializeEvent(json) {
   event.startDate = attributes?.startDate ?? event?.startDate;
   event.status = attributes?.status ?? event?.status;
 
-  event.organizers = relationships?.organizers ?? event?.organizers;
-  event.publisher = relationships?.publisher ?? event?.publisher;
-  event.series = relationships?.series ?? event?.series;
-  event.subEvents = relationships?.subEvents ?? event?.subEvents;
-  event.venues = relationships?.venues ?? event?.venues;
+  event.organizers = relationships?.organizers?.data ?? event?.organizers;
+  event.publisher = relationships?.publisher?.data ?? event?.publisher;
+  event.series = relationships?.series?.data ?? event?.series;
+  event.subEvents = relationships?.subEvents?.data ?? event?.subEvents;
+  event.venues = relationships?.venues?.data ?? event?.venues;
 
   return event;
 }
@@ -120,9 +120,9 @@ function deserializeFeature(json) {
   feature.namespace = attributes?.namespace ?? feature?.namespace;
   feature.resourceTypes = attributes?.resourceTypes ?? feature?.resourceTypes;
 
-  feature.children = relationships?.children ?? feature?.children;
-  feature.multimediaDescriptions = relationships?.multimediaDescriptions ?? feature?.multimediaDescriptions;
-  feature.parents = relationships?.parents ?? feature?.parents;
+  feature.children = relationships?.children?.data ?? feature?.children;
+  feature.multimediaDescriptions = relationships?.multimediaDescriptions?.data ?? feature?.multimediaDescriptions;
+  feature.parents = relationships?.parents?.data ?? feature?.parents;
 
   return feature;
 }
@@ -139,8 +139,8 @@ function deserializeMediaObject(json) {
   mediaObject.license = attributes?.license ?? mediaObject?.license;
   mediaObject.width = attributes?.width ?? mediaObject?.width;
 
-  mediaObject.categories = relationships?.categories ?? mediaObject?.categories;
-  mediaObject.copyrightOwner = relationships?.copyrightOwner ?? mediaObject?.copyrightOwner;
+  mediaObject.categories = relationships?.categories?.data ?? mediaObject?.categories;
+  mediaObject.copyrightOwner = relationships?.copyrightOwner?.data ?? mediaObject?.copyrightOwner;
 
   return mediaObject;
 }

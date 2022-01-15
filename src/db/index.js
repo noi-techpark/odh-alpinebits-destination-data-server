@@ -1,4 +1,33 @@
 module.exports = {
+  defaults: {
+    resourceTypes: {
+      agents: "agents",
+      categories: "categories",
+      events: "events",
+      eventSeries: "eventSeries",
+      features: "features",
+      lifts: "lifts",
+      mediaObjects: "mediaObjects",
+      mountainAreas: "mountainAreas",
+      skiSlopes: "skiSlopes",
+      snowparks: "snowparks",
+      venues: "venues",
+    },
+    eventStatus: {
+      canceled: "canceled",
+      published: "published",
+    },
+    seriesFrequencies: {
+      daily: "daily",
+      weekly: "weekly",
+      monthly: "monthly",
+      bimonthly: "bimonthly",
+      quarterly: "quarterly",
+      annual: "annual",
+      biennial: "biennial",
+      triennial: "triennial",
+    },
+  },
   schemas: {
     abstracts: {
       _name: "abstracts",
