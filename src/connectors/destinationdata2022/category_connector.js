@@ -42,27 +42,51 @@ class CategoryConnector extends ResourceConnector {
     });
   }
 
+  updateCategory(oldCategory, newInput) {
+    const newCategory = _.create(oldCategory, newInput);
+
+    // TODO: re-enable
+    // this.checkLastUpdate(oldCategory, newCategory);
+
+    if (this.shouldUpdate(oldCategory, newCategory)) {
+      const columns = this.mapCategoryToColumns(newCategory);
+
+      return dbFn.updateCategory(this.connection, columns).then((ret) => {
+        newCategory.resource_id = _.first(ret)?.resource_id;
+        return Promise.all([this.updateResource(newCategory)]);
+      });
+
+      // return Promise.all([this.updateResource(newCategory)]).then((promises) => {
+      //   newCategory.lastUpdate = _.first(_.flatten(promises))[schemas.resources.lastUpdate];
+      //   return newCategory;
+      // });
+    }
+
+    return Promise.resolve("nope");
+    // TODO: re-enable
+    // this.throwNoUpdate(oldCategory);
+  }
+
   deleteCategory(id) {
     return dbFn.deleteCategory(this.connection, id);
   }
 
   insertCategory(category) {
     const categoryId = category.id;
-    // let resourceId;
 
-    return this.insertResource(category).then((resourceId) => {
-      category.id = categoryId;
-      const columns = this.mapCategoryToColumns(category, resourceId);
-      return dbFn
-        .insertCategory(this.connection, columns)
-        .then(() =>
-          Promise.all([
-            this.insertCategoryCoveredTypes(category),
-            this.insertChildrenCategories(category),
-            this.insertParentCategories(category),
-          ])
-        );
-    });
+    return this.insertResource(category)
+      .then((resourceId) => {
+        category.id = categoryId;
+        const columns = this.mapCategoryToColumns(category, resourceId);
+        return dbFn.insertCategory(this.connection, columns);
+      })
+      .then(() =>
+        Promise.all([
+          this.insertCategoryCoveredTypes(category),
+          this.insertChildrenCategories(category),
+          this.insertParentCategories(category),
+        ])
+      );
   }
 
   insertCategoryCoveredTypes(category) {
@@ -90,7 +114,10 @@ class CategoryConnector extends ResourceConnector {
   }
 
   mapResourceToColumns(resource) {
+    console.log("updateResource", resource);
+
     return {
+      [schemas.resources.id]: resource?.resource_id,
       [schemas.resources.type]: resource?.type,
       [schemas.resources.dataProvider]: resource?.dataProvider,
       [schemas.resources.lastUpdate]: resource?.lastUpdate,

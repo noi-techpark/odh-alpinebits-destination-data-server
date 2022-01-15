@@ -49,8 +49,8 @@ class ResourceConnector {
       .then((ret) => {
         console.log("transaction complete");
         // TODO: re-enable commits
-        this.connection.commit();
-        // this.connection.rollback();
+        // this.connection.commit();
+        this.connection.rollback();
         return ret;
       })
       .catch((err) => {
@@ -97,7 +97,7 @@ class ResourceConnector {
           this.insertResourceName(resource),
           this.insertResourceShortName(resource),
           this.insertResourceUrl(resource),
-          this.insertCategories(resource),
+          this.insertResourceCategories(resource),
         ])
       )
       .then(() => resource.id);
@@ -145,14 +145,12 @@ class ResourceConnector {
     return Promise.all(inserts ?? []);
   }
 
-  insertCategories(resource) {
-    const inserts = resource?.categories?.map((category) => this.insertCategory(category, resource));
+  insertResourceCategories(resource) {
+    const inserts = resource?.categories?.map((category) => {
+      const columns = this.mapResourceCategoryToColumns(category.id, resource.id);
+      return dbFn.insertResourceCategory(this.connection, columns);
+    });
     return Promise.all(inserts ?? []);
-  }
-
-  insertCategory(category, resource) {
-    const columns = this.mapResourceCategoryToColumns(category.id, resource.id);
-    return dbFn.insertResourceCategory(this.connection, columns);
   }
 
   insertAddress(address) {
@@ -205,6 +203,8 @@ class ResourceConnector {
 
   updateResource(resource) {
     const columns = this.mapResourceToColumns(resource);
+    console.log("updateResource", columns);
+
     return Promise.all([
       dbFn.updateResource(this.connection, columns),
       this.updateResourceAbstract(resource),

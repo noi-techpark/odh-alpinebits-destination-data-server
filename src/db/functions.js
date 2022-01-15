@@ -262,9 +262,21 @@ function selectAgentFromId(connection, id) {
           COALESCE(agentNames.name, 'null') AS  "name",
           COALESCE(agentShortNames."shortName", 'null') AS  "shortName",
           COALESCE(to_json(resources.simple_url), agentUrls.url, 'null') AS  "url",
-          COALESCE(agentContacts."contactPoints", 'null')  AS "contactPoints"
+          COALESCE(agentContacts."contactPoints", 'null')  AS "contactPoints",
+          COALESCE(agentCategories."categories", 'null')  AS "categories"
         FROM agents
         LEFT JOIN resources ON resources.id = agents.id
+        LEFT JOIN (
+          SELECT categorized_resource_id AS "resource_id",
+            json_agg(
+              json_build_object(
+                'id', category_id,
+                'type', 'categories'
+              )
+            ) AS "categories"
+          FROM resource_categories
+          GROUP BY resource_id
+        ) agentCategories ON agentCategories.resource_id = agents.id
         LEFT JOIN (
           SELECT abstracts.resource_id AS "id", COALESCE(json_object_agg(DISTINCT abstracts.lang, abstracts.content) FILTER (WHERE abstracts.lang IS NOT NULL))::json AS "abstract"
           FROM abstracts
@@ -343,8 +355,11 @@ function selectCategoryFromId(connection, id) {
       `
       SELECT
         categories.id AS "id",
+        categories.resource_id AS "resource_id",
+        categories.namespace AS "namespace",
         COALESCE(data_provider) AS "dataProvider",
         COALESCE(last_update) AS "lastUpdate",
+        COALESCE(type) AS "type",
         COALESCE(categoryAbstracts.abstract, 'null') AS  "abstract",
         COALESCE(categoryDescriptions.description, 'null') AS  "description",
         COALESCE(categoryNames.name, 'null') AS  "name",
@@ -504,12 +519,21 @@ function update(connection, tableName, where, columns, returning) {
 }
 
 function updateResource(connection, resource) {
-  const id = resource[resources.id];
+  const resourceId = resource[resources.id];
 
-  checkNotNullable(id, resources.id);
+  checkNotNullable(resourceId, resources.id);
 
-  const where = { [resources.id]: id };
+  const where = { [resources.id]: resourceId };
   return update(connection, resources._name, where, resource);
+}
+
+function updateCategory(connection, category) {
+  const categoryId = category[categories.id];
+
+  checkNotNullable(categoryId, categories.id);
+
+  const where = { [categories.id]: categoryId };
+  return update(connection, categories._name, where, category);
 }
 
 function deleteAbstracts(connection, id) {
@@ -604,6 +628,7 @@ module.exports = {
   deleteResource,
   deleteCategory,
   updateResource,
+  updateCategory,
   deleteAbstracts,
   deleteDescriptions,
   deleteNames,
