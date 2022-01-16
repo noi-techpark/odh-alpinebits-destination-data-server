@@ -17,7 +17,7 @@ const {
   descriptions,
   eventStatus,
   events,
-  eventSeries,
+  eventSeries: eventSeriesSchema,
   features,
   featureCoveredTypes,
   featureSpecializations,
@@ -290,6 +290,14 @@ function insertEvent(connection, event) {
   return insert(connection, events._name, event, events.id).then((array) => _.first(array));
 }
 
+function insertEventSeries(connection, eventSeries) {
+  const eventSeriesId = eventSeries[eventSeriesSchema.id];
+
+  checkNotNullable(eventSeriesId, eventSeriesSchema.id);
+
+  return insert(connection, eventSeriesSchema._name, eventSeries, eventSeriesSchema.id).then((array) => _.first(array));
+}
+
 function insertResourceCategory(connection, resourceId, categoryId) {
   const columns = {
     [resourceCategories.categoryId]: categoryId,
@@ -388,6 +396,12 @@ function selectEventFromId(connection, id) {
   const selectEventFile = "select_event.sql";
   const where = _.isString(id) ? `WHERE events.id = '${id}'` : "";
   return selectUsingFile(connection, selectEventFile, where);
+}
+
+function selectEventSeriesFromId(connection, id) {
+  const selectEventSeriesFile = "select_event_series.sql";
+  const where = _.isString(id) ? `WHERE event_series.id = '${id}'` : "";
+  return selectUsingFile(connection, selectEventSeriesFile, where);
 }
 
 function selectResourceFromId(connection, resourceId) {
@@ -626,12 +640,36 @@ function updateSubEvent(connection, eventId, subEventId) {
   return update(connection, events._name, where, columns);
 }
 
+// TODO: check the case where the event already has a series
+function updateEdition(connection, eventSeriesId, eventId) {
+  const columns = {
+    [events.seriesId]: eventSeriesId,
+  };
+
+  checkNotNullable(eventSeriesId, events.seriesId);
+  checkNotNullable(eventId, events.id);
+
+  const where = { [events.id]: eventId };
+
+  return update(connection, events._name, where, columns);
+}
+
 function deleteSubEvents(connection, eventId) {
   const columns = { [events.parentId]: null };
 
   checkNotNullable(eventId, events.parentId);
 
   const where = { [events.parentId]: eventId };
+
+  return update(connection, events._name, where, columns);
+}
+
+function deleteEditions(connection, eventSeriesId) {
+  const columns = { [events.seriesId]: null };
+
+  checkNotNullable(eventSeriesId, events.seriesId);
+
+  const where = { [events.seriesId]: eventSeriesId };
 
   return update(connection, events._name, where, columns);
 }
@@ -695,6 +733,7 @@ module.exports = {
   insertCategoryCoveredType,
   insertCategorySpecialization,
   insertEvent,
+  insertEventSeries,
   selectAgentFromId,
   selectCategoryFromId,
   selectResourceFromId,
@@ -710,6 +749,7 @@ module.exports = {
   selectCategoriesFromId,
   selectMediaObjectFromId,
   selectEventFromId,
+  selectEventSeriesFromId,
   selectContactPointsFromId,
   deleteResource,
   deleteCategory,
@@ -737,6 +777,8 @@ module.exports = {
   deleteSponsors,
   updateSubEvent,
   deleteSubEvents,
+  deleteEditions,
+  updateEdition,
   deleteCategoryCoveredTypes,
   deleteChildrenCategories,
   deleteParentCategories,
