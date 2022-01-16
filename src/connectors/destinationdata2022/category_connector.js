@@ -1,8 +1,10 @@
 const _ = require("lodash");
 const dbFn = require("../../db/functions");
-const { schemas } = require("../../db");
 const { ResourceConnector } = require("./resource_connector");
 const { Category } = require("../../model/destinationdata2022/category");
+
+const { schemas } = require("../../db");
+const { abstracts, descriptions, names, shortNames, urls } = schemas;
 
 class CategoryConnector extends ResourceConnector {
   constructor(request) {
@@ -45,26 +47,26 @@ class CategoryConnector extends ResourceConnector {
   updateCategory(oldCategory, newInput) {
     const newCategory = _.create(oldCategory, newInput);
 
-    // TODO: re-enable
-    // this.checkLastUpdate(oldCategory, newCategory);
+    this.checkLastUpdate(oldCategory, newCategory);
 
     if (this.shouldUpdate(oldCategory, newCategory)) {
       const columns = this.mapCategoryToColumns(newCategory);
 
-      return dbFn.updateCategory(this.connection, columns).then((ret) => {
-        newCategory.resource_id = _.first(ret)?.resource_id;
-        return Promise.all([this.updateResource(newCategory)]);
-      });
-
-      // return Promise.all([this.updateResource(newCategory)]).then((promises) => {
-      //   newCategory.lastUpdate = _.first(_.flatten(promises))[schemas.resources.lastUpdate];
-      //   return newCategory;
-      // });
+      return dbFn
+        .updateCategory(this.connection, columns)
+        .then((ret) => {
+          newCategory.resource_id = _.first(ret)?.resource_id;
+          return Promise.all([
+            this.updateResource(newCategory),
+            this.updateCategoryCoveredTypes(newCategory),
+            this.updateChildrenCategories(newCategory),
+            this.updateParentCategories(newCategory),
+          ]);
+        })
+        .then(() => newCategory);
     }
 
-    return Promise.resolve("nope");
-    // TODO: re-enable
-    // this.throwNoUpdate(oldCategory);
+    this.throwNoUpdate(oldCategory);
   }
 
   deleteCategory(id) {
@@ -72,11 +74,8 @@ class CategoryConnector extends ResourceConnector {
   }
 
   insertCategory(category) {
-    const categoryId = category.id;
-
     return this.insertResource(category)
       .then((resourceId) => {
-        category.id = categoryId;
         const columns = this.mapCategoryToColumns(category, resourceId);
         return dbFn.insertCategory(this.connection, columns);
       })
@@ -89,61 +88,101 @@ class CategoryConnector extends ResourceConnector {
       );
   }
 
-  insertCategoryCoveredTypes(category) {
-    const inserts = category?.resourceTypes?.map((type) => {
-      const columns = this.mapCategoryCoveredType(type, category.id);
-      return dbFn.insertCategoryCoveredType(this.connection, columns);
+  insertResource(category) {
+    const columns = this.mapResourceToColumns(category);
+
+    return dbFn.insertResource(this.connection, columns).then((resourceId) => {
+      category.resource_id = resourceId;
+      return Promise.all([
+        this.insertResourceText(abstracts._name, category.abstract, category.resource_id),
+        this.insertResourceText(descriptions._name, category.description, category.resource_id),
+        this.insertResourceText(names._name, category.name, category.resource_id),
+        this.insertResourceText(shortNames._name, category.shortName, category.resource_id),
+        this.insertResourceText(urls._name, category.url, category.resource_id),
+        this.insertMultimediaDescriptions(category),
+      ]);
     });
+  }
+
+  updateResource(category) {
+    const columns = this.mapResourceToColumns(category);
+
+    return Promise.all([
+      dbFn.updateResource(this.connection, columns),
+      this.updateResourceText(abstracts._name, category.abstract, category.resource_id),
+      this.updateResourceText(descriptions._name, category.description, category.resource_id),
+      this.updateResourceText(names._name, category.name, category.resource_id),
+      this.updateResourceText(shortNames._name, category.shortName, category.resource_id),
+      this.updateResourceText(urls._name, category.url, category.resource_id),
+      this.updateMultimediaDescriptions(category),
+    ]).then(_.flatten);
+  }
+
+  insertMultimediaDescriptions(category) {
+    const inserts = category?.multimediaDescriptions?.map((description) =>
+      dbFn.insertMultimediaDescriptions(this.connection, category.resource_id, description.id)
+    );
     return Promise.all(inserts ?? []);
+  }
+
+  updateMultimediaDescriptions(category) {
+    return dbFn
+      .deleteMultimediaDescriptions(this.connection, category.resource_id)
+      .then(() => this.insertMultimediaDescriptions(category));
+  }
+
+  insertCategoryCoveredTypes(category) {
+    const inserts = category?.resourceTypes?.map((type) =>
+      dbFn.insertCategoryCoveredType(this.connection, type, category.id)
+    );
+    return Promise.all(inserts ?? []);
+  }
+
+  updateCategoryCoveredTypes(category) {
+    return dbFn
+      .deleteCategoryCoveredTypes(this.connection, category.id)
+      .then(() => this.insertCategoryCoveredTypes(category));
   }
 
   insertChildrenCategories(category) {
-    const inserts = category?.children?.map((child) => {
-      const columns = this.mapCategorySpecialization(child.id, category.id);
-      return dbFn.insertCategorySpecialization(this.connection, columns);
-    });
+    const inserts = category?.children?.map((child) =>
+      dbFn.insertCategorySpecialization(this.connection, child.id, category.id)
+    );
     return Promise.all(inserts ?? []);
+  }
+
+  updateChildrenCategories(category) {
+    return dbFn
+      .deleteChildrenCategories(this.connection, category.id)
+      .then(() => this.insertChildrenCategories(category));
   }
 
   insertParentCategories(category) {
-    const inserts = category?.parents?.map((parent) => {
-      const columns = this.mapCategorySpecialization(category.id, parent.id);
-      return dbFn.insertCategorySpecialization(this.connection, columns);
-    });
+    const inserts = category?.parents?.map((parent) =>
+      dbFn.insertCategorySpecialization(this.connection, category.id, parent.id)
+    );
     return Promise.all(inserts ?? []);
   }
 
-  mapResourceToColumns(resource) {
-    console.log("updateResource", resource);
+  updateParentCategories(category) {
+    return dbFn.deleteParentCategories(this.connection, category.id).then(() => this.insertParentCategories(category));
+  }
 
+  mapResourceToColumns(category) {
     return {
-      [schemas.resources.id]: resource?.resource_id,
-      [schemas.resources.type]: resource?.type,
-      [schemas.resources.dataProvider]: resource?.dataProvider,
-      [schemas.resources.lastUpdate]: resource?.lastUpdate,
-      [schemas.resources.simpleUrl]: _.isString(resource?.url) ? resource?.url : null,
+      [schemas.resources.id]: category?.resource_id,
+      [schemas.resources.type]: category?.type,
+      [schemas.resources.dataProvider]: category?.dataProvider,
+      [schemas.resources.lastUpdate]: category?.lastUpdate,
+      [schemas.resources.simpleUrl]: _.isString(category?.url) ? category?.url : null,
     };
   }
 
-  mapCategoryToColumns(category, resourceId) {
+  mapCategoryToColumns(category) {
     return {
       [schemas.categories.id]: category.id,
-      [schemas.categories.resourceId]: resourceId,
+      [schemas.categories.resourceId]: category.resource_id,
       [schemas.categories.namespace]: category.namespace,
-    };
-  }
-
-  mapCategoryCoveredType(type, categoryId) {
-    return {
-      [schemas.categoryCoveredTypes.type]: type,
-      [schemas.categoryCoveredTypes.categoryId]: categoryId,
-    };
-  }
-
-  mapCategorySpecialization(childId, parentId) {
-    return {
-      [schemas.categorySpecializations.childId]: childId,
-      [schemas.categorySpecializations.parentId]: parentId,
     };
   }
 

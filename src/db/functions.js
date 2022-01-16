@@ -198,16 +198,54 @@ function insert(connection, tableName, columns, returning) {
   return connection(tableName).insert(columns).returning(returnColumns);
 }
 
-function insertCategoryCoveredType(connection, columns) {
-  checkNotNullable(columns[categoryCoveredTypes.type], categoryCoveredTypes.type);
-  checkNotNullable(columns[categoryCoveredTypes.categoryId], categoryCoveredTypes.categoryId);
+function insertResourceText(connection, tableName, resourceId, lang, content) {
+  const columns = {
+    [abstracts.resourceId]: resourceId,
+    [abstracts.lang]: lang,
+    [abstracts.content]: content,
+  };
+
+  checkNotNullable(resourceId, abstracts.resourceId);
+  checkNotNullable(lang, abstracts.lang);
+  checkNotNullable(content, abstracts.content);
+
+  return insert(connection, tableName, columns);
+}
+
+function insertAddressText(connection, tableName, addressId, lang, content) {
+  const columns = {
+    [cities.addressId]: addressId,
+    [cities.lang]: lang,
+    [cities.content]: content,
+  };
+
+  checkNotNullable(addressId, cities.addressId);
+  checkNotNullable(lang, cities.lang);
+  checkNotNullable(content, cities.content);
+
+  return insert(connection, tableName, columns);
+}
+
+function insertCategoryCoveredType(connection, type, categoryId) {
+  const columns = {
+    [categoryCoveredTypes.type]: type,
+    [categoryCoveredTypes.categoryId]: categoryId,
+  };
+
+  checkNotNullable(type, categoryCoveredTypes.type);
+  checkNotNullable(categoryId, categoryCoveredTypes.categoryId);
 
   return insert(connection, categoryCoveredTypes._name, columns);
 }
 
-function insertCategorySpecialization(connection, columns) {
-  checkNotNullable(columns[categorySpecializations.childId], categorySpecializations.childId);
-  checkNotNullable(columns[categorySpecializations.parentId], categorySpecializations.parentId);
+function insertCategorySpecialization(connection, childId, parentId) {
+  const columns = {
+    [categorySpecializations.childId]: childId,
+    [categorySpecializations.parentId]: parentId,
+  };
+
+  checkNotNullable(childId, categorySpecializations.childId);
+  checkNotNullable(parentId, categorySpecializations.parentId);
 
   return insert(connection, categorySpecializations._name, columns);
 }
@@ -238,8 +276,28 @@ function insertCategory(connection, category) {
   return insert(connection, categories._name, category, categories.id).then((array) => _.first(array));
 }
 
-function insertResourceCategory(connection, resourceCategory) {
-  return insert(connection, resourceCategories._name, resourceCategory);
+function insertResourceCategory(connection, resourceId, categoryId) {
+  const columns = {
+    [resourceCategories.categoryId]: categoryId,
+    [resourceCategories.categorizedResourceId]: resourceId,
+  };
+
+  checkNotNullable(categoryId, resourceCategories.categoryId);
+  checkNotNullable(resourceId, resourceCategories.categorizedResourceId);
+
+  return insert(connection, resourceCategories._name, columns);
+}
+
+function insertMultimediaDescriptions(connection, resourceId, descriptionId) {
+  const columns = {
+    [multimediaDescriptions.mediaObjectId]: descriptionId,
+    [multimediaDescriptions.resourceId]: resourceId,
+  };
+
+  checkNotNullable(descriptionId, multimediaDescriptions.mediaObjectId);
+  checkNotNullable(resourceId, multimediaDescriptions.resourceId);
+
+  return insert(connection, multimediaDescriptions._name, columns);
 }
 
 function select(connection, tableName, where, selection) {
@@ -583,6 +641,76 @@ function _delete(connection, tableName, where, returning) {
   return connection(tableName).where(where).del(ret);
 }
 
+function deleteResourceText(connection, tableName, resourceId) {
+  const columns = {
+    [abstracts.resourceId]: resourceId,
+  };
+
+  checkNotNullable(resourceId, abstracts.resourceId);
+
+  return connection(tableName).where(columns).del();
+}
+
+function deleteAddressText(connection, tableName, addressId) {
+  const columns = {
+    [cities.addressId]: addressId,
+  };
+
+  checkNotNullable(addressId, cities.addressId);
+
+  return connection(tableName).where(columns).del();
+}
+
+function deleteResourceCategories(connection, resourceId) {
+  const columns = {
+    [resourceCategories.categorizedResourceId]: resourceId,
+  };
+
+  checkNotNullable(resourceId, resourceCategories.categorizedResourceId);
+
+  return connection(resourceCategories._name).where(columns).del();
+}
+
+function deleteMultimediaDescriptions(connection, descriptionId) {
+  const columns = {
+    [multimediaDescriptions.resourceId]: descriptionId,
+  };
+
+  checkNotNullable(descriptionId, multimediaDescriptions.resourceId);
+
+  return connection(multimediaDescriptions._name).where(columns).del();
+}
+
+function deleteCategoryCoveredTypes(connection, categoryId) {
+  const columns = {
+    [categoryCoveredTypes.categoryId]: categoryId,
+  };
+
+  checkNotNullable(categoryId, categoryCoveredTypes.categoryId);
+
+  return connection(categoryCoveredTypes._name).where(columns).del();
+}
+
+function deleteChildrenCategories(connection, parentId) {
+  const columns = {
+    [categorySpecializations.parentId]: parentId,
+  };
+
+  checkNotNullable(parentId, categorySpecializations.parentId);
+
+  return connection(categorySpecializations._name).where(columns).del();
+}
+
+function deleteParentCategories(connection, childId) {
+  const columns = {
+    [categorySpecializations.childId]: childId,
+  };
+
+  checkNotNullable(childId, categorySpecializations.childId);
+
+  return connection(categorySpecializations._name).where(columns).del();
+}
+
 module.exports = {
   deleteResourceTypes,
   deleteAllEventsStatus,
@@ -635,4 +763,15 @@ module.exports = {
   deleteShortNames,
   deleteUrls,
   deleteContactPoints,
+  deleteResourceText,
+  deleteAddressText,
+  insertResourceText,
+  insertAddressText,
+  insertResourceCategory,
+  insertMultimediaDescriptions,
+  deleteResourceCategories,
+  deleteMultimediaDescriptions,
+  deleteCategoryCoveredTypes,
+  deleteChildrenCategories,
+  deleteParentCategories,
 };

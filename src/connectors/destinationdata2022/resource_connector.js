@@ -1,7 +1,10 @@
 const _ = require("lodash");
 const knex = require("../../db/connect");
 const dbFn = require("../../db/functions");
+const db = require("../../db");
+
 const { schemas } = require("../../db");
+const { abstracts, descriptions, names, shortNames, urls, cities, complements, regions, streets } = schemas;
 
 const colors = {
   FgBlack: "\x1b[30m",
@@ -48,9 +51,7 @@ class ResourceConnector {
       )
       .then((ret) => {
         console.log("transaction complete");
-        // TODO: re-enable commits
-        // this.connection.commit();
-        this.connection.rollback();
+        this.connection.commit();
         return ret;
       })
       .catch((err) => {
@@ -87,70 +88,74 @@ class ResourceConnector {
   insertResource(resource) {
     const columns = this.mapResourceToColumns(resource);
 
+    return dbFn.insertResource(this.connection, columns).then((resourceId) => {
+      resource.id = resourceId;
+      return Promise.all([
+        this.insertResourceText(abstracts._name, resource.abstract, resource.id),
+        this.insertResourceText(descriptions._name, resource.description, resource.id),
+        this.insertResourceText(names._name, resource.name, resource.id),
+        this.insertResourceText(shortNames._name, resource.shortName, resource.id),
+        this.insertResourceText(urls._name, resource.url, resource.id),
+        this.insertResourceCategories(resource),
+        this.insertMultimediaDescriptions(resource),
+      ]);
+    });
+  }
+
+  updateResource(resource) {
+    const columns = this.mapResourceToColumns(resource);
+
+    return Promise.all([
+      dbFn.updateResource(this.connection, columns),
+      this.updateResourceText(abstracts._name, resource.abstract, resource.id),
+      this.updateResourceText(descriptions._name, resource.description, resource.id),
+      this.updateResourceText(names._name, resource.name, resource.id),
+      this.updateResourceText(shortNames._name, resource.shortName, resource.id),
+      this.updateResourceText(urls._name, resource.url, resource.id),
+      this.updateResourceCategories(resource),
+      this.updateMultimediaDescriptions(resource),
+    ]).then(_.flatten);
+  }
+
+  insertResourceText(tableName, text, resourceId) {
+    const inserts = !_.isObject(text)
+      ? []
+      : _.entries(text)?.map(([lang, content]) =>
+          dbFn.insertResourceText(this.connection, tableName, resourceId, lang, content)
+        );
+    return Promise.all(inserts);
+  }
+
+  updateResourceText(tableName, text, resourceId) {
     return dbFn
-      .insertResource(this.connection, columns)
-      .then((resourceId) => (resource.id = resourceId))
-      .then(() =>
-        Promise.all([
-          this.insertResourceAbstract(resource),
-          this.insertResourceDescription(resource),
-          this.insertResourceName(resource),
-          this.insertResourceShortName(resource),
-          this.insertResourceUrl(resource),
-          this.insertResourceCategories(resource),
-        ])
-      )
-      .then(() => resource.id);
-  }
-
-  insertResourceAbstract(resource) {
-    const inserts = _.keys(resource.abstract).map((lang) => {
-      const columns = this.mapResourceTextToColumns(resource.id, lang, _.get(resource.abstract, lang));
-      return dbFn.insertAbstract(this.connection, columns);
-    });
-    return Promise.all(inserts ?? []);
-  }
-
-  insertResourceDescription(resource) {
-    const inserts = _.keys(resource.description).map((lang) => {
-      const columns = this.mapResourceTextToColumns(resource.id, lang, _.get(resource.description, lang));
-      return dbFn.insertDescription(this.connection, columns);
-    });
-    return Promise.all(inserts ?? []);
-  }
-
-  insertResourceName(resource) {
-    const inserts = _.keys(resource.name).map((lang) => {
-      const columns = this.mapResourceTextToColumns(resource.id, lang, _.get(resource.name, lang));
-      return dbFn.insertName(this.connection, columns);
-    });
-    return Promise.all(inserts ?? []);
-  }
-
-  insertResourceShortName(resource) {
-    const inserts = _.keys(resource.shortName).map((lang) => {
-      const columns = this.mapResourceTextToColumns(resource.id, lang, _.get(resource.shortName, lang));
-      return dbFn.insertShortName(this.connection, columns);
-    });
-    return Promise.all(inserts ?? []);
-  }
-
-  insertResourceUrl(resource) {
-    if (!_.isObject(resource.url)) return;
-
-    const inserts = _.keys(resource.url).map((lang) => {
-      const columns = this.mapResourceTextToColumns(resource.id, lang, _.get(resource.url, lang));
-      return dbFn.insertUrl(this.connection, columns);
-    });
-    return Promise.all(inserts ?? []);
+      .deleteResourceText(this.connection, tableName, resourceId)
+      .then(() => this.insertResourceText(tableName, text, resourceId));
   }
 
   insertResourceCategories(resource) {
-    const inserts = resource?.categories?.map((category) => {
-      const columns = this.mapResourceCategoryToColumns(category.id, resource.id);
-      return dbFn.insertResourceCategory(this.connection, columns);
-    });
+    const inserts = resource?.categories?.map((category) =>
+      dbFn.insertResourceCategory(this.connection, resource.id, category.id)
+    );
     return Promise.all(inserts ?? []);
+  }
+
+  updateResourceCategories(resource) {
+    return dbFn
+      .deleteResourceCategories(this.connection, resource.id)
+      .then(() => this.insertResourceCategories(resource));
+  }
+
+  insertMultimediaDescriptions(resource) {
+    const inserts = resource?.multimediaDescriptions?.map((description) =>
+      dbFn.insertMultimediaDescriptions(this.connection, resource.id, description.id)
+    );
+    return Promise.all(inserts ?? []);
+  }
+
+  updateMultimediaDescriptions(resource) {
+    return dbFn
+      .deleteMultimediaDescriptions(this.connection, resource.id)
+      .then(() => this.insertMultimediaDescriptions(resource));
   }
 
   insertAddress(address) {
@@ -159,110 +164,23 @@ class ResourceConnector {
     const columns = this.mapAddressToColumns(address);
 
     return dbFn.insertAddress(this.connection, columns).then((rows) => {
-      const addressId = _.first(rows);
+      address.id = _.first(rows);
       return Promise.all([
-        this.insertAddressCity(address, addressId),
-        this.insertAddressComplement(address, addressId),
-        this.insertAddressRegion(address, addressId),
-        this.insertAddressStreet(address, addressId),
-      ]).then(() => addressId);
+        this.insertAddressText(cities._name, address.city, address.id),
+        this.insertAddressText(complements._name, address.complement, address.id),
+        this.insertAddressText(regions._name, address.region, address.id),
+        this.insertAddressText(streets._name, address.street, address.id),
+      ]).then(() => address.id);
     });
   }
 
-  insertAddressCity(address, addressId) {
-    const inserts = _.keys(address.city)?.map((lang) => {
-      const columns = this.mapAddressTextToColumns(addressId, lang, _.get(address.city, lang));
-      return dbFn.insertCity(this.connection, columns);
-    });
-    return Promise.all(inserts ?? []);
-  }
-
-  insertAddressComplement(address, addressId) {
-    const inserts = _.keys(address.complement)?.map((lang) => {
-      const columns = this.mapAddressTextToColumns(addressId, lang, _.get(address.complement, lang));
-      return dbFn.insertComplement(this.connection, columns);
-    });
-    return Promise.all(inserts ?? []);
-  }
-
-  insertAddressRegion(address, addressId) {
-    const inserts = _.keys(address.region)?.map((lang) => {
-      const columns = this.mapAddressTextToColumns(addressId, lang, _.get(address.region, lang));
-      return dbFn.insertRegion(this.connection, columns);
-    });
-    return Promise.all(inserts ?? []);
-  }
-
-  insertAddressStreet(address, addressId) {
-    const inserts = _.keys(address.street)?.map((lang) => {
-      const columns = this.mapAddressTextToColumns(addressId, lang, _.get(address.street, lang));
-      return dbFn.insertStreet(this.connection, columns);
-    });
-    return Promise.all(inserts ?? []);
-  }
-
-  updateResource(resource) {
-    const columns = this.mapResourceToColumns(resource);
-    console.log("updateResource", columns);
-
-    return Promise.all([
-      dbFn.updateResource(this.connection, columns),
-      this.updateResourceAbstract(resource),
-      this.updateResourceDescription(resource),
-      this.updateResourceName(resource),
-      this.updateResourceShortName(resource),
-      this.updateResourceUrl(resource),
-      // TODO: process categories relationship
-      // TODO: process multimediaDescriptions relationship
-    ]).then(_.flatten);
-  }
-
-  updateResourceAbstract(resource) {
-    const updates = _.keys(resource.abstract)?.map((lang) => {
-      const columns = this.mapResourceTextToColumns(resource.id, lang, _.get(resource.abstract, lang));
-      return dbFn
-        .deleteAbstracts(this.connection, resource.id)
-        .then(() => dbFn.insertAbstract(this.connection, columns));
-    });
-    return Promise.all(updates ?? []);
-  }
-
-  updateResourceDescription(resource) {
-    const updates = _.keys(resource.description)?.map((lang) => {
-      const columns = this.mapResourceTextToColumns(resource.id, lang, _.get(resource.description, lang));
-      return dbFn
-        .deleteDescriptions(this.connection, resource.id)
-        .then(() => dbFn.insertDescription(this.connection, columns));
-    });
-    return Promise.all(updates ?? []);
-  }
-
-  updateResourceName(resource) {
-    const updates = _.keys(resource.name)?.map((lang) => {
-      const columns = this.mapResourceTextToColumns(resource.id, lang, _.get(resource.name, lang));
-      return dbFn.deleteNames(this.connection, resource.id).then(() => dbFn.insertName(this.connection, columns));
-    });
-    return Promise.all(updates ?? []);
-  }
-
-  updateResourceShortName(resource) {
-    const updates = _.keys(resource.shortName)?.map((lang) => {
-      const columns = this.mapResourceTextToColumns(resource.id, lang, _.get(resource.shortName, lang));
-      return dbFn
-        .deleteShortNames(this.connection, resource.id)
-        .then(() => dbFn.insertShortName(this.connection, columns));
-    });
-    return Promise.all(updates ?? []);
-  }
-
-  updateResourceUrl(resource) {
-    if (_.isString(resource.url)) return dbFn.deleteUrls(this.connection, resource.id);
-
-    const updates = _.keys(resource.url)?.map((lang) => {
-      const columns = this.mapResourceTextToColumns(resource.id, lang, _.get(resource.url, lang));
-      return dbFn.deleteUrls(this.connection, resource.id).then(() => dbFn.insertUrl(this.connection, columns));
-    });
-    return Promise.all(updates ?? []);
+  insertAddressText(tableName, text, addressId) {
+    const inserts = !_.isObject(text)
+      ? []
+      : _.entries(text)?.map(([lang, content]) =>
+          dbFn.insertAddressText(this.connection, tableName, addressId, lang, content)
+        );
+    return Promise.all(inserts);
   }
 
   mapResourceToColumns(resource) {
@@ -272,29 +190,6 @@ class ResourceConnector {
       [schemas.resources.dataProvider]: resource?.dataProvider,
       [schemas.resources.lastUpdate]: resource?.lastUpdate,
       [schemas.resources.simpleUrl]: _.isString(resource?.url) ? resource?.url : null,
-    };
-  }
-
-  mapResourceCategoryToColumns(categoryId, agentId) {
-    return {
-      [schemas.resourceCategories.categoryId]: categoryId,
-      [schemas.resourceCategories.categorizedResourceId]: agentId,
-    };
-  }
-
-  mapResourceTextToColumns(resourceId, lang, content) {
-    return {
-      [schemas.names.resourceId]: resourceId,
-      [schemas.names.lang]: lang,
-      [schemas.names.content]: content,
-    };
-  }
-
-  mapAddressTextToColumns(addressId, lang, content) {
-    return {
-      [schemas.cities.addressId]: addressId,
-      [schemas.cities.lang]: lang,
-      [schemas.cities.content]: content,
     };
   }
 

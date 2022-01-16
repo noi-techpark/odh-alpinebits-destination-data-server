@@ -58,7 +58,8 @@ class AgentsRouter extends Router {
     this.validate(body);
     // Store data
     const agent = deserializeAgent(body.data);
-    const connector = new AgentConnector();
+    const parsedRequest = new Request(request);
+    const connector = new AgentConnector(parsedRequest);
 
     // Return to the client
     try {
@@ -76,7 +77,8 @@ class AgentsRouter extends Router {
     this.validate(body);
     // Store data
     const agent = deserializeAgent(body.data);
-    const connector = new AgentConnector();
+    const parsedRequest = new Request(request);
+    const connector = new AgentConnector(parsedRequest);
 
     // Return to the client
     try {
