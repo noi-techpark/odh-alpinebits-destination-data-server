@@ -226,6 +226,7 @@ function createEventsTable() {
     table.timestamp(events.startDate, { useTz: true });
     table.uuid(events.parentId).references(events.id).inTable(events._name).onDelete(SET_NULL);
     table.uuid(events.publisherId).references(agents.id).inTable(agents._name).notNullable().onDelete(CASCADE);
+    table.uuid(events.seriesId).references(eventSeries.id).inTable(eventSeries._name).notNullable().onDelete(SET_NULL);
     table.string(events.status, 50).references(eventStatus.status).inTable(eventStatus._name).onDelete(SET_NULL);
   });
 }

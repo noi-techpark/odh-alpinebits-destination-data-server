@@ -2,17 +2,18 @@ SELECT agents.id AS "id",
   COALESCE(resources.type) AS "type",
   COALESCE(resources.data_provider) AS "dataProvider",
   COALESCE(resources.last_update) AS "lastUpdate",
-  COALESCE(agentAbstracts.abstract, 'null') AS "abstract",
-  COALESCE(agentDescriptions.description, 'null') AS "description",
-  COALESCE(agentNames.name, 'null') AS "name",
-  COALESCE(agentShortNames."shortName", 'null') AS "shortName",
+  COALESCE(abstract_obj.abstract, 'null') AS "abstract",
+  COALESCE(description_obj.description, 'null') AS "description",
+  COALESCE(name_obj.name, 'null') AS "name",
+  COALESCE(short_name_obj.short_name, 'null') AS "shortName",
   COALESCE(
     to_json(resources.simple_url),
-    agentUrls.url,
+    url_obj.url,
     'null'
   ) AS "url",
-  COALESCE(agentContacts."contactPoints", 'null') AS "contactPoints",
-  COALESCE(agentCategories."categories", 'null') AS "categories"
+  COALESCE(contacts_array.contacts, 'null') AS "contactPoints",
+  COALESCE(categories_array.categories, 'null') AS "categories",
+  COALESCE(multimedia_descriptions_array.media) AS "multimediaDescriptions"
 FROM agents
   LEFT JOIN resources ON resources.id = agents.id
   LEFT JOIN (
@@ -27,7 +28,20 @@ FROM agents
       ) AS "categories"
     FROM resource_categories
     GROUP BY resource_id
-  ) agentCategories ON agentCategories.resource_id = agents.id
+  ) categories_array ON categories_array.resource_id = agents.id
+  LEFT JOIN (
+    SELECT resource_id AS "resource_id",
+      json_agg(
+        json_build_object(
+          'id',
+          media_object_id,
+          'type',
+          'mediaObjects'
+        )
+      ) AS "media"
+    FROM multimedia_descriptions
+    GROUP BY resource_id
+  ) AS multimedia_descriptions_array ON multimedia_descriptions_array.resource_id = agents.id
   LEFT JOIN (
     SELECT abstracts.resource_id AS "id",
       COALESCE(
@@ -37,7 +51,7 @@ FROM agents
       )::json AS "abstract"
     FROM abstracts
     GROUP BY abstracts.resource_id
-  ) AS agentAbstracts ON agentAbstracts.id = agents.id
+  ) AS abstract_obj ON abstract_obj.id = agents.id
   LEFT JOIN (
     SELECT descriptions.resource_id AS "id",
       COALESCE(
@@ -47,7 +61,7 @@ FROM agents
       )::json AS "description"
     FROM descriptions
     GROUP BY descriptions.resource_id
-  ) AS agentDescriptions ON agentDescriptions.id = agents.id
+  ) AS description_obj ON description_obj.id = agents.id
   LEFT JOIN (
     SELECT names.resource_id AS "id",
       COALESCE(
@@ -57,17 +71,17 @@ FROM agents
       )::json AS "name"
     FROM names
     GROUP BY names.resource_id
-  ) AS agentNames ON agentNames.id = agents.id
+  ) AS name_obj ON name_obj.id = agents.id
   LEFT JOIN (
     SELECT short_names.resource_id AS "id",
       COALESCE(
         json_object_agg(DISTINCT short_names.lang, short_names.content) FILTER (
           WHERE short_names.lang IS NOT NULL
         )
-      )::json AS "shortName"
+      )::json AS "short_name"
     FROM short_names
     GROUP BY short_names.resource_id
-  ) AS agentShortNames ON agentShortNames.id = agents.id
+  ) AS short_name_obj ON short_name_obj.id = agents.id
   LEFT JOIN (
     SELECT urls.resource_id AS "id",
       COALESCE(
@@ -77,7 +91,7 @@ FROM agents
       )::json AS "url"
     FROM urls
     GROUP BY urls.resource_id
-  ) AS agentUrls ON agentUrls.id = agents.id
+  ) AS url_obj ON url_obj.id = agents.id
   LEFT JOIN (
     SELECT contact_points.agent_id AS "id",
       json_agg(
@@ -91,22 +105,22 @@ FROM agents
           'address',
           json_build_object(
             'city',
-            contactAddress.city,
+            address_obj.city,
             'complement',
-            contactAddress.complement,
+            address_obj.complement,
             'country',
-            contactAddress.country,
+            address_obj.country,
             'region',
-            contactAddress.region,
+            address_obj.region,
             'street',
-            contactAddress.street,
+            address_obj.street,
             'type',
-            contactAddress.type,
+            address_obj.type,
             'zipcode',
-            contactAddress.zipcode
+            address_obj.zipcode
           )
         )
-      ) AS "contactPoints"
+      ) AS contacts
     FROM contact_points
       LEFT JOIN (
         SELECT addresses.id AS "address_id",
@@ -139,6 +153,6 @@ FROM agents
           LEFT JOIN regions ON regions.address_id = addresses.id
           LEFT JOIN streets ON streets.address_id = addresses.id
         GROUP BY addresses.id
-      ) AS contactAddress ON contactAddress.address_id = contact_points.address_id
+      ) AS address_obj ON address_obj.address_id = contact_points.address_id
     GROUP BY contact_points.agent_id
-  ) AS agentContacts ON agentContacts.id = agents.id
+  ) AS contacts_array ON contacts_array.id = agents.id

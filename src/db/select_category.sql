@@ -15,7 +15,8 @@ SELECT categories.id AS "id",
     'null'
   ) AS "url",
   COALESCE(childrenCategories.children) AS "children",
-  COALESCE(parentCategories.parents) AS "parents"
+  COALESCE(parentCategories.parents) AS "parents",
+  COALESCE(categoryMedia.media) AS "multimediaDescriptions"
 FROM categories
   LEFT JOIN resources ON resources.id = categories.resource_id
   LEFT JOIN (
@@ -50,6 +51,19 @@ FROM categories
     FROM category_specializations
     GROUP BY child_id
   ) AS parentCategories ON parentCategories.child_id = categories.id
+  LEFT JOIN (
+    SELECT resource_id AS "resource_id",
+      json_agg(
+        json_build_object(
+          'id',
+          media_object_id,
+          'type',
+          'mediaObjects'
+        )
+      ) AS "media"
+    FROM multimedia_descriptions
+    GROUP BY resource_id
+  ) AS categoryMedia ON categoryMedia.resource_id = categories.resource_id
   LEFT JOIN (
     SELECT abstracts.resource_id AS "id",
       COALESCE(

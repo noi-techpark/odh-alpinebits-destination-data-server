@@ -1,5 +1,9 @@
 module.exports = {
   defaults: {
+    eventStatus: {
+      canceled: "canceled",
+      published: "published",
+    },
     resourceTypes: {
       agents: "agents",
       categories: "categories",
@@ -12,10 +16,6 @@ module.exports = {
       skiSlopes: "skiSlopes",
       snowparks: "snowparks",
       venues: "venues",
-    },
-    eventStatus: {
-      canceled: "canceled",
-      published: "published",
     },
     seriesFrequencies: {
       daily: "daily",
@@ -99,11 +99,11 @@ module.exports = {
       id: "id",
       capacity: "capacity",
       endDate: "end_date",
-      startDate: "start_date",
       parentId: "parent_id",
       publisherId: "publisher_id",
-      status: "status",
       seriesId: "series_id",
+      startDate: "start_date",
+      status: "status",
     },
     eventSeries: {
       _name: "event_series",

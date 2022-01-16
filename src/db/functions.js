@@ -280,6 +280,16 @@ function insertMediaObject(connection, mediaObject) {
   return insert(connection, mediaObjects._name, mediaObject, mediaObjects.id).then((array) => _.first(array));
 }
 
+function insertEvent(connection, event) {
+  const eventId = event[events.id];
+  const publisherId = event[events.publisherId];
+
+  checkNotNullable(eventId, events.id);
+  checkNotNullable(publisherId, events.publisherId);
+
+  return insert(connection, events._name, event, events.id).then((array) => _.first(array));
+}
+
 function insertResourceCategory(connection, resourceId, categoryId) {
   const columns = {
     [resourceCategories.categoryId]: categoryId,
@@ -302,6 +312,42 @@ function insertMultimediaDescriptions(connection, resourceId, descriptionId) {
   checkNotNullable(resourceId, multimediaDescriptions.resourceId);
 
   return insert(connection, multimediaDescriptions._name, columns);
+}
+
+function insertContributor(connection, eventId, contributorId) {
+  const columns = {
+    [contributors.contributorId]: contributorId,
+    [contributors.eventId]: eventId,
+  };
+
+  checkNotNullable(contributorId, contributors.contributorId);
+  checkNotNullable(eventId, contributors.eventId);
+
+  return insert(connection, contributors._name, columns);
+}
+
+function insertOrganizer(connection, eventId, organizerId) {
+  const columns = {
+    [organizers.organizerId]: organizerId,
+    [organizers.eventId]: eventId,
+  };
+
+  checkNotNullable(organizerId, organizers.organizerId);
+  checkNotNullable(eventId, organizers.eventId);
+
+  return insert(connection, organizers._name, columns);
+}
+
+function insertSponsor(connection, eventId, sponsorId) {
+  const columns = {
+    [sponsors.sponsorId]: sponsorId,
+    [sponsors.eventId]: eventId,
+  };
+
+  checkNotNullable(sponsorId, sponsors.sponsorId);
+  checkNotNullable(eventId, sponsors.eventId);
+
+  return insert(connection, sponsors._name, columns);
 }
 
 function select(connection, tableName, where, selection) {
@@ -336,6 +382,12 @@ function selectMediaObjectFromId(connection, id) {
   const selectMediaObjectFile = "select_media_object.sql";
   const where = _.isString(id) ? `WHERE media_objects.id = '${id}'` : "";
   return selectUsingFile(connection, selectMediaObjectFile, where);
+}
+
+function selectEventFromId(connection, id) {
+  const selectEventFile = "select_event.sql";
+  const where = _.isString(id) ? `WHERE events.id = '${id}'` : "";
+  return selectUsingFile(connection, selectEventFile, where);
 }
 
 function selectResourceFromId(connection, resourceId) {
@@ -530,6 +582,60 @@ function deleteMultimediaDescriptions(connection, descriptionId) {
   return connection(multimediaDescriptions._name).where(columns).del();
 }
 
+function deleteContributors(connection, eventId) {
+  const columns = {
+    [contributors.eventId]: eventId,
+  };
+
+  checkNotNullable(eventId, contributors.eventId);
+
+  return connection(contributors._name).where(columns).del();
+}
+
+function deleteOrganizers(connection, eventId) {
+  const columns = {
+    [organizers.eventId]: eventId,
+  };
+
+  checkNotNullable(eventId, organizers.eventId);
+
+  return connection(organizers._name).where(columns).del();
+}
+
+function deleteSponsors(connection, eventId) {
+  const columns = {
+    [sponsors.eventId]: eventId,
+  };
+
+  checkNotNullable(eventId, sponsors.eventId);
+
+  return connection(sponsors._name).where(columns).del();
+}
+
+// TODO: check the case where the event already has a parent
+function updateSubEvent(connection, eventId, subEventId) {
+  const columns = {
+    [events.parentId]: eventId,
+  };
+
+  checkNotNullable(eventId, events.parentId);
+  checkNotNullable(subEventId, events.id);
+
+  const where = { [events.id]: subEventId };
+
+  return update(connection, events._name, where, columns);
+}
+
+function deleteSubEvents(connection, eventId) {
+  const columns = { [events.parentId]: null };
+
+  checkNotNullable(eventId, events.parentId);
+
+  const where = { [events.parentId]: eventId };
+
+  return update(connection, events._name, where, columns);
+}
+
 function deleteCategoryCoveredTypes(connection, categoryId) {
   const columns = {
     [categoryCoveredTypes.categoryId]: categoryId,
@@ -588,6 +694,7 @@ module.exports = {
   insertResourceCategory,
   insertCategoryCoveredType,
   insertCategorySpecialization,
+  insertEvent,
   selectAgentFromId,
   selectCategoryFromId,
   selectResourceFromId,
@@ -602,6 +709,7 @@ module.exports = {
   selectStreetsFromId,
   selectCategoriesFromId,
   selectMediaObjectFromId,
+  selectEventFromId,
   selectContactPointsFromId,
   deleteResource,
   deleteCategory,
@@ -619,8 +727,16 @@ module.exports = {
   insertAddressText,
   insertResourceCategory,
   insertMultimediaDescriptions,
+  insertOrganizer,
+  insertContributor,
+  insertSponsor,
   deleteResourceCategories,
   deleteMultimediaDescriptions,
+  deleteOrganizers,
+  deleteContributors,
+  deleteSponsors,
+  updateSubEvent,
+  deleteSubEvents,
   deleteCategoryCoveredTypes,
   deleteChildrenCategories,
   deleteParentCategories,

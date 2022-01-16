@@ -102,9 +102,11 @@ function deserializeEvent(json) {
   event.startDate = attributes?.startDate ?? event?.startDate;
   event.status = attributes?.status ?? event?.status;
 
+  event.contributors = relationships?.contributors?.data ?? event?.contributors;
   event.organizers = relationships?.organizers?.data ?? event?.organizers;
   event.publisher = relationships?.publisher?.data ?? event?.publisher;
   event.series = relationships?.series?.data ?? event?.series;
+  event.sponsors = relationships?.sponsors?.data ?? event?.sponsors;
   event.subEvents = relationships?.subEvents?.data ?? event?.subEvents;
   event.venues = relationships?.venues?.data ?? event?.venues;
 
