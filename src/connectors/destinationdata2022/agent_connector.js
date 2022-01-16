@@ -3,6 +3,7 @@ const dbFn = require("../../db/functions");
 const { schemas } = require("../../db");
 const { ResourceConnector } = require("./resource_connector");
 const { Agent } = require("../../model/destinationdata2022/agent");
+
 class AgentConnector extends ResourceConnector {
   constructor(request) {
     super(request);
@@ -64,7 +65,7 @@ class AgentConnector extends ResourceConnector {
 
   mapRowToAgent(row) {
     const agent = new Agent();
-    Object.assign(agent, row);
+    _.assign(agent, row);
     return agent;
   }
 

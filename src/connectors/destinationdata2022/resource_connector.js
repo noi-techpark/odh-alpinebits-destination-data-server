@@ -96,7 +96,7 @@ class ResourceConnector {
         this.insertResourceText(names._name, resource.name, resource.id),
         this.insertResourceText(shortNames._name, resource.shortName, resource.id),
         this.insertResourceText(urls._name, resource.url, resource.id),
-        this.insertResourceCategories(resource),
+        this.insertCopyrightOwner(resource),
         this.insertMultimediaDescriptions(resource),
       ]);
     });
@@ -112,7 +112,7 @@ class ResourceConnector {
       this.updateResourceText(names._name, resource.name, resource.id),
       this.updateResourceText(shortNames._name, resource.shortName, resource.id),
       this.updateResourceText(urls._name, resource.url, resource.id),
-      this.updateResourceCategories(resource),
+      this.updateCopyrightOwner(resource),
       this.updateMultimediaDescriptions(resource),
     ]).then(_.flatten);
   }
@@ -132,17 +132,15 @@ class ResourceConnector {
       .then(() => this.insertResourceText(tableName, text, resourceId));
   }
 
-  insertResourceCategories(resource) {
+  insertCopyrightOwner(resource) {
     const inserts = resource?.categories?.map((category) =>
       dbFn.insertResourceCategory(this.connection, resource.id, category.id)
     );
     return Promise.all(inserts ?? []);
   }
 
-  updateResourceCategories(resource) {
-    return dbFn
-      .deleteResourceCategories(this.connection, resource.id)
-      .then(() => this.insertResourceCategories(resource));
+  updateCopyrightOwner(resource) {
+    return dbFn.deleteResourceCategories(this.connection, resource.id).then(() => this.insertCopyrightOwner(resource));
   }
 
   insertMultimediaDescriptions(resource) {

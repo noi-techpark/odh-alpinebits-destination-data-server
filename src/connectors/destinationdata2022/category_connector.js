@@ -188,7 +188,7 @@ class CategoryConnector extends ResourceConnector {
 
   mapRowToCategory(row) {
     const category = new Category();
-    Object.assign(category, row);
+    _.assign(category, row);
     return category;
   }
 }
