@@ -1,0 +1,36 @@
+name: ci odh-alpinebits-destination-data-server
+
+on:
+  push:
+    branches: [ master, development, "1.0", "2021-04"  ]
+    paths:
+      - "!README.md"
+  pull_request:
+    branches: [ master, development, "1.0", "2021-04" ]
+    paths:
+      - "!README.md"
+      
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-20.04
+    env:
+      DOCKER_IMAGE: app
+      DOCKER_TAG: latest
+
+    steps:
+      - uses: actions/checkout@v2
+      
+      - name: Configure
+        run: |
+          cp .env.example .env
+          echo 'DOCKER_IMAGE=${DOCKER_IMAGE}' >> .env
+          echo 'DOCKER_TAG=${DOCKER_TAG}' >> .env
+
+      - name: Build
+        run: docker-compose -f infrastructure/docker-compose.build.yml build
+    
+      - name: Shut down
+        run: docker-compose -f infrastructure/docker-compose.build.yml down || true
