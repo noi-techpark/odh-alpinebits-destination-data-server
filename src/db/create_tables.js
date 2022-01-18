@@ -1,4 +1,4 @@
-const { schemas } = require(".");
+const { schemas, views } = require(".");
 const knex = require("./connect");
 let connection;
 
@@ -45,8 +45,10 @@ knex
     connection = trx;
 
     setupDatabase()
+      .then(() => dropAllViews())
       .then(() => dropAllTables())
       .then(() => createAllTables())
+      .then(() => createAllViews())
       .then(() => createAllTriggers())
       .then(() => {
         console.log("Tables successfully (re)created.");
@@ -71,6 +73,10 @@ function addUuidGenerator() {
 
 function dropTableIfExists(tableName) {
   return connection.raw(`DROP TABLE IF EXISTS ${tableName} CASCADE;`);
+}
+
+function dropViewIfExists(tableName) {
+  return connection.raw(`DROP VIEW IF EXISTS ${tableName} CASCADE;`);
 }
 
 function createResourceTypesTable() {
@@ -468,6 +474,226 @@ function createSyncLastUpdateTrigger() {
     FOR EACH ROW EXECUTE PROCEDURE
       sync_last_update();
   `);
+}
+
+function createAbstractObjectsView() {
+  return connection.raw(`
+  CREATE VIEW abstract_objects AS
+    SELECT resource_id AS "id",
+        COALESCE(
+          json_object_agg(DISTINCT lang, content) FILTER (WHERE lang IS NOT NULL)
+        )::json AS "abstract"
+      FROM abstracts
+      GROUP BY resource_id;
+  `);
+}
+
+function createDescriptionObjectsView() {
+  return connection.raw(`
+  CREATE VIEW description_objects AS
+    SELECT resource_id AS "id",
+        COALESCE(
+          json_object_agg(DISTINCT lang, content) FILTER (WHERE lang IS NOT NULL)
+        )::json AS "description"
+      FROM descriptions
+      GROUP BY resource_id;
+  `);
+}
+
+function createNameObjectsView() {
+  return connection.raw(`
+  CREATE VIEW name_objects AS
+    SELECT resource_id AS "id",
+        COALESCE(
+          json_object_agg(DISTINCT lang, content) FILTER (WHERE lang IS NOT NULL)
+        )::json AS "name"
+      FROM names
+      GROUP BY resource_id;
+  `);
+}
+
+function createShortNameObjectsView() {
+  return connection.raw(`
+  CREATE VIEW short_name_objects AS
+    SELECT resource_id AS "id",
+        COALESCE(
+          json_object_agg(DISTINCT lang, content) FILTER (WHERE lang IS NOT NULL)
+        )::json AS "short_name"
+      FROM short_names
+      GROUP BY resource_id;
+  `);
+}
+
+function createUrlObjectsView() {
+  return connection.raw(`
+  CREATE VIEW url_objects AS
+    SELECT resource_id AS "id",
+        COALESCE(
+          json_object_agg(DISTINCT lang, content) FILTER (WHERE lang IS NOT NULL)
+        )::json AS "url"
+      FROM urls
+      GROUP BY resource_id;
+  `);
+}
+
+function createCategoriesArrayView() {
+  return connection.raw(`
+  CREATE VIEW categories_arrays AS
+    SELECT categorized_resource_id AS "id",
+        json_agg(
+          json_build_object(
+            'id',
+            category_id,
+            'type',
+            'categories'
+          )
+        ) AS "categories"
+      FROM resource_categories
+      GROUP BY categorized_resource_id;
+  `);
+}
+
+function createMultimediaDescriptionsArraysView() {
+  return connection.raw(`
+  CREATE VIEW multimedia_descriptions_arrays AS
+    SELECT resource_id AS "id",
+        json_agg(
+          json_build_object(
+            'id',
+            media_object_id,
+            'type',
+            'mediaObjects'
+          )
+        ) AS "media"
+      FROM multimedia_descriptions
+      GROUP BY resource_id;
+  `);
+}
+
+function createCityObjectsView() {
+  return connection.raw(`
+  CREATE VIEW city_objects AS
+    SELECT address_id AS "id",
+        COALESCE(
+          json_object_agg(DISTINCT lang, content) FILTER (WHERE lang IS NOT NULL)
+        )::json AS "city"
+      FROM cities
+      GROUP BY address_id;
+  `);
+}
+
+function createComplementObjectsView() {
+  return connection.raw(`
+  CREATE VIEW complement_objects AS
+    SELECT address_id AS "id",
+        COALESCE(
+          json_object_agg(DISTINCT lang, content) FILTER (WHERE lang IS NOT NULL)
+        )::json AS "complement"
+      FROM complements
+      GROUP BY address_id;
+  `);
+}
+
+function createRegionObjectsView() {
+  return connection.raw(`
+  CREATE VIEW region_objects AS
+    SELECT address_id AS "id",
+        COALESCE(
+          json_object_agg(DISTINCT lang, content) FILTER (WHERE lang IS NOT NULL)
+        )::json AS "region"
+      FROM regions
+      GROUP BY address_id;
+  `);
+}
+
+function createStreetObjectsView() {
+  return connection.raw(`
+  CREATE VIEW street_objects AS
+    SELECT address_id AS "id",
+        COALESCE(
+          json_object_agg(DISTINCT lang, content) FILTER (WHERE lang IS NOT NULL)
+        )::json AS "street"
+      FROM streets
+      GROUP BY address_id;
+  `);
+}
+
+function createAddressObjectsView() {
+  return connection.raw(`
+  CREATE VIEW address_objects AS
+    SELECT addresses.id,
+        country,
+        zipcode,
+        addresses.type,
+        COALESCE(city_objects.city, 'null') AS "city",
+        COALESCE(complement_objects.complement, 'null') AS "complement",
+        COALESCE(region_objects.region, 'null') AS "region",
+        COALESCE(street_objects.street, 'null') AS "street"
+      FROM addresses
+      LEFT JOIN city_objects ON city_objects.id = addresses.id
+      LEFT JOIN complement_objects ON complement_objects.id = addresses.id
+      LEFT JOIN region_objects ON region_objects.id = addresses.id
+      LEFT JOIN street_objects ON street_objects.id = addresses.id;
+  `);
+}
+
+function createResourceObjectsView() {
+  return connection.raw(`
+  CREATE VIEW resource_objects AS
+    SELECT resources.id,
+          resources.type,
+          data_provider,
+          last_update,
+          abstract_objects.abstract,
+          description_objects.description,
+          name_objects.name,
+          short_name_objects.short_name,
+          COALESCE(to_json(resources.simple_url), url_objects.url) AS "url",
+          categories_arrays.categories,
+          multimedia_descriptions_arrays.media
+        FROM resources
+        LEFT JOIN abstract_objects ON abstract_objects.id = resources.id
+        LEFT JOIN description_objects ON description_objects.id = resources.id
+        LEFT JOIN name_objects ON name_objects.id = resources.id
+        LEFT JOIN short_name_objects ON short_name_objects.id = resources.id
+        LEFT JOIN url_objects ON url_objects.id = resources.id
+        LEFT JOIN categories_arrays ON categories_arrays.id = resources.id
+        LEFT JOIN multimedia_descriptions_arrays ON multimedia_descriptions_arrays.id = resources.id;
+  `);
+}
+
+function createAllViews() {
+  return createAbstractObjectsView()
+    .then(() => createDescriptionObjectsView())
+    .then(() => createNameObjectsView())
+    .then(() => createShortNameObjectsView())
+    .then(() => createUrlObjectsView())
+    .then(() => createCategoriesArrayView())
+    .then(() => createMultimediaDescriptionsArraysView())
+    .then(() => createCityObjectsView())
+    .then(() => createComplementObjectsView())
+    .then(() => createRegionObjectsView())
+    .then(() => createStreetObjectsView())
+    .then(() => createAddressObjectsView())
+    .then(() => createResourceObjectsView());
+}
+
+function dropAllViews() {
+  return Promise.all([
+    dropViewIfExists(views.abstractObjects._name),
+    dropViewIfExists(views.descriptionObjects._name),
+    dropViewIfExists(views.nameObjects._name),
+    dropViewIfExists(views.shortNameObjects._name),
+    dropViewIfExists(views.urlObjects._name),
+    dropViewIfExists(views.categoriesArrays._name),
+    dropViewIfExists(views.multimediaDescriptionsArrays._name),
+    dropViewIfExists(views.cityObjects._name),
+    dropViewIfExists(views.complementObjects._name),
+    dropViewIfExists(views.regionObjects._name),
+    dropViewIfExists(views.streetObjects._name),
+    dropViewIfExists(views.addressObjects._name),
+    dropViewIfExists(views.resourceObjects._name),
+  ]);
 }
 
 function createAllTriggers() {

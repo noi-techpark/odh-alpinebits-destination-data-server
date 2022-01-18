@@ -217,4 +217,71 @@ module.exports = {
       content: "content",
     },
   },
+  views: {
+    abstractObjects: {
+      _name: "abstract_objects",
+      id: "id",
+      abstract: "abstract",
+    },
+    descriptionObjects: {
+      _name: "description_objects",
+      id: "id",
+      description: "description",
+    },
+    nameObjects: {
+      _name: "name_objects",
+      id: "id",
+      name: "name",
+    },
+    shortNameObjects: {
+      _name: "short_name_objects",
+      id: "id",
+      short_name: "short_name",
+    },
+    urlObjects: {
+      _name: "url_objects",
+      id: "id",
+      url: "url",
+    },
+    categoriesArrays: {
+      _name: "categories_arrays",
+      id: "id",
+      categories: "categories",
+    },
+    multimediaDescriptionsArrays: {
+      _name: "multimedia_descriptions_arrays",
+      id: "id",
+      multimediaDescriptions: "multimedia_descriptions",
+    },
+    cityObjects: {
+      _name: "city_objects",
+      id: "id",
+      city: "city",
+    },
+    complementObjects: {
+      _name: "complement_objects",
+      id: "id",
+      complement: "complement",
+    },
+    regionObjects: {
+      _name: "region_objects",
+      id: "id",
+      region: "region",
+    },
+    streetObjects: {
+      _name: "street_objects",
+      id: "id",
+      street: "street",
+    },
+    addressObjects: {
+      _name: "address_objects",
+      id: "id",
+      address: "address",
+    },
+    resourceObjects: {
+      _name: "resource_objects",
+      id: "id",
+      resource: "resource",
+    },
+  },
 };

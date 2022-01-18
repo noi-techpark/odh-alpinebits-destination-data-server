@@ -1,7 +1,6 @@
 const _ = require("lodash");
 const dbFn = require("../../db/functions");
 const { ResourceConnector } = require("./resource_connector");
-const { Event } = require("../../model/destinationdata2022/event");
 const { schemas } = require("../../db");
 const { EventSeries } = require("../../model/destinationdata2022/event_series");
 const { eventSeries: eventSeriesSchema, resources } = schemas;
