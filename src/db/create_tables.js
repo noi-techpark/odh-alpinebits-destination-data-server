@@ -95,6 +95,8 @@ function createResourcesTable() {
       ${resources.dataProvider} TEXT NOT NULL,
       ${resources.createdAt} TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
       ${resources.lastUpdate} TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
+      ${resources.license} VARCHAR ( 50 ) NOT NULL,
+      ${resources.licenseHolder} VARCHAR ( 255 ) NOT NULL,
       ${resources.simpleUrl} TEXT,
 
       FOREIGN KEY (${resources.type})
@@ -644,6 +646,8 @@ function createResourceObjectsView() {
           resources.type,
           data_provider,
           last_update,
+          license,
+          license_holder,
           abstract_objects.abstract,
           description_objects.description,
           name_objects.name,

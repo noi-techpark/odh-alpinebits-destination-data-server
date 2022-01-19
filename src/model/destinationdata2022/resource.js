@@ -6,6 +6,8 @@ class Resource {
     this.id = undefined;
     this.dataProvider = undefined;
     this.lastUpdate = undefined;
+    this.license = undefined;
+    this.licenseHolder = undefined;
     this.abstract = undefined;
     this.description = undefined;
     this.name = undefined;

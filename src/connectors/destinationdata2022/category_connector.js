@@ -174,6 +174,8 @@ class CategoryConnector extends ResourceConnector {
       [schemas.resources.type]: category?.type,
       [schemas.resources.dataProvider]: category?.dataProvider,
       [schemas.resources.lastUpdate]: category?.lastUpdate,
+      [schemas.resources.license]: category?.license,
+      [schemas.resources.licenseHolder]: category?.licenseHolder,
       [schemas.resources.simpleUrl]: _.isString(category?.url) ? category?.url : null,
     };
   }

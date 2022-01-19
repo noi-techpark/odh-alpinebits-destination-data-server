@@ -28,6 +28,8 @@ function deserializeResourceFields(resource, json) {
 
   resource.dataProvider = meta?.dataProvider ?? resource?.dataProvider;
   resource.lastUpdate = (meta?.lastUpdate && new Date(meta?.lastUpdate)) ?? resource?.lastUpdate; // TODO: review whether we should deserialize by creating an instance of Date();
+  resource.license = meta?.license ?? resource?.license;
+  resource.licenseHolder = meta?.licenseHolder ?? resource?.licenseHolder;
 
   resource.abstract = attributes?.abstract ?? resource?.abstract;
   resource.description = attributes?.description ?? resource?.description;

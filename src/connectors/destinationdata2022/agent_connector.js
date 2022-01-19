@@ -71,9 +71,10 @@ class AgentConnector extends ResourceConnector {
 
   insertAgent(agent) {
     return this.insertResource(agent)
-      .then((agentId) => (agent.id = agentId))
-      .then(() => this.mapAgentToColumns(agent))
-      .then((columns) => dbFn.insertAgent(this.connection, columns))
+      .then(() => {
+        const columns = this.mapAgentToColumns(agent);
+        return dbFn.insertAgent(this.connection, columns);
+      })
       .then(() => this.insertContactPoints(agent))
       .then(() => agent.id);
   }
