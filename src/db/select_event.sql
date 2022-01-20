@@ -75,7 +75,7 @@ FROM events
           'id', parent_id,
           'type', 'events'
         )
-      ) AS "sub_events"
+      ) FILTER (WHERE parent_id IS NOT NULL) AS "sub_events"
     FROM events
     GROUP BY id
   ) AS sub_events_array ON sub_events_array.id = events.id

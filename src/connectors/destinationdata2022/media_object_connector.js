@@ -11,7 +11,9 @@ class MediaObjectConnector extends ResourceConnector {
   }
 
   create(mediaObject) {
-    return this.runTransaction(() => this.insertMediaObject(mediaObject).then((id) => this.retrieveMediaObject(id)));
+    return this.runTransaction(() =>
+      this.insertMediaObject(mediaObject).then(() => this.retrieveMediaObject(mediaObject.id))
+    );
   }
 
   retrieve(id) {
@@ -52,7 +54,11 @@ class MediaObjectConnector extends ResourceConnector {
   }
 
   updateMediaObject(oldMediaObject, newInput) {
-    const newMediaObject = _.create(oldMediaObject, newInput);
+    const newMediaObject = _.create(oldMediaObject);
+
+    _.entries(newInput).forEach(([k, v]) => {
+      if (!_.isUndefined(v)) newMediaObject[k] = v;
+    });
 
     this.checkLastUpdate(oldMediaObject, newMediaObject);
 
@@ -82,6 +88,7 @@ class MediaObjectConnector extends ResourceConnector {
   }
 
   mapMediaObjectToColumns(mediaObject) {
+    // TODO: handle license information as different from metadata
     return {
       [mediaObjects.id]: mediaObject?.id,
       [mediaObjects.contentType]: mediaObject?.contentType,

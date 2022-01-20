@@ -1,6 +1,11 @@
 const { Router } = require("./router");
 const { AgentConnector } = require("../connectors/destinationdata2022/agent_connector");
-const { deserializeAgent } = require("../model/destinationdata2022");
+const {
+  deserializeAgent,
+  serializeAgent,
+  serializeSingleResource,
+  serializeResourceCollection,
+} = require("../model/destinationdata2022");
 const { Request } = require("../model/request/request");
 
 class AgentsRouter extends Router {
@@ -29,7 +34,8 @@ class AgentsRouter extends Router {
 
     // Return to the client
     try {
-      return connector.retrieve();
+      return connector.retrieve().then((agents) => serializeResourceCollection(agents, "/2022-04-draft", "agents"));
+      // return connector.retrieve();
     } catch (error) {
       console.error(error);
       throw error;
@@ -44,7 +50,7 @@ class AgentsRouter extends Router {
 
     // Return to the client
     try {
-      return connector.retrieve();
+      return connector.retrieve().then((agent) => serializeSingleResource(agent, "/2022-04-draft", "agents"));
     } catch (error) {
       console.error(error);
       throw error;
@@ -63,7 +69,7 @@ class AgentsRouter extends Router {
 
     // Return to the client
     try {
-      return connector.create(agent);
+      return connector.create(agent).then((agent) => serializeSingleResource(agent, "/2022-04-draft", "agents"));
     } catch (error) {
       console.error(error);
       throw error;
@@ -82,7 +88,7 @@ class AgentsRouter extends Router {
 
     // Return to the client
     try {
-      return connector.update(agent);
+      return connector.update(agent).then((agent) => serializeSingleResource(agent, "/2022-04-draft", "agents"));
     } catch (error) {
       console.error(error);
       throw error;

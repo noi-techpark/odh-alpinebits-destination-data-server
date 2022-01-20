@@ -1,6 +1,10 @@
 const { Router } = require("./router");
 const { EventConnector } = require("./../connectors/destinationdata2022/event_connector");
-const { deserializeEvent } = require("../model/destinationdata2022");
+const {
+  deserializeEvent,
+  serializeResourceCollection,
+  serializeSingleResource,
+} = require("../model/destinationdata2022");
 const { Request } = require("../model/request/request");
 
 class EventsRouter extends Router {
@@ -35,7 +39,7 @@ class EventsRouter extends Router {
 
     // Return to the client
     try {
-      return connector.retrieve();
+      return connector.retrieve().then((events) => serializeResourceCollection(events, "/2022-04-draft", "events"));
     } catch (error) {
       console.error(error);
       throw error;
@@ -50,7 +54,7 @@ class EventsRouter extends Router {
 
     // Return to the client
     try {
-      return connector.retrieve();
+      return connector.retrieve().then((event) => serializeSingleResource(event, "/2022-04-draft", "events"));
     } catch (error) {
       console.error(error);
       throw error;
@@ -69,7 +73,7 @@ class EventsRouter extends Router {
 
     // Return to the client
     try {
-      return connector.create(event);
+      return connector.create(event).then((event) => serializeSingleResource(event, "/2022-04-draft", "events"));
     } catch (error) {
       console.error(error);
       throw error;
@@ -90,7 +94,7 @@ class EventsRouter extends Router {
 
     // Return to the client
     try {
-      return connector.update(event);
+      return connector.update(event).then((event) => serializeSingleResource(event, "/2022-04-draft", "events"));
     } catch (error) {
       console.error(error);
       throw error;

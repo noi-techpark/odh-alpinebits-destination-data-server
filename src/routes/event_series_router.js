@@ -1,6 +1,10 @@
 const { Router } = require("./router");
 const { EventSeriesConnector } = require("./../connectors/destinationdata2022/event_series_connector");
-const { deserializeEventSeries } = require("../model/destinationdata2022");
+const {
+  deserializeEventSeries,
+  serializeResourceCollection,
+  serializeSingleResource,
+} = require("../model/destinationdata2022");
 const { Request } = require("../model/request/request");
 
 class EventSeriesRouter extends Router {
@@ -29,7 +33,11 @@ class EventSeriesRouter extends Router {
 
     // Return to the client
     try {
-      return connector.retrieve();
+      return connector
+        .retrieve()
+        .then((eventSeriesCollection) =>
+          serializeResourceCollection(eventSeriesCollection, "/2022-04-draft", "eventSeries")
+        );
     } catch (error) {
       console.error(error);
       throw error;
@@ -44,7 +52,9 @@ class EventSeriesRouter extends Router {
 
     // Return to the client
     try {
-      return connector.retrieve();
+      return connector
+        .retrieve()
+        .then((eventSeries) => serializeSingleResource(eventSeries, "/2022-04-draft", "eventSeries"));
     } catch (error) {
       console.error(error);
       throw error;
@@ -63,7 +73,9 @@ class EventSeriesRouter extends Router {
 
     // Return to the client
     try {
-      return connector.create(eventSeries);
+      return connector
+        .create(eventSeries)
+        .then((eventSeries) => serializeSingleResource(eventSeries, "/2022-04-draft", "eventSeries"));
     } catch (error) {
       console.error(error);
       throw error;
@@ -82,7 +94,9 @@ class EventSeriesRouter extends Router {
 
     // Return to the client
     try {
-      return connector.update(eventSeries);
+      return connector
+        .update(eventSeries)
+        .then((eventSeries) => serializeSingleResource(eventSeries, "/2022-04-draft", "eventSeries"));
     } catch (error) {
       console.error(error);
       throw error;

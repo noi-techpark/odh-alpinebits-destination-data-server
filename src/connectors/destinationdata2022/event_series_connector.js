@@ -11,7 +11,9 @@ class EventSeriesConnector extends ResourceConnector {
   }
 
   create(eventSeries) {
-    return this.runTransaction(() => this.insertEventSeries(eventSeries).then((id) => this.retrieveEventSeries(id)));
+    return this.runTransaction(() =>
+      this.insertEventSeries(eventSeries).then(() => this.retrieveEventSeries(eventSeries.id))
+    );
   }
 
   retrieve(id) {
@@ -52,7 +54,11 @@ class EventSeriesConnector extends ResourceConnector {
   }
 
   updateEventSeries(oldEventSeries, newInput) {
-    const newEventSeries = _.create(oldEventSeries, newInput);
+    const newEventSeries = _.create(oldEventSeries);
+
+    _.entries(newInput).forEach(([k, v]) => {
+      if (!_.isUndefined(v)) newEventSeries[k] = v;
+    });
 
     this.checkLastUpdate(oldEventSeries, newEventSeries);
 

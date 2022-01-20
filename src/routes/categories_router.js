@@ -3,7 +3,11 @@ const { CategoryConnector } = require("../connectors/destinationdata2022/categor
 const { Category } = require("./../model/destinationdata/category");
 const { MediaObject } = require("./../model/destinationdata/media_object");
 const responseTransform = require("../model/odh2destinationdata/response_transform");
-const { deserializeCategory } = require("../model/destinationdata2022");
+const {
+  deserializeCategory,
+  serializeResourceCollection,
+  serializeSingleResource,
+} = require("../model/destinationdata2022");
 const { Request } = require("../model/request/request");
 
 class CategoriesRouter extends Router {
@@ -32,7 +36,9 @@ class CategoriesRouter extends Router {
 
     // Return to the client
     try {
-      return connector.retrieve();
+      return connector
+        .retrieve()
+        .then((categories) => serializeResourceCollection(categories, "/2022-04-draft", "categories"));
     } catch (error) {
       console.error(error);
       throw error;
@@ -47,7 +53,7 @@ class CategoriesRouter extends Router {
 
     // Return to the client
     try {
-      return connector.retrieve();
+      return connector.retrieve().then((category) => serializeSingleResource(category, "/2022-04-draft", "categories"));
     } catch (error) {
       console.error(error);
       throw error;
@@ -65,7 +71,9 @@ class CategoriesRouter extends Router {
 
     // Return to the client
     try {
-      return connector.create(category);
+      return connector
+        .create(category)
+        .then((category) => serializeSingleResource(category, "/2022-04-draft", "categories"));
     } catch (error) {
       console.error(error);
       throw error;
@@ -83,7 +91,9 @@ class CategoriesRouter extends Router {
 
     // Return to the client
     try {
-      return connector.update(category);
+      return connector
+        .update(category)
+        .then((category) => serializeSingleResource(category, "/2022-04-draft", "categories"));
     } catch (error) {
       console.error(error);
       throw error;

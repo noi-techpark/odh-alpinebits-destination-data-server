@@ -11,7 +11,7 @@ class EventConnector extends ResourceConnector {
   }
 
   create(event) {
-    return this.runTransaction(() => this.insertEvent(event).then((id) => this.retrieveEvent(id)));
+    return this.runTransaction(() => this.insertEvent(event).then(() => this.retrieveEvent(event.id)));
   }
 
   retrieve(id) {
@@ -50,7 +50,11 @@ class EventConnector extends ResourceConnector {
   }
 
   updateEvent(oldEvent, newInput) {
-    const newEvent = _.create(oldEvent, newInput);
+    const newEvent = _.create(oldEvent);
+
+    _.entries(newInput).forEach(([k, v]) => {
+      if (!_.isUndefined(v)) newEvent[k] = v;
+    });
 
     this.checkLastUpdate(oldEvent, newEvent);
 

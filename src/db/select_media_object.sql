@@ -2,12 +2,12 @@ SELECT media_objects.id,
   content_type AS "contentType",
   duration,
   height,
-  license,
+  media_objects.license,
   width,
   resource_objects.type,
   data_provider AS "dataProvider",
   last_update AS "lastUpdate",
-  license,
+  -- license, -- TODO: re-enable license information on meta
   license_holder AS "licenseHolder",
   abstract,
   resource_objects.description,
@@ -21,6 +21,6 @@ SELECT media_objects.id,
         'id', copyright_owner_id,
         'type', 'agents'
       )
-  END AS "copyrightOwnerId"
+  END AS "copyrightOwner"
 FROM media_objects
   LEFT JOIN resource_objects ON resource_objects.id = media_objects.id
