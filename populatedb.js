@@ -1,6 +1,6 @@
 const axios = require("axios");
-const { config } = require("custom-env");
-
+//const { config } = require("custom-env");
+const odhUrl = "http://localhost:8080/2021-04/"
 let insertid = '';
 let connection;
 //Setup database connection
@@ -16,10 +16,36 @@ const knex = require("knex")({
   pool: { min: 1, max: 1 } 
 });
 
+async function getNumberPagesOdh(endpoint) {
+  let response = await axios.get(odhUrl+endpoint);
+  return parseInt(response.data.links.last.split('=')[1]);
+}
+
+async function getOdhData(endpoint=null, page=null) {
+  let response;
+  if (endpoint == null)
+    response = await axios.get(odhUrl);
+  else if (page == null)
+    response = await axios.get(odhUrl+endpoint);
+  else 
+    response = await axios.get(odhUrl+endpoint+"?page[number]="+page);
+  return response;
+}
 
 async function getEventsData() {
-    const response = await axios.get("http://localhost:8080/2021-04/events");
-    return response.data.data;
+//    const response = await axios.get("http://localhost:8080/2021-04/events");
+  let start  = 1;
+  let end = 1;
+  let response = await axios.get("http://localhost:8080/2021-04/events");
+  end = parseInt(response.data.links.last.split('=')[1]);
+  for(var i=1; j=end,i<=j; i++){
+    //Merge Json files
+    
+    //console.log(i);
+  }
+  //console.log(end);
+
+  return response.data.data;
 }
 
 /*async function insertEventData(trx, eventData) {
@@ -50,7 +76,7 @@ async function insertResourceData(trx, resData) {
         odh_id: resData.id,
         data_provider: resData.meta.dataProvider,
         created_at: knex.fn.now(),
-        last_update: resData.meta.lastUpdate,
+        last_update: knex.fn.now(),//resData.meta.lastUpdate,
         simple_url: resData.links.self }];
     return knex("resources").insert(insert_content).transacting(trx).returning('id');
     //trx.commit();
@@ -180,26 +206,40 @@ async function main() {
 //Initialize database and transaction
 const trx = await knex.transaction();
 let ret = 0;
+
 //const trx2 = await knex.transaction();
 //Extract the API Json
-odhData = await getEventsData();
-for (const ev of odhData) {
-  //console.log(ev.id);
-  const resId = await insertResourceData(trx, ev);
-  //console.log(resId[0]);
+//odhData = await getOdhData(endpoint='events');
+let odhData;
+let end = await getNumberPagesOdh('events');
+console.log(end);
+//Loop over each page of Events to insert them at the db
+for(var i=1; j=end,i<=j; i++){
+  console.log(i);
+  odhData = await getOdhData(endpoint='events', page=i);
+  odhData = odhData.data.data;
+//odhData = await getEventsData();
+  for (const ev of odhData) {
+    //console.log(ev.id);
+    console.log(ev);
+    const resId = await insertResourceData(trx, ev);
+    //console.log(resId[0]);
+    //trx.commit();
+    //await insertAttributeData(trx, ev.attributes, resId[0]);
+    await insertAbstractData(trx, ev.attributes.abstract, resId[0]);
+    await insertDescriptionData(trx, ev.attributes.description, resId[0]);
+    //console.log(ret);
+    await insertNameData(trx, ev.attributes.name, resId[0]);
+    await insertShortNameData(trx, ev.attributes.shortname, resId[0]);
+    await insertUrlData(trx, ev.attributes.url, resId[0]);
+    //trx.commit();
+    //console.log(Object.keys(ev.attributes.name));
+    }
   //trx.commit();
-  //await insertAttributeData(trx, ev.attributes, resId[0]);
-  await insertAbstractData(trx, ev.attributes.abstract, resId[0]);
-  await insertDescriptionData(trx, ev.attributes.description, resId[0]);
-  //console.log(ret);
-  await insertNameData(trx, ev.attributes.name, resId[0]);
-  await insertShortNameData(trx, ev.attributes.shortname, resId[0]);
-  await insertUrlData(trx, ev.attributes.url, resId[0]);
-  //trx.commit();
-  //console.log(Object.keys(ev.attributes.name));
+  //knex.client.pool.destroy()
   }
-trx.commit();
-knex.client.pool.destroy()
+  trx.commit();
+  knex.client.pool.destroy()
 }   
 
 try {
