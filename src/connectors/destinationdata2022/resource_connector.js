@@ -187,8 +187,6 @@ class ResourceConnector {
       [resources.type]: resource?.type,
       [resources.dataProvider]: resource?.dataProvider,
       [resources.lastUpdate]: resource?.lastUpdate,
-      // [`${resources.license}`]: resource?.license,
-      [resources.licenseHolder]: resource?.licenseHolder,
       [resources.simpleUrl]: _.isString(resource?.url) ? resource?.url : null,
     };
   }

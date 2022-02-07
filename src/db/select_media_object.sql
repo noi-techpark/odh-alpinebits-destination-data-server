@@ -7,8 +7,6 @@ SELECT media_objects.id,
   resource_objects.type,
   data_provider AS "dataProvider",
   last_update AS "lastUpdate",
-  -- license, -- TODO: re-enable license information on meta
-  license_holder AS "licenseHolder",
   abstract,
   resource_objects.description,
   resource_objects.name,

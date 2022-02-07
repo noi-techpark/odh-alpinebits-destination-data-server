@@ -88,7 +88,6 @@ class MediaObjectConnector extends ResourceConnector {
   }
 
   mapMediaObjectToColumns(mediaObject) {
-    // TODO: handle license information as different from metadata
     return {
       [mediaObjects.id]: mediaObject?.id,
       [mediaObjects.contentType]: mediaObject?.contentType,

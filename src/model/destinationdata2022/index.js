@@ -38,8 +38,6 @@ function deserializeResourceFields(resource, json) {
 
   resource.dataProvider = meta?.dataProvider ?? resource?.dataProvider;
   resource.lastUpdate = (meta?.lastUpdate && new Date(meta?.lastUpdate)) ?? resource?.lastUpdate; // TODO: review whether we should deserialize by creating an instance of Date();
-  resource.license = meta?.license ?? resource?.license;
-  resource.licenseHolder = meta?.licenseHolder ?? resource?.licenseHolder;
 
   resource.abstract = attributes?.abstract ?? resource?.abstract;
   resource.description = attributes?.description ?? resource?.description;
@@ -321,8 +319,6 @@ function serializeMediaObject(mediaObject, versionUrl) {
   const json = serializeResource(mediaObject, versionUrl);
 
   const { meta, attributes, relationships } = json;
-
-  meta.license = null; // TODO: handle meta license info
 
   attributes.contentType = mediaObject.contentType;
   attributes.duration = mediaObject.duration;

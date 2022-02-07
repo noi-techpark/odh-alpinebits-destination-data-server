@@ -181,8 +181,6 @@ module.exports = {
       dataProvider: "data_provider",
       createdAt: "created_at",
       lastUpdate: "last_update",
-      license: "license",
-      licenseHolder: "license_holder",
       simpleUrl: "simple_url",
     },
     resourceTypes: {
