@@ -5,34 +5,49 @@ let connection;
 const {
   abstracts,
   addresses,
+  agents,
+  areaLifts,
+  areaSkiSlopes,
+  areaSnowparks,
   categoryCoveredTypes,
   categorySpecializations,
-  agents,
   categories,
   cities,
   complements,
+  connections,
   contactPoints,
   contributors,
   descriptions,
   eventStatus,
   events,
   eventSeries,
+  eventVenues,
   features,
   featureCoveredTypes,
   featureSpecializations,
+  howToArrive,
   languageCodes,
+  lifts,
   mediaObjects,
+  mountainAreas,
   multimediaDescriptions,
   names,
   organizers,
+  places,
   regions,
   resourceCategories,
+  resourceFeatures,
   resources,
   resourceTypes,
   seriesFrequencies,
   shortNames,
+  skiSlopes,
+  snowConditions,
+  snowparks,
   sponsors,
   streets,
+  subAreas,
+  venues,
   urls,
 } = schemas;
 
@@ -111,13 +126,7 @@ function createAgentsTable() {
 
 function createCategoriesTable() {
   return connection.schema.createTable(categories._name, function (table) {
-    table.string(categories.id, 100).primary();
-    table
-      .string(categories.resourceId, 50)
-      .notNullable()
-      .references(resources.id)
-      .inTable(resources._name)
-      .onDelete(CASCADE);
+    table.string(categories.id, 50).primary().references(resources.id).inTable(resources._name).onDelete(CASCADE);
     table.string(categories.namespace, 50).notNullable();
   });
 }
@@ -125,7 +134,7 @@ function createCategoriesTable() {
 function createCategoryCoveredTypesTable() {
   return connection.schema.createTable(categoryCoveredTypes._name, function (table) {
     table
-      .string(categoryCoveredTypes.categoryId, 100)
+      .string(categoryCoveredTypes.categoryId, 50)
       .references(categories.id)
       .inTable(categories._name)
       .onDelete(CASCADE);
@@ -141,12 +150,12 @@ function createCategoryCoveredTypesTable() {
 function createCategorySpecializationsTable() {
   return connection.schema.createTable(categorySpecializations._name, function (table) {
     table
-      .string(categorySpecializations.parentId, 100)
+      .string(categorySpecializations.parentId, 50)
       .references(categories.id)
       .inTable(categories._name)
       .onDelete(CASCADE);
     table
-      .string(categorySpecializations.childId, 100)
+      .string(categorySpecializations.childId, 50)
       .references(categories.id)
       .inTable(categories._name)
       .onDelete(CASCADE);
@@ -157,13 +166,7 @@ function createCategorySpecializationsTable() {
 function createFeaturesTable() {
   // TODO: update the relationship to snowparks
   return connection.schema.createTable(features._name, function (table) {
-    table.string(features.id, 100).primary();
-    table
-      .string(features.resourceId, 50)
-      .notNullable()
-      .references(resources.id)
-      .inTable(resources._name)
-      .onDelete(CASCADE);
+    table.string(features.id, 50).primary().references(resources.id).inTable(resources._name).onDelete(CASCADE);
     table.string(features.namespace, 50).notNullable();
   });
 }
@@ -171,7 +174,7 @@ function createFeaturesTable() {
 // At the moment, this should always be "snowparks"
 function createFeatureCoveredTypesTable() {
   return connection.schema.createTable(featureCoveredTypes._name, function (table) {
-    table.string(featureCoveredTypes.featureId, 100).references(features.id).inTable(features._name).onDelete(CASCADE);
+    table.string(featureCoveredTypes.featureId, 50).references(features.id).inTable(features._name).onDelete(CASCADE);
     table
       .string(featureCoveredTypes.type, 50)
       .references(resourceTypes.type)
@@ -184,12 +187,12 @@ function createFeatureCoveredTypesTable() {
 function createFeatureSpecializationsTable() {
   return connection.schema.createTable(featureSpecializations._name, function (table) {
     table
-      .string(featureSpecializations.parentId, 100)
+      .string(featureSpecializations.parentId, 50)
       .references(features.categoryId)
       .inTable(features._name)
       .onDelete(CASCADE);
     table
-      .string(featureSpecializations.childId, 100)
+      .string(featureSpecializations.childId, 50)
       .references(features.categoryId)
       .inTable(features._name)
       .onDelete(CASCADE);
@@ -365,19 +368,162 @@ function createContactPointsTable() {
   });
 }
 
+// TODO: review whether all columns in places should be nullable
+function createPlacesTable() {
+  return connection.schema.createTable(places._name, function (table) {
+    table.string(places.id, 50).primary().references(resources.id).inTable(resources._name).onDelete(CASCADE);
+
+    table.integer(places.addressId).references(addresses.id).inTable(addresses._name).onDelete(SET_NULL);
+
+    table.jsonb(places.geometries);
+    table.integer(places.length);
+    table.integer(places.maxAltitude);
+    table.integer(places.minAltitude);
+    table.jsonb(places.openingHours);
+  });
+}
+
+function createHowToArriveTable() {
+  return connection.schema.createTable(howToArrive._name, function (table) {
+    table.string(howToArrive.lang, 3).references(languageCodes.lang).inTable(languageCodes._name).onDelete(CASCADE);
+    table.string(howToArrive.placeId, 50).references(places.id).inTable(places._name).onDelete(CASCADE);
+    table.primary([howToArrive.lang, howToArrive.placeId]);
+
+    table.text(howToArrive.content).notNullable();
+  });
+}
+
+function createSnowConditionsTable() {
+  return connection.schema.createTable(snowConditions._name, function (table) {
+    table
+      .string(snowConditions.id, 50)
+      .primary()
+      .references(places.id)
+      .inTable(places._name)
+      .notNullable()
+      .onDelete(CASCADE);
+
+    table.integer(snowConditions.baseSnow).notNullable();
+    table.integer(snowConditions.baseSnowRangeLower);
+    table.integer(snowConditions.baseSnowRangeUpper);
+    table.boolean(snowConditions.groomed);
+    table.integer(snowConditions.latestStorm);
+    table.timestamp(snowConditions.obtainedIn);
+    table.string(snowConditions.primarySurface, 50).notNullable();
+    table.string(snowConditions.secondarySurface, 50);
+    table.boolean(snowConditions.snowMaking);
+    table.integer(snowConditions.snowOverNight);
+  });
+}
+
+// TODO: add propagation trigger to delete place
+function createVenuesTable() {
+  return connection.schema.createTable(venues._name, function (table) {
+    table.string(venues.id, 50).primary().references(resources.id).inTable(resources._name).onDelete(CASCADE);
+  });
+}
+
+function createEventVenuesTable() {
+  return connection.schema.createTable(eventVenues._name, function (table) {
+    table.string(eventVenues.venueId, 50).references(venues.id).inTable(venues._name).onDelete(CASCADE);
+    table.string(eventVenues.eventId, 50).references(events.id).inTable(events._name).onDelete(CASCADE);
+    table.primary([eventVenues.venueId, eventVenues.eventId]);
+  });
+}
+
+function createLiftsTable() {
+  return connection.schema.createTable(lifts._name, function (table) {
+    table.string(lifts.id, 50).primary().references(resources.id).inTable(resources._name).onDelete(CASCADE);
+
+    table.integer(lifts.capacity);
+    table.integer(lifts.personsPerChair);
+  });
+}
+
+function createMountainAreasTable() {
+  return connection.schema.createTable(mountainAreas._name, function (table) {
+    table.string(mountainAreas.id, 50).primary().references(resources.id).inTable(resources._name).onDelete(CASCADE);
+
+    table.integer(mountainAreas.area);
+    table.integer(mountainAreas.totalParkLength);
+    table.integer(mountainAreas.totalSlopeLength);
+  });
+}
+
+function createSkiSlopesTable() {
+  return connection.schema.createTable(skiSlopes._name, function (table) {
+    table.string(skiSlopes.id, 50).primary().references(resources.id).inTable(resources._name).onDelete(CASCADE);
+
+    table.string(skiSlopes.difficultyEu, 20);
+    table.string(skiSlopes.difficultyUs, 20);
+  });
+}
+
+function createSnowparksTable() {
+  return connection.schema.createTable(snowparks._name, function (table) {
+    table.string(snowparks.id, 50).primary().references(resources.id).inTable(resources._name).onDelete(CASCADE);
+
+    table.string(snowparks.difficulty, 20);
+  });
+}
+
+function createAreaLiftsTable() {
+  return connection.schema.createTable(areaLifts._name, function (table) {
+    table.string(areaLifts.areaId, 50).references(mountainAreas.id).inTable(mountainAreas._name).onDelete(CASCADE);
+    table.string(areaLifts.liftId, 50).references(lifts.id).inTable(lifts._name).onDelete(CASCADE);
+    table.primary([areaLifts.areaId, areaLifts.liftId]);
+  });
+}
+
+function createAreaSkiSlopesTable() {
+  return connection.schema.createTable(areaSkiSlopes._name, function (table) {
+    table.string(areaSkiSlopes.areaId, 50).references(mountainAreas.id).inTable(mountainAreas._name).onDelete(CASCADE);
+    table.string(areaSkiSlopes.skiSlopeId, 50).references(skiSlopes.id).inTable(skiSlopes._name).onDelete(CASCADE);
+    table.primary([areaSkiSlopes.areaId, areaSkiSlopes.skiSlopeId]);
+  });
+}
+
+function createAreaSnowparksTable() {
+  return connection.schema.createTable(areaSnowparks._name, function (table) {
+    table.string(areaSnowparks.areaId, 50).references(mountainAreas.id).inTable(mountainAreas._name).onDelete(CASCADE);
+    table.string(areaSnowparks.snowparkId, 50).references(snowparks.id).inTable(snowparks._name).onDelete(CASCADE);
+    table.primary([areaSnowparks.areaId, areaSnowparks.snowparkId]);
+  });
+}
+
+function createSubAreasTable() {
+  return connection.schema.createTable(subAreas._name, function (table) {
+    table.string(subAreas.parentId, 50).references(mountainAreas.id).inTable(mountainAreas._name).onDelete(CASCADE);
+    table.string(subAreas.childId, 50).references(mountainAreas.id).inTable(mountainAreas._name).onDelete(CASCADE);
+    table.primary([subAreas.parentId, subAreas.childId]);
+  });
+}
+
+function createConnectionsTable() {
+  return connection.schema.createTable(connections._name, function (table) {
+    table.string(connections.aId, 50).references(places.id).inTable(places._name).onDelete(CASCADE);
+    table.string(connections.bId, 50).references(places.id).inTable(places._name).onDelete(CASCADE);
+    table.primary([connections.aId, connections.bId]);
+  });
+}
+
 function createResourceCategoriesTable() {
   return connection.schema.createTable(resourceCategories._name, function (table) {
     table
-      .string(resourceCategories.categoryId, 100)
+      .string(resourceCategories.categoryId, 50)
       .references(categories.id)
       .inTable(categories._name)
       .onDelete(CASCADE);
-    table
-      .string(resourceCategories.categorizedResourceId, 50)
-      .references(resources.id)
-      .inTable(resources._name)
-      .onDelete(CASCADE);
-    table.primary([resourceCategories.categorizedResourceId, resourceCategories.categoryId]);
+    table.string(resourceCategories.resourceId, 50).references(resources.id).inTable(resources._name).onDelete(CASCADE);
+    table.primary([resourceCategories.resourceId, resourceCategories.categoryId]);
+  });
+}
+
+function createResourceFeaturesTable() {
+  return connection.schema.createTable(resourceFeatures._name, function (table) {
+    table.string(resourceFeatures.featureId, 50).references(features.id).inTable(features._name).onDelete(CASCADE);
+    table.string(resourceFeatures.resourceId, 50).references(resources.id).inTable(resources._name).onDelete(CASCADE);
+    table.primary([resourceFeatures.resourceId, resourceFeatures.featureId]);
   });
 }
 
@@ -447,33 +593,6 @@ function createDeleteContactPointAddressTrigger() {
       ON ${contactPoints._name}
       FOR EACH ROW
       EXECUTE PROCEDURE delete_contact_points_address();
-  `);
-}
-
-function createDeleteCategoryResourceTrigger() {
-  const categoriesTable = categories._name;
-  const categoriesId = categories.resourceId;
-
-  const resourcesTable = resources._name;
-  const resourcesId = resourcesTable + "." + resources.id;
-
-  return connection.raw(`
-    CREATE OR REPLACE FUNCTION delete_category_resource()
-      RETURNS TRIGGER AS
-    $$
-    BEGIN
-      DELETE FROM ${resourcesTable} WHERE OLD.${categoriesId} = ${resourcesId};
-      RETURN OLD;
-    END;
-    $$ LANGUAGE PLPGSQL;
-
-    DROP TRIGGER IF EXISTS category_resource_deletion ON ${categoriesTable};
-
-    CREATE TRIGGER category_resource_deletion
-      AFTER DELETE
-      ON ${categoriesTable}
-      FOR EACH ROW
-      EXECUTE PROCEDURE delete_category_resource();
   `);
 }
 
@@ -555,10 +674,10 @@ function createUrlObjectsView() {
   `);
 }
 
-function createCategoriesArrayView() {
+function createCategoriesArraysView() {
   return connection.raw(`
   CREATE VIEW categories_arrays AS
-    SELECT categorized_resource_id AS "id",
+    SELECT resource_id AS "id",
         json_agg(
           json_build_object(
             'id',
@@ -568,7 +687,7 @@ function createCategoriesArrayView() {
           )
         ) AS "categories"
       FROM resource_categories
-      GROUP BY categorized_resource_id;
+      GROUP BY resource_id;
   `);
 }
 
@@ -641,13 +760,15 @@ function createAddressObjectsView() {
   return connection.raw(`
   CREATE VIEW address_objects AS
     SELECT addresses.id,
-        country,
-        zipcode,
-        addresses.type,
-        COALESCE(city_objects.city, 'null') AS "city",
-        COALESCE(complement_objects.complement, 'null') AS "complement",
-        COALESCE(region_objects.region, 'null') AS "region",
-        COALESCE(street_objects.street, 'null') AS "street"
+        json_build_object(
+          'country', country,
+          'zipcode', zipcode,
+          'type', addresses.type,
+          'city', COALESCE(city_objects.city),
+          'complement', COALESCE(complement_objects.complement),
+          'region', COALESCE(region_objects.region),
+          'street', COALESCE(street_objects.street)
+        ) AS "address"
       FROM addresses
       LEFT JOIN city_objects ON city_objects.id = addresses.id
       LEFT JOIN complement_objects ON complement_objects.id = addresses.id
@@ -681,20 +802,143 @@ function createResourceObjectsView() {
   `);
 }
 
+function createHowToArriveObjectsView() {
+  return connection.raw(`
+  CREATE VIEW how_to_arrive_objects AS
+    SELECT place_id AS "id",
+        COALESCE(
+          json_object_agg(DISTINCT lang, content) FILTER (WHERE lang IS NOT NULL)
+        )::json AS "how_to_arrive"
+      FROM how_to_arrive
+      GROUP BY place_id;
+  `);
+}
+
+function createAreaLiftsArraysView() {
+  return connection.raw(`
+  CREATE VIEW area_lifts_arrays AS
+    SELECT area_id AS "id",
+        json_agg(json_build_object(
+          'id', lift_id,
+          'type', 'lifts'
+        )) AS "lifts"
+      FROM area_lifts
+      GROUP BY area_id;
+  `);
+}
+
+function createAreaSkiSlopesArraysView() {
+  return connection.raw(`
+  CREATE VIEW area_ski_slopes_arrays AS
+    SELECT area_id AS "id",
+        json_agg(json_build_object(
+          'id', ski_slope_id,
+          'type', 'skiSlopes'
+        )) AS "ski_slopes"
+      FROM area_ski_slopes
+      GROUP BY area_id;
+  `);
+}
+
+function createAreaSnowparksArraysView() {
+  return connection.raw(`
+  CREATE VIEW area_snowparks_arrays AS
+    SELECT area_id AS "id",
+        json_agg(json_build_object(
+          'id', snowpark_id,
+          'type', 'snowparks'
+        )) AS "lifts"
+      FROM area_snowparks
+      GROUP BY area_id;
+  `);
+}
+
+function createSubAreasArraysView() {
+  return connection.raw(`
+  CREATE VIEW sub_areas_arrays AS
+    SELECT parent_id AS "id",
+        json_agg(json_build_object(
+          'id', child_id,
+          'type', 'mountainAreas'
+        )) AS "sub_areas"
+      FROM sub_areas
+      GROUP BY parent_id;
+  `);
+}
+
+// TODO: review whether connections must be bi-directional
+function createConnectionsArraysView() {
+  return connection.raw(`
+  CREATE VIEW connections_arrays AS
+    SELECT a_id AS "id",
+        json_agg(json_build_object(
+          'id', b_id,
+          'type', resources.type
+        )) AS "connections"
+      FROM connections
+      LEFT JOIN resources ON resources.id = connections.b_id
+      GROUP BY a_id;
+  `);
+}
+
+// TODO: add filter to make 'baseSnow' null when there are no ranges
+function createSnowConditionObjectsView() {
+  return connection.raw(`
+  CREATE VIEW snow_condition_objects AS
+    SELECT snow_conditions.id,
+        json_build_object(
+          'baseSnow', json_build_object(
+            'lower', base_snow_range_lower,
+            'upper', base_snow_range_upper
+          ),
+          'groomed', groomed,
+          'latestStorm', latest_storm,
+          'obtainedIn', obtained_in,
+          'primarySurface', primary_surface,
+          'secondarySurface', secondary_surface,
+          'snowMaking', snow_making,
+          'snowOverNight', snow_over_night
+        ) AS "snow_condition"
+      FROM snow_conditions;
+  `);
+}
+
+function createPlaceObjectsView() {
+  return connection.raw(`
+  CREATE VIEW place_objects AS
+    SELECT places.id, geometries, length, max_altitude, min_altitude, opening_hours,
+        address_objects.address AS "address",
+        how_to_arrive_objects.how_to_arrive AS "how_to_arrive",
+		    snow_condition_objects.snow_condition AS "snow_condition"
+      FROM places
+      LEFT JOIN snow_condition_objects ON snow_condition_objects.id = places.id
+      LEFT JOIN address_objects ON address_objects.id = places.address_id
+      LEFT JOIN how_to_arrive_objects ON how_to_arrive_objects.id = places.id;
+  `);
+}
+
 function createAllViews() {
   return createAbstractObjectsView()
     .then(() => createDescriptionObjectsView())
     .then(() => createNameObjectsView())
     .then(() => createShortNameObjectsView())
     .then(() => createUrlObjectsView())
-    .then(() => createCategoriesArrayView())
+    .then(() => createCategoriesArraysView())
     .then(() => createMultimediaDescriptionsArraysView())
     .then(() => createCityObjectsView())
     .then(() => createComplementObjectsView())
     .then(() => createRegionObjectsView())
     .then(() => createStreetObjectsView())
     .then(() => createAddressObjectsView())
-    .then(() => createResourceObjectsView());
+    .then(() => createResourceObjectsView())
+    .then(() => createHowToArriveObjectsView())
+    .then(() => createAreaLiftsArraysView())
+    .then(() => createAreaSkiSlopesArraysView())
+    .then(() => createAreaSnowparksArraysView())
+    .then(() => createSubAreasArraysView())
+    .then(() => createConnectionsArraysView())
+    .then(() => createSnowConditionObjectsView())
+    .then(() => createPlaceObjectsView());
 }
 
 function dropAllViews() {
@@ -712,15 +956,19 @@ function dropAllViews() {
     dropViewIfExists(views.streetObjects._name),
     dropViewIfExists(views.addressObjects._name),
     dropViewIfExists(views.resourceObjects._name),
+    dropViewIfExists(views.howToArriveObjects._name),
+    dropViewIfExists(views.areaLiftsArrays._name),
+    dropViewIfExists(views.areaSkiSlopesArrays._name),
+    dropViewIfExists(views.areaSnowparksArrays._name),
+    dropViewIfExists(views.subAreasArrays._name),
+    dropViewIfExists(views.connectionsArrays._name),
+    dropViewIfExists(views.snowConditionObjects._name),
+    dropViewIfExists(views.placeObjects._name),
   ]);
 }
 
 function createAllTriggers() {
-  return Promise.all([
-    createDeleteContactPointAddressTrigger(),
-    createDeleteCategoryResourceTrigger(),
-    createSyncLastUpdateTrigger(),
-  ]);
+  return Promise.all([createDeleteContactPointAddressTrigger(), createSyncLastUpdateTrigger()]);
 }
 
 function dropAllTables() {
@@ -740,6 +988,11 @@ function dropAllTables() {
     dropTableIfExists(regions._name),
     dropTableIfExists(streets._name),
     dropTableIfExists(contactPoints._name),
+    dropTableIfExists(places._name),
+    dropTableIfExists(howToArrive._name),
+    dropTableIfExists(snowConditions._name),
+    dropTableIfExists(venues._name),
+    dropTableIfExists(eventVenues._name),
     dropTableIfExists(categories._name),
     dropTableIfExists(features._name),
     dropTableIfExists(mediaObjects._name),
@@ -748,6 +1001,7 @@ function dropAllTables() {
     dropTableIfExists(eventStatus._name),
     dropTableIfExists(events._name),
     dropTableIfExists(resourceCategories._name),
+    dropTableIfExists(resourceFeatures._name),
     dropTableIfExists(categoryCoveredTypes._name),
     dropTableIfExists(categorySpecializations._name),
     dropTableIfExists(featureCoveredTypes._name),
@@ -756,6 +1010,15 @@ function dropAllTables() {
     dropTableIfExists(organizers._name),
     dropTableIfExists(sponsors._name),
     dropTableIfExists(multimediaDescriptions._name),
+    dropTableIfExists(areaLifts._name),
+    dropTableIfExists(areaSkiSlopes._name),
+    dropTableIfExists(areaSnowparks._name),
+    dropTableIfExists(lifts._name),
+    dropTableIfExists(mountainAreas._name),
+    dropTableIfExists(skiSlopes._name),
+    dropTableIfExists(snowparks._name),
+    dropTableIfExists(subAreas._name),
+    dropTableIfExists(connections._name),
   ]);
 }
 
@@ -782,7 +1045,22 @@ function createAllTables() {
     .then(() => createRegionsTable())
     .then(() => createStreetsTable())
     .then(() => createContactPointsTable())
+    .then(() => createPlacesTable())
+    .then(() => createHowToArriveTable())
+    .then(() => createSnowConditionsTable())
+    .then(() => createVenuesTable())
+    .then(() => createEventVenuesTable())
+    .then(() => createLiftsTable())
+    .then(() => createMountainAreasTable())
+    .then(() => createSkiSlopesTable())
+    .then(() => createSnowparksTable())
+    .then(() => createAreaLiftsTable())
+    .then(() => createAreaSkiSlopesTable())
+    .then(() => createAreaSnowparksTable())
+    .then(() => createSubAreasTable())
+    .then(() => createConnectionsTable())
     .then(() => createResourceCategoriesTable())
+    .then(() => createResourceFeaturesTable())
     .then(() => createCategoryCoveredTypesTable())
     .then(() => createCategorySpecializationsTable())
     .then(() => createFeatureCoveredTypesTable())

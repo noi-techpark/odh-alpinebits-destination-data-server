@@ -301,11 +301,11 @@ function insertEventSeries(connection, eventSeries) {
 function insertResourceCategory(connection, resourceId, categoryId) {
   const columns = {
     [resourceCategories.categoryId]: categoryId,
-    [resourceCategories.categorizedResourceId]: resourceId,
+    [resourceCategories.resourceId]: resourceId,
   };
 
   checkNotNullable(categoryId, resourceCategories.categoryId);
-  checkNotNullable(resourceId, resourceCategories.categorizedResourceId);
+  checkNotNullable(resourceId, resourceCategories.resourceId);
 
   return insert(connection, resourceCategories._name, columns);
 }
@@ -455,7 +455,7 @@ function selectStreetsFromId(connection, addressId) {
 }
 
 function selectCategoriesFromId(connection, resourceId) {
-  const columns = { [resourceCategories.categorizedResourceId]: resourceId };
+  const columns = { [resourceCategories.resourceId]: resourceId };
   return select(connection, resourceCategories._name, columns);
 }
 
@@ -578,10 +578,10 @@ function deleteAddressText(connection, tableName, addressId) {
 
 function deleteResourceCategories(connection, resourceId) {
   const columns = {
-    [resourceCategories.categorizedResourceId]: resourceId,
+    [resourceCategories.resourceId]: resourceId,
   };
 
-  checkNotNullable(resourceId, resourceCategories.categorizedResourceId);
+  checkNotNullable(resourceId, resourceCategories.resourceId);
 
   return connection(resourceCategories._name).where(columns).del();
 }

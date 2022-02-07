@@ -16,29 +16,10 @@ FROM agents
     SELECT agent_id AS "id",
       json_agg(
         json_build_object(
-          'availableHours',
-          available_hours,
-          'email',
-          email,
-          'telephone',
-          telephone,
-          'address',
-          json_build_object(
-            'city',
-            address_objects.city,
-            'complement',
-            address_objects.complement,
-            'country',
-            address_objects.country,
-            'region',
-            address_objects.region,
-            'street',
-            address_objects.street,
-            'type',
-            address_objects.type,
-            'zipcode',
-            address_objects.zipcode
-          )
+          'availableHours', available_hours,
+          'email', email,
+          'telephone', telephone,
+          'address', address_objects.address
         )
       ) AS contacts
     FROM contact_points
