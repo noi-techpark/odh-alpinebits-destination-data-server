@@ -89,7 +89,7 @@ function createResourceTypesTable() {
 function createResourcesTable() {
   return connection.raw(`
     CREATE TABLE ${resources._name} (
-      ${resources.id} UUID DEFAULT ${UUID_GENERATE} PRIMARY KEY,
+      ${resources.id} VARCHAR ( 50 ) DEFAULT ${UUID_GENERATE} PRIMARY KEY,
       ${resources.type} VARCHAR ( 50 ) NOT NULL,
       ${resources.odhId} VARCHAR ( 50 ),
       ${resources.dataProvider} TEXT NOT NULL,
@@ -105,14 +105,19 @@ function createResourcesTable() {
 
 function createAgentsTable() {
   return connection.schema.createTable(agents._name, function (table) {
-    table.uuid(agents.id).primary().references(resources.id).inTable(resources._name).onDelete(CASCADE);
+    table.string(agents.id, 50).primary().references(resources.id).inTable(resources._name).onDelete(CASCADE);
   });
 }
 
 function createCategoriesTable() {
   return connection.schema.createTable(categories._name, function (table) {
     table.string(categories.id, 100).primary();
-    table.uuid(categories.resourceId).notNullable().references(resources.id).inTable(resources._name).onDelete(CASCADE);
+    table
+      .string(categories.resourceId, 50)
+      .notNullable()
+      .references(resources.id)
+      .inTable(resources._name)
+      .onDelete(CASCADE);
     table.string(categories.namespace, 50).notNullable();
   });
 }
@@ -153,7 +158,12 @@ function createFeaturesTable() {
   // TODO: update the relationship to snowparks
   return connection.schema.createTable(features._name, function (table) {
     table.string(features.id, 100).primary();
-    table.uuid(features.resourceId).notNullable().references(resources.id).inTable(resources._name).onDelete(CASCADE);
+    table
+      .string(features.resourceId, 50)
+      .notNullable()
+      .references(resources.id)
+      .inTable(resources._name)
+      .onDelete(CASCADE);
     table.string(features.namespace, 50).notNullable();
   });
 }
@@ -189,8 +199,8 @@ function createFeatureSpecializationsTable() {
 
 function createMediaObjectsTable() {
   return connection.schema.createTable(mediaObjects._name, function (table) {
-    table.uuid(mediaObjects.id).primary().references(resources.id).inTable(resources._name).onDelete(CASCADE);
-    table.uuid(mediaObjects.copyrightOwnerId).references(agents.id).inTable(agents._name).onDelete(SET_NULL);
+    table.string(mediaObjects.id, 50).primary().references(resources.id).inTable(resources._name).onDelete(CASCADE);
+    table.string(mediaObjects.copyrightOwnerId, 50).references(agents.id).inTable(agents._name).onDelete(SET_NULL);
     table.string(mediaObjects.contentType);
     table.integer(mediaObjects.duration);
     table.integer(mediaObjects.height);
@@ -208,7 +218,7 @@ function createSeriesFrequenciesTable() {
 
 function createEventSeriesTable() {
   return connection.schema.createTable(eventSeries._name, function (table) {
-    table.uuid(eventSeries.id).primary().references(resources.id).inTable(resources._name).onDelete(CASCADE);
+    table.string(eventSeries.id, 50).primary().references(resources.id).inTable(resources._name).onDelete(CASCADE);
     table
       .string(eventSeries.frequency, 50)
       .references(seriesFrequencies.frequency)
@@ -226,13 +236,18 @@ function createEventStatusTable() {
 
 function createEventsTable() {
   return connection.schema.createTable(events._name, function (table) {
-    table.uuid(events.id).primary().references(resources.id).inTable(resources._name).onDelete(CASCADE);
+    table.string(events.id, 50).primary().references(resources.id).inTable(resources._name).onDelete(CASCADE);
     table.integer(events.capacity);
     table.timestamp(events.endDate, { useTz: true });
     table.timestamp(events.startDate, { useTz: true });
-    table.uuid(events.parentId).references(events.id).inTable(events._name).onDelete(SET_NULL);
-    table.uuid(events.publisherId).references(agents.id).inTable(agents._name).notNullable().onDelete(CASCADE);
-    table.uuid(events.seriesId).references(eventSeries.id).inTable(eventSeries._name).notNullable().onDelete(SET_NULL);
+    table.string(events.parentId, 50).references(events.id).inTable(events._name).onDelete(SET_NULL);
+    table.string(events.publisherId, 50).references(agents.id).inTable(agents._name).notNullable().onDelete(CASCADE);
+    table
+      .string(events.seriesId, 50)
+      .references(eventSeries.id)
+      .inTable(eventSeries._name)
+      .notNullable()
+      .onDelete(SET_NULL);
     table.string(events.status, 50).references(eventStatus.status).inTable(eventStatus._name).onDelete(SET_NULL);
   });
 }
@@ -247,7 +262,7 @@ function createLanguageCodesTable() {
 function createAbstractsTable() {
   return connection.schema.createTable(abstracts._name, function (table) {
     table.string(abstracts.lang, 3).references(languageCodes.lang).inTable(languageCodes._name).onDelete(CASCADE);
-    table.uuid(abstracts.resourceId).references(resources.id).inTable(resources._name).onDelete(CASCADE);
+    table.string(abstracts.resourceId, 50).references(resources.id).inTable(resources._name).onDelete(CASCADE);
     table.text(abstracts.content).notNullable();
     table.primary([abstracts.lang, abstracts.resourceId]);
   });
@@ -256,7 +271,7 @@ function createAbstractsTable() {
 function createDescriptionsTable() {
   return connection.schema.createTable(descriptions._name, function (table) {
     table.string(descriptions.lang, 3).references(languageCodes.lang).inTable(languageCodes._name).onDelete(CASCADE);
-    table.uuid(descriptions.resourceId).references(resources.id).inTable(resources._name).onDelete(CASCADE);
+    table.string(descriptions.resourceId, 50).references(resources.id).inTable(resources._name).onDelete(CASCADE);
     table.text(descriptions.content).notNullable();
     table.primary([descriptions.lang, descriptions.resourceId]);
   });
@@ -265,7 +280,7 @@ function createDescriptionsTable() {
 function createNamesTable() {
   return connection.schema.createTable(names._name, function (table) {
     table.string(names.lang, 3).references(languageCodes.lang).inTable(languageCodes._name).onDelete(CASCADE);
-    table.uuid(names.resourceId).references(resources.id).inTable(resources._name).onDelete(CASCADE);
+    table.string(names.resourceId, 50).references(resources.id).inTable(resources._name).onDelete(CASCADE);
     table.text(names.content).notNullable();
     table.primary([names.lang, names.resourceId]);
   });
@@ -274,7 +289,7 @@ function createNamesTable() {
 function createShortNamesTable() {
   return connection.schema.createTable(shortNames._name, function (table) {
     table.string(shortNames.lang, 3).references(languageCodes.lang).inTable(languageCodes._name).onDelete(CASCADE);
-    table.uuid(shortNames.resourceId).references(resources.id).inTable(resources._name).onDelete(CASCADE);
+    table.string(shortNames.resourceId, 50).references(resources.id).inTable(resources._name).onDelete(CASCADE);
     table.text(shortNames.content).notNullable();
     table.primary([shortNames.lang, shortNames.resourceId]);
   });
@@ -283,7 +298,7 @@ function createShortNamesTable() {
 function createUrlsTable() {
   return connection.schema.createTable(urls._name, function (table) {
     table.string(urls.lang, 3).references(languageCodes.lang).inTable(languageCodes._name).onDelete(CASCADE);
-    table.uuid(urls.resourceId).references(resources.id).inTable(resources._name).onDelete(CASCADE);
+    table.string(urls.resourceId, 50).references(resources.id).inTable(resources._name).onDelete(CASCADE);
     table.text(urls.content).notNullable();
     table.primary([urls.lang, urls.resourceId]);
   });
@@ -341,7 +356,7 @@ function createContactPointsTable() {
   return connection.schema.createTable(contactPoints._name, function (table) {
     table.increments(contactPoints.id);
 
-    table.uuid(contactPoints.agentId).references(agents.id).inTable(agents._name).notNullable().onDelete(CASCADE);
+    table.string(contactPoints.agentId, 50).references(agents.id).inTable(agents._name).notNullable().onDelete(CASCADE);
     table.integer(contactPoints.addressId).references(addresses.id).inTable(addresses._name).onDelete(SET_NULL);
 
     table.jsonb(contactPoints.availableHours);
@@ -358,7 +373,7 @@ function createResourceCategoriesTable() {
       .inTable(categories._name)
       .onDelete(CASCADE);
     table
-      .uuid(resourceCategories.categorizedResourceId)
+      .string(resourceCategories.categorizedResourceId, 50)
       .references(resources.id)
       .inTable(resources._name)
       .onDelete(CASCADE);
@@ -368,41 +383,45 @@ function createResourceCategoriesTable() {
 
 function createContributorsTable() {
   return connection.schema.createTable(contributors._name, function (table) {
-    table.uuid(contributors.contributorId).references(agents.id).inTable(agents._name).onDelete(CASCADE);
-    table.uuid(contributors.eventId).references(events.id).inTable(events._name).onDelete(CASCADE);
+    table.string(contributors.contributorId, 50).references(agents.id).inTable(agents._name).onDelete(CASCADE);
+    table.string(contributors.eventId, 50).references(events.id).inTable(events._name).onDelete(CASCADE);
     table.primary([contributors.contributorId, contributors.eventId]);
   });
 }
 
 function createOrganizersTable() {
   return connection.schema.createTable(organizers._name, function (table) {
-    table.uuid(organizers.organizerId).references(agents.id).inTable(agents._name).onDelete(CASCADE);
-    table.uuid(organizers.eventId).references(events.id).inTable(events._name).onDelete(CASCADE);
+    table.string(organizers.organizerId, 50).references(agents.id).inTable(agents._name).onDelete(CASCADE);
+    table.string(organizers.eventId, 50).references(events.id).inTable(events._name).onDelete(CASCADE);
     table.primary([organizers.organizerId, organizers.eventId]);
   });
 }
 
 function createSponsorsTable() {
   return connection.schema.createTable(sponsors._name, function (table) {
-    table.uuid(sponsors.sponsorId).references(agents.id).inTable(agents._name).onDelete(CASCADE);
-    table.uuid(sponsors.eventId).references(events.id).inTable(events._name).onDelete(CASCADE);
+    table.string(sponsors.sponsorId, 50).references(agents.id).inTable(agents._name).onDelete(CASCADE);
+    table.string(sponsors.eventId, 50).references(events.id).inTable(events._name).onDelete(CASCADE);
     table.primary([sponsors.sponsorId, sponsors.eventId]);
   });
 }
 
 function createSponsorsTable() {
   return connection.schema.createTable(sponsors._name, function (table) {
-    table.uuid(sponsors.sponsorId).references(agents.id).inTable(agents._name).onDelete(CASCADE);
-    table.uuid(sponsors.eventId).references(events.id).inTable(events._name).onDelete(CASCADE);
+    table.string(sponsors.sponsorId, 50).references(agents.id).inTable(agents._name).onDelete(CASCADE);
+    table.string(sponsors.eventId, 50).references(events.id).inTable(events._name).onDelete(CASCADE);
     table.primary([sponsors.sponsorId, sponsors.eventId]);
   });
 }
 
 function createMultimediaDescriptionsTable() {
   return connection.schema.createTable(multimediaDescriptions._name, function (table) {
-    table.uuid(multimediaDescriptions.resourceId).references(resources.id).inTable(resources._name).onDelete(CASCADE);
     table
-      .uuid(multimediaDescriptions.mediaObjectId)
+      .string(multimediaDescriptions.resourceId, 50)
+      .references(resources.id)
+      .inTable(resources._name)
+      .onDelete(CASCADE);
+    table
+      .string(multimediaDescriptions.mediaObjectId, 50)
       .references(mediaObjects.id)
       .inTable(mediaObjects._name)
       .onDelete(CASCADE);
