@@ -1,15 +1,64 @@
 const fs = require("fs");
 const _ = require("lodash");
-
-const odhEvents = require("./../events-1000.json");
+const utils = require("./model/odh2destinationdata/utils");
+const mappings = require("./model/mappings");
+const odhEvents = require("/home/jcg/Event.json");//"./../events-1000.json");
 const script = "";
 
 main();
 
 function main() {
+  let insert;
+
   const resources = odhEvents.Items.slice(0, 9).map((odhEvent) => mapResource(odhEvent, "events"));
-  const insert = getInsertResources(resources);
+  insert = getInsertResources(resources);
+  //console.log(insert);
+  //Inserting resource names
+  //insert = getInsertResourceNames(resources);
+  let names = mapResourceNames(odhEvents.Items.slice(0, 9));
+  insert = getInsertResourceNames(names);
   console.log(insert);
+
+}
+
+function checkQuotesSQL(input) {
+  return input.replace("'","''");
+}
+
+function mapResourceNames(odhResource) {
+  //const names = {};
+  const names = []
+  for (const ev of odhResource) {
+    const keys = Object.keys(ev.Detail);
+
+    for (const key of keys) {
+      let name = {};
+      name.lang = key;
+      name.content = checkQuotesSQL(ev.Detail[key].Title);
+      name.resourceId = ev.Id;
+      names.push(name);
+    }
+  }
+  
+  return names;
+}
+
+function getInsertResourceNames(names) {
+  let insert = "INSERT INTO names (resource_id, lang, content)\nVALUES\n";
+  const length = names?.length;
+  names?.forEach((name, index) => {
+    const id = name.resourceId ? `'${name.resourceId}'` : null;
+    //const lang = name.lang ? `'${utils.sanitizeAndConvertLanguageTags(name.lang)}'` : null;
+    const lang = name.lang ? `'${mappings.iso6391to6393[name.lang]}'` : null;
+    //const lang = name.lang ? `'${name.lang}'` : null;
+    const content = name.content ? `'${name.content}'` : null;
+    
+    insert += `(${id}, ${lang}, ${content})${
+      length - 1 > index ? "," : ";"
+    }\n`;
+  });
+
+  return insert;
 }
 
 function mapResource(odhResource, type) {
@@ -48,6 +97,7 @@ function getInsertResources(resources) {
 
   return insert;
 }
+
 
 function hasSimpleUrl(odhResource) {
   // TODO: Implement
