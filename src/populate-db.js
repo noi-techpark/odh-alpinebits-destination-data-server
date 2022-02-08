@@ -5,20 +5,46 @@ const mappings = require("./model/mappings");
 const odhEvents = require("/home/jcg/Event.json");//"./../events-1000.json");
 const script = "";
 
+
+const {Pool, Client} = require('pg');
+
+const pool = new Pool({
+host: "localhost",
+database: "test_db",
+user: "root",
+password: "root",
+port: "5433"
+})
+
 main();
 
 function main() {
   let insert;
 
-  const resources = odhEvents.Items.slice(0, 9).map((odhEvent) => mapResource(odhEvent, "events"));
-  insert = getInsertResources(resources);
-  //console.log(insert);
-  //Inserting resource names
-  //insert = getInsertResourceNames(resources);
-  let names = mapResourceNames(odhEvents.Items.slice(0, 9));
-  insert = getInsertResourceNames(names);
-  console.log(insert);
+  const dataSource = odhEvents.Items.slice(0, 9);
 
+  console.log('OpenDatahub migration');
+  console.log('Extracting Events...');
+  const resources = dataSource.map((odhEvent) => mapResource(odhEvent, "events"));
+  console.log('Events - Insert at table resource');
+  insertResources = getInsertResources(resources);
+  //console.log(insertResources);
+  //executeSQLQuery(insertResources);
+  //Inserting resource names
+  console.log('Events - Insert at table names');
+  let names = mapResourceNames(dataSource);
+  insertNames = getInsertResourceNames(names);
+  //executeSQLQuery(insertNames);
+  //console.log(insertNames);
+
+}
+async function executeSQLQuery(query) {
+  try {
+    return await pool.query(query);
+  }
+  catch (error) {
+    console.log(error.message);
+  }
 }
 
 function checkQuotesSQL(input) {
