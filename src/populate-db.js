@@ -18,7 +18,7 @@ port: "5433"
 
 main();
 
-function main() {
+async function main() {
   let insert;
 
   const dataSource = odhEvents.Items.slice(0, 9);
@@ -29,14 +29,18 @@ function main() {
   console.log('Events - Insert at table resource');
   insertResources = getInsertResources(resources);
   //console.log(insertResources);
-  //executeSQLQuery(insertResources);
+  await executeSQLQuery(insertResources);
   //Inserting resource names
   console.log('Events - Insert at table names');
-  let names = mapResourceNames(dataSource);
-  insertNames = getInsertResourceNames(names);
-  //executeSQLQuery(insertNames);
+  const names = mapMultilingualAttribute(dataSource, 'Title');
+  insertNames = getInsertMultilingualTable(names, 'names');
+  await executeSQLQuery(insertNames);
   //console.log(insertNames);
-
+  console.log('Events - Insert at table descriptions');
+  const descriptions = mapMultilingualAttribute(dataSource, 'BaseText');
+  insertDescriptions = insertNames = getInsertMultilingualTable(descriptions, 'descriptions');
+  //console.log(insertDescriptions);
+  await executeSQLQuery(insertDescriptions);
 }
 async function executeSQLQuery(query) {
   try {
@@ -48,29 +52,32 @@ async function executeSQLQuery(query) {
 }
 
 function checkQuotesSQL(input) {
-  return input.replace("'","''");
+  input = input.replace( /[\r\n]+/gm, "" );;
+  //input =  input.replace("'","''");
+  input = input.replace( /'/g, "''");
+  input = input.replace( /’/g, "’’");
+  return input;
 }
 
-function mapResourceNames(odhResource) {
-  //const names = {};
-  const names = []
+function mapMultilingualAttribute(odhResource, field) {
+  const attributes = []
   for (const ev of odhResource) {
     const keys = Object.keys(ev.Detail);
 
     for (const key of keys) {
-      let name = {};
-      name.lang = key;
-      name.content = checkQuotesSQL(ev.Detail[key].Title);
-      name.resourceId = ev.Id;
-      names.push(name);
+      let attribute = {};
+      attribute.lang = key;
+      attribute.content = checkQuotesSQL(ev.Detail[key][field]);
+      attribute.resourceId = ev.Id;
+      attributes.push(attribute);
     }
   }
   
-  return names;
+  return attributes;
 }
 
-function getInsertResourceNames(names) {
-  let insert = "INSERT INTO names (resource_id, lang, content)\nVALUES\n";
+function getInsertMultilingualTable(names, table) {
+  let insert = "INSERT INTO "+table+" (resource_id, lang, content)\nVALUES\n";
   const length = names?.length;
   names?.forEach((name, index) => {
     const id = name.resourceId ? `'${name.resourceId}'` : null;
