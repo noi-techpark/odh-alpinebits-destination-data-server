@@ -1,5 +1,9 @@
 const { MediaObjectConnector } = require("../connectors/destinationdata2022/media_object_connector");
-const { deserializeMediaObject } = require("../model/destinationdata2022");
+const {
+  deserializeMediaObject,
+  serializeResourceCollection,
+  serializeSingleResource,
+} = require("../model/destinationdata2022");
 const { Request } = require("../model/request/request");
 const { Router } = require("./router");
 
@@ -28,7 +32,9 @@ class MediaObjectsRouter extends Router {
 
     // Return to the client
     try {
-      return connector.retrieve();
+      return connector
+        .retrieve()
+        .then((mediaObjects) => serializeResourceCollection(mediaObjects, "/2022-04-draft", "mediaObjects"));
     } catch (error) {
       console.error(error);
       throw error;
@@ -43,7 +49,9 @@ class MediaObjectsRouter extends Router {
 
     // Return to the client
     try {
-      return connector.retrieve();
+      return connector
+        .retrieve()
+        .then((mediaObject) => serializeSingleResource(mediaObject, "/2022-04-draft", "mediaObjects"));
     } catch (error) {
       console.error(error);
       throw error;
@@ -62,7 +70,9 @@ class MediaObjectsRouter extends Router {
 
     // Return to the client
     try {
-      return connector.create(mediaObject);
+      return connector
+        .create(mediaObject)
+        .then((mediaObject) => serializeSingleResource(mediaObject, "/2022-04-draft", "mediaObjects"));
     } catch (error) {
       console.error(error);
       throw error;
@@ -81,7 +91,9 @@ class MediaObjectsRouter extends Router {
 
     // Return to the client
     try {
-      return connector.update(mediaObject);
+      return connector
+        .update(mediaObject)
+        .then((mediaObject) => serializeSingleResource(mediaObject, "/2022-04-draft", "mediaObjects"));
     } catch (error) {
       console.error(error);
       throw error;

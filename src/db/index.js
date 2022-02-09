@@ -1,5 +1,9 @@
 module.exports = {
   defaults: {
+    eventStatus: {
+      canceled: "canceled",
+      published: "published",
+    },
     resourceTypes: {
       agents: "agents",
       categories: "categories",
@@ -12,10 +16,6 @@ module.exports = {
       skiSlopes: "skiSlopes",
       snowparks: "snowparks",
       venues: "venues",
-    },
-    eventStatus: {
-      canceled: "canceled",
-      published: "published",
     },
     seriesFrequencies: {
       daily: "daily",
@@ -46,6 +46,21 @@ module.exports = {
       _name: "agents",
       id: "id",
     },
+    areaLifts: {
+      _name: "area_lifts",
+      areaId: "area_id",
+      liftId: "lift_id",
+    },
+    areaSkiSlopes: {
+      _name: "area_ski_slopes",
+      areaId: "area_id",
+      skiSlopeId: "ski_slope_id",
+    },
+    areaSnowparks: {
+      _name: "area_snowparks",
+      areaId: "area_id",
+      snowparkId: "snowpark_id",
+    },
     categories: {
       _name: "categories",
       id: "id",
@@ -74,6 +89,11 @@ module.exports = {
       lang: "lang",
       content: "content",
     },
+    connections: {
+      _name: "connections",
+      aId: "a_id",
+      bId: "b_id",
+    },
     contactPoints: {
       _name: "contact_points",
       id: "id",
@@ -99,11 +119,11 @@ module.exports = {
       id: "id",
       capacity: "capacity",
       endDate: "end_date",
-      startDate: "start_date",
       parentId: "parent_id",
       publisherId: "publisher_id",
-      status: "status",
       seriesId: "series_id",
+      startDate: "start_date",
+      status: "status",
     },
     eventSeries: {
       _name: "event_series",
@@ -114,6 +134,11 @@ module.exports = {
       _name: "event_status",
       status: "status",
       title: "title",
+    },
+    eventVenues: {
+      _name: "event_venues",
+      venueId: "venue_id",
+      eventId: "event_id",
     },
     featureCoveredTypes: {
       _name: "feature_covered_types",
@@ -131,10 +156,22 @@ module.exports = {
       parentId: "parent_id",
       childId: "child_id",
     },
+    howToArrive: {
+      _name: "how_to_arrive",
+      placeId: "place_id",
+      lang: "lang",
+      content: "content",
+    },
     languageCodes: {
       _name: "language_codes",
       lang: "lang",
       title: "title",
+    },
+    lifts: {
+      _name: "lifts",
+      id: "id",
+      capacity: "capacity",
+      personsPerChair: "persons_per_chair",
     },
     mediaObjects: {
       _name: "media_objects",
@@ -145,6 +182,13 @@ module.exports = {
       license: "license",
       width: "width",
       copyrightOwnerId: "copyright_owner_id",
+    },
+    mountainAreas: {
+      _name: "mountain_areas",
+      id: "id",
+      area: "area",
+      totalParkLength: "total_park_length",
+      totalSlopeLength: "total_slope_length",
     },
     multimediaDescriptions: {
       _name: "multimedia_descriptions",
@@ -162,6 +206,16 @@ module.exports = {
       organizerId: "organizer_id",
       eventId: "event_id",
     },
+    places: {
+      _name: "places",
+      id: "id",
+      addressId: "address_id",
+      geometries: "geometries",
+      length: "length",
+      maxAltitude: "max_altitude",
+      minAltitude: "min_altitude",
+      openingHours: "opening_hours",
+    },
     regions: {
       _name: "regions",
       addressId: "address_id",
@@ -170,8 +224,13 @@ module.exports = {
     },
     resourceCategories: {
       _name: "resource_categories",
-      categorizedResourceId: "categorized_resource_id",
+      resourceId: "resource_id",
       categoryId: "category_id",
+    },
+    resourceFeatures: {
+      _name: "resource_features",
+      resourceId: "resource_id",
+      featureId: "feature_id",
     },
     resources: {
       _name: "resources",
@@ -199,6 +258,31 @@ module.exports = {
       lang: "lang",
       content: "content",
     },
+    skiSlopes: {
+      _name: "ski_slopes",
+      id: "id",
+      difficultyEu: "difficulty_eu",
+      difficultyUs: "difficulty_us",
+    },
+    snowConditions: {
+      _name: "snow_conditions",
+      id: "id",
+      baseSnow: "base_snow",
+      baseSnowRangeLower: "base_snow_range_lower",
+      baseSnowRangeUpper: "base_snow_range_upper",
+      groomed: "groomed",
+      latestStorm: "latest_storm",
+      obtainedIn: "obtained_in",
+      primarySurface: "primary_surface",
+      secondarySurface: "secondary_surface",
+      snowMaking: "snow_making",
+      snowOverNight: "snow_over_night",
+    },
+    snowparks: {
+      _name: "snowparks",
+      id: "id",
+      difficulty: "difficulty",
+    },
     sponsors: {
       _name: "sponsors",
       sponsorId: "sponsor_id",
@@ -210,11 +294,144 @@ module.exports = {
       lang: "lang",
       content: "content",
     },
+    subAreas: {
+      _name: "sub_areas",
+      childId: "child_id",
+      parentId: "parent_id",
+    },
+    venues: {
+      _name: "venues",
+      id: "id",
+    },
     urls: {
       _name: "urls",
       resourceId: "resource_id",
       lang: "lang",
       content: "content",
+    },
+  },
+  views: {
+    abstractObjects: {
+      _name: "abstract_objects",
+      id: "id",
+      abstract: "abstract",
+    },
+    descriptionObjects: {
+      _name: "description_objects",
+      id: "id",
+      description: "description",
+    },
+    nameObjects: {
+      _name: "name_objects",
+      id: "id",
+      name: "name",
+    },
+    shortNameObjects: {
+      _name: "short_name_objects",
+      id: "id",
+      short_name: "short_name",
+    },
+    urlObjects: {
+      _name: "url_objects",
+      id: "id",
+      url: "url",
+    },
+    categoriesArrays: {
+      _name: "categories_arrays",
+      id: "id",
+      categories: "categories",
+    },
+    multimediaDescriptionsArrays: {
+      _name: "multimedia_descriptions_arrays",
+      id: "id",
+      multimediaDescriptions: "multimedia_descriptions",
+    },
+    cityObjects: {
+      _name: "city_objects",
+      id: "id",
+      city: "city",
+    },
+    complementObjects: {
+      _name: "complement_objects",
+      id: "id",
+      complement: "complement",
+    },
+    regionObjects: {
+      _name: "region_objects",
+      id: "id",
+      region: "region",
+    },
+    streetObjects: {
+      _name: "street_objects",
+      id: "id",
+      street: "street",
+    },
+    addressObjects: {
+      _name: "address_objects",
+      id: "id",
+      address: "address",
+    },
+    resourceObjects: {
+      _name: "resource_objects",
+      id: "id",
+      type: "type",
+      dataProvider: "data_provider",
+      lastUpdate: "last_update",
+      abstract: "abstract",
+      description: "description",
+      name: "name",
+      shortName: "short_name",
+      url: "url",
+      categories: "categories",
+      media: "media",
+    },
+    howToArriveObjects: {
+      _name: "how_to_arrive_objects",
+      id: "id",
+      howToArrive: "how_to_arrive",
+    },
+    areaLiftsArrays: {
+      _name: "area_lifts_arrays",
+      id: "id",
+      areaLifts: "area_lifts",
+    },
+    areaSkiSlopesArrays: {
+      _name: "area_ski_slopes_arrays",
+      id: "id",
+      areaSkiSlopes: "area_ski_slopes",
+    },
+    areaSnowparksArrays: {
+      _name: "area_snowparks_arrays",
+      id: "id",
+      areaSnowparks: "area_snowparks",
+    },
+    subAreasArrays: {
+      _name: "sub_areas_arrays",
+      id: "id",
+      subAreas: "sub_areas",
+    },
+    connectionsArrays: {
+      _name: "connections_arrays",
+      id: "id",
+      connections: "connections",
+    },
+    snowConditionObjects: {
+      _name: "snow_condition_objects",
+      id: "id",
+      snowCondition: "snow_condition",
+    },
+    placeObjects: {
+      _name: "place_objects",
+      id: "id",
+      resource: "resource",
+      geometries: "geometries",
+      length: "length",
+      maxAltitude: "max_altitude",
+      minAltitude: "min_altitude",
+      openingHours: "opening_hours",
+      address: "address",
+      howToArrive: "how_to_arrive",
+      snowConditions: "snow_conditions",
     },
   },
 };

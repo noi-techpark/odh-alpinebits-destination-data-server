@@ -4,7 +4,7 @@ const dbFn = require("../../db/functions");
 const db = require("../../db");
 
 const { schemas } = require("../../db");
-const { abstracts, descriptions, names, shortNames, urls, cities, complements, regions, streets } = schemas;
+const { abstracts, descriptions, names, shortNames, urls, cities, complements, regions, streets, resources } = schemas;
 
 const colors = {
   FgBlack: "\x1b[30m",
@@ -183,11 +183,11 @@ class ResourceConnector {
 
   mapResourceToColumns(resource) {
     return {
-      [schemas.resources.id]: resource?.id,
-      [schemas.resources.type]: resource?.type,
-      [schemas.resources.dataProvider]: resource?.dataProvider,
-      [schemas.resources.lastUpdate]: resource?.lastUpdate,
-      [schemas.resources.simpleUrl]: _.isString(resource?.url) ? resource?.url : null,
+      [resources.id]: resource?.id,
+      [resources.type]: resource?.type,
+      [resources.dataProvider]: resource?.dataProvider,
+      [resources.lastUpdate]: resource?.lastUpdate,
+      [resources.simpleUrl]: _.isString(resource?.url) ? resource?.url : null,
     };
   }
 
@@ -203,11 +203,11 @@ class ResourceConnector {
     const clientLastUpdate = clientsResource?.lastUpdate?.toISOString();
     const serverLastUpdate = serversResource?.lastUpdate?.toISOString();
 
-    if (clientLastUpdate < serverLastUpdate) {
-      throw new Error("Outdated: expected last update at " + serversResource.lastUpdate);
-    } else if (clientLastUpdate > serverLastUpdate) {
-      throw new Error("Ahead: expected last update at " + serversResource.lastUpdate);
-    }
+    // if (clientLastUpdate < serverLastUpdate) {
+    //   throw new Error("Outdated: expected last update at " + serversResource.lastUpdate);
+    // } else if (clientLastUpdate > serverLastUpdate) {
+    //   throw new Error("Ahead: expected last update at " + serversResource.lastUpdate);
+    // }
   }
 
   throwNoUpdate(serversResource) {

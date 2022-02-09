@@ -17,7 +17,7 @@ const {
   descriptions,
   eventStatus,
   events,
-  eventSeries,
+  eventSeries: eventSeriesSchema,
   features,
   featureCoveredTypes,
   featureSpecializations,
@@ -280,14 +280,32 @@ function insertMediaObject(connection, mediaObject) {
   return insert(connection, mediaObjects._name, mediaObject, mediaObjects.id).then((array) => _.first(array));
 }
 
+function insertEvent(connection, event) {
+  const eventId = event[events.id];
+  const publisherId = event[events.publisherId];
+
+  checkNotNullable(eventId, events.id);
+  checkNotNullable(publisherId, events.publisherId);
+
+  return insert(connection, events._name, event, events.id).then((array) => _.first(array));
+}
+
+function insertEventSeries(connection, eventSeries) {
+  const eventSeriesId = eventSeries[eventSeriesSchema.id];
+
+  checkNotNullable(eventSeriesId, eventSeriesSchema.id);
+
+  return insert(connection, eventSeriesSchema._name, eventSeries, eventSeriesSchema.id).then((array) => _.first(array));
+}
+
 function insertResourceCategory(connection, resourceId, categoryId) {
   const columns = {
     [resourceCategories.categoryId]: categoryId,
-    [resourceCategories.categorizedResourceId]: resourceId,
+    [resourceCategories.resourceId]: resourceId,
   };
 
   checkNotNullable(categoryId, resourceCategories.categoryId);
-  checkNotNullable(resourceId, resourceCategories.categorizedResourceId);
+  checkNotNullable(resourceId, resourceCategories.resourceId);
 
   return insert(connection, resourceCategories._name, columns);
 }
@@ -302,6 +320,42 @@ function insertMultimediaDescriptions(connection, resourceId, descriptionId) {
   checkNotNullable(resourceId, multimediaDescriptions.resourceId);
 
   return insert(connection, multimediaDescriptions._name, columns);
+}
+
+function insertContributor(connection, eventId, contributorId) {
+  const columns = {
+    [contributors.contributorId]: contributorId,
+    [contributors.eventId]: eventId,
+  };
+
+  checkNotNullable(contributorId, contributors.contributorId);
+  checkNotNullable(eventId, contributors.eventId);
+
+  return insert(connection, contributors._name, columns);
+}
+
+function insertOrganizer(connection, eventId, organizerId) {
+  const columns = {
+    [organizers.organizerId]: organizerId,
+    [organizers.eventId]: eventId,
+  };
+
+  checkNotNullable(organizerId, organizers.organizerId);
+  checkNotNullable(eventId, organizers.eventId);
+
+  return insert(connection, organizers._name, columns);
+}
+
+function insertSponsor(connection, eventId, sponsorId) {
+  const columns = {
+    [sponsors.sponsorId]: sponsorId,
+    [sponsors.eventId]: eventId,
+  };
+
+  checkNotNullable(sponsorId, sponsors.sponsorId);
+  checkNotNullable(eventId, sponsors.eventId);
+
+  return insert(connection, sponsors._name, columns);
 }
 
 function select(connection, tableName, where, selection) {
@@ -336,6 +390,18 @@ function selectMediaObjectFromId(connection, id) {
   const selectMediaObjectFile = "select_media_object.sql";
   const where = _.isString(id) ? `WHERE media_objects.id = '${id}'` : "";
   return selectUsingFile(connection, selectMediaObjectFile, where);
+}
+
+function selectEventFromId(connection, id) {
+  const selectEventFile = "select_event.sql";
+  const where = _.isString(id) ? `WHERE events.id = '${id}'` : "";
+  return selectUsingFile(connection, selectEventFile, where);
+}
+
+function selectEventSeriesFromId(connection, id) {
+  const selectEventSeriesFile = "select_event_series.sql";
+  const where = _.isString(id) ? `WHERE event_series.id = '${id}'` : "";
+  return selectUsingFile(connection, selectEventSeriesFile, where);
 }
 
 function selectResourceFromId(connection, resourceId) {
@@ -389,7 +455,7 @@ function selectStreetsFromId(connection, addressId) {
 }
 
 function selectCategoriesFromId(connection, resourceId) {
-  const columns = { [resourceCategories.categorizedResourceId]: resourceId };
+  const columns = { [resourceCategories.resourceId]: resourceId };
   return select(connection, resourceCategories._name, columns);
 }
 
@@ -512,10 +578,10 @@ function deleteAddressText(connection, tableName, addressId) {
 
 function deleteResourceCategories(connection, resourceId) {
   const columns = {
-    [resourceCategories.categorizedResourceId]: resourceId,
+    [resourceCategories.resourceId]: resourceId,
   };
 
-  checkNotNullable(resourceId, resourceCategories.categorizedResourceId);
+  checkNotNullable(resourceId, resourceCategories.resourceId);
 
   return connection(resourceCategories._name).where(columns).del();
 }
@@ -528,6 +594,84 @@ function deleteMultimediaDescriptions(connection, descriptionId) {
   checkNotNullable(descriptionId, multimediaDescriptions.resourceId);
 
   return connection(multimediaDescriptions._name).where(columns).del();
+}
+
+function deleteContributors(connection, eventId) {
+  const columns = {
+    [contributors.eventId]: eventId,
+  };
+
+  checkNotNullable(eventId, contributors.eventId);
+
+  return connection(contributors._name).where(columns).del();
+}
+
+function deleteOrganizers(connection, eventId) {
+  const columns = {
+    [organizers.eventId]: eventId,
+  };
+
+  checkNotNullable(eventId, organizers.eventId);
+
+  return connection(organizers._name).where(columns).del();
+}
+
+function deleteSponsors(connection, eventId) {
+  const columns = {
+    [sponsors.eventId]: eventId,
+  };
+
+  checkNotNullable(eventId, sponsors.eventId);
+
+  return connection(sponsors._name).where(columns).del();
+}
+
+// TODO: check the case where the event already has a parent
+function updateSubEvent(connection, eventId, subEventId) {
+  const columns = {
+    [events.parentId]: eventId,
+  };
+
+  checkNotNullable(eventId, events.parentId);
+  checkNotNullable(subEventId, events.id);
+
+  const where = { [events.id]: subEventId };
+
+  return update(connection, events._name, where, columns);
+}
+
+// TODO: check the case where the event already has a series
+function updateEdition(connection, eventSeriesId, eventId) {
+  const columns = {
+    [events.seriesId]: eventSeriesId,
+  };
+
+  checkNotNullable(eventSeriesId, events.seriesId);
+  checkNotNullable(eventId, events.id);
+
+  const where = { [events.id]: eventId };
+
+  return update(connection, events._name, where, columns);
+}
+
+function deleteSubEvents(connection, eventId) {
+  const columns = { [events.parentId]: null };
+
+  checkNotNullable(eventId, events.parentId);
+
+  const where = { [events.parentId]: eventId };
+
+  return update(connection, events._name, where, columns);
+}
+
+function deleteEditions(connection, eventSeriesId) {
+  const columns = { [events.seriesId]: null };
+
+  checkNotNullable(eventSeriesId, events.seriesId);
+
+  const where = { [events.seriesId]: eventSeriesId };
+
+  return update(connection, events._name, where, columns);
 }
 
 function deleteCategoryCoveredTypes(connection, categoryId) {
@@ -566,6 +710,26 @@ module.exports = {
   deleteSeriesFrequencies,
   deleteLanguageCodes,
   deleteCategories,
+  deleteResource,
+  deleteCategory,
+  deleteAbstracts,
+  deleteDescriptions,
+  deleteNames,
+  deleteShortNames,
+  deleteUrls,
+  deleteContactPoints,
+  deleteResourceText,
+  deleteAddressText,
+  deleteResourceCategories,
+  deleteMultimediaDescriptions,
+  deleteOrganizers,
+  deleteContributors,
+  deleteSponsors,
+  deleteSubEvents,
+  deleteEditions,
+  deleteCategoryCoveredTypes,
+  deleteChildrenCategories,
+  deleteParentCategories,
   insert,
   insertResourceType,
   insertSeriesFrequency,
@@ -588,6 +752,16 @@ module.exports = {
   insertResourceCategory,
   insertCategoryCoveredType,
   insertCategorySpecialization,
+  insertEvent,
+  insertEventSeries,
+  insertResourceText,
+  insertAddressText,
+  insertResourceCategory,
+  insertMultimediaDescriptions,
+  insertOrganizer,
+  insertContributor,
+  insertSponsor,
+  insertMediaObject,
   selectAgentFromId,
   selectCategoryFromId,
   selectResourceFromId,
@@ -602,27 +776,11 @@ module.exports = {
   selectStreetsFromId,
   selectCategoriesFromId,
   selectMediaObjectFromId,
+  selectEventFromId,
+  selectEventSeriesFromId,
   selectContactPointsFromId,
-  deleteResource,
-  deleteCategory,
   updateResource,
   updateCategory,
-  deleteAbstracts,
-  deleteDescriptions,
-  deleteNames,
-  deleteShortNames,
-  deleteUrls,
-  deleteContactPoints,
-  deleteResourceText,
-  deleteAddressText,
-  insertResourceText,
-  insertAddressText,
-  insertResourceCategory,
-  insertMultimediaDescriptions,
-  deleteResourceCategories,
-  deleteMultimediaDescriptions,
-  deleteCategoryCoveredTypes,
-  deleteChildrenCategories,
-  deleteParentCategories,
-  insertMediaObject,
+  updateSubEvent,
+  updateEdition,
 };

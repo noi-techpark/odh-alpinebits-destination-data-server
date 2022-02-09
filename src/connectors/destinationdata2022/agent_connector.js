@@ -10,7 +10,7 @@ class AgentConnector extends ResourceConnector {
   }
 
   create(agent) {
-    return this.runTransaction(() => this.insertAgent(agent).then((id) => this.retrieveAgent(id)));
+    return this.runTransaction(() => this.insertAgent(agent).then(() => this.retrieveAgent(agent.id)));
   }
 
   retrieve(id) {
@@ -22,7 +22,9 @@ class AgentConnector extends ResourceConnector {
     if (!agent.id) throw new Error("missing id");
 
     return this.runTransaction(() =>
-      this.retrieveAgent(agent.id).then((oldAgent) => this.updateAgent(oldAgent, agent))
+      this.retrieveAgent(agent.id)
+        .then((oldAgent) => this.updateAgent(oldAgent, agent))
+        .then(_.first)
     );
   }
 
@@ -49,7 +51,11 @@ class AgentConnector extends ResourceConnector {
   }
 
   updateAgent(oldAgent, newInput) {
-    const newAgent = _.create(oldAgent, newInput);
+    const newAgent = _.create(oldAgent);
+
+    _.entries(newInput).forEach(([k, v]) => {
+      if (!_.isUndefined(v)) newAgent[k] = v;
+    });
 
     this.checkLastUpdate(oldAgent, newAgent);
 
@@ -71,9 +77,10 @@ class AgentConnector extends ResourceConnector {
 
   insertAgent(agent) {
     return this.insertResource(agent)
-      .then((agentId) => (agent.id = agentId))
-      .then(() => this.mapAgentToColumns(agent))
-      .then((columns) => dbFn.insertAgent(this.connection, columns))
+      .then(() => {
+        const columns = this.mapAgentToColumns(agent);
+        return dbFn.insertAgent(this.connection, columns);
+      })
       .then(() => this.insertContactPoints(agent))
       .then(() => agent.id);
   }

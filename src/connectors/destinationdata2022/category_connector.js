@@ -12,9 +12,10 @@ class CategoryConnector extends ResourceConnector {
   }
 
   create(category) {
-    return this.runTransaction(() => this.insertCategory(category).then((id) => this.retrieveCategory(id)));
+    return this.runTransaction(() => this.insertCategory(category).then(() => this.retrieveCategory(category.id)));
   }
 
+  // TODO: change default sorting on response
   retrieve(id) {
     const categoryId = id ?? this?.request?.params?.id;
     return this.runTransaction(() => this.retrieveCategory(categoryId));
@@ -22,7 +23,7 @@ class CategoryConnector extends ResourceConnector {
 
   update(category) {
     return this.runTransaction(() =>
-      this.retrieveCategory(category.id).then((oldCategory) => this.updateCategory(oldCategory, category))
+      this.retrieveCategory(category.id).then((oldCategory) => this.updateCategory(oldCategory, category).then(_.first))
     );
   }
 
@@ -45,7 +46,11 @@ class CategoryConnector extends ResourceConnector {
   }
 
   updateCategory(oldCategory, newInput) {
-    const newCategory = _.create(oldCategory, newInput);
+    const newCategory = _.create(oldCategory);
+
+    _.entries(newInput).forEach(([k, v]) => {
+      if (!_.isUndefined(v)) newCategory[k] = v;
+    });
 
     this.checkLastUpdate(oldCategory, newCategory);
 
