@@ -28,20 +28,38 @@ async function main() {
   const resources = dataSource.map((odhEvent) => mapResource(odhEvent, "events"));
   console.log('Events - Insert at table resource');
   insertResources = getInsertResources(resources);
-  //console.log(insertResources);
-  await executeSQLQuery(insertResources);
+  console.log(insertResources);
+  //await executeSQLQuery(insertResources);
   //Inserting resource names
   console.log('Events - Insert at table names');
-  const names = mapMultilingualAttribute(dataSource, 'Title');
+  const names = mapMultilingualAttribute(dataSource, 'Title', 'Detail');
   insertNames = getInsertMultilingualTable(names, 'names');
-  await executeSQLQuery(insertNames);
-  //console.log(insertNames);
+  //await executeSQLQuery(insertNames);
+  console.log(insertNames);
   console.log('Events - Insert at table descriptions');
-  const descriptions = mapMultilingualAttribute(dataSource, 'BaseText');
+  const descriptions = mapMultilingualAttribute(dataSource, 'BaseText', 'Detail');
   insertDescriptions = insertNames = getInsertMultilingualTable(descriptions, 'descriptions');
-  //console.log(insertDescriptions);
-  await executeSQLQuery(insertDescriptions);
+  console.log(insertDescriptions);
+  //await executeSQLQuery(insertDescriptions);
+  console.log('Events - Insert at table short_names');
+  const shortnames = mapMultilingualAttribute(dataSource, 'Header', 'Detail');
+  insertShortNames = getInsertMultilingualTable(shortnames, 'short_names');
+  console.log(insertShortNames);
+  //await executeSQLQuery(insertDescriptions);
+  console.log('Events - Insert at table abstracts');
+  const abstracts = mapMultilingualAttribute(dataSource, 'SubHeader', 'Detail');
+  insertAbstracts = getInsertMultilingualTable(abstracts, 'abstracts');
+  console.log(insertAbstracts);
+  //await executeSQLQuery(insertAbstracts);
+  console.log('Events - Insert at table urls');
+  const urls = mapMultilingualAttribute(dataSource, 'Url', 'ContactInfos');
+  insertUrls = getInsertMultilingualTable(urls, 'urls');
+  console.log(insertUrls);
+  //await executeSQLQuery(insertUrls);
+  
+
 }
+
 async function executeSQLQuery(query) {
   try {
     return await pool.query(query);
@@ -52,24 +70,32 @@ async function executeSQLQuery(query) {
 }
 
 function checkQuotesSQL(input) {
-  input = input.replace( /[\r\n]+/gm, "" );;
-  //input =  input.replace("'","''");
-  input = input.replace( /'/g, "''");
-  input = input.replace( /’/g, "’’");
-  return input;
+  if (input != null) {
+    input = input.replace( /[\r\n]+/gm, "" );;
+    //input =  input.replace("'","''");
+    input = input.replace( /'/g, "''");
+    input = input.replace( /’/g, "’’");
+    return input;
+  }
+  else
+    return null;
 }
 
-function mapMultilingualAttribute(odhResource, field) {
+function mapMultilingualAttribute(odhResource, field, extra) {
   const attributes = []
+
   for (const ev of odhResource) {
     const keys = Object.keys(ev.Detail);
 
     for (const key of keys) {
       let attribute = {};
       attribute.lang = key;
-      attribute.content = checkQuotesSQL(ev.Detail[key][field]);
+      attribute.content = checkQuotesSQL(ev[extra][key][field]); 
       attribute.resourceId = ev.Id;
-      attributes.push(attribute);
+      //Filter inexistent fields
+      if ((attribute.content != null) && (attribute.lang != null) && (attribute.resourceId != null)) {
+        attributes.push(attribute);
+      }
     }
   }
   
