@@ -2,7 +2,6 @@ const fs = require("fs");
 const _ = require("lodash");
 const utils = require("./model/odh2destinationdata/utils");
 const mappings = require("./model/mappings");
-const eventTransform = require("./model/odh2destinationdata/event_transform")
 const odhEvents = require("/home/jcg/Event.json");//"./../events-1000.json");
 const script = "";
 
@@ -101,20 +100,20 @@ async function main() {
   //await executeSQLQuery(insertEvents);
 
   //TODO
-  /*console.log('Events - Insert Event Organizer at table Agents');
-  const agents = mapAgents(dataSource);
-  insertAgents = getInsertAgents(dataSource);
-  console.log(insertAgents);
-  //await executeSQLQuery(insertAgents);
+  /*console.log('Events - Insert Event Organizers at table Agents');
+  const organizers = dataSource.map((organizer) => mapOrganizer(organizer));
+  insertOrganizers = getInsertOrganizers(dataSource);
+  console.log(insertOrganizers);
+  //await executeSQLQuery(insertOrganizers);*/
   console.log('Events - Insert Event Location at table Venues');
-  const venues = mapVenue(dataSource) ;
+  const venues = dataSource.map((venue) => mapVenue(venue));
   insertVenues = getInsertVenues(venues)
   console.log(insertVenues);
   //await executeSQLQuery(insertVenues);
-  console.log('Events - Insert row Event-Venue at table EventVenues');
-  const venues = mapEventVenues() (dataSource) ;
-  insertVenues = getInsertEventVenues(venues)
-  console.log(insertVenues);
+  //console.log('Events - Insert row Event-Venue at table EventVenues');
+  //const venues = mapEventVenues() (dataSource) ;
+  //insertVenues = getInsertEventVenues(venues)
+  //console.log(insertVenues);
   //await executeSQLQuery(insert);*/
 }
 
@@ -251,14 +250,16 @@ function getInsertEvents(events) {
   return insert;
 }
 
-/*function mapVenue (odhData) {
+function mapVenue (odhData) {
   const venue = {};
 
-  venue.id = odhData.Id;
+  venue.eventId = odhData.Id;
+  venue.id = odhData.Id+"_venue";
   
   return venue;
 }
 
+//Create insert string for venues table
 function getInsertVenues(venues) {
   let insertVenues = 
   "INSERT INTO venues (id)\nVALUES\n";
@@ -272,16 +273,17 @@ function getInsertVenues(venues) {
     }\n`;
   });
 
+  //Create insert string for resources table
   let insertResources = 
   "INSERT INTO resources (id,odh_id,type,data_provider,last_update,created_at,simple_url)\nVALUES\n";
 
   venues?.forEach((venue, index) => {
-    const id = venue.id ? `'${venue.id}'` : null;
-    const odh_id = venue.id ? `'${venue.id}'` : null;
+    const id = venue.id;
+    const odh_id = null;
     const type = 'venues';
-    venue.data_provider = "http://tourism.opendatahub.bz.it/";
-    venue.last_update = new Date().toISOString();
-    venue.created_at = new Date().toISOString();
+    const data_provider = "http://tourism.opendatahub.bz.it/";
+    const last_update = new Date().toISOString();
+    const created_at = new Date().toISOString();
     const simple_url = venue.simple_url ? `'${venue.simple_url}'` : null;    
     
     insertResources += `(${id},${odh_id},${type},${data_provider},${last_update},${created_at},${simple_url})${
@@ -289,12 +291,24 @@ function getInsertVenues(venues) {
     }\n`;
   });  
   
-  let insert = insertResources + "\n" + insertVenues;
+  let insertEventVenues =
+  "INSERT INTO event_venues (venue_id, event_id)\nVALUES\n";
+  
+  venues?.forEach((venue, index) => {
+    const venue_id = venue.id;
+    const event_id = venue.eventId;
+    
+    insertEventVenues += `(${venue_id},${event_id})${
+      length - 1 > index ? "," : ";"
+    }\n`;
+  });
+
+  let insert = insertResources + "\n" + insertVenues + "\n" + insertEventVenues;
   
   return insert;
 }
 
-function mapEventVenues (odhData) {
+/*function mapEventVenues (odhData) {
   const eventVenues = {};
 
   eventVenues.eventId = odhData.Id;
@@ -318,7 +332,7 @@ function getInsertEventVenues(venues) {
   });
 
   return insertVenues;
-}
+}*/
 
 /*function mapAgents(odhData, agentType) {
   const agent = {};
