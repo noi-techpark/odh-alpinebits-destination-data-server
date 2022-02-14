@@ -1,5 +1,6 @@
 const fs = require("fs");
 const _ = require("lodash");
+const eventTransform = require("./model/odh2destinationdata/event_transform");
 const utils = require("./model/odh2destinationdata/utils");
 const mappings = require("./model/mappings");
 const odhEvents = require("/home/jcg/Event.json");//"./../events-1000.json");
@@ -93,28 +94,31 @@ async function main() {
   console.log(insertUrls);
   //await executeSQLQuery(insertUrls);
   console.log('--Events - Insert Event data at table Events');
-  const events = dataSource.map((event) => mapEvents(event));
+  const events = dataSource.map((event) => mapEvent(event));
   //const events = mapEvents(dataSource);
   insertEvents = getInsertEvents(events);
   console.log(insertEvents);
   //await executeSQLQuery(insertEvents);
 
-  //TODO
-  /*console.log('Events - Insert Event Organizers at table Agents');
-  const organizers = dataSource.map((organizer) => mapOrganizer(organizer));
-  insertOrganizers = getInsertOrganizers(dataSource);
+  
+  console.log('--Events - Insert Event Organizers at table Agents');
+  const organizers = dataSource.map((organizer) => mapAgent(organizer));
+  insertOrganizers = getInsertAgents(organizers);
   console.log(insertOrganizers);
-  //await executeSQLQuery(insertOrganizers);*/
-  console.log('Events - Insert Event Location at table Venues');
+  console.log('--Events - Insert Organizer name at multilingual tables');
+  const organizerNames = mapMultilingualAttributeOrganizer(dataSource,'CompanyName');
+  const insertOrganizerNames = (getInsertMultilingualTable(organizerNames, 'names'));
+  console.log(insertOrganizerNames);
+  console.log('--Events - Insert Organizer Url at multilingual tables');
+  const organizerUrls = mapMultilingualAttributeOrganizer(dataSource,'Url');
+  const insertOrganizerUrls = (getInsertMultilingualTable(organizerUrls, 'urls'));
+  console.log(insertOrganizerUrls);
+  //await executeSQLQuery(insertOrganizers);
+  console.log('--Events - Insert Event Location at table Venues');
   const venues = dataSource.map((venue) => mapVenue(venue));
   insertVenues = getInsertVenues(venues)
   console.log(insertVenues);
   //await executeSQLQuery(insertVenues);
-  //console.log('Events - Insert row Event-Venue at table EventVenues');
-  //const venues = mapEventVenues() (dataSource) ;
-  //insertVenues = getInsertEventVenues(venues)
-  //console.log(insertVenues);
-  //await executeSQLQuery(insert);*/
 }
 
 async function executeSQLQuery(query) {
@@ -148,6 +152,28 @@ function mapMultilingualAttribute(odhResource, field, extra) {
       let attribute = {};
       attribute.lang = key;
       attribute.content = checkQuotesSQL(ev[extra][key][field]); 
+      attribute.resourceId = ev.Id;
+      //Filter inexistent fields
+      if ((attribute.content != null) && (attribute.lang != null) && (attribute.resourceId != null)) {
+        attributes.push(attribute);
+      }
+    }
+  }
+  
+  return attributes;
+}
+
+function mapMultilingualAttributeOrganizer(odhData, field) {
+  const attributes = []
+
+  for (const ev of odhData) {
+    const keys = Object.keys(ev.OrganizerInfos);
+    //console.log(ev[keys[0]]);
+
+    for (const key of keys) {
+      let attribute = {};
+      attribute.lang = key;
+      attribute.content = checkQuotesSQL(ev.OrganizerInfos[key][field]); 
       attribute.resourceId = ev.Id;
       //Filter inexistent fields
       if ((attribute.content != null) && (attribute.lang != null) && (attribute.resourceId != null)) {
@@ -212,7 +238,7 @@ function getInsertResources(resources) {
   return insert;
 }
 
-function mapEvents(odhData) {
+function mapEvent(odhData) {
   const event = {};
   event.id = odhData.Id;
   event.capacity = null;
@@ -308,45 +334,20 @@ function getInsertVenues(venues) {
   return insert;
 }
 
-/*function mapEventVenues (odhData) {
-  const eventVenues = {};
-
-  eventVenues.eventId = odhData.Id;
-  eventVenues.venueId = venueId;
+function mapAgent(odhData, agentType) {
   
-  return eventVenues;
-}
-
-function getInsertEventVenues(venues) {
-  let insertEventVenues = 
-  "INSERT INTO event_venues (venue_id, event_id)\nVALUES\n";
-  const length = venues?.length;
-
-  venues?.forEach((venue, index) => {
-    const venue_id = venue.venueId;
-    const event_id = venue.eventId;
-    
-    insertVenues += `(${venue_id}, ${event_id})${
-      length - 1 > index ? "," : ";"
-    }\n`;
-  });
-
-  return insertVenues;
-}*/
-
-/*function mapAgents(odhData, agentType) {
   const agent = {};
 
-  agent.id = odhData.id,
-  const odh_id = null,
-  const type = "agents",
-  const data_provider = "http://tourism.opendatahub.bz.it/",
-  const last_update = new Date().toISOString(),
-  const created_at = new Date().toISOString(),
-  const simple_url = null;
+  agent.id = odhData.Id+"_organizer",
+  agent.odh_id = null,
+  agent.type = "agents",
+  agent.data_provider = "http://tourism.opendatahub.bz.it/",
+  agent.last_update = new Date().toISOString(),
+  agent.created_at = new Date().toISOString(),
+  agent.simple_url = null;
 
   return agent;
-}*/
+}
 
 function getInsertAgents(agents) {
   let insertAgents = 
@@ -365,13 +366,13 @@ function getInsertAgents(agents) {
   "INSERT INTO resources (id,odh_id,type,data_provider,last_update,created_at,simple_url)\nVALUES\n";
 
   agents?.forEach((agent, index) => {
-    const id = agent.id ? `'${agent.id}'` : null;
-    const odh_id = agent.odh_id ? `'${agent.odh_id}'` : null;
-    const type = agent.type ? `'${agent.type}'` : null;
-    const data_provider = agent.data_provider ? `'${agent.data_provider}'` : null;
-    const last_update = agent.last_update ? `'${agent.last_update}'` : null;
-    const created_at = agent.created_at ? `'${agent.created_at}'` : null;
-    const simple_url = agent.simple_url ? `'${agent.simple_url}'` : null;    
+    const id = agent.id;
+    const odh_id = agent.odh_id;
+    const type = agent.type;
+    const data_provider = agent.data_provider;
+    const last_update = agent.last_update;
+    const created_at = agent.created_at;
+    const simple_url = agent.simple_url;    
     
     insertResources += `(${id},${odh_id},${type},${data_provider},${last_update},${created_at},${simple_url})${
       length - 1 > index ? "," : ";"
