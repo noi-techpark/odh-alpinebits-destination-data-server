@@ -1,10 +1,8 @@
 const fs = require("fs");
 const _ = require("lodash");
-const eventTransform = require("./model/odh2destinationdata/event_transform");
 const utils = require("./model/odh2destinationdata/utils");
 const mappings = require("./model/mappings");
 const odhEvents = require("/home/jcg/Event.json");//"./../events-1000.json");
-const script = "";
 
 
 const {Pool, Client} = require('pg');
@@ -99,8 +97,6 @@ async function main() {
   insertEvents = getInsertEvents(events);
   console.log(insertEvents);
   //await executeSQLQuery(insertEvents);
-
-  
   console.log('--Events - Insert Event Organizers at table Agents');
   const organizers = dataSource.map((organizer) => mapAgent(organizer));
   insertOrganizers = getInsertAgents(organizers);
@@ -118,6 +114,11 @@ async function main() {
   const venues = dataSource.map((venue) => mapVenue(venue));
   insertVenues = getInsertVenues(venues)
   console.log(insertVenues);
+  console.log('--Events - Insert Venue name at table names');
+  const venueNames = mapMultilingualAttributeVenue(dataSource, 'Name');
+  console.log(venueNames);
+  insertVenueNames = getInsertMultilingualTable(venueNames);
+  console.log(insertVenueNames);
   //await executeSQLQuery(insertVenues);
 }
 
@@ -133,7 +134,6 @@ async function executeSQLQuery(query) {
 function checkQuotesSQL(input) {
   if (input != null) {
     input = input.replace( /[\r\n]+/gm, "" );;
-    //input =  input.replace("'","''");
     input = input.replace( /'/g, "''");
     input = input.replace( /’/g, "’’");
     return input;
@@ -168,12 +168,31 @@ function mapMultilingualAttributeOrganizer(odhData, field) {
 
   for (const ev of odhData) {
     const keys = Object.keys(ev.OrganizerInfos);
-    //console.log(ev[keys[0]]);
 
     for (const key of keys) {
       let attribute = {};
       attribute.lang = key;
       attribute.content = checkQuotesSQL(ev.OrganizerInfos[key][field]); 
+      attribute.resourceId = ev.Id;
+      //Filter inexistent fields
+      if ((attribute.content != null) && (attribute.lang != null) && (attribute.resourceId != null)) {
+        attributes.push(attribute);
+      }
+    }
+  }
+  
+  return attributes;
+}
+
+function mapMultilingualAttributeVenue(odhData, field) {
+  const attributes = []
+
+  for (const ev of odhData) {
+    const keys = Object.keys(ev.LocationInfo.TvInfo[field]);
+    for (const key of keys) {
+      let attribute = {};
+      attribute.lang = key;
+      attribute.content = checkQuotesSQL(ev.LocationInfo.TvInfo[field][key]); 
       attribute.resourceId = ev.Id;
       //Filter inexistent fields
       if ((attribute.content != null) && (attribute.lang != null) && (attribute.resourceId != null)) {
@@ -260,7 +279,6 @@ function getInsertEvents(events) {
   events?.forEach((event, index) => {
     const id = event.id;
     const capacity = event.capacity;
-    //const end_date = event.endDate;
     const end_date = event.endDate.replace(/Z/g, "") + "+01:00"
     const start_date = event.startDate.replace(/Z/g, "") + "+01:00";
     const parent_id = event.parentId;
@@ -280,8 +298,8 @@ function mapVenue (odhData) {
   const venue = {};
 
   venue.eventId = odhData.Id;
-  venue.id = odhData.Id+"_venue";
-  
+  //venue.id = odhData.Id+"_venue";
+  venue.id = odhData.LocationInfo.TvInfo.Id;
   return venue;
 }
 
@@ -305,7 +323,7 @@ function getInsertVenues(venues) {
 
   venues?.forEach((venue, index) => {
     const id = venue.id;
-    const odh_id = null;
+    const odh_id = venue.id;
     const type = 'venues';
     const data_provider = "http://tourism.opendatahub.bz.it/";
     const last_update = new Date().toISOString();
