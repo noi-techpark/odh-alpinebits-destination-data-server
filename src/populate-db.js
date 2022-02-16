@@ -22,12 +22,14 @@ async function main() {
 
   const dataSource = odhEvents.Items.slice(0, 9);
   //const dataSource = odhEvents.Items;
+  //Creating event_series
+  
 
   //Creating Publisher
   const publisher = {}
   publisher.id = "publisher",
   publisher.odh_id = null,
-  publisher.type = "agent",
+  publisher.type = "agents",
   publisher.data_provider = "http://tourism.opendatahub.bz.it/",
   publisher.last_update = formatTimestampSQL(new Date().toISOString()),
   publisher.created_at = formatTimestampSQL(new Date().toISOString()),
@@ -60,6 +62,21 @@ async function main() {
   //console.log(insertPublisher);
   console.log(insertPublisherAgent);
   console.log(insertPublisherName);
+  //Creating default event series for testing
+  console.log('--Creating default event series');
+  const defEventSeries = {}
+  defEventSeries.id = "default_series",
+  defEventSeries.odh_id = null,
+  defEventSeries.type = "eventSeries",
+  defEventSeries.data_provider = "http://tourism.opendatahub.bz.it/",
+  defEventSeries.last_update = formatTimestampSQL(new Date().toISOString()),
+  defEventSeries.created_at = formatTimestampSQL(new Date().toISOString()),
+  defEventSeries.simple_url = null;
+  let eventSeries = []
+  eventSeries.push(defEventSeries);
+  let insertdefEventSeries = getInsertEventSeries(eventSeries);
+  console.log(insertdefEventSeries);
+
   console.log('--Extracting Events...');
   const resources = dataSource.map((odhEvent) => mapResource(odhEvent, "events"));
   console.log('--Events - Insert at table resource');
@@ -77,7 +94,7 @@ async function main() {
   insertDescriptions = insertNames = getInsertMultilingualTable(descriptions, 'descriptions');
   console.log(insertDescriptions);
   //await executeSQLQuery(insertDescriptions);
-  console.log('--Events - Insert at table short_names');
+  /*console.log('--Events - Insert at table short_names');
   const shortnames = mapMultilingualAttribute(dataSource, 'Header', 'Detail');
   insertShortNames = getInsertMultilingualTable(shortnames, 'short_names');
   console.log(insertShortNames);
@@ -85,7 +102,7 @@ async function main() {
   console.log('--Events - Insert at table abstracts');
   const abstracts = mapMultilingualAttribute(dataSource, 'SubHeader', 'Detail');
   insertAbstracts = getInsertMultilingualTable(abstracts, 'abstracts');
-  console.log(insertAbstracts);
+  console.log(insertAbstracts);*/
   //await executeSQLQuery(insertAbstracts);
   console.log('--Events - Insert at table urls');
   const urls = mapMultilingualAttribute(dataSource, 'Url', 'ContactInfos');
@@ -239,6 +256,9 @@ function getInsertMultilingualTable(names, table) {
         length - 1 > index ? "," : ";"
       }\n`;
     }
+    //TODO - Less hacky and more elegant solution 
+    if (insert[insert.length-1] == ",")
+      insert[insert.length-1] = ";";
   });
 
   return insert;
@@ -312,33 +332,57 @@ function mapEvent(odhData) {
   event.capacity = null;
   event.endDate = formatTimestampSQL(odhData['DateBegin']);
   event.startDate = formatTimestampSQL(odhData['DateEnd']);
+  //Default event series for testing
   event.parentId = null;
   event.publisherId = "publisher";
+  event.seriesId = "default_series";
   //Active boolean field in Opendatahub for events
-  event.status = odhData.Active ? "Published" : "Disabled";
+  event.status = odhData.Active ? "published" : "disabled";
 
   return event;
+}
+
+function getInsertEventSeries(eventSeries) {
+  eventSeries = getUniques(eventSeries);
+  let insertEventSeries = 
+  "INSERT INTO event_series (id, frequency)\nVALUES\n";
+  const length = eventSeries?.length;
+
+  eventSeries?.forEach((eventSerie, index) => {
+    const id = eventSerie.id ? `'${eventSerie.id}'` : null;
+    const frequency = eventSerie.frequency ? `'${eventSerie.frequency}'` : null;
+    
+    insertEventSeries += `(${id}, ${frequency})${
+      length - 1 > index ? "," : ";"
+    }\n`;
+  });
+
+  let insertResources = getInsertResources(eventSeries);
+  let insert = insertResources + "\n" + insertEventSeries;
+  
+  return insert;
 }
 
 function getInsertEvents(events) {
   events = getUniques(events);
 
-  let insert = "INSERT INTO events (id, capacity, end_date, start_date, parent_id, publisher_id, status)\nVALUES\n";
+  let insert = "INSERT INTO events (id, capacity, end_date, start_date, parent_id, publisher_id, series_id, status)\nVALUES\n";
   const length = events?.length;
 
   events?.forEach((event, index) => {
     const id = `'${event.id}'`;
-    const capacity = `'${event.capacity}'`;
+    const capacity = event.capacity ? `'${event.capacity}'` : null;
     //const end_date = event.endDate.replace(/Z/g, "") + "+01:00"
     const end_date = event.endDate;
     //const start_date = event.startDate.replace(/Z/g, "") + "+01:00";
     const start_date = event.startDate;
-    const parent_id = event.parentId;
+    const parent_id = event.parentId ? `'${event.parentId}'` : null;
     const publisher_id = `'${event.publisherId}'`;
+    const series_id = `'${event.seriesId}'`;
     const status = `'${event.status}'`;
     
     insert += `(${id}, ${capacity}, ${end_date}, ${start_date}, ${parent_id}, 
-                ${publisher_id}, ${status})${
+                ${publisher_id}, ${series_id}, ${status})${
       length - 1 > index ? "," : ";"
     }\n`;
   });
