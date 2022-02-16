@@ -20,7 +20,7 @@ main();
 async function main() {
   let insert;
 
-  const dataSource = odhEvents.Items.slice(0, 199);
+  const dataSource = odhEvents.Items.slice(0, 9);
   //const dataSource = odhEvents.Items;
 
   //Creating Publisher
@@ -28,10 +28,10 @@ async function main() {
   publisher.id = "publisher",
   publisher.odh_id = null,
   publisher.type = "agent",
-  publisher.data_provider = "'http://tourism.opendatahub.bz.it/'",
-  publisher.last_update = new Date().toISOString(),
-  publisher.created_at = new Date().toISOString(),
-  publisher.simple_url = "'https://lts.it'",
+  publisher.data_provider = "http://tourism.opendatahub.bz.it/",
+  publisher.last_update = formatTimestampSQL(new Date().toISOString()),
+  publisher.created_at = formatTimestampSQL(new Date().toISOString()),
+  publisher.simple_url = "https://lts.it",
   publisher.name = [
     {
       lang: 'de',
@@ -139,6 +139,19 @@ async function executeSQLQuery(query) {
   }
 }
 
+function formatTimestampSQL(timestamp) {
+  if(timestamp == null)
+    timestamp = new Date().toISOString();
+
+  timestamp = timestamp.replace(/Z/g, "");
+  timestamp = timestamp.replace(/T/g, " ");
+  if ((timestamp[0] != "'") && (timestamp[timestamp.length-1] != "'")) {
+    timestamp = "'"+timestamp+"'";
+  }
+    
+  return timestamp;
+}
+
 function checkQuotesSQL(input) {
   if (input != null) {
     input = input.replace( /[\r\n]+/gm, "" );;
@@ -238,16 +251,18 @@ function mapResource(odhResource, type) {
   resource.odh_id = odhResource.Id;
   resource.type = type;
   resource.data_provider = "http://tourism.opendatahub.bz.it/";
-  resource.last_update = _.isString(odhResource.LastChange)
-    ? odhResource.LastChange.replace(/Z/g, "") + "+01:00"
-    : new Date().toISOString();
-  resource.created_at = new Date().toISOString();
+  //resource.last_update = _.isString(odhResource.LastChange)
+  resource.last_update = odhResource.LastChange
+  //  ? odhResource.LastChange.replace(/Z/g, "") + "+01:00"
+  ? formatTimestampSQL(odhResource.LastChange)
+    : formatTimestampSQL(new Date().toISOString());
+  resource.created_at = formatTimestampSQL(new Date().toISOString());
   resource.simple_url = hasSimpleUrl(odhResource) ? getSimpleUrl(odhResource) : null;
 
   return resource;
 }
 
-function getInsertResources(resources) {
+/*function getInsertResources(resources) {
   resources = getUniques(resources);
   let insert = "INSERT INTO resources (id,odh_id,type,data_provider,last_update,created_at,simple_url)\nVALUES\n";
   const length = resources?.length;
@@ -267,18 +282,40 @@ function getInsertResources(resources) {
   });
 
   return insert;
+}*/
+
+function getInsertResources(resources) {
+  resources = getUniques(resources);
+  let insert = "INSERT INTO resources (id,odh_id,type,data_provider,last_update,created_at,simple_url)\nVALUES\n";
+  const length = resources?.length;
+
+  resources?.forEach((resource, index) => {
+    const id = `'${resource.id}'`;
+    const odh_id = `'${resource.odh_id}'`;
+    const type = `'${resource.type}'`;
+    const data_provider = `'${resource.data_provider}'`;
+    const last_update = resource.last_update;
+    const created_at = resource.created_at;
+    const simple_url = `'${resource.simple_url}'`;
+
+    insert += `(${id},${odh_id},${type},${data_provider},${last_update},${created_at},${simple_url})${
+      length - 1 > index ? "," : ";"
+    }\n`;
+  });
+
+  return insert;
 }
 
 function mapEvent(odhData) {
   const event = {};
   event.id = odhData.Id;
   event.capacity = null;
-  event.endDate = odhData['DateBegin'];
-  event.startDate = odhData['DateEnd'];
+  event.endDate = formatTimestampSQL(odhData['DateBegin']);
+  event.startDate = formatTimestampSQL(odhData['DateEnd']);
   event.parentId = null;
   event.publisherId = "publisher";
   //Active boolean field in Opendatahub for events
-  event.status = odhData.Active ? `'${"Published"}` : `'${"Disabled"}`;
+  event.status = odhData.Active ? "Published" : "Disabled";
 
   return event;
 }
@@ -290,13 +327,15 @@ function getInsertEvents(events) {
   const length = events?.length;
 
   events?.forEach((event, index) => {
-    const id = event.id;
-    const capacity = event.capacity;
-    const end_date = event.endDate.replace(/Z/g, "") + "+01:00"
-    const start_date = event.startDate.replace(/Z/g, "") + "+01:00";
+    const id = `'${event.id}'`;
+    const capacity = `'${event.capacity}'`;
+    //const end_date = event.endDate.replace(/Z/g, "") + "+01:00"
+    const end_date = event.endDate;
+    //const start_date = event.startDate.replace(/Z/g, "") + "+01:00";
+    const start_date = event.startDate;
     const parent_id = event.parentId;
-    const publisher_id = event.publisherId;
-    const status = event.status;
+    const publisher_id = `'${event.publisherId}'`;
+    const status = `'${event.status}'`;
     
     insert += `(${id}, ${capacity}, ${end_date}, ${start_date}, ${parent_id}, 
                 ${publisher_id}, ${status})${
@@ -313,6 +352,12 @@ function mapVenue (odhData) {
   venue.eventId = odhData.Id;
   //venue.id = odhData.Id+"_venue";
   venue.id = odhData.LocationInfo.TvInfo.Id;
+  venue.odh_id = venue.id;
+  venue.type = 'venues';
+  venue.data_provider = "http://tourism.opendatahub.bz.it/";
+  venue.last_update = formatTimestampSQL(new Date().toISOString());
+  venue.created_at = formatTimestampSQL(new Date().toISOString());
+  venue.simple_url = venue.simple_url ? `'${venue.simple_url}'` : null;    
   return venue;
 }
 
@@ -332,7 +377,8 @@ function getInsertVenues(venues) {
   });
 
   //Create insert string for resources table
-  let insertResources = 
+  let insertResources = getInsertResources(venues);
+  /*let insertResources = 
   "INSERT INTO resources (id,odh_id,type,data_provider,last_update,created_at,simple_url)\nVALUES\n";
 
   venues?.forEach((venue, index) => {
@@ -340,21 +386,21 @@ function getInsertVenues(venues) {
     const odh_id = venue.id;
     const type = 'venues';
     const data_provider = "http://tourism.opendatahub.bz.it/";
-    const last_update = new Date().toISOString();
-    const created_at = new Date().toISOString();
+    const last_update = formatTimestampSQL(new Date().toISOString());
+    const created_at = formatTimestampSQL(new Date().toISOString());
     const simple_url = venue.simple_url ? `'${venue.simple_url}'` : null;    
     
     insertResources += `(${id},${odh_id},${type},${data_provider},${last_update},${created_at},${simple_url})${
       length - 1 > index ? "," : ";"
     }\n`;
-  });  
+  });*/  
   
   let insertEventVenues =
   "INSERT INTO event_venues (venue_id, event_id)\nVALUES\n";
   
   venues?.forEach((venue, index) => {
-    const venue_id = venue.id;
-    const event_id = venue.eventId;
+    const venue_id = `'${venue.id}'`;
+    const event_id = `'${venue.eventId}'`;
     
     insertEventVenues += `(${venue_id},${event_id})${
       length - 1 > index ? "," : ";"
@@ -374,8 +420,8 @@ function mapAgent(odhData, agentType) {
   agent.odh_id = null,
   agent.type = "agents",
   agent.data_provider = "http://tourism.opendatahub.bz.it/",
-  agent.last_update = new Date().toISOString(),
-  agent.created_at = new Date().toISOString(),
+  agent.last_update = formatTimestampSQL(new Date().toISOString()),
+  agent.created_at = formatTimestampSQL(new Date().toISOString()),
   agent.simple_url = null;
 
   return agent;
@@ -395,7 +441,8 @@ function getInsertAgents(agents) {
     }\n`;
   });
 
-  let insertResources = 
+  let insertResources = getInsertResources(agents);
+  /*let insertResources = 
   "INSERT INTO resources (id,odh_id,type,data_provider,last_update,created_at,simple_url)\nVALUES\n";
 
   agents?.forEach((agent, index) => {
@@ -411,7 +458,7 @@ function getInsertAgents(agents) {
       length - 1 > index ? "," : ";"
     }\n`;
   });  
-  
+  */
   let insert = insertResources + "\n" + insertAgents;
   
   return insert;
