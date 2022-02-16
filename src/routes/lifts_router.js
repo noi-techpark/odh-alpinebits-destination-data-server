@@ -16,7 +16,7 @@ class LiftsRouter extends Router {
     this.addUnimplementedGetRoute(`/lifts/:id/multimediaDescriptions`);
 
     this.addPostRoute(`/lifts`, this.postLift);
-    this.addGetRoute(`/lifts`, this.getLift);
+    this.addGetRoute(`/lifts`, this.getLifts);
     this.addGetRoute(`/lifts/:id`, this.getLiftById);
     this.addDeleteRoute(`/lifts/:id`, this.deleteLift);
     this.addPatchRoute(`/lifts/:id`, this.patchLift);
@@ -26,14 +26,15 @@ class LiftsRouter extends Router {
     }
   }
 
-  getLift = async (request) => {
+  getLifts = async (request) => {
     // Process request and authentication
     // Retrieve data
     const connector = new LiftConnector();
+    const parsedRequest = new Request(request);
 
     // Return to the client
     try {
-      return connector.retrieve().then((lifts) => serializeResourceCollection(lifts, "/2022-04-draft", "lifts"));
+      return connector.retrieve().then((lifts) => serializeResourceCollection(lifts, parsedRequest));
       // return connector.retrieve();
     } catch (error) {
       console.error(error);
@@ -49,7 +50,7 @@ class LiftsRouter extends Router {
 
     // Return to the client
     try {
-      return connector.retrieve().then((lift) => serializeSingleResource(lift, "/2022-04-draft", "lifts"));
+      return connector.retrieve().then((lift) => serializeSingleResource(lift, parsedRequest));
     } catch (error) {
       console.error(error);
       throw error;
@@ -68,7 +69,7 @@ class LiftsRouter extends Router {
 
     // Return to the client
     try {
-      return connector.create(lift).then((lift) => serializeSingleResource(lift, "/2022-04-draft", "lifts"));
+      return connector.create(lift).then((lift) => serializeSingleResource(lift, parsedRequest));
     } catch (error) {
       console.error(error);
       throw error;
@@ -87,7 +88,7 @@ class LiftsRouter extends Router {
 
     // Return to the client
     try {
-      return connector.update(lift).then((lift) => serializeSingleResource(lift, "/2022-04-draft", "lifts"));
+      return connector.update(lift).then((lift) => serializeSingleResource(lift, parsedRequest));
     } catch (error) {
       console.error(error);
       throw error;

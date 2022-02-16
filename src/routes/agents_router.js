@@ -30,10 +30,11 @@ class AgentsRouter extends Router {
     // Process request and authentication
     // Retrieve data
     const connector = new AgentConnector();
+    const parsedRequest = new Request(request);
 
     // Return to the client
     try {
-      return connector.retrieve().then((agents) => serializeResourceCollection(agents, "/2022-04-draft", "agents"));
+      return connector.retrieve().then((agents) => serializeResourceCollection(agents, parsedRequest));
       // return connector.retrieve();
     } catch (error) {
       console.error(error);
@@ -49,7 +50,7 @@ class AgentsRouter extends Router {
 
     // Return to the client
     try {
-      return connector.retrieve().then((agent) => serializeSingleResource(agent, "/2022-04-draft", "agents"));
+      return connector.retrieve().then((agent) => serializeSingleResource(agent, parsedRequest));
     } catch (error) {
       console.error(error);
       throw error;
@@ -68,7 +69,7 @@ class AgentsRouter extends Router {
 
     // Return to the client
     try {
-      return connector.create(agent).then((agent) => serializeSingleResource(agent, "/2022-04-draft", "agents"));
+      return connector.create(agent).then((agent) => serializeSingleResource(agent, parsedRequest));
     } catch (error) {
       console.error(error);
       throw error;
@@ -87,7 +88,7 @@ class AgentsRouter extends Router {
 
     // Return to the client
     try {
-      return connector.update(agent).then((agent) => serializeSingleResource(agent, "/2022-04-draft", "agents"));
+      return connector.update(agent).then((agent) => serializeSingleResource(agent, parsedRequest));
     } catch (error) {
       console.error(error);
       throw error;

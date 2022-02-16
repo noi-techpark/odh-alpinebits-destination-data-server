@@ -31,12 +31,11 @@ class SnowparksRouter extends Router {
     // Process request and authentication
     // Retrieve data
     const connector = new SnowparkConnector();
+    const parsedRequest = new Request(request);
 
     // Return to the client
     try {
-      return connector
-        .retrieve()
-        .then((snowparks) => serializeResourceCollection(snowparks, "/2022-04-draft", "snowparks"));
+      return connector.retrieve().then((snowparks) => serializeResourceCollection(snowparks, parsedRequest));
       // return connector.retrieve();
     } catch (error) {
       console.error(error);
@@ -52,7 +51,7 @@ class SnowparksRouter extends Router {
 
     // Return to the client
     try {
-      return connector.retrieve().then((snowpark) => serializeSingleResource(snowpark, "/2022-04-draft", "snowparks"));
+      return connector.retrieve().then((snowpark) => serializeSingleResource(snowpark, parsedRequest));
     } catch (error) {
       console.error(error);
       throw error;
@@ -71,9 +70,7 @@ class SnowparksRouter extends Router {
 
     // Return to the client
     try {
-      return connector
-        .create(snowpark)
-        .then((snowpark) => serializeSingleResource(snowpark, "/2022-04-draft", "snowparks"));
+      return connector.create(snowpark).then((snowpark) => serializeSingleResource(snowpark, parsedRequest));
     } catch (error) {
       console.error(error);
       throw error;
@@ -92,9 +89,7 @@ class SnowparksRouter extends Router {
 
     // Return to the client
     try {
-      return connector
-        .update(snowpark)
-        .then((snowpark) => serializeSingleResource(snowpark, "/2022-04-draft", "snowparks"));
+      return connector.update(snowpark).then((snowpark) => serializeSingleResource(snowpark, parsedRequest));
     } catch (error) {
       console.error(error);
       throw error;

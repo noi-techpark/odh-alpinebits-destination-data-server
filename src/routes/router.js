@@ -52,7 +52,13 @@ class Router {
     this.deleteRoutes[version_prefix + path] = (request, response) => {
       try {
         handleRequestFn(request)
-          .then((data) => response.json(data))
+          .then((data) => {
+            if (data > 0) {
+              return response.status(200).end();
+            } else {
+              throw errors.notFound;
+            }
+          })
           .catch((error) => errors.handleError(error, request, response));
       } catch (error) {
         errors.handleError(error, request, response);

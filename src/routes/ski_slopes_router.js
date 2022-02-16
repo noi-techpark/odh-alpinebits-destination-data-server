@@ -30,12 +30,11 @@ class SkiSlopesRouter extends Router {
     // Process request and authentication
     // Retrieve data
     const connector = new SkiSlopeConnector();
+    const parsedRequest = new Request(request);
 
     // Return to the client
     try {
-      return connector
-        .retrieve()
-        .then((skiSlopes) => serializeResourceCollection(skiSlopes, "/2022-04-draft", "skiSlopes"));
+      return connector.retrieve().then((skiSlopes) => serializeResourceCollection(skiSlopes, parsedRequest));
       // return connector.retrieve();
     } catch (error) {
       console.error(error);
@@ -51,7 +50,7 @@ class SkiSlopesRouter extends Router {
 
     // Return to the client
     try {
-      return connector.retrieve().then((skiSlope) => serializeSingleResource(skiSlope, "/2022-04-draft", "skiSlopes"));
+      return connector.retrieve().then((skiSlope) => serializeSingleResource(skiSlope, parsedRequest));
     } catch (error) {
       console.error(error);
       throw error;
@@ -70,9 +69,7 @@ class SkiSlopesRouter extends Router {
 
     // Return to the client
     try {
-      return connector
-        .create(skiSlope)
-        .then((skiSlope) => serializeSingleResource(skiSlope, "/2022-04-draft", "skiSlopes"));
+      return connector.create(skiSlope).then((skiSlope) => serializeSingleResource(skiSlope, parsedRequest));
     } catch (error) {
       console.error(error);
       throw error;
@@ -91,9 +88,7 @@ class SkiSlopesRouter extends Router {
 
     // Return to the client
     try {
-      return connector
-        .update(skiSlope)
-        .then((skiSlope) => serializeSingleResource(skiSlope, "/2022-04-draft", "skiSlopes"));
+      return connector.update(skiSlope).then((skiSlope) => serializeSingleResource(skiSlope, parsedRequest));
     } catch (error) {
       console.error(error);
       throw error;

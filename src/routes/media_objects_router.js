@@ -29,12 +29,11 @@ class MediaObjectsRouter extends Router {
     // Process request and authentication
     // Retrieve data
     const connector = new MediaObjectConnector();
+    const parsedRequest = new Request(request);
 
     // Return to the client
     try {
-      return connector
-        .retrieve()
-        .then((mediaObjects) => serializeResourceCollection(mediaObjects, "/2022-04-draft", "mediaObjects"));
+      return connector.retrieve().then((mediaObjects) => serializeResourceCollection(mediaObjects, parsedRequest));
     } catch (error) {
       console.error(error);
       throw error;
@@ -49,9 +48,7 @@ class MediaObjectsRouter extends Router {
 
     // Return to the client
     try {
-      return connector
-        .retrieve()
-        .then((mediaObject) => serializeSingleResource(mediaObject, "/2022-04-draft", "mediaObjects"));
+      return connector.retrieve().then((mediaObject) => serializeSingleResource(mediaObject, parsedRequest));
     } catch (error) {
       console.error(error);
       throw error;
@@ -70,9 +67,7 @@ class MediaObjectsRouter extends Router {
 
     // Return to the client
     try {
-      return connector
-        .create(mediaObject)
-        .then((mediaObject) => serializeSingleResource(mediaObject, "/2022-04-draft", "mediaObjects"));
+      return connector.create(mediaObject).then((mediaObject) => serializeSingleResource(mediaObject, parsedRequest));
     } catch (error) {
       console.error(error);
       throw error;
@@ -91,9 +86,7 @@ class MediaObjectsRouter extends Router {
 
     // Return to the client
     try {
-      return connector
-        .update(mediaObject)
-        .then((mediaObject) => serializeSingleResource(mediaObject, "/2022-04-draft", "mediaObjects"));
+      return connector.update(mediaObject).then((mediaObject) => serializeSingleResource(mediaObject, parsedRequest));
     } catch (error) {
       console.error(error);
       throw error;

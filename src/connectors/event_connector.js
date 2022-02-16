@@ -145,6 +145,8 @@ class EventConnector extends ResourceConnector {
     return dbFn.deleteSubEvents(this.connection, event.id).then(() => this.insertSubEvents(event));
   }
 
+  // TODO: add venues
+
   mapEventToColumns(event) {
     return {
       [events.id]: event?.id,

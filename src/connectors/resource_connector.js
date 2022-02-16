@@ -216,10 +216,8 @@ class ResourceConnector {
 
   insertSnowCondition(resource) {
     if (!resource?.snowCondition) return Promise.resolve();
-    console.log("snowCondition", resource?.snowCondition);
 
     const columns = this.mapSnowConditionToColumns(resource);
-    console.log("columns", columns);
     return dbFn.insertSnowCondition(this.connection, columns);
   }
 
@@ -237,8 +235,6 @@ class ResourceConnector {
   }
 
   insertPlaceConnections(resource) {
-    console.log(resource.connections);
-
     const inserts = resource?.connections?.map((connection) =>
       dbFn.insertPlaceConnection(this.connection, resource.id, connection.id)
     );

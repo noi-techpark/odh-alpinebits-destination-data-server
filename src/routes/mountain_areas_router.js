@@ -35,12 +35,11 @@ class MountainAreasRouter extends Router {
     // Process request and authentication
     // Retrieve data
     const connector = new MountainAreaConnector();
+    const parsedRequest = new Request(request);
 
     // Return to the client
     try {
-      return connector
-        .retrieve()
-        .then((mountainAreas) => serializeResourceCollection(mountainAreas, "/2022-04-draft", "mountainAreas"));
+      return connector.retrieve().then((mountainAreas) => serializeResourceCollection(mountainAreas, parsedRequest));
       // return connector.retrieve();
     } catch (error) {
       console.error(error);
@@ -56,9 +55,7 @@ class MountainAreasRouter extends Router {
 
     // Return to the client
     try {
-      return connector
-        .retrieve()
-        .then((mountainArea) => serializeSingleResource(mountainArea, "/2022-04-draft", "mountainAreas"));
+      return connector.retrieve().then((mountainArea) => serializeSingleResource(mountainArea, parsedRequest));
     } catch (error) {
       console.error(error);
       throw error;
@@ -79,7 +76,7 @@ class MountainAreasRouter extends Router {
     try {
       return connector
         .create(mountainArea)
-        .then((mountainArea) => serializeSingleResource(mountainArea, "/2022-04-draft", "mountainAreas"));
+        .then((mountainArea) => serializeSingleResource(mountainArea, parsedRequest));
     } catch (error) {
       console.error(error);
       throw error;
@@ -100,7 +97,7 @@ class MountainAreasRouter extends Router {
     try {
       return connector
         .update(mountainArea)
-        .then((mountainArea) => serializeSingleResource(mountainArea, "/2022-04-draft", "mountainAreas"));
+        .then((mountainArea) => serializeSingleResource(mountainArea, parsedRequest));
     } catch (error) {
       console.error(error);
       throw error;

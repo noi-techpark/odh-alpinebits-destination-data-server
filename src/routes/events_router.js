@@ -36,10 +36,11 @@ class EventsRouter extends Router {
     // Process request and authentication
     // Retrieve data
     const connector = new EventConnector();
+    const parsedRequest = new Request(request);
 
     // Return to the client
     try {
-      return connector.retrieve().then((events) => serializeResourceCollection(events, "/2022-04-draft", "events"));
+      return connector.retrieve().then((events) => serializeResourceCollection(events, parsedRequest));
     } catch (error) {
       console.error(error);
       throw error;
@@ -54,7 +55,7 @@ class EventsRouter extends Router {
 
     // Return to the client
     try {
-      return connector.retrieve().then((event) => serializeSingleResource(event, "/2022-04-draft", "events"));
+      return connector.retrieve().then((event) => serializeSingleResource(event, parsedRequest));
     } catch (error) {
       console.error(error);
       throw error;
@@ -73,7 +74,7 @@ class EventsRouter extends Router {
 
     // Return to the client
     try {
-      return connector.create(event).then((event) => serializeSingleResource(event, "/2022-04-draft", "events"));
+      return connector.create(event).then((event) => serializeSingleResource(event, parsedRequest));
     } catch (error) {
       console.error(error);
       throw error;
@@ -94,7 +95,7 @@ class EventsRouter extends Router {
 
     // Return to the client
     try {
-      return connector.update(event).then((event) => serializeSingleResource(event, "/2022-04-draft", "events"));
+      return connector.update(event).then((event) => serializeSingleResource(event, parsedRequest));
     } catch (error) {
       console.error(error);
       throw error;

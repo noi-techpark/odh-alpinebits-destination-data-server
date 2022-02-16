@@ -269,7 +269,7 @@ function deserializeSnowpark(json) {
   return snowpark;
 }
 
-function toRelationshipToManyObject(relationshipName, resource, versionUrl) {
+function toRelationshipToManyObject(relationshipName, resource) {
   const relationship = resource[relationshipName];
 
   if (!_.isArray(relationship)) {
@@ -285,7 +285,7 @@ function toRelationshipToManyObject(relationshipName, resource, versionUrl) {
   };
 }
 
-function toRelationshipToOneObject(relationshipName, resource, versionUrl) {
+function toRelationshipToOneObject(relationshipName, resource) {
   const relationship = resource[relationshipName];
 
   if (!_.isObject(relationship)) {
@@ -301,7 +301,7 @@ function toRelationshipToOneObject(relationshipName, resource, versionUrl) {
   };
 }
 
-function serializeResource(resource, versionUrl) {
+function serializeResource(resource) {
   const json = _.cloneDeep(baseResourceSerialization);
 
   const { meta, links, attributes } = json;
@@ -325,23 +325,19 @@ function serializeResource(resource, versionUrl) {
   return json;
 }
 
-function serializeIndividualResource(individualResource, versionUrl) {
-  const json = serializeResource(individualResource, versionUrl);
+function serializeIndividualResource(individualResource) {
+  const json = serializeResource(individualResource);
 
   const { relationships } = json;
 
-  relationships.categories = toRelationshipToManyObject("categories", individualResource, versionUrl);
-  relationships.multimediaDescriptions = toRelationshipToManyObject(
-    "multimediaDescriptions",
-    individualResource,
-    versionUrl
-  );
+  relationships.categories = toRelationshipToManyObject("categories", individualResource);
+  relationships.multimediaDescriptions = toRelationshipToManyObject("multimediaDescriptions", individualResource);
 
   return json;
 }
 
-function serializeAgent(agent, versionUrl) {
-  const json = serializeIndividualResource(agent, versionUrl);
+function serializeAgent(agent) {
+  const json = serializeIndividualResource(agent);
 
   const { attributes } = json;
 
@@ -350,35 +346,35 @@ function serializeAgent(agent, versionUrl) {
   return json;
 }
 
-function serializeCategory(category, versionUrl) {
-  const json = serializeResource(category, versionUrl);
+function serializeCategory(category) {
+  const json = serializeResource(category);
 
   const { attributes, relationships } = json;
 
   attributes.namespace = category.namespace;
   attributes.resourceTypes = !_.isEmpty(category.resourceTypes) ? category.resourceTypes : null;
 
-  relationships.children = toRelationshipToManyObject("children", category, versionUrl);
-  relationships.multimediaDescriptions = toRelationshipToManyObject("multimediaDescriptions", category, versionUrl);
-  relationships.parents = toRelationshipToManyObject("parents", category, versionUrl);
+  relationships.children = toRelationshipToManyObject("children", category);
+  relationships.multimediaDescriptions = toRelationshipToManyObject("multimediaDescriptions", category);
+  relationships.parents = toRelationshipToManyObject("parents", category);
 
   return json;
 }
 
-function serializeEventSeries(eventSeries, versionUrl) {
-  const json = serializeIndividualResource(eventSeries, versionUrl);
+function serializeEventSeries(eventSeries) {
+  const json = serializeIndividualResource(eventSeries);
 
   const { attributes, relationships } = json;
 
   attributes.frequency = eventSeries.frequency;
 
-  relationships.editions = toRelationshipToManyObject("editions", eventSeries, versionUrl);
+  relationships.editions = toRelationshipToManyObject("editions", eventSeries);
 
   return json;
 }
 
-function serializeEvent(events, versionUrl) {
-  const json = serializeIndividualResource(events, versionUrl);
+function serializeEvent(events) {
+  const json = serializeIndividualResource(events);
 
   const { attributes, relationships } = json;
 
@@ -387,34 +383,34 @@ function serializeEvent(events, versionUrl) {
   attributes.startDate = events.startDate;
   attributes.status = events.status;
 
-  relationships.contributors = toRelationshipToManyObject("contributors", events, versionUrl);
-  relationships.organizers = toRelationshipToManyObject("organizers", events, versionUrl);
-  relationships.publisher = toRelationshipToOneObject("publisher", events, versionUrl);
-  relationships.series = toRelationshipToOneObject("series", events, versionUrl);
-  relationships.sponsors = toRelationshipToManyObject("sponsors", events, versionUrl);
-  relationships.subEvents = toRelationshipToManyObject("subEvents", events, versionUrl);
-  relationships.venues = toRelationshipToManyObject("venues", events, versionUrl);
+  relationships.contributors = toRelationshipToManyObject("contributors", events);
+  relationships.organizers = toRelationshipToManyObject("organizers", events);
+  relationships.publisher = toRelationshipToOneObject("publisher", events);
+  relationships.series = toRelationshipToOneObject("series", events);
+  relationships.sponsors = toRelationshipToManyObject("sponsors", events);
+  relationships.subEvents = toRelationshipToManyObject("subEvents", events);
+  relationships.venues = toRelationshipToManyObject("venues", events);
 
   return json;
 }
 
-function serializeFeature(feature, versionUrl) {
-  const json = serializeResource(feature, versionUrl);
+function serializeFeature(feature) {
+  const json = serializeResource(feature);
 
   const { attributes, relationships } = json;
 
   attributes.namespace = feature.namespace;
   attributes.resourceTypes = !_.isEmpty(feature.resourceTypes) ? feature.resourceTypes : null;
 
-  relationships.children = toRelationshipToManyObject("children", feature, versionUrl);
-  relationships.multimediaDescriptions = toRelationshipToManyObject("multimediaDescriptions", feature, versionUrl);
-  relationships.parents = toRelationshipToManyObject("parents", feature, versionUrl);
+  relationships.children = toRelationshipToManyObject("children", feature);
+  relationships.multimediaDescriptions = toRelationshipToManyObject("multimediaDescriptions", feature);
+  relationships.parents = toRelationshipToManyObject("parents", feature);
 
   return json;
 }
 
-function serializeMediaObject(mediaObject, versionUrl) {
-  const json = serializeResource(mediaObject, versionUrl);
+function serializeMediaObject(mediaObject) {
+  const json = serializeResource(mediaObject);
 
   const { meta, attributes, relationships } = json;
 
@@ -424,14 +420,14 @@ function serializeMediaObject(mediaObject, versionUrl) {
   attributes.license = mediaObject.license;
   attributes.width = mediaObject.width;
 
-  relationships.categories = toRelationshipToManyObject("categories", mediaObject, versionUrl);
-  relationships.copyrightOwner = toRelationshipToOneObject("copyrightOwner", mediaObject, versionUrl);
+  relationships.categories = toRelationshipToManyObject("categories", mediaObject);
+  relationships.copyrightOwner = toRelationshipToOneObject("copyrightOwner", mediaObject);
 
   return json;
 }
 
-function serializeVenue(venue, versionUrl) {
-  const json = serializeIndividualResource(venue, versionUrl);
+function serializeVenue(venue) {
+  const json = serializeIndividualResource(venue);
 
   const { attributes } = json;
 
@@ -442,8 +438,8 @@ function serializeVenue(venue, versionUrl) {
   return json;
 }
 
-function serializeLift(lift, versionUrl) {
-  const json = serializeIndividualResource(lift, versionUrl);
+function serializeLift(lift) {
+  const json = serializeIndividualResource(lift);
 
   const { attributes, relationships } = json;
 
@@ -457,13 +453,13 @@ function serializeLift(lift, versionUrl) {
   attributes.openingHours = _.cloneDeep(lift.openingHours) ?? null;
   attributes.personsPerChair = _.cloneDeep(lift.personsPerChair) ?? null;
 
-  relationships.connections = toRelationshipToManyObject("connections", lift, versionUrl);
+  relationships.connections = toRelationshipToManyObject("connections", lift);
 
   return json;
 }
 
-function serializeSkiSlope(skiSlope, versionUrl) {
-  const json = serializeIndividualResource(skiSlope, versionUrl);
+function serializeSkiSlope(skiSlope) {
+  const json = serializeIndividualResource(skiSlope);
 
   const { attributes, relationships } = json;
 
@@ -477,13 +473,13 @@ function serializeSkiSlope(skiSlope, versionUrl) {
   attributes.openingHours = _.cloneDeep(skiSlope.openingHours) ?? null;
   attributes.snowCondition = _.cloneDeep(skiSlope.snowCondition) ?? null;
 
-  relationships.connections = toRelationshipToManyObject("connections", skiSlope, versionUrl);
+  relationships.connections = toRelationshipToManyObject("connections", skiSlope);
 
   return json;
 }
 
-function serializeSnowpark(snowpark, versionUrl) {
-  const json = serializeIndividualResource(snowpark, versionUrl);
+function serializeSnowpark(snowpark) {
+  const json = serializeIndividualResource(snowpark);
 
   const { attributes, relationships } = json;
 
@@ -497,14 +493,14 @@ function serializeSnowpark(snowpark, versionUrl) {
   attributes.openingHours = _.cloneDeep(snowpark.openingHours) ?? null;
   attributes.snowCondition = _.cloneDeep(snowpark.snowCondition) ?? null;
 
-  relationships.connections = toRelationshipToManyObject("connections", snowpark, versionUrl);
-  relationships.features = toRelationshipToManyObject("features", snowpark, versionUrl);
+  relationships.connections = toRelationshipToManyObject("connections", snowpark);
+  relationships.features = toRelationshipToManyObject("features", snowpark);
 
   return json;
 }
 
-function serializeMountainArea(mountainArea, versionUrl) {
-  const json = serializeIndividualResource(mountainArea, versionUrl);
+function serializeMountainArea(mountainArea) {
+  const json = serializeIndividualResource(mountainArea);
 
   const { attributes, relationships } = json;
 
@@ -518,40 +514,40 @@ function serializeMountainArea(mountainArea, versionUrl) {
   attributes.totalParkArea = _.cloneDeep(mountainArea.totalParkArea) ?? null;
   attributes.totalTrailLength = _.cloneDeep(mountainArea.totalTrailLength) ?? null;
 
-  relationships.areaOwner = toRelationshipToOneObject("areaOwner", mountainArea, versionUrl);
-  relationships.connections = toRelationshipToManyObject("connections", mountainArea, versionUrl);
-  relationships.lifts = toRelationshipToManyObject("lifts", mountainArea, versionUrl);
-  relationships.snowparks = toRelationshipToManyObject("snowparks", mountainArea, versionUrl);
-  relationships.subAreas = toRelationshipToManyObject("subAreas", mountainArea, versionUrl);
-  relationships.skiSlopes = toRelationshipToManyObject("skiSlopes", mountainArea, versionUrl);
+  relationships.areaOwner = toRelationshipToOneObject("areaOwner", mountainArea);
+  relationships.connections = toRelationshipToManyObject("connections", mountainArea);
+  relationships.lifts = toRelationshipToManyObject("lifts", mountainArea);
+  relationships.snowparks = toRelationshipToManyObject("snowparks", mountainArea);
+  relationships.subAreas = toRelationshipToManyObject("subAreas", mountainArea);
+  relationships.skiSlopes = toRelationshipToManyObject("skiSlopes", mountainArea);
 
   return json;
 }
 
-function serializeAnyResource(resource, versionUrl) {
+function serializeAnyResource(resource) {
   switch (resource.type) {
     case "agents":
-      return serializeAgent(resource, versionUrl);
+      return serializeAgent(resource);
     case "categories":
-      return serializeCategory(resource, versionUrl);
+      return serializeCategory(resource);
     case "events":
-      return serializeEvent(resource, versionUrl);
+      return serializeEvent(resource);
     case "eventSeries":
-      return serializeEventSeries(resource, versionUrl);
+      return serializeEventSeries(resource);
     case "features":
-      return serializeFeature(resource, versionUrl);
+      return serializeFeature(resource);
     case "lifts":
-      return serializeLift(resource, versionUrl);
+      return serializeLift(resource);
     case "mediaObjects":
-      return serializeMediaObject(resource, versionUrl);
+      return serializeMediaObject(resource);
     case "mountainAreas":
-      return serializeMountainArea(resource, versionUrl);
+      return serializeMountainArea(resource);
     case "skiSlopes":
-      return serializeSkiSlope(resource, versionUrl);
+      return serializeSkiSlope(resource);
     case "snowparks":
-      return serializeSnowpark(resource, versionUrl);
+      return serializeSnowpark(resource);
     case "venues":
-      return serializeVenue(resource, versionUrl);
+      return serializeVenue(resource);
   }
 
   if (!_.isEmpty(resource)) throw new Error("Unexpected input");
@@ -559,27 +555,66 @@ function serializeAnyResource(resource, versionUrl) {
   return null;
 }
 
-function serializeSingleResource(resource, versionUrl, typeUrl) {
+function serializeSingleResource(resource, request) {
+  const links = {
+    swagger: process.env.SWAGGER_URL,
+    self: request.selfUrl,
+  };
+
   return {
-    meta: {},
-    links: {
-      self: `${baseUrl}/${typeUrl}/${typeUrl}/${resource.id}`,
-    },
-    data: serializeAnyResource(resource, versionUrl),
+    jsonapi: { version: "1.0" },
+    links,
+    data: serializeAnyResource(resource),
     include: [],
   };
 }
 
-function serializeResourceCollection(resources, versionUrl, typeUrl) {
+function serializeResourceCollection(resources, request) {
+  const size = request?.query?.page?.size ?? 10;
+  const number = request?.query?.page?.number ?? 1;
+
+  const count = resources?.length ?? 0;
+
+  const indexFirst = size * (number - 1);
+  const indexLast = size * number;
+  const resourcesPage = resources?.slice(indexFirst, indexLast);
+
+  const current = number;
+  const first = 1;
+  const last = Math.ceil(count / size);
+  const prev = number > 1 ? number - 1 : 1;
+  const next = number < last ? number + 1 : last;
+
+  const { selfUrl } = request;
+  const links = { swagger: process.env.SWAGGER_URL };
+  const regexPageQuery = /page\[number\]=[0-9]+/;
+  const pageQuery = "page[number]=";
+
+  if (regexPageQuery.test(selfUrl)) {
+    links.first = selfUrl.replace(regexPageQuery, pageQuery + first);
+    links.last = selfUrl.replace(regexPageQuery, pageQuery + last);
+    links.next = selfUrl.replace(regexPageQuery, pageQuery + next);
+    links.prev = selfUrl.replace(regexPageQuery, pageQuery + prev);
+    links.self = selfUrl.replace(regexPageQuery, pageQuery + current);
+  } else {
+    const regexQueries = /page|include|fields|filter|sort|search|random/;
+    const separator = regexQueries.test(selfUrl) ? "&" : "?";
+
+    links.self = selfUrl + separator + pageQuery + current;
+    links.first = selfUrl + separator + pageQuery + first;
+    links.next = selfUrl + separator + pageQuery + next;
+    links.prev = selfUrl + separator + pageQuery + prev;
+    links.last = selfUrl + separator + pageQuery + last;
+  }
+
   return {
+    jsonapi: { version: "1.0" },
     meta: {
-      page: 999,
-      count: 999,
+      pages: last,
+      count,
     },
-    links: {
-      self: `${baseUrl}/${typeUrl}`,
-    },
-    data: resources?.map((resource) => serializeAnyResource(resource, versionUrl)),
+    links,
+    data: resourcesPage?.map((resource) => serializeAnyResource(resource)),
     include: [],
   };
 }

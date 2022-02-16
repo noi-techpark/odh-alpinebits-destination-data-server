@@ -30,14 +30,13 @@ class EventSeriesRouter extends Router {
     // Process request and authentication
     // Retrieve data
     const connector = new EventSeriesConnector();
+    const parsedRequest = new Request(request);
 
     // Return to the client
     try {
       return connector
         .retrieve()
-        .then((eventSeriesCollection) =>
-          serializeResourceCollection(eventSeriesCollection, "/2022-04-draft", "eventSeries")
-        );
+        .then((eventSeriesCollection) => serializeResourceCollection(eventSeriesCollection, parsedRequest));
     } catch (error) {
       console.error(error);
       throw error;
@@ -52,9 +51,7 @@ class EventSeriesRouter extends Router {
 
     // Return to the client
     try {
-      return connector
-        .retrieve()
-        .then((eventSeries) => serializeSingleResource(eventSeries, "/2022-04-draft", "eventSeries"));
+      return connector.retrieve().then((eventSeries) => serializeSingleResource(eventSeries, parsedRequest));
     } catch (error) {
       console.error(error);
       throw error;
@@ -73,9 +70,7 @@ class EventSeriesRouter extends Router {
 
     // Return to the client
     try {
-      return connector
-        .create(eventSeries)
-        .then((eventSeries) => serializeSingleResource(eventSeries, "/2022-04-draft", "eventSeries"));
+      return connector.create(eventSeries).then((eventSeries) => serializeSingleResource(eventSeries, parsedRequest));
     } catch (error) {
       console.error(error);
       throw error;
@@ -94,9 +89,7 @@ class EventSeriesRouter extends Router {
 
     // Return to the client
     try {
-      return connector
-        .update(eventSeries)
-        .then((eventSeries) => serializeSingleResource(eventSeries, "/2022-04-draft", "eventSeries"));
+      return connector.update(eventSeries).then((eventSeries) => serializeSingleResource(eventSeries, parsedRequest));
     } catch (error) {
       console.error(error);
       throw error;

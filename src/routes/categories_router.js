@@ -30,12 +30,11 @@ class CategoriesRouter extends Router {
     // Process request and authentication
     // Retrieve data
     const connector = new CategoryConnector();
+    const parsedRequest = new Request(request);
 
     // Return to the client
     try {
-      return connector
-        .retrieve()
-        .then((categories) => serializeResourceCollection(categories, "/2022-04-draft", "categories"));
+      return connector.retrieve().then((categories) => serializeResourceCollection(categories, parsedRequest));
     } catch (error) {
       console.error(error);
       throw error;
@@ -50,7 +49,7 @@ class CategoriesRouter extends Router {
 
     // Return to the client
     try {
-      return connector.retrieve().then((category) => serializeSingleResource(category, "/2022-04-draft", "categories"));
+      return connector.retrieve().then((category) => serializeSingleResource(category, parsedRequest));
     } catch (error) {
       console.error(error);
       throw error;
@@ -59,6 +58,7 @@ class CategoriesRouter extends Router {
 
   postCategory = async (request) => {
     // Process request and authentication
+    const parsedRequest = new Request(request);
     const { body } = request;
     // Validate object
     this.validate(body);
@@ -68,9 +68,7 @@ class CategoriesRouter extends Router {
 
     // Return to the client
     try {
-      return connector
-        .create(category)
-        .then((category) => serializeSingleResource(category, "/2022-04-draft", "categories"));
+      return connector.create(category).then((category) => serializeSingleResource(category, parsedRequest));
     } catch (error) {
       console.error(error);
       throw error;
@@ -79,6 +77,7 @@ class CategoriesRouter extends Router {
 
   patchCategory = async (request) => {
     // Process request and authentication
+    const parsedRequest = new Request(request);
     const { body } = request;
     // Validate object
     this.validate(body);
@@ -88,9 +87,7 @@ class CategoriesRouter extends Router {
 
     // Return to the client
     try {
-      return connector
-        .update(category)
-        .then((category) => serializeSingleResource(category, "/2022-04-draft", "categories"));
+      return connector.update(category).then((category) => serializeSingleResource(category, parsedRequest));
     } catch (error) {
       console.error(error);
       throw error;

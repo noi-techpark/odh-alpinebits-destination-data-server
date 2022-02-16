@@ -105,7 +105,7 @@ class MountainAreaConnector extends ResourceConnector {
 
   insertAreaSkiSlopes(mountainArea) {
     const inserts = mountainArea?.skiSlopes?.map((skiSlope) =>
-      dbFn.insertSkiSlope(this.connection, mountainArea.id, skiSlope.id)
+      dbFn.insertAreaSkiSlope(this.connection, mountainArea.id, skiSlope.id)
     );
     return Promise.all(inserts ?? []);
   }
@@ -118,7 +118,7 @@ class MountainAreaConnector extends ResourceConnector {
 
   insertAreaSnowparks(mountainArea) {
     const inserts = mountainArea?.snowparks?.map((snowpark) =>
-      dbFn.insertSnowpark(this.connection, mountainArea.id, snowpark.id)
+      dbFn.insertAreaSnowpark(this.connection, mountainArea.id, snowpark.id)
     );
     return Promise.all(inserts ?? []);
   }
@@ -130,7 +130,9 @@ class MountainAreaConnector extends ResourceConnector {
   }
 
   insertSubAreas(mountainArea) {
-    const inserts = mountainArea?.lifts?.map((lift) => dbFn.insertSubArea(this.connection, mountainArea.id, lift.id));
+    const inserts = mountainArea?.subAreas?.map((subArea) =>
+      dbFn.insertSubArea(this.connection, mountainArea.id, subArea.id)
+    );
     return Promise.all(inserts ?? []);
   }
 

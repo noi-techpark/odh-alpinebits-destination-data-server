@@ -30,7 +30,8 @@ SELECT events.id,
       )
   END AS "series",
   COALESCE(sponsors_array.sponsors) AS "sponsors",
-  COALESCE(sub_events_array.sub_events) AS "subEvents"
+  COALESCE(sub_events_array.sub_events) AS "subEvents",
+  COALESCE(event_venues_array.venues) AS "venues"
 FROM events
   LEFT JOIN resource_objects ON resource_objects.id = events.id
   LEFT JOIN (
@@ -77,3 +78,14 @@ FROM events
     FROM events
     GROUP BY id
   ) AS sub_events_array ON sub_events_array.id = events.id
+  LEFT JOIN (
+    SELECT event_venues.event_id AS "id",
+      json_agg(
+        json_build_object(
+          'id', venue_id,
+          'type', 'venues'
+        )
+      ) FILTER (WHERE venue_id IS NOT NULL) AS "venues"
+    FROM event_venues
+    GROUP BY id
+  ) AS event_venues_array ON event_venues_array.id = events.id

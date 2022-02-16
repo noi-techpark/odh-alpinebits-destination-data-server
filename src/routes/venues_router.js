@@ -29,10 +29,11 @@ class VenuesRouter extends Router {
     // Process request and authentication
     // Retrieve data
     const connector = new VenueConnector();
+    const parsedRequest = new Request(request);
 
     // Return to the client
     try {
-      return connector.retrieve().then((venues) => serializeResourceCollection(venues, "/2022-04-draft", "venues"));
+      return connector.retrieve().then((venues) => serializeResourceCollection(venues, parsedRequest));
       // return connector.retrieve();
     } catch (error) {
       console.error(error);
@@ -48,7 +49,7 @@ class VenuesRouter extends Router {
 
     // Return to the client
     try {
-      return connector.retrieve().then((venue) => serializeSingleResource(venue, "/2022-04-draft", "venues"));
+      return connector.retrieve().then((venue) => serializeSingleResource(venue, parsedRequest));
     } catch (error) {
       console.error(error);
       throw error;
@@ -67,7 +68,7 @@ class VenuesRouter extends Router {
 
     // Return to the client
     try {
-      return connector.create(venue).then((venue) => serializeSingleResource(venue, "/2022-04-draft", "venues"));
+      return connector.create(venue).then((venue) => serializeSingleResource(venue, parsedRequest));
     } catch (error) {
       console.error(error);
       throw error;
@@ -86,7 +87,7 @@ class VenuesRouter extends Router {
 
     // Return to the client
     try {
-      return connector.update(venue).then((_venue) => serializeSingleResource(_venue, "/2022-04-draft", "venues"));
+      return connector.update(venue).then((_venue) => serializeSingleResource(_venue, parsedRequest));
     } catch (error) {
       console.error(error);
       throw error;
