@@ -5,6 +5,10 @@ const { EventSeries } = require("./event_series");
 const { Feature } = require("./feature");
 const { MediaObject } = require("./media_object");
 const { Venue } = require("./venue");
+const { Lift } = require("./lift");
+const { MountainArea } = require("./mountain_area");
+const { SkiSlope } = require("./ski_slope");
+const { Snowpark } = require("./snowpark");
 
 const _ = require("lodash");
 const baseUrl = `${process.env.REF_SERVER_URL}/${process.env.API_VERSION}`;
@@ -169,6 +173,100 @@ function deserializeVenue(json) {
   venue.geometries = attributes?.geometries ?? venue?.geometries;
 
   return venue;
+}
+
+function deserializeLift(json) {
+  const lift = new Lift();
+  const { attributes, relationships } = json;
+
+  deserializeResourceFields(lift, json);
+  deserializeIndividualResourceFields(lift, json);
+
+  lift.address = attributes?.address ?? lift?.address;
+  lift.capacity = attributes?.capacity ?? lift?.capacity;
+  lift.geometries = attributes?.geometries ?? lift?.geometries;
+  lift.howToArrive = attributes?.howToArrive ?? lift?.howToArrive;
+  lift.length = attributes?.length ?? lift?.length;
+  lift.maxAltitude = attributes?.maxAltitude ?? lift?.maxAltitude;
+  lift.minAltitude = attributes?.minAltitude ?? lift?.minAltitude;
+  lift.openingHours = attributes?.openingHours ?? lift?.openingHours;
+  lift.personsPerChair = attributes?.personsPerChair ?? lift?.personsPerChair;
+
+  lift.connections = relationships?.connections?.data ?? lift?.connections;
+
+  return lift;
+}
+
+function deserializeMountainArea(json) {
+  const mountainArea = new MountainArea();
+  const { attributes, relationships } = json;
+
+  deserializeResourceFields(mountainArea, json);
+  deserializeIndividualResourceFields(mountainArea, json);
+
+  mountainArea.area = attributes?.area ?? mountainArea?.area;
+  mountainArea.geometries = attributes?.geometries ?? mountainArea?.geometries;
+  mountainArea.howToArrive = attributes?.howToArrive ?? mountainArea?.howToArrive;
+  mountainArea.maxAltitude = attributes?.maxAltitude ?? mountainArea?.maxAltitude;
+  mountainArea.minAltitude = attributes?.minAltitude ?? mountainArea?.minAltitude;
+  mountainArea.openingHours = attributes?.openingHours ?? mountainArea?.openingHours;
+  mountainArea.snowCondition = attributes?.snowCondition ?? mountainArea?.snowCondition;
+  mountainArea.totalParkArea = attributes?.totalParkArea ?? mountainArea?.totalParkArea;
+  mountainArea.totalTrailLength = attributes?.totalTrailLength ?? mountainArea?.totalTrailLength;
+
+  mountainArea.areaOwner = relationships?.areaOwner?.data ?? mountainArea?.areaOwner;
+  mountainArea.connections = relationships?.connections?.data ?? mountainArea?.connections;
+  mountainArea.lifts = relationships?.lifts?.data ?? mountainArea?.lifts;
+  mountainArea.snowparks = relationships?.snowparks?.data ?? mountainArea?.snowparks;
+  mountainArea.subAreas = relationships?.subAreas?.data ?? mountainArea?.subAreas;
+  mountainArea.skiSlopes = relationships?.skiSlopes?.data ?? mountainArea?.skiSlopes;
+
+  return mountainArea;
+}
+
+function deserializeSkiSlope(json) {
+  const skiSlope = new SkiSlope();
+  const { attributes, relationships } = json;
+
+  deserializeResourceFields(skiSlope, json);
+  deserializeIndividualResourceFields(skiSlope, json);
+
+  skiSlope.address = attributes?.address ?? skiSlope?.address;
+  skiSlope.difficulty = attributes?.difficulty ?? skiSlope?.difficulty;
+  skiSlope.geometries = attributes?.geometries ?? skiSlope?.geometries;
+  skiSlope.howToArrive = attributes?.howToArrive ?? skiSlope?.howToArrive;
+  skiSlope.length = attributes?.length ?? skiSlope?.length;
+  skiSlope.maxAltitude = attributes?.maxAltitude ?? skiSlope?.maxAltitude;
+  skiSlope.minAltitude = attributes?.minAltitude ?? skiSlope?.minAltitude;
+  skiSlope.openingHours = attributes?.openingHours ?? skiSlope?.openingHours;
+  skiSlope.snowCondition = attributes?.snowCondition ?? skiSlope?.snowCondition;
+
+  skiSlope.connections = relationships?.connections?.data ?? skiSlope?.connections;
+
+  return skiSlope;
+}
+
+function deserializeSnowpark(json) {
+  const snowpark = new Snowpark();
+  const { attributes, relationships } = json;
+
+  deserializeResourceFields(snowpark, json);
+  deserializeIndividualResourceFields(snowpark, json);
+
+  snowpark.address = attributes?.address ?? snowpark?.address;
+  snowpark.difficulty = attributes?.difficulty ?? snowpark?.difficulty;
+  snowpark.geometries = attributes?.geometries ?? snowpark?.geometries;
+  snowpark.howToArrive = attributes?.howToArrive ?? snowpark?.howToArrive;
+  snowpark.length = attributes?.length ?? snowpark?.length;
+  snowpark.maxAltitude = attributes?.maxAltitude ?? snowpark?.maxAltitude;
+  snowpark.minAltitude = attributes?.minAltitude ?? snowpark?.minAltitude;
+  snowpark.openingHours = attributes?.openingHours ?? snowpark?.openingHours;
+  snowpark.snowCondition = attributes?.snowCondition ?? snowpark?.snowCondition;
+
+  snowpark.connections = relationships?.connections?.data ?? snowpark?.connections;
+  snowpark.features = relationships?.features?.data ?? snowpark?.features;
+
+  return snowpark;
 }
 
 function toRelationshipToManyObject(relationshipName, resource, versionUrl) {
@@ -344,6 +442,92 @@ function serializeVenue(venue, versionUrl) {
   return json;
 }
 
+function serializeLift(lift, versionUrl) {
+  const json = serializeIndividualResource(lift, versionUrl);
+
+  const { attributes, relationships } = json;
+
+  attributes.address = _.cloneDeep(lift.address) ?? null;
+  attributes.capacity = _.cloneDeep(lift.capacity) ?? null;
+  attributes.geometries = _.cloneDeep(lift.geometries) ?? null;
+  attributes.howToArrive = _.cloneDeep(lift.howToArrive) ?? null;
+  attributes.length = _.cloneDeep(lift.length) ?? null;
+  attributes.maxAltitude = _.cloneDeep(lift.maxAltitude) ?? null;
+  attributes.minAltitude = _.cloneDeep(lift.minAltitude) ?? null;
+  attributes.openingHours = _.cloneDeep(lift.openingHours) ?? null;
+  attributes.personsPerChair = _.cloneDeep(lift.personsPerChair) ?? null;
+
+  relationships.connections = toRelationshipToManyObject("connections", lift, versionUrl);
+
+  return json;
+}
+
+function serializeSkiSlope(skiSlope, versionUrl) {
+  const json = serializeIndividualResource(skiSlope, versionUrl);
+
+  const { attributes, relationships } = json;
+
+  attributes.address = _.cloneDeep(skiSlope.address) ?? null;
+  attributes.difficulty = _.cloneDeep(skiSlope.difficulty) ?? null;
+  attributes.geometries = _.cloneDeep(skiSlope.geometries) ?? null;
+  attributes.howToArrive = _.cloneDeep(skiSlope.howToArrive) ?? null;
+  attributes.length = _.cloneDeep(skiSlope.length) ?? null;
+  attributes.maxAltitude = _.cloneDeep(skiSlope.maxAltitude) ?? null;
+  attributes.minAltitude = _.cloneDeep(skiSlope.minAltitude) ?? null;
+  attributes.openingHours = _.cloneDeep(skiSlope.openingHours) ?? null;
+  attributes.snowCondition = _.cloneDeep(skiSlope.snowCondition) ?? null;
+
+  relationships.connections = toRelationshipToManyObject("connections", skiSlope, versionUrl);
+
+  return json;
+}
+
+function serializeSnowpark(snowpark, versionUrl) {
+  const json = serializeIndividualResource(snowpark, versionUrl);
+
+  const { attributes, relationships } = json;
+
+  attributes.address = _.cloneDeep(snowpark.address) ?? null;
+  attributes.difficulty = _.cloneDeep(snowpark.difficulty) ?? null;
+  attributes.geometries = _.cloneDeep(snowpark.geometries) ?? null;
+  attributes.howToArrive = _.cloneDeep(snowpark.howToArrive) ?? null;
+  attributes.length = _.cloneDeep(snowpark.length) ?? null;
+  attributes.maxAltitude = _.cloneDeep(snowpark.maxAltitude) ?? null;
+  attributes.minAltitude = _.cloneDeep(snowpark.minAltitude) ?? null;
+  attributes.openingHours = _.cloneDeep(snowpark.openingHours) ?? null;
+  attributes.snowCondition = _.cloneDeep(snowpark.snowCondition) ?? null;
+
+  relationships.connections = toRelationshipToManyObject("connections", snowpark, versionUrl);
+  relationships.features = toRelationshipToManyObject("features", snowpark, versionUrl);
+
+  return json;
+}
+
+function serializeMountainArea(mountainArea, versionUrl) {
+  const json = serializeIndividualResource(mountainArea, versionUrl);
+
+  const { attributes, relationships } = json;
+
+  attributes.area = _.cloneDeep(mountainArea.area) ?? null;
+  attributes.geometries = _.cloneDeep(mountainArea.geometries) ?? null;
+  attributes.howToArrive = _.cloneDeep(mountainArea.howToArrive) ?? null;
+  attributes.maxAltitude = _.cloneDeep(mountainArea.maxAltitude) ?? null;
+  attributes.minAltitude = _.cloneDeep(mountainArea.minAltitude) ?? null;
+  attributes.openingHours = _.cloneDeep(mountainArea.openingHours) ?? null;
+  attributes.snowCondition = _.cloneDeep(mountainArea.snowCondition) ?? null;
+  attributes.totalParkArea = _.cloneDeep(mountainArea.totalParkArea) ?? null;
+  attributes.totalTrailLength = _.cloneDeep(mountainArea.totalTrailLength) ?? null;
+
+  relationships.areaOwner = toRelationshipToOneObject("areaOwner", mountainArea, versionUrl);
+  relationships.connections = toRelationshipToManyObject("connections", mountainArea, versionUrl);
+  relationships.lifts = toRelationshipToManyObject("lifts", mountainArea, versionUrl);
+  relationships.snowparks = toRelationshipToManyObject("snowparks", mountainArea, versionUrl);
+  relationships.subAreas = toRelationshipToManyObject("subAreas", mountainArea, versionUrl);
+  relationships.skiSlopes = toRelationshipToManyObject("skiSlopes", mountainArea, versionUrl);
+
+  return json;
+}
+
 function serializeAnyResource(resource, versionUrl) {
   switch (resource.type) {
     case "agents":
@@ -357,15 +541,15 @@ function serializeAnyResource(resource, versionUrl) {
     case "features":
       return serializeFeature(resource, versionUrl);
     case "lifts":
-      throw new Error("Unimplemented");
+      return serializeLift(resource, versionUrl);
     case "mediaObjects":
       return serializeMediaObject(resource, versionUrl);
     case "mountainAreas":
-      throw new Error("Unimplemented");
+      return serializeMountainArea(resource, versionUrl);
     case "skiSlopes":
-      throw new Error("Unimplemented");
+      return serializeSkiSlope(resource, versionUrl);
     case "snowparks":
-      throw new Error("Unimplemented");
+      return serializeSnowpark(resource, versionUrl);
     case "venues":
       return serializeVenue(resource, versionUrl);
   }
@@ -411,6 +595,10 @@ module.exports = {
   deserializeFeature,
   deserializeMediaObject,
   deserializeVenue,
+  deserializeLift,
+  deserializeMountainArea,
+  deserializeSkiSlope,
+  deserializeSnowpark,
   serializeSingleResource,
   serializeResourceCollection,
 };

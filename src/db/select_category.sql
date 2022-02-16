@@ -1,5 +1,4 @@
 SELECT categories.id,
-  resource_id,
   namespace,
   resource_objects.type,
   resource_types_array.types AS "resourceTypes",
@@ -14,7 +13,7 @@ SELECT categories.id,
   COALESCE(children_array.children) AS "children",
   COALESCE(parents_array.parents) AS "parents"
 FROM categories
-  LEFT JOIN resource_objects ON resource_objects.id = categories.resource_id
+  LEFT JOIN resource_objects ON resource_objects.id = categories.id
   LEFT JOIN (
     SELECT category_id AS "id",
       json_agg(to_json("type")) FILTER (WHERE "type" IS NOT NULL) AS "types"

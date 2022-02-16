@@ -1,117 +1,124 @@
 const { Router } = require("./router");
-const { SkiSlopeConnector } = require("./../connectors/ski_slope_connector");
-const { Agent } = require("./../model/destinationdata/agents");
-const { Category } = require("./../model/destinationdata/category");
-const { Lift } = require("../model/destinationdata/lift");
-const { MediaObject } = require("./../model/destinationdata/media_object");
-const { MountainArea } = require("../model/destinationdata/mountain_area");
-const { SkiSlope } = require("../model/destinationdata/ski_slope");
-const { Snowpark } = require("../model/destinationdata/snowpark");
-const responseTransform = require("../model/odh2destinationdata/response_transform");
-const requestTransform = require("../model/request2odh/request_transform");
-const { Feature } = require("../model/destinationdata/feature");
+const { SkiSlopeConnector } = require("../connectors/destinationdata2022/ski_slope_connector");
+const {
+  deserializeSkiSlope,
+  serializeSingleResource,
+  serializeResourceCollection,
+} = require("../model/destinationdata2022");
+const { Request } = require("../model/request/request");
 
 class SkiSlopesRouter extends Router {
   constructor(app) {
     super();
 
-    this.addGetRoute(`/skiSlopes`, this.getSkiSlopes);
+    this.addUnimplementedGetRoute(`/skiSlopes/:id/categories`);
+    this.addUnimplementedGetRoute(`/skiSlopes/:id/connections`);
+    this.addUnimplementedGetRoute(`/skiSlopes/:id/multimediaDescriptions`);
+
+    this.addPostRoute(`/skiSlopes`, this.postSkiSlope);
+    this.addGetRoute(`/skiSlopes`, this.getSkiSlope);
     this.addGetRoute(`/skiSlopes/:id`, this.getSkiSlopeById);
-    this.addGetRoute(`/skiSlopes/:id/categories`, this.getSkiSlopeCategories);
-    this.addGetRoute(`/skiSlopes/:id/connections`, this.getSkiSlopeConnections);
-    this.addGetRoute(`/skiSlopes/:id/multimediaDescriptions`, this.getSkiSlopeMultimediaDescriptions);
+    this.addDeleteRoute(`/skiSlopes/:id`, this.deleteSkiSlope);
+    this.addPatchRoute(`/skiSlopes/:id`, this.patchSkiSlope);
 
     if (app) {
       this.installRoutes(app);
     }
   }
 
-  getSkiSlopes = (request) => {
-    const parseRequestFn = (request) => {
-      const typesInData = [SkiSlope];
-      const typesInIncluded = [Category, MediaObject, Lift, MountainArea, SkiSlope, Snowpark];
-      const supportedFeatures = ["include", "fields", "filter", "page", "random", "search", "sort"];
-      return this.parseRequest(request, typesInData, typesInIncluded, supportedFeatures);
-    };
-    const fetchFn = (parsedRequest) =>
-      new SkiSlopeConnector(parsedRequest, requestTransform.transformGetSkiSlopesRequest).fetch();
+  getSkiSlope = async (request) => {
+    // Process request and authentication
+    // Retrieve data
+    const connector = new SkiSlopeConnector();
 
-    return this.handleGetRequest(
-      request,
-      parseRequestFn,
-      fetchFn,
-      responseTransform.transformToSkiSlopeCollection,
-      this.validate
-    );
+    // Return to the client
+    try {
+      return connector
+        .retrieve()
+        .then((skiSlopes) => serializeResourceCollection(skiSlopes, "/2022-04-draft", "skiSlopes"));
+      // return connector.retrieve();
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
   };
 
-  getSkiSlopeById = (request) => {
-    const parseRequestFn = (request) => {
-      const typesInData = [SkiSlope];
-      const typesInIncluded = [Category, MediaObject, Lift, MountainArea, SkiSlope, Snowpark];
-      return this.parseRequest(request, typesInData, typesInIncluded);
-    };
-    const fetchFn = (parsedRequest) => new SkiSlopeConnector(parsedRequest, null).fetch();
+  getSkiSlopeById = async (request) => {
+    // Process request and authentication
+    // Retrieve data
+    const parsedRequest = new Request(request);
+    const connector = new SkiSlopeConnector(parsedRequest);
 
-    return this.handleGetRequest(
-      request,
-      parseRequestFn,
-      fetchFn,
-      responseTransform.transformToSkiSlopeObject,
-      this.validate
-    );
+    // Return to the client
+    try {
+      return connector.retrieve().then((skiSlope) => serializeSingleResource(skiSlope, "/2022-04-draft", "skiSlopes"));
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
   };
 
-  getSkiSlopeCategories = (request) => {
-    const parseRequestFn = (request) => {
-      const typesInData = [Category];
-      const typesInIncluded = [Agent, Category, MediaObject];
-      return this.parseRequest(request, typesInData, typesInIncluded);
-    };
-    const fetchFn = (parsedRequest) => new SkiSlopeConnector(parsedRequest, null).fetch();
+  postSkiSlope = async (request) => {
+    // Process request and authentication
+    const { body } = request;
+    // Validate object
+    this.validate(body);
+    // Store data
+    const skiSlope = deserializeSkiSlope(body.data);
+    const parsedRequest = new Request(request);
+    const connector = new SkiSlopeConnector(parsedRequest);
 
-    return this.handleGetRequest(
-      request,
-      parseRequestFn,
-      fetchFn,
-      responseTransform.transformToSkiSlopeCategories,
-      this.validate
-    );
+    // Return to the client
+    try {
+      return connector
+        .create(skiSlope)
+        .then((skiSlope) => serializeSingleResource(skiSlope, "/2022-04-draft", "skiSlopes"));
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
   };
 
-  getSkiSlopeConnections = (request) => {
-    const parseRequestFn = (request) => {
-      const typesInData = [Lift, MountainArea, SkiSlope, Snowpark];
-      const typesInIncluded = [Category, Feature, MediaObject, Lift, MountainArea, SkiSlope, Snowpark];
-      return this.parseRequest(request, typesInData, typesInIncluded);
-    };
-    const fetchFn = (parsedRequest) => new SkiSlopeConnector(parsedRequest, null).fetch();
+  patchSkiSlope = async (request) => {
+    // Process request and authentication
+    const { body } = request;
+    // Validate object
+    this.validate(body);
+    // Store data
+    const skiSlope = deserializeSkiSlope(body.data);
+    const parsedRequest = new Request(request);
+    const connector = new SkiSlopeConnector(parsedRequest);
 
-    return this.handleGetRequest(
-      request,
-      parseRequestFn,
-      fetchFn,
-      responseTransform.transformToSkiSlopeConnections,
-      this.validate
-    );
+    // Return to the client
+    try {
+      return connector
+        .update(skiSlope)
+        .then((skiSlope) => serializeSingleResource(skiSlope, "/2022-04-draft", "skiSlopes"));
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
   };
 
-  getSkiSlopeMultimediaDescriptions = (request) => {
-    const parseRequestFn = (request) => {
-      const typesInData = [MediaObject];
-      const typesInIncluded = [Agent, Category];
-      return this.parseRequest(request, typesInData, typesInIncluded);
-    };
-    const fetchFn = (parsedRequest) => new SkiSlopeConnector(parsedRequest, null).fetch();
+  deleteSkiSlope = async (request) => {
+    // Process request and authentication
+    // Retrieve data
+    const parsedRequest = new Request(request);
+    const connector = new SkiSlopeConnector(parsedRequest);
+    console.log("delete skiSlope");
 
-    return this.handleGetRequest(
-      request,
-      parseRequestFn,
-      fetchFn,
-      responseTransform.transformToSkiSlopeMultimediaDescriptions,
-      this.validate
-    );
+    // Return to the client
+    try {
+      return connector.delete();
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
   };
+
+  validate(skiSlopeMessage) {
+    console.log("The skiSlope message HAS NOT BEEN validated.");
+  }
 }
 
 module.exports = {

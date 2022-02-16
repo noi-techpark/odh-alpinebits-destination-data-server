@@ -60,8 +60,6 @@ class EventSeriesConnector extends ResourceConnector {
       if (!_.isUndefined(v)) newEventSeries[k] = v;
     });
 
-    this.checkLastUpdate(oldEventSeries, newEventSeries);
-
     if (this.shouldUpdate(oldEventSeries, newEventSeries)) {
       return Promise.all([this.updateResource(newEventSeries), this.updateEditions(newEventSeries)]).then(
         (promises) => {

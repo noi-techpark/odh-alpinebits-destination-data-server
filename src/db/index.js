@@ -187,6 +187,7 @@ module.exports = {
       _name: "mountain_areas",
       id: "id",
       area: "area",
+      areaOwnerId: "area_owner_id",
       totalParkLength: "total_park_length",
       totalSlopeLength: "total_slope_length",
     },
@@ -340,6 +341,11 @@ module.exports = {
       _name: "categories_arrays",
       id: "id",
       categories: "categories",
+    },
+    featuresArrays: {
+      _name: "features_arrays",
+      id: "id",
+      features: "features",
     },
     multimediaDescriptionsArrays: {
       _name: "multimedia_descriptions_arrays",

@@ -245,12 +245,7 @@ function createEventsTable() {
     table.timestamp(events.startDate, { useTz: true });
     table.string(events.parentId, 50).references(events.id).inTable(events._name).onDelete(SET_NULL);
     table.string(events.publisherId, 50).references(agents.id).inTable(agents._name).notNullable().onDelete(CASCADE);
-    table
-      .string(events.seriesId, 50)
-      .references(eventSeries.id)
-      .inTable(eventSeries._name)
-      .notNullable()
-      .onDelete(SET_NULL);
+    table.string(events.seriesId, 50).references(eventSeries.id).inTable(eventSeries._name).onDelete(SET_NULL);
     table.string(events.status, 50).references(eventStatus.status).inTable(eventStatus._name).onDelete(SET_NULL);
   });
 }
@@ -443,6 +438,7 @@ function createLiftsTable() {
 function createMountainAreasTable() {
   return connection.schema.createTable(mountainAreas._name, function (table) {
     table.string(mountainAreas.id, 50).primary().references(resources.id).inTable(resources._name).onDelete(CASCADE);
+    table.string(mountainAreas.areaOwnerId, 50).references(agents.id).inTable(agents._name);
 
     table.integer(mountainAreas.area);
     table.integer(mountainAreas.totalParkLength);
@@ -596,6 +592,27 @@ function createDeleteContactPointAddressTrigger() {
   `);
 }
 
+function createDeletePlaceAddressTrigger() {
+  return connection.raw(`
+    CREATE OR REPLACE FUNCTION delete_place_address()
+      RETURNS TRIGGER AS
+    $$
+    BEGIN
+      DELETE FROM ${addresses._name} WHERE OLD.${places.addressId} = ${addresses._name}.${addresses.id};
+      RETURN OLD;
+    END;
+    $$ LANGUAGE PLPGSQL;
+
+    DROP TRIGGER IF EXISTS place_address_deletion ON ${places._name};
+
+    CREATE TRIGGER place_address_deletion
+      AFTER DELETE
+      ON ${places._name}
+      FOR EACH ROW
+      EXECUTE PROCEDURE delete_place_address();
+  `);
+}
+
 function createSyncLastUpdateTrigger() {
   return connection.raw(`
     CREATE OR REPLACE FUNCTION sync_last_update() RETURNS trigger AS $$
@@ -687,6 +704,21 @@ function createCategoriesArraysView() {
           )
         ) AS "categories"
       FROM resource_categories
+      GROUP BY resource_id;
+  `);
+}
+
+function createFeaturesArraysView() {
+  return connection.raw(`
+  CREATE VIEW features_arrays AS
+    SELECT resource_id AS "id",
+        json_agg(
+          json_build_object(
+            'id', feature_id,
+            'type', 'features'
+          )
+        ) AS "features"
+      FROM resource_features
       GROUP BY resource_id;
   `);
 }
@@ -790,6 +822,7 @@ function createResourceObjectsView() {
           short_name_objects.short_name,
           COALESCE(to_json(resources.simple_url), url_objects.url) AS "url",
           categories_arrays.categories,
+          features_arrays.features,
           multimedia_descriptions_arrays.media
         FROM resources
         LEFT JOIN abstract_objects ON abstract_objects.id = resources.id
@@ -798,6 +831,7 @@ function createResourceObjectsView() {
         LEFT JOIN short_name_objects ON short_name_objects.id = resources.id
         LEFT JOIN url_objects ON url_objects.id = resources.id
         LEFT JOIN categories_arrays ON categories_arrays.id = resources.id
+        LEFT JOIN features_arrays ON features_arrays.id = resources.id
         LEFT JOIN multimedia_descriptions_arrays ON multimedia_descriptions_arrays.id = resources.id;
   `);
 }
@@ -847,7 +881,7 @@ function createAreaSnowparksArraysView() {
         json_agg(json_build_object(
           'id', snowpark_id,
           'type', 'snowparks'
-        )) AS "lifts"
+        )) AS "snowparks"
       FROM area_snowparks
       GROUP BY area_id;
   `);
@@ -887,7 +921,8 @@ function createSnowConditionObjectsView() {
   CREATE VIEW snow_condition_objects AS
     SELECT snow_conditions.id,
         json_build_object(
-          'baseSnow', json_build_object(
+          'baseSnow', base_snow,
+          'baseSnowRange', json_build_object(
             'lower', base_snow_range_lower,
             'upper', base_snow_range_upper
           ),
@@ -924,6 +959,7 @@ function createAllViews() {
     .then(() => createShortNameObjectsView())
     .then(() => createUrlObjectsView())
     .then(() => createCategoriesArraysView())
+    .then(() => createFeaturesArraysView())
     .then(() => createMultimediaDescriptionsArraysView())
     .then(() => createCityObjectsView())
     .then(() => createComplementObjectsView())
@@ -949,6 +985,7 @@ function dropAllViews() {
     dropViewIfExists(views.shortNameObjects._name),
     dropViewIfExists(views.urlObjects._name),
     dropViewIfExists(views.categoriesArrays._name),
+    dropViewIfExists(views.featuresArrays._name),
     dropViewIfExists(views.multimediaDescriptionsArrays._name),
     dropViewIfExists(views.cityObjects._name),
     dropViewIfExists(views.complementObjects._name),
@@ -968,7 +1005,11 @@ function dropAllViews() {
 }
 
 function createAllTriggers() {
-  return Promise.all([createDeleteContactPointAddressTrigger(), createSyncLastUpdateTrigger()]);
+  return Promise.all([
+    createDeleteContactPointAddressTrigger(),
+    createDeletePlaceAddressTrigger(),
+    createSyncLastUpdateTrigger(),
+  ]);
 }
 
 function dropAllTables() {

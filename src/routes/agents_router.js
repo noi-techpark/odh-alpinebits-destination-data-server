@@ -12,7 +12,6 @@ class AgentsRouter extends Router {
   constructor(app) {
     super();
 
-    this.addUnimplementedGetRoute(`/agents`);
     this.addUnimplementedGetRoute(`/agents/:id/categories`);
     this.addUnimplementedGetRoute(`/agents/:id/multimediaDescriptions`);
 

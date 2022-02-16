@@ -1,117 +1,118 @@
 const { Router } = require("./router");
-const { LiftConnector } = require("./../connectors/lift_connector");
-const { Agent } = require("./../model/destinationdata/agents");
-const { Category } = require("./../model/destinationdata/category");
-const { Lift } = require("../model/destinationdata/lift");
-const { MediaObject } = require("./../model/destinationdata/media_object");
-const { MountainArea } = require("../model/destinationdata/mountain_area");
-const { SkiSlope } = require("../model/destinationdata/ski_slope");
-const { Snowpark } = require("../model/destinationdata/snowpark");
-const responseTransform = require("../model/odh2destinationdata/response_transform");
-const requestTransform = require("../model/request2odh/request_transform");
-const { Feature } = require("../model/destinationdata/feature");
+const { LiftConnector } = require("../connectors/destinationdata2022/lift_connector");
+const {
+  deserializeLift,
+  serializeSingleResource,
+  serializeResourceCollection,
+} = require("../model/destinationdata2022");
+const { Request } = require("../model/request/request");
 
 class LiftsRouter extends Router {
   constructor(app) {
     super();
 
-    this.addGetRoute(`/lifts`, this.getLifts);
+    this.addUnimplementedGetRoute(`/lifts/:id/categories`);
+    this.addUnimplementedGetRoute(`/lifts/:id/connections`);
+    this.addUnimplementedGetRoute(`/lifts/:id/multimediaDescriptions`);
+
+    this.addPostRoute(`/lifts`, this.postLift);
+    this.addGetRoute(`/lifts`, this.getLift);
     this.addGetRoute(`/lifts/:id`, this.getLiftById);
-    this.addGetRoute(`/lifts/:id/categories`, this.getLiftCategories);
-    this.addGetRoute(`/lifts/:id/connections`, this.getLiftConnections);
-    this.addGetRoute(`/lifts/:id/multimediaDescriptions`, this.getLiftMultimediaDescriptions);
+    this.addDeleteRoute(`/lifts/:id`, this.deleteLift);
+    this.addPatchRoute(`/lifts/:id`, this.patchLift);
 
     if (app) {
       this.installRoutes(app);
     }
   }
 
-  getLifts = (request) => {
-    const parseRequestFn = (request) => {
-      const typesInData = [Lift];
-      const typesInIncluded = [Category, MediaObject, Lift, MountainArea, SkiSlope, Snowpark];
-      const supportedFeatures = ["include", "fields", "filter", "page", "random", "search", "sort"];
-      return this.parseRequest(request, typesInData, typesInIncluded, supportedFeatures);
-    };
-    const fetchFn = (parsedRequest) =>
-      new LiftConnector(parsedRequest, requestTransform.transformGetLiftsRequest).fetch();
+  getLift = async (request) => {
+    // Process request and authentication
+    // Retrieve data
+    const connector = new LiftConnector();
 
-    return this.handleGetRequest(
-      request,
-      parseRequestFn,
-      fetchFn,
-      responseTransform.transformToLiftCollection,
-      this.validate
-    );
+    // Return to the client
+    try {
+      return connector.retrieve().then((lifts) => serializeResourceCollection(lifts, "/2022-04-draft", "lifts"));
+      // return connector.retrieve();
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
   };
 
-  getLiftById = (request) => {
-    const parseRequestFn = (request) => {
-      const typesInData = [Lift];
-      const typesInIncluded = [Category, MediaObject, Lift, MountainArea, SkiSlope, Snowpark];
-      return this.parseRequest(request, typesInData, typesInIncluded);
-    };
-    const fetchFn = (parsedRequest) => new LiftConnector(parsedRequest, null).fetch();
+  getLiftById = async (request) => {
+    // Process request and authentication
+    // Retrieve data
+    const parsedRequest = new Request(request);
+    const connector = new LiftConnector(parsedRequest);
 
-    return this.handleGetRequest(
-      request,
-      parseRequestFn,
-      fetchFn,
-      responseTransform.transformToLiftObject,
-      this.validate
-    );
+    // Return to the client
+    try {
+      return connector.retrieve().then((lift) => serializeSingleResource(lift, "/2022-04-draft", "lifts"));
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
   };
 
-  getLiftCategories = (request) => {
-    const parseRequestFn = (request) => {
-      const typesInData = [Category];
-      const typesInIncluded = [Category, MediaObject];
-      return this.parseRequest(request, typesInData, typesInIncluded);
-    };
-    const fetchFn = (parsedRequest) => new LiftConnector(parsedRequest, null).fetch();
+  postLift = async (request) => {
+    // Process request and authentication
+    const { body } = request;
+    // Validate object
+    this.validate(body);
+    // Store data
+    const lift = deserializeLift(body.data);
+    const parsedRequest = new Request(request);
+    const connector = new LiftConnector(parsedRequest);
 
-    return this.handleGetRequest(
-      request,
-      parseRequestFn,
-      fetchFn,
-      responseTransform.transformToLiftCategories,
-      this.validate
-    );
+    // Return to the client
+    try {
+      return connector.create(lift).then((lift) => serializeSingleResource(lift, "/2022-04-draft", "lifts"));
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
   };
 
-  getLiftConnections = (request) => {
-    const parseRequestFn = (request) => {
-      const typesInData = [Lift, MountainArea, SkiSlope, Snowpark];
-      const typesInIncluded = [Category, Feature, MediaObject, Lift, MountainArea, SkiSlope, Snowpark];
-      return this.parseRequest(request, typesInData, typesInIncluded);
-    };
-    const fetchFn = (parsedRequest) => new LiftConnector(parsedRequest, null).fetch();
+  patchLift = async (request) => {
+    // Process request and authentication
+    const { body } = request;
+    // Validate object
+    this.validate(body);
+    // Store data
+    const lift = deserializeLift(body.data);
+    const parsedRequest = new Request(request);
+    const connector = new LiftConnector(parsedRequest);
 
-    return this.handleGetRequest(
-      request,
-      parseRequestFn,
-      fetchFn,
-      responseTransform.transformToLiftConnections,
-      this.validate
-    );
+    // Return to the client
+    try {
+      return connector.update(lift).then((lift) => serializeSingleResource(lift, "/2022-04-draft", "lifts"));
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
   };
 
-  getLiftMultimediaDescriptions = (request) => {
-    const parseRequestFn = (request) => {
-      const typesInData = [MediaObject];
-      const typesInIncluded = [Agent, Category, MediaObject];
-      return this.parseRequest(request, typesInData, typesInIncluded);
-    };
-    const fetchFn = (parsedRequest) => new LiftConnector(parsedRequest, null).fetch();
+  deleteLift = async (request) => {
+    // Process request and authentication
+    // Retrieve data
+    const parsedRequest = new Request(request);
+    const connector = new LiftConnector(parsedRequest);
+    console.log("delete lift");
 
-    return this.handleGetRequest(
-      request,
-      parseRequestFn,
-      fetchFn,
-      responseTransform.transformToLiftMultimediaDescriptions,
-      this.validate
-    );
+    // Return to the client
+    try {
+      return connector.delete();
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
   };
+
+  validate(liftMessage) {
+    console.log("The lift message HAS NOT BEEN validated.");
+  }
 }
 
 module.exports = {

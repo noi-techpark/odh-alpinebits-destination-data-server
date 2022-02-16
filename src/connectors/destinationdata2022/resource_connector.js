@@ -4,7 +4,20 @@ const dbFn = require("../../db/functions");
 const db = require("../../db");
 
 const { schemas } = require("../../db");
-const { abstracts, descriptions, names, shortNames, urls, cities, complements, regions, streets, resources } = schemas;
+const {
+  abstracts,
+  descriptions,
+  names,
+  shortNames,
+  urls,
+  cities,
+  complements,
+  regions,
+  streets,
+  resources,
+  howToArrive,
+  connections,
+} = schemas;
 
 const colors = {
   FgBlack: "\x1b[30m",
@@ -96,7 +109,8 @@ class ResourceConnector {
         this.insertResourceText(names._name, resource.name, resource.id),
         this.insertResourceText(shortNames._name, resource.shortName, resource.id),
         this.insertResourceText(urls._name, resource.url, resource.id),
-        this.insertCopyrightOwner(resource),
+        this.insertCategories(resource),
+        // TODO: add insertFeatures
         this.insertMultimediaDescriptions(resource),
       ]);
     });
@@ -112,7 +126,8 @@ class ResourceConnector {
       this.updateResourceText(names._name, resource.name, resource.id),
       this.updateResourceText(shortNames._name, resource.shortName, resource.id),
       this.updateResourceText(urls._name, resource.url, resource.id),
-      this.updateCopyrightOwner(resource),
+      this.updateCategories(resource),
+      // TODO: add updateFeatures
       this.updateMultimediaDescriptions(resource),
     ]).then(_.flatten);
   }
@@ -132,15 +147,15 @@ class ResourceConnector {
       .then(() => this.insertResourceText(tableName, text, resourceId));
   }
 
-  insertCopyrightOwner(resource) {
+  insertCategories(resource) {
     const inserts = resource?.categories?.map((category) =>
       dbFn.insertResourceCategory(this.connection, resource.id, category.id)
     );
     return Promise.all(inserts ?? []);
   }
 
-  updateCopyrightOwner(resource) {
-    return dbFn.deleteResourceCategories(this.connection, resource.id).then(() => this.insertCopyrightOwner(resource));
+  updateCategories(resource) {
+    return dbFn.deleteResourceCategories(this.connection, resource.id).then(() => this.insertCategories(resource));
   }
 
   insertMultimediaDescriptions(resource) {
@@ -181,6 +196,56 @@ class ResourceConnector {
     return Promise.all(inserts);
   }
 
+  // TODO: add trigger to delete address when a place is deleted
+  insertPlace(resource) {
+    if (!resource) return Promise.resolve();
+
+    return this.insertAddress(resource.address)
+      .then((addressId) => {
+        resource.addressId = addressId;
+        const columns = this.mapPlaceToColumns(resource);
+        return dbFn.insertPlace(this.connection, columns);
+      })
+      .then(() =>
+        Promise.all([
+          this.insertPlaceText(howToArrive._name, resource.howToArrive, resource.id),
+          this.insertSnowCondition(resource),
+          this.insertPlaceConnections(resource),
+        ])
+      );
+  }
+
+  insertSnowCondition(resource) {
+    if (!resource?.snowCondition) return Promise.resolve();
+    console.log("snowCondition", resource?.snowCondition);
+
+    const columns = this.mapSnowConditionToColumns(resource);
+    console.log("columns", columns);
+    return dbFn.insertSnowCondition(this.connection, columns);
+  }
+
+  updatePlace(resource) {
+    return dbFn.deletePlace(this.connection, resource.id).then(() => this.insertPlace(resource));
+  }
+
+  insertPlaceText(tableName, text, placeId) {
+    const inserts = !_.isObject(text)
+      ? []
+      : _.entries(text)?.map(([lang, content]) =>
+          dbFn.insertPlaceText(this.connection, tableName, placeId, lang, content)
+        );
+    return Promise.all(inserts);
+  }
+
+  insertPlaceConnections(resource) {
+    console.log(resource.connections);
+
+    const inserts = resource?.connections?.map((connection) =>
+      dbFn.insertPlaceConnection(this.connection, resource.id, connection.id)
+    );
+    return Promise.all(inserts ?? []);
+  }
+
   mapResourceToColumns(resource) {
     return {
       [resources.id]: resource?.id,
@@ -199,15 +264,44 @@ class ResourceConnector {
     };
   }
 
+  mapPlaceToColumns(place) {
+    return {
+      [schemas.places.id]: place?.id,
+      [schemas.places.addressId]: place?.addressId,
+      [schemas.places.geometries]: place?.geometries ? JSON.stringify(place?.geometries) : undefined,
+      [schemas.places.length]: place?.length,
+      [schemas.places.maxAltitude]: place?.maxAltitude,
+      [schemas.places.minAltitude]: place?.minAltitude,
+      [schemas.places.openingHours]: place?.openingHours ? JSON.stringify(place?.openingHours) : undefined,
+    };
+  }
+
+  mapSnowConditionToColumns(place) {
+    return {
+      [schemas.snowConditions.id]: place?.id,
+      [schemas.snowConditions.baseSnow]: place?.snowCondition?.baseSnow,
+      [schemas.snowConditions.baseSnowRangeLower]: place?.snowCondition?.baseSnowRange?.lower,
+      [schemas.snowConditions.baseSnowRangeUpper]: place?.snowCondition?.baseSnowRange?.upper,
+      [schemas.snowConditions.groomed]: place?.snowCondition?.groomed,
+      [schemas.snowConditions.latestStorm]: place?.snowCondition?.latestStorm,
+      [schemas.snowConditions.obtainedIn]: place?.snowCondition?.obtainedIn,
+      [schemas.snowConditions.primarySurface]: place?.snowCondition?.primarySurface,
+      [schemas.snowConditions.secondarySurface]: place?.snowCondition?.secondarySurface,
+      [schemas.snowConditions.snowMaking]: place?.snowCondition?.snowMaking,
+      [schemas.snowConditions.snowOverNight]: place?.snowCondition?.snowOverNight,
+    };
+  }
+
+  // Removed by request
   checkLastUpdate(serversResource, clientsResource) {
     const clientLastUpdate = clientsResource?.lastUpdate?.toISOString();
     const serverLastUpdate = serversResource?.lastUpdate?.toISOString();
 
-    // if (clientLastUpdate < serverLastUpdate) {
-    //   throw new Error("Outdated: expected last update at " + serversResource.lastUpdate);
-    // } else if (clientLastUpdate > serverLastUpdate) {
-    //   throw new Error("Ahead: expected last update at " + serversResource.lastUpdate);
-    // }
+    if (clientLastUpdate < serverLastUpdate) {
+      throw new Error("Outdated: expected last update at " + serversResource.lastUpdate);
+    } else if (clientLastUpdate > serverLastUpdate) {
+      throw new Error("Ahead: expected last update at " + serversResource.lastUpdate);
+    }
   }
 
   throwNoUpdate(serversResource) {
@@ -252,6 +346,12 @@ class ResourceConnector {
 
   isUpdate(oldValue, newValue) {
     return !_.isNil(newValue) && !_.isEqual(oldValue, newValue);
+  }
+
+  ignoreNonListedFields(incomingMessage, updatedResource) {
+    _.entries(incomingMessage).forEach(([field, value]) => {
+      if (!_.isUndefined(value)) updatedResource[field] = value;
+    });
   }
 }
 

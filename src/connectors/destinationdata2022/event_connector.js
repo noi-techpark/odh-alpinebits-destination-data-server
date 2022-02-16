@@ -56,8 +56,6 @@ class EventConnector extends ResourceConnector {
       if (!_.isUndefined(v)) newEvent[k] = v;
     });
 
-    this.checkLastUpdate(oldEvent, newEvent);
-
     if (this.shouldUpdate(oldEvent, newEvent)) {
       return Promise.all([
         this.updateResource(newEvent),
@@ -92,8 +90,7 @@ class EventConnector extends ResourceConnector {
           this.insertOrganizers(event),
           this.insertSponsors(event),
           this.insertSubEvents(event),
-          // TODO: add venues
-          // this.insertContributors(venues),
+          this.insertEventVenues(venues),
         ])
       )
       .then(() => event.id);
@@ -108,6 +105,15 @@ class EventConnector extends ResourceConnector {
 
   updateContributors(event) {
     return dbFn.deleteContributors(this.connection, event.id).then(() => this.insertContributors(event));
+  }
+
+  insertEventVenues(event) {
+    const inserts = event?.venues?.map((venue) => dbFn.insertEventVenue(this.connection, event.id, venue.id));
+    return Promise.all(inserts ?? []);
+  }
+
+  updateEventVenues(event) {
+    return dbFn.deleteEventVenues(this.connection, event.id).then(() => this.insertEventVenues(event));
   }
 
   insertOrganizers(event) {

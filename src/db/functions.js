@@ -35,6 +35,21 @@ const {
   sponsors,
   streets,
   urls,
+  venues,
+  places,
+  mountainAreas,
+  lifts,
+  snowConditions,
+  snowparks,
+  skiSlopes,
+  eventVenues,
+  areaLifts,
+  areaSkiSlopes,
+  areaSnowparks,
+  subAreas,
+  howToArrive,
+  connections,
+  resourceFeatures,
 } = schemas;
 
 function deleteResourceTypes(connection) {
@@ -212,6 +227,20 @@ function insertResourceText(connection, tableName, resourceId, lang, content) {
   return insert(connection, tableName, columns);
 }
 
+function insertPlaceText(connection, tableName, placeId, lang, content) {
+  const columns = {
+    [howToArrive.placeId]: placeId,
+    [howToArrive.lang]: lang,
+    [howToArrive.content]: content,
+  };
+
+  checkNotNullable(placeId, howToArrive.placeId);
+  checkNotNullable(lang, howToArrive.lang);
+  checkNotNullable(content, howToArrive.content);
+
+  return insert(connection, tableName, columns);
+}
+
 function insertAddressText(connection, tableName, addressId, lang, content) {
   const columns = {
     [cities.addressId]: addressId,
@@ -264,13 +293,39 @@ function insertAgent(connection, agent) {
   return insert(connection, agents._name, agent, agents.id).then((array) => _.first(array));
 }
 
+function insertVenue(connection, venue) {
+  return insert(connection, venues._name, venue, venues.id).then((array) => _.first(array));
+}
+
+function insertLift(connection, lift) {
+  return insert(connection, lifts._name, lift, lifts.id).then((array) => _.first(array));
+}
+
+function insertMountainArea(connection, mountainArea) {
+  return insert(connection, mountainAreas._name, mountainArea, mountainAreas.id).then((array) => _.first(array));
+}
+
+function insertSkiSlope(connection, skiSlope) {
+  return insert(connection, skiSlopes._name, skiSlope, skiSlopes.id).then((array) => _.first(array));
+}
+
+function insertSnowpark(connection, snowpark) {
+  return insert(connection, snowparks._name, snowpark, snowparks.id).then((array) => _.first(array));
+}
+
+function insertPlace(connection, place) {
+  return insert(connection, places._name, place, places.id).then((array) => _.first(array));
+}
+
+function insertSnowCondition(connection, snowCondition) {
+  return insert(connection, snowConditions._name, snowCondition, snowConditions.id).then((array) => _.first(array));
+}
+
 function insertCategory(connection, category) {
   const categoryId = category[categories.id];
-  const resourceId = category[categories.resourceId];
   const namespace = category[categories.namespace];
 
   checkNotNullable(categoryId, categories.id);
-  checkNotNullable(resourceId, categories.resourceId);
   checkNotNullable(namespace, categories.namespace);
 
   return insert(connection, categories._name, category, categories.id).then((array) => _.first(array));
@@ -322,6 +377,18 @@ function insertMultimediaDescriptions(connection, resourceId, descriptionId) {
   return insert(connection, multimediaDescriptions._name, columns);
 }
 
+function insertPlaceConnection(connection, sourceId, destinationId) {
+  const columns = {
+    [connections.aId]: sourceId,
+    [connections.bId]: destinationId,
+  };
+
+  checkNotNullable(sourceId, connections.sourceId);
+  checkNotNullable(destinationId, connections.destinationId);
+
+  return insert(connection, connections._name, columns);
+}
+
 function insertContributor(connection, eventId, contributorId) {
   const columns = {
     [contributors.contributorId]: contributorId,
@@ -332,6 +399,66 @@ function insertContributor(connection, eventId, contributorId) {
   checkNotNullable(eventId, contributors.eventId);
 
   return insert(connection, contributors._name, columns);
+}
+
+function insertEventVenue(connection, eventId, venueId) {
+  const columns = {
+    [eventVenues.venueId]: venueId,
+    [eventVenues.eventId]: eventId,
+  };
+
+  checkNotNullable(venueId, eventVenues.venueId);
+  checkNotNullable(eventId, eventVenues.eventId);
+
+  return insert(connection, eventVenues._name, columns);
+}
+
+function insertAreaLift(connection, areaId, liftId) {
+  const columns = {
+    [areaLifts.liftId]: liftId,
+    [areaLifts.areaId]: areaId,
+  };
+
+  checkNotNullable(liftId, areaLifts.liftId);
+  checkNotNullable(areaId, areaLifts.areaId);
+
+  return insert(connection, areaLifts._name, columns);
+}
+
+function insertAreaSkiSlope(connection, areaId, skiSlopeId) {
+  const columns = {
+    [areaSkiSlopes.skiSlopeId]: skiSlopeId,
+    [areaSkiSlopes.areaId]: areaId,
+  };
+
+  checkNotNullable(skiSlopeId, areaSkiSlopes.skiSlopeId);
+  checkNotNullable(areaId, areaSkiSlopes.areaId);
+
+  return insert(connection, areaSkiSlopes._name, columns);
+}
+
+function insertAreaSnowpark(connection, areaId, snowparkId) {
+  const columns = {
+    [areaSnowparks.snowparkId]: snowparkId,
+    [areaSnowparks.areaId]: areaId,
+  };
+
+  checkNotNullable(snowparkId, areaSnowparks.snowparkId);
+  checkNotNullable(areaId, areaSnowparks.areaId);
+
+  return insert(connection, areaSnowparks._name, columns);
+}
+
+function insertSubArea(connection, parentId, childId) {
+  const columns = {
+    [subAreas.parentId]: parentId,
+    [subAreas.childId]: childId,
+  };
+
+  checkNotNullable(parentId, subAreas.parentId);
+  checkNotNullable(childId, subAreas.childId);
+
+  return insert(connection, subAreas._name, columns);
 }
 
 function insertOrganizer(connection, eventId, organizerId) {
@@ -378,6 +505,36 @@ function selectAgentFromId(connection, id) {
   const selectAgentFile = "select_agent.sql";
   const where = _.isString(id) ? `WHERE agents.id = '${id}'` : "";
   return selectUsingFile(connection, selectAgentFile, where);
+}
+
+function selectVenueFromId(connection, id) {
+  const selectVenueFile = "select_venue.sql";
+  const where = _.isString(id) ? `WHERE venues.id = '${id}'` : "";
+  return selectUsingFile(connection, selectVenueFile, where);
+}
+
+function selectLiftFromId(connection, id) {
+  const selectLiftFile = "select_lift.sql";
+  const where = _.isString(id) ? `WHERE lifts.id = '${id}'` : "";
+  return selectUsingFile(connection, selectLiftFile, where);
+}
+
+function selectMountainAreaFromId(connection, id) {
+  const selectMountainAreaFile = "select_mountain_area.sql";
+  const where = _.isString(id) ? `WHERE mountain_areas.id = '${id}'` : "";
+  return selectUsingFile(connection, selectMountainAreaFile, where);
+}
+
+function selectSkiSlopeFromId(connection, id) {
+  const selectSkiSlopeFile = "select_ski_slope.sql";
+  const where = _.isString(id) ? `WHERE ski_slopes.id = '${id}'` : "";
+  return selectUsingFile(connection, selectSkiSlopeFile, where);
+}
+
+function selectSnowparkFromId(connection, id) {
+  const selectSnowparkFile = "select_snowpark.sql";
+  const where = _.isString(id) ? `WHERE snowparks.id = '${id}'` : "";
+  return selectUsingFile(connection, selectSnowparkFile, where);
 }
 
 function selectCategoryFromId(connection, id) {
@@ -477,6 +634,13 @@ function deleteResource(connection, resourceId, type) {
     [resources.type]: type,
   };
   return connection(resources._name).where(columns).del();
+}
+
+function deletePlace(connection, placeId, type) {
+  const columns = {
+    [places.id]: placeId,
+  };
+  return connection(places._name).where(columns).del();
 }
 
 function deleteCategory(connection, id) {
@@ -606,6 +770,56 @@ function deleteContributors(connection, eventId) {
   return connection(contributors._name).where(columns).del();
 }
 
+function deleteEventVenues(connection, eventId) {
+  const columns = {
+    [eventVenues.eventId]: eventId,
+  };
+
+  checkNotNullable(eventId, eventVenues.eventId);
+
+  return connection(eventVenues._name).where(columns).del();
+}
+
+function deleteAreaLifts(connection, areaId) {
+  const columns = {
+    [areaLifts.areaId]: areaId,
+  };
+
+  checkNotNullable(areaId, areaLifts.areaId);
+
+  return connection(areaLifts._name).where(columns).del();
+}
+
+function deleteAreaSkiSlopes(connection, areaId) {
+  const columns = {
+    [areaSkiSlopes.areaId]: areaId,
+  };
+
+  checkNotNullable(areaId, areaSkiSlopes.areaId);
+
+  return connection(areaSkiSlopes._name).where(columns).del();
+}
+
+function deleteAreaSnowparks(connection, areaId) {
+  const columns = {
+    [areaSnowparks.areaId]: areaId,
+  };
+
+  checkNotNullable(areaId, areaSnowparks.areaId);
+
+  return connection(areaSnowparks._name).where(columns).del();
+}
+
+function deleteSubAreas(connection, parentId) {
+  const columns = {
+    [subAreas.parentId]: parentId,
+  };
+
+  checkNotNullable(parentId, subAreas.parentId);
+
+  return connection(subAreas._name).where(columns).del();
+}
+
 function deleteOrganizers(connection, eventId) {
   const columns = {
     [organizers.eventId]: eventId,
@@ -711,6 +925,7 @@ module.exports = {
   deleteLanguageCodes,
   deleteCategories,
   deleteResource,
+  deletePlace,
   deleteCategory,
   deleteAbstracts,
   deleteDescriptions,
@@ -755,14 +970,21 @@ module.exports = {
   insertEvent,
   insertEventSeries,
   insertResourceText,
+  insertPlaceText,
   insertAddressText,
   insertResourceCategory,
   insertMultimediaDescriptions,
+  insertPlaceConnection,
   insertOrganizer,
   insertContributor,
   insertSponsor,
   insertMediaObject,
   selectAgentFromId,
+  selectVenueFromId,
+  selectLiftFromId,
+  selectMountainAreaFromId,
+  selectSkiSlopeFromId,
+  selectSnowparkFromId,
   selectCategoryFromId,
   selectResourceFromId,
   selectAbstractsFromId,
@@ -783,4 +1005,21 @@ module.exports = {
   updateCategory,
   updateSubEvent,
   updateEdition,
+  insertVenue,
+  insertLift,
+  insertMountainArea,
+  insertSkiSlope,
+  insertSnowpark,
+  insertPlace,
+  insertSnowCondition,
+  insertEventVenue,
+  insertAreaLift,
+  insertAreaSkiSlope,
+  insertAreaSnowpark,
+  insertSubArea,
+  deleteEventVenues,
+  deleteAreaLifts,
+  deleteAreaSkiSlopes,
+  deleteAreaSnowparks,
+  deleteSubAreas,
 };

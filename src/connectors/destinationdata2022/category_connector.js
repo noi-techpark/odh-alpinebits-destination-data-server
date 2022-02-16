@@ -23,7 +23,7 @@ class CategoryConnector extends ResourceConnector {
 
   update(category) {
     return this.runTransaction(() =>
-      this.retrieveCategory(category.id).then((oldCategory) => this.updateCategory(oldCategory, category).then(_.first))
+      this.retrieveCategory(category.id).then((oldCategory) => this.updateCategory(oldCategory, category))
     );
   }
 
@@ -52,15 +52,13 @@ class CategoryConnector extends ResourceConnector {
       if (!_.isUndefined(v)) newCategory[k] = v;
     });
 
-    this.checkLastUpdate(oldCategory, newCategory);
-
     if (this.shouldUpdate(oldCategory, newCategory)) {
       const columns = this.mapCategoryToColumns(newCategory);
 
       return dbFn
         .updateCategory(this.connection, columns)
         .then((ret) => {
-          newCategory.resource_id = _.first(ret)?.resource_id;
+          newCategory.id = _.first(ret)?.id;
           return Promise.all([
             this.updateResource(newCategory),
             this.updateCategoryCoveredTypes(newCategory),
@@ -93,46 +91,16 @@ class CategoryConnector extends ResourceConnector {
       );
   }
 
-  insertResource(category) {
-    const columns = this.mapResourceToColumns(category);
-
-    return dbFn.insertResource(this.connection, columns).then((resourceId) => {
-      category.resource_id = resourceId;
-      return Promise.all([
-        this.insertResourceText(abstracts._name, category.abstract, category.resource_id),
-        this.insertResourceText(descriptions._name, category.description, category.resource_id),
-        this.insertResourceText(names._name, category.name, category.resource_id),
-        this.insertResourceText(shortNames._name, category.shortName, category.resource_id),
-        this.insertResourceText(urls._name, category.url, category.resource_id),
-        this.insertMultimediaDescriptions(category),
-      ]);
-    });
-  }
-
-  updateResource(category) {
-    const columns = this.mapResourceToColumns(category);
-
-    return Promise.all([
-      dbFn.updateResource(this.connection, columns),
-      this.updateResourceText(abstracts._name, category.abstract, category.resource_id),
-      this.updateResourceText(descriptions._name, category.description, category.resource_id),
-      this.updateResourceText(names._name, category.name, category.resource_id),
-      this.updateResourceText(shortNames._name, category.shortName, category.resource_id),
-      this.updateResourceText(urls._name, category.url, category.resource_id),
-      this.updateMultimediaDescriptions(category),
-    ]).then(_.flatten);
-  }
-
   insertMultimediaDescriptions(category) {
     const inserts = category?.multimediaDescriptions?.map((description) =>
-      dbFn.insertMultimediaDescriptions(this.connection, category.resource_id, description.id)
+      dbFn.insertMultimediaDescriptions(this.connection, category.id, description.id)
     );
     return Promise.all(inserts ?? []);
   }
 
   updateMultimediaDescriptions(category) {
     return dbFn
-      .deleteMultimediaDescriptions(this.connection, category.resource_id)
+      .deleteMultimediaDescriptions(this.connection, category.id)
       .then(() => this.insertMultimediaDescriptions(category));
   }
 
@@ -173,20 +141,9 @@ class CategoryConnector extends ResourceConnector {
     return dbFn.deleteParentCategories(this.connection, category.id).then(() => this.insertParentCategories(category));
   }
 
-  mapResourceToColumns(category) {
-    return {
-      [schemas.resources.id]: category?.resource_id,
-      [schemas.resources.type]: category?.type,
-      [schemas.resources.dataProvider]: category?.dataProvider,
-      [schemas.resources.lastUpdate]: category?.lastUpdate,
-      [schemas.resources.simpleUrl]: _.isString(category?.url) ? category?.url : null,
-    };
-  }
-
   mapCategoryToColumns(category) {
     return {
       [schemas.categories.id]: category.id,
-      [schemas.categories.resourceId]: category.resource_id,
       [schemas.categories.namespace]: category.namespace,
     };
   }

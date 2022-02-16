@@ -60,8 +60,6 @@ class MediaObjectConnector extends ResourceConnector {
       if (!_.isUndefined(v)) newMediaObject[k] = v;
     });
 
-    this.checkLastUpdate(oldMediaObject, newMediaObject);
-
     if (this.shouldUpdate(oldMediaObject, newMediaObject)) {
       return Promise.all([this.updateResource(newMediaObject)]).then((promises) => {
         newMediaObject.lastUpdate = _.first(_.flatten(promises))[schemas.resources.lastUpdate];

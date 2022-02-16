@@ -1,135 +1,125 @@
 const { Router } = require("./router");
-const { SnowparkConnector } = require("./../connectors/snowpark_connector");
-const { Agent } = require("./../model/destinationdata/agents");
-const { Category } = require("./../model/destinationdata/category");
-const { Feature } = require("./../model/destinationdata/feature");
-const { Lift } = require("../model/destinationdata/lift");
-const { MediaObject } = require("./../model/destinationdata/media_object");
-const { MountainArea } = require("../model/destinationdata/mountain_area");
-const { SkiSlope } = require("../model/destinationdata/ski_slope");
-const { Snowpark } = require("../model/destinationdata/snowpark");
-const responseTransform = require("../model/odh2destinationdata/response_transform");
-const requestTransform = require("../model/request2odh/request_transform");
+const { SnowparkConnector } = require("../connectors/destinationdata2022/snowparks_connector");
+const {
+  deserializeSnowpark,
+  serializeSingleResource,
+  serializeResourceCollection,
+} = require("../model/destinationdata2022");
+const { Request } = require("../model/request/request");
 
 class SnowparksRouter extends Router {
   constructor(app) {
     super();
 
-    this.addGetRoute(`/snowparks`, this.getSnowparks);
+    this.addUnimplementedGetRoute(`/snowparks/:id/categories`);
+    this.addUnimplementedGetRoute(`/snowparks/:id/connections`);
+    this.addUnimplementedGetRoute(`/snowparks/:id/features`);
+    this.addUnimplementedGetRoute(`/snowparks/:id/multimediaDescriptions`);
+
+    this.addPostRoute(`/snowparks`, this.postSnowpark);
+    this.addGetRoute(`/snowparks`, this.getSnowpark);
     this.addGetRoute(`/snowparks/:id`, this.getSnowparkById);
-    this.addGetRoute(`/snowparks/:id/categories`, this.getSnowparkCategories);
-    this.addGetRoute(`/snowparks/:id/connections`, this.getSnowparkConnections);
-    this.addGetRoute(`/snowparks/:id/features`, this.getSnowparkFeatures);
-    this.addGetRoute(`/snowparks/:id/multimediaDescriptions`, this.getSnowparkMultimediaDescriptions);
+    this.addDeleteRoute(`/snowparks/:id`, this.deleteSnowpark);
+    this.addPatchRoute(`/snowparks/:id`, this.patchSnowpark);
 
     if (app) {
       this.installRoutes(app);
     }
   }
 
-  getSnowparks = (request) => {
-    const parseRequestFn = (request) => {
-      const typesInData = [Snowpark];
-      const typesInIncluded = [Category, Feature, MediaObject, Lift, MountainArea, SkiSlope, Snowpark];
-      const supportedFeatures = ["include", "fields", "filter", "page", "random", "search", "sort"];
-      return this.parseRequest(request, typesInData, typesInIncluded, supportedFeatures);
-    };
-    const fetchFn = (parsedRequest) =>
-      new SnowparkConnector(parsedRequest, requestTransform.transformGetSnowparksRequest).fetch();
+  getSnowpark = async (request) => {
+    // Process request and authentication
+    // Retrieve data
+    const connector = new SnowparkConnector();
 
-    return this.handleGetRequest(
-      request,
-      parseRequestFn,
-      fetchFn,
-      responseTransform.transformToSnowparkCollection,
-      this.validate
-    );
+    // Return to the client
+    try {
+      return connector
+        .retrieve()
+        .then((snowparks) => serializeResourceCollection(snowparks, "/2022-04-draft", "snowparks"));
+      // return connector.retrieve();
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
   };
 
-  getSnowparkById = (request) => {
-    const parseRequestFn = (request) => {
-      const typesInData = [Snowpark];
-      const typesInIncluded = [Category, Feature, MediaObject, Lift, MountainArea, SkiSlope, Snowpark];
-      return this.parseRequest(request, typesInData, typesInIncluded);
-    };
-    const fetchFn = (parsedRequest) => new SnowparkConnector(parsedRequest, null).fetch();
+  getSnowparkById = async (request) => {
+    // Process request and authentication
+    // Retrieve data
+    const parsedRequest = new Request(request);
+    const connector = new SnowparkConnector(parsedRequest);
 
-    return this.handleGetRequest(
-      request,
-      parseRequestFn,
-      fetchFn,
-      responseTransform.transformToSnowparkObject,
-      this.validate
-    );
+    // Return to the client
+    try {
+      return connector.retrieve().then((snowpark) => serializeSingleResource(snowpark, "/2022-04-draft", "snowparks"));
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
   };
 
-  getSnowparkCategories = (request) => {
-    const parseRequestFn = (request) => {
-      const typesInData = [Category];
-      const typesInIncluded = [Agent, Category, MediaObject];
-      return this.parseRequest(request, typesInData, typesInIncluded);
-    };
-    const fetchFn = (parsedRequest) => new SnowparkConnector(parsedRequest, null).fetch();
+  postSnowpark = async (request) => {
+    // Process request and authentication
+    const { body } = request;
+    // Validate object
+    this.validate(body);
+    // Store data
+    const snowpark = deserializeSnowpark(body.data);
+    const parsedRequest = new Request(request);
+    const connector = new SnowparkConnector(parsedRequest);
 
-    return this.handleGetRequest(
-      request,
-      parseRequestFn,
-      fetchFn,
-      responseTransform.transformToSnowparkCategories,
-      this.validate
-    );
+    // Return to the client
+    try {
+      return connector
+        .create(snowpark)
+        .then((snowpark) => serializeSingleResource(snowpark, "/2022-04-draft", "snowparks"));
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
   };
 
-  getSnowparkConnections = (request) => {
-    const parseRequestFn = (request) => {
-      const typesInData = [Lift, MountainArea, SkiSlope, Snowpark];
-      const typesInIncluded = [Category, Feature, MediaObject, Lift, MountainArea, SkiSlope, Snowpark];
-      return this.parseRequest(request, typesInData, typesInIncluded);
-    };
-    const fetchFn = (parsedRequest) => new SnowparkConnector(parsedRequest, null).fetch();
+  patchSnowpark = async (request) => {
+    // Process request and authentication
+    const { body } = request;
+    // Validate object
+    this.validate(body);
+    // Store data
+    const snowpark = deserializeSnowpark(body.data);
+    const parsedRequest = new Request(request);
+    const connector = new SnowparkConnector(parsedRequest);
 
-    return this.handleGetRequest(
-      request,
-      parseRequestFn,
-      fetchFn,
-      responseTransform.transformToSnowparkConnections,
-      this.validate
-    );
+    // Return to the client
+    try {
+      return connector
+        .update(snowpark)
+        .then((snowpark) => serializeSingleResource(snowpark, "/2022-04-draft", "snowparks"));
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
   };
 
-  getSnowparkFeatures = (request) => {
-    const parseRequestFn = (request) => {
-      const typesInData = [Feature];
-      const typesInIncluded = [Feature, MediaObject];
-      return this.parseRequest(request, typesInData, typesInIncluded);
-    };
-    const fetchFn = (parsedRequest) => new SnowparkConnector(parsedRequest, null).fetch();
+  deleteSnowpark = async (request) => {
+    // Process request and authentication
+    // Retrieve data
+    const parsedRequest = new Request(request);
+    const connector = new SnowparkConnector(parsedRequest);
+    console.log("delete snowpark");
 
-    return this.handleGetRequest(
-      request,
-      parseRequestFn,
-      fetchFn,
-      responseTransform.transformToSnowparkFeatures,
-      this.validate
-    );
+    // Return to the client
+    try {
+      return connector.delete();
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
   };
 
-  getSnowparkMultimediaDescriptions = (request) => {
-    const parseRequestFn = (request) => {
-      const typesInData = [MediaObject];
-      const typesInIncluded = [Agent, Category];
-      return this.parseRequest(request, typesInData, typesInIncluded);
-    };
-    const fetchFn = (parsedRequest) => new SnowparkConnector(parsedRequest, null).fetch();
-
-    return this.handleGetRequest(
-      request,
-      parseRequestFn,
-      fetchFn,
-      responseTransform.transformToSnowparkMultimediaDescriptions,
-      this.validate
-    );
-  };
+  validate(snowparkMessage) {
+    console.log("The snowpark message HAS NOT BEEN validated.");
+  }
 }
 
 module.exports = {

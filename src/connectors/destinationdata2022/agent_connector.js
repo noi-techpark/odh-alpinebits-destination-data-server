@@ -22,9 +22,7 @@ class AgentConnector extends ResourceConnector {
     if (!agent.id) throw new Error("missing id");
 
     return this.runTransaction(() =>
-      this.retrieveAgent(agent.id)
-        .then((oldAgent) => this.updateAgent(oldAgent, agent))
-        .then(_.first)
+      this.retrieveAgent(agent.id).then((oldAgent) => this.updateAgent(oldAgent, agent))
     );
   }
 
@@ -56,8 +54,6 @@ class AgentConnector extends ResourceConnector {
     _.entries(newInput).forEach(([k, v]) => {
       if (!_.isUndefined(v)) newAgent[k] = v;
     });
-
-    this.checkLastUpdate(oldAgent, newAgent);
 
     if (this.shouldUpdate(oldAgent, newAgent)) {
       return Promise.all([this.updateResource(newAgent), this.updateContactPoints(newAgent)]).then((promises) => {
