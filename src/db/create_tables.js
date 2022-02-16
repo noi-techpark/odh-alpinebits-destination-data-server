@@ -249,7 +249,6 @@ function createEventsTable() {
       .string(events.seriesId, 50)
       .references(eventSeries.id)
       .inTable(eventSeries._name)
-      .notNullable()
       .onDelete(SET_NULL);
     table.string(events.status, 50).references(eventStatus.status).inTable(eventStatus._name).onDelete(SET_NULL);
   });
