@@ -1,8 +1,8 @@
 const _ = require("lodash");
-const dbFn = require("../../db/functions");
+const dbFn = require("../db/functions");
 const { ResourceConnector } = require("./resource_connector");
-const { MediaObject } = require("../../model/destinationdata2022/media_object");
-const { schemas } = require("../../db");
+const { MediaObject } = require("../model/destinationdata2022/media_object");
+const { schemas } = require("../db");
 const { mediaObjects } = schemas;
 
 class MediaObjectConnector extends ResourceConnector {

@@ -1,5 +1,5 @@
 const { Router } = require("./router");
-const { EventSeriesConnector } = require("./../connectors/destinationdata2022/event_series_connector");
+const { EventSeriesConnector } = require("./../connectors/event_series_connector");
 const {
   deserializeEventSeries,
   serializeResourceCollection,

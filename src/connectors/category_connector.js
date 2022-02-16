@@ -1,44 +1,158 @@
-// TODO: Rename "DestinationDataError" not to give the impression the error was caused by DestinationData exclusive aspects
-const errors = require("../errors");
-const { DestinationDataError: Error } = require("../errors");
-const categoriesData = require("./../../data/categories.data");
+const _ = require("lodash");
+const dbFn = require("../db/functions");
+const { ResourceConnector } = require("./resource_connector");
+const { Category } = require("../model/destinationdata2022/category");
 
-class CategoryConnector {
+const { schemas } = require("../db");
+const { abstracts, descriptions, names, shortNames, urls } = schemas;
+
+class CategoryConnector extends ResourceConnector {
   constructor(request) {
-    this.request = request;
+    super(request);
   }
 
-  fetch() {
-    try {
-      const { id } = this.request.params;
-      const { page } = this.request.query;
-      console.log(`  Fetching local categories data: ${id ? `{ id: ${id} }` : ""} ${page ? JSON.stringify(page) : ""}`);
+  create(category) {
+    return this.runTransaction(() => this.insertCategory(category).then(() => this.retrieveCategory(category.id)));
+  }
 
-      if (id) {
-        const category = categoriesData.categoriesMap[id];
+  // TODO: change default sorting on response
+  retrieve(id) {
+    const categoryId = id ?? this?.request?.params?.id;
+    return this.runTransaction(() => this.retrieveCategory(categoryId));
+  }
 
-        if (!category) {
-          errors.DestinationDataError.throwNotFound();
+  update(category) {
+    return this.runTransaction(() =>
+      this.retrieveCategory(category.id).then((oldCategory) => this.updateCategory(oldCategory, category))
+    );
+  }
+
+  delete(id) {
+    const categoryId = id ?? this.request?.params?.id;
+    return this.runTransaction(() => this.deleteCategory(categoryId));
+  }
+
+  retrieveCategory(id) {
+    return dbFn.selectCategoryFromId(this.connection, id).then((rows) => {
+      if (_.isString(id)) {
+        if (_.size(rows) === 1) {
+          return this.mapRowToCategory(_.first(rows));
         }
-
-        return category;
+        throw new Error("Not found");
+      } else {
+        return rows?.map(this.mapRowToCategory);
       }
+    });
+  }
 
-      if (page) {
-        const { size, number } = page;
-        const firstIndex = size && number ? size * (number - 1) : 0;
-        const lastIndex = size ? firstIndex + size : 9;
+  updateCategory(oldCategory, newInput) {
+    const newCategory = _.create(oldCategory);
 
-        return categoriesData.categories.slice(firstIndex, lastIndex);
-      }
+    _.entries(newInput).forEach(([k, v]) => {
+      if (!_.isUndefined(v)) newCategory[k] = v;
+    });
 
-      return null;
-    } catch (error) {
-      Error.throwConnectionError(error);
+    if (this.shouldUpdate(oldCategory, newCategory)) {
+      const columns = this.mapCategoryToColumns(newCategory);
+
+      return dbFn
+        .updateCategory(this.connection, columns)
+        .then((ret) => {
+          newCategory.id = _.first(ret)?.id;
+          return Promise.all([
+            this.updateResource(newCategory),
+            this.updateCategoryCoveredTypes(newCategory),
+            this.updateChildrenCategories(newCategory),
+            this.updateParentCategories(newCategory),
+          ]);
+        })
+        .then(() => newCategory);
     }
+
+    this.throwNoUpdate(oldCategory);
+  }
+
+  deleteCategory(id) {
+    return dbFn.deleteCategory(this.connection, id);
+  }
+
+  insertCategory(category) {
+    return this.insertResource(category)
+      .then((resourceId) => {
+        const columns = this.mapCategoryToColumns(category, resourceId);
+        return dbFn.insertCategory(this.connection, columns);
+      })
+      .then(() =>
+        Promise.all([
+          this.insertCategoryCoveredTypes(category),
+          this.insertChildrenCategories(category),
+          this.insertParentCategories(category),
+        ])
+      );
+  }
+
+  insertMultimediaDescriptions(category) {
+    const inserts = category?.multimediaDescriptions?.map((description) =>
+      dbFn.insertMultimediaDescriptions(this.connection, category.id, description.id)
+    );
+    return Promise.all(inserts ?? []);
+  }
+
+  updateMultimediaDescriptions(category) {
+    return dbFn
+      .deleteMultimediaDescriptions(this.connection, category.id)
+      .then(() => this.insertMultimediaDescriptions(category));
+  }
+
+  insertCategoryCoveredTypes(category) {
+    const inserts = category?.resourceTypes?.map((type) =>
+      dbFn.insertCategoryCoveredType(this.connection, type, category.id)
+    );
+    return Promise.all(inserts ?? []);
+  }
+
+  updateCategoryCoveredTypes(category) {
+    return dbFn
+      .deleteCategoryCoveredTypes(this.connection, category.id)
+      .then(() => this.insertCategoryCoveredTypes(category));
+  }
+
+  insertChildrenCategories(category) {
+    const inserts = category?.children?.map((child) =>
+      dbFn.insertCategorySpecialization(this.connection, child.id, category.id)
+    );
+    return Promise.all(inserts ?? []);
+  }
+
+  updateChildrenCategories(category) {
+    return dbFn
+      .deleteChildrenCategories(this.connection, category.id)
+      .then(() => this.insertChildrenCategories(category));
+  }
+
+  insertParentCategories(category) {
+    const inserts = category?.parents?.map((parent) =>
+      dbFn.insertCategorySpecialization(this.connection, category.id, parent.id)
+    );
+    return Promise.all(inserts ?? []);
+  }
+
+  updateParentCategories(category) {
+    return dbFn.deleteParentCategories(this.connection, category.id).then(() => this.insertParentCategories(category));
+  }
+
+  mapCategoryToColumns(category) {
+    return {
+      [schemas.categories.id]: category.id,
+      [schemas.categories.namespace]: category.namespace,
+    };
+  }
+
+  mapRowToCategory(row) {
+    const category = new Category();
+    _.assign(category, row);
+    return category;
   }
 }
 
-module.exports = {
-  CategoryConnector,
-};
+module.exports = { CategoryConnector };

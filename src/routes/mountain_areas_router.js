@@ -1,5 +1,5 @@
 const { Router } = require("./router");
-const { MountainAreaConnector } = require("../connectors/destinationdata2022/mountain_area_connector");
+const { MountainAreaConnector } = require("../connectors/mountain_area_connector");
 const {
   deserializeMountainArea,
   serializeSingleResource,

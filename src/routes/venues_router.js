@@ -1,5 +1,5 @@
 const { Router } = require("./router");
-const { VenueConnector } = require("../connectors/destinationdata2022/venue_connector");
+const { VenueConnector } = require("../connectors/venue_connector");
 const {
   deserializeVenue,
   serializeSingleResource,

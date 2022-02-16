@@ -1,9 +1,8 @@
 const _ = require("lodash");
-const knex = require("../../db/connect");
-const dbFn = require("../../db/functions");
-const db = require("../../db");
+const knex = require("../db/connect");
+const dbFn = require("../db/functions");
 
-const { schemas } = require("../../db");
+const { schemas } = require("../db");
 const {
   abstracts,
   descriptions,

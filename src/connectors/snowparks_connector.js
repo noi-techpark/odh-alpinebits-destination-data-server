@@ -1,8 +1,8 @@
 const _ = require("lodash");
-const dbFn = require("../../db/functions");
-const { schemas } = require("../../db");
+const dbFn = require("../db/functions");
+const { schemas } = require("../db");
 const { ResourceConnector } = require("./resource_connector");
-const { Snowpark } = require("../../model/destinationdata2022/snowpark");
+const { Snowpark } = require("../model/destinationdata2022/snowpark");
 
 class SnowparkConnector extends ResourceConnector {
   constructor(request) {

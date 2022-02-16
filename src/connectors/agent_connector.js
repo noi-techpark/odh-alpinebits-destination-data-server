@@ -1,8 +1,8 @@
 const _ = require("lodash");
-const dbFn = require("../../db/functions");
-const { schemas } = require("../../db");
+const dbFn = require("../db/functions");
+const { schemas } = require("../db");
 const { ResourceConnector } = require("./resource_connector");
-const { Agent } = require("../../model/destinationdata2022/agent");
+const { Agent } = require("../model/destinationdata2022/agent");
 
 class AgentConnector extends ResourceConnector {
   constructor(request) {

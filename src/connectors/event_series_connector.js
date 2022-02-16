@@ -1,8 +1,8 @@
 const _ = require("lodash");
-const dbFn = require("../../db/functions");
+const dbFn = require("../db/functions");
 const { ResourceConnector } = require("./resource_connector");
-const { schemas } = require("../../db");
-const { EventSeries } = require("../../model/destinationdata2022/event_series");
+const { schemas } = require("../db");
+const { EventSeries } = require("../model/destinationdata2022/event_series");
 const { eventSeries: eventSeriesSchema, resources } = schemas;
 
 class EventSeriesConnector extends ResourceConnector {

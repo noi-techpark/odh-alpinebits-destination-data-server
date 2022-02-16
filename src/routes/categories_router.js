@@ -1,8 +1,5 @@
 const { Router } = require("./router");
-const { CategoryConnector } = require("../connectors/destinationdata2022/category_connector");
-const { Category } = require("./../model/destinationdata/category");
-const { MediaObject } = require("./../model/destinationdata/media_object");
-const responseTransform = require("../model/odh2destinationdata/response_transform");
+const { CategoryConnector } = require("../connectors/category_connector");
 const {
   deserializeCategory,
   serializeResourceCollection,
@@ -14,9 +11,9 @@ class CategoriesRouter extends Router {
   constructor(app) {
     super();
 
-    this.addUnimplementedGetRoute(`/categories/:id/children`); //, this.getCategoryChildren);
-    this.addUnimplementedGetRoute(`/categories/:id/multimediaDescriptions`); //, this.getCategoryMultimediaDescriptions);
-    this.addUnimplementedGetRoute(`/categories/:id/parents`); //, this.getCategoryParents);
+    this.addUnimplementedGetRoute(`/categories/:id/children`);
+    this.addUnimplementedGetRoute(`/categories/:id/multimediaDescriptions`);
+    this.addUnimplementedGetRoute(`/categories/:id/parents`);
 
     this.addPostRoute(`/categories`, this.postCategory);
     this.addGetRoute(`/categories`, this.getCategories);

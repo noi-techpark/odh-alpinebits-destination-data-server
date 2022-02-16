@@ -2,18 +2,17 @@ const fs = require("fs");
 const _ = require("lodash");
 const utils = require("./model/odh2destinationdata/utils");
 const mappings = require("./model/mappings");
-const odhEvents = require("/home/jcg/Event.json");//"./../events-1000.json");
+const odhEvents = require("./../events-100.json");
 
-
-const {Pool, Client} = require('pg');
+const { Pool, Client } = require("pg");
 
 const pool = new Pool({
-host: "localhost",
-database: "test_db",
-user: "root",
-password: "root",
-port: "5433"
-})
+  host: "localhost",
+  database: "test_db",
+  user: "root",
+  password: "root",
+  port: "5433",
+});
 
 main();
 
@@ -22,73 +21,73 @@ async function main() {
 
   const dataSource = odhEvents.Items.slice(0, 99);
   //Creating event_series
-  
 
   //Creating Publisher
-  const publisher = {}
-  publisher.id = "publisher",
-  publisher.odh_id = null,
-  publisher.type = "agents",
-  publisher.data_provider = "http://tourism.opendatahub.bz.it/",
-  publisher.last_update = formatTimestampSQL(new Date().toISOString()),
-  publisher.created_at = formatTimestampSQL(new Date().toISOString()),
-  publisher.simple_url = "https://lts.it",
-  publisher.name = [
-    {
-      lang: 'de',
-      content: "LTS - Landesverband der Tourismusorganisationen Südtirols",
-      resourceId: "publisher"
-    },
-    {
-      lang: 'en',
-      content: "LTS - Landesverband der Tourismusorganisationen Südtirols",
-      resourceId: "publisher"
-    },
-    {
-      lang: 'it',
-      content: "LTS - Landesverband der Tourismusorganisationen Südtirols",
-      resourceId: "publisher"
-    }];
+  const publisher = {};
+  (publisher.id = "publisher"),
+    (publisher.odh_id = null),
+    (publisher.type = "agents"),
+    (publisher.data_provider = "http://tourism.opendatahub.bz.it/"),
+    (publisher.last_update = formatTimestampSQL(new Date().toISOString())),
+    (publisher.created_at = formatTimestampSQL(new Date().toISOString())),
+    (publisher.simple_url = "https://lts.it"),
+    (publisher.name = [
+      {
+        lang: "de",
+        content: "LTS - Landesverband der Tourismusorganisationen Südtirols",
+        resourceId: "publisher",
+      },
+      {
+        lang: "en",
+        content: "LTS - Landesverband der Tourismusorganisationen Südtirols",
+        resourceId: "publisher",
+      },
+      {
+        lang: "it",
+        content: "LTS - Landesverband der Tourismusorganisationen Südtirols",
+        resourceId: "publisher",
+      },
+    ]);
 
   let publishers = [];
   publishers.push(publisher);
-  console.log('--OpenDatahub migration');
-  console.log('--Creating default Db Entries...')
+  console.log("--OpenDatahub migration");
+  console.log("--Creating default Db Entries...");
   //Creating publisher entry on resource and name tables
   let insertPublisherAgent = getInsertAgents(publishers);
-  let insertPublisherName = getInsertMultilingualTable(publisher.name, 'names');
+  let insertPublisherName = getInsertMultilingualTable(publisher.name, "names");
   console.log(insertPublisherAgent);
   console.log(insertPublisherName);
   //Creating default event series for testing
-  console.log('--Creating default event series');
-  const defEventSeries = {}
-  defEventSeries.id = "default_series",
-  defEventSeries.odh_id = null,
-  defEventSeries.type = "eventSeries",
-  defEventSeries.data_provider = "http://tourism.opendatahub.bz.it/",
-  defEventSeries.last_update = formatTimestampSQL(new Date().toISOString()),
-  defEventSeries.created_at = formatTimestampSQL(new Date().toISOString()),
-  defEventSeries.simple_url = null;
-  let eventSeries = []
+  console.log("--Creating default event series");
+  const defEventSeries = {};
+  (defEventSeries.id = "default_series"),
+    (defEventSeries.odh_id = null),
+    (defEventSeries.type = "eventSeries"),
+    (defEventSeries.data_provider = "http://tourism.opendatahub.bz.it/"),
+    (defEventSeries.last_update = formatTimestampSQL(new Date().toISOString())),
+    (defEventSeries.created_at = formatTimestampSQL(new Date().toISOString())),
+    (defEventSeries.simple_url = null);
+  let eventSeries = [];
   eventSeries.push(defEventSeries);
   let insertdefEventSeries = getInsertEventSeries(eventSeries);
   console.log(insertdefEventSeries);
 
-  console.log('--Extracting Events...');
+  console.log("--Extracting Events...");
   const resources = dataSource.map((odhEvent) => mapResource(odhEvent, "events"));
-  console.log('--Events - Insert at table resource');
+  console.log("--Events - Insert at table resource");
   insertResources = getInsertResources(resources);
   console.log(insertResources);
   //await executeSQLQuery(insertResources);
   //Inserting resource names
-  console.log('--Events - Insert at table names');
-  const names = mapMultilingualAttribute(dataSource, 'Title', 'Detail');
-  insertNames = getInsertMultilingualTable(names, 'names');
+  console.log("--Events - Insert at table names");
+  const names = mapMultilingualAttribute(dataSource, "Title", "Detail");
+  insertNames = getInsertMultilingualTable(names, "names");
   //await executeSQLQuery(insertNames);
   console.log(insertNames);
-  console.log('--Events - Insert at table descriptions');
-  const descriptions = mapMultilingualAttribute(dataSource, 'BaseText', 'Detail');
-  insertDescriptions = insertNames = getInsertMultilingualTable(descriptions, 'descriptions');
+  console.log("--Events - Insert at table descriptions");
+  const descriptions = mapMultilingualAttribute(dataSource, "BaseText", "Detail");
+  insertDescriptions = insertNames = getInsertMultilingualTable(descriptions, "descriptions");
   console.log(insertDescriptions);
   //await executeSQLQuery(insertDescriptions);
   /*console.log('--Events - Insert at table short_names');
@@ -101,39 +100,39 @@ async function main() {
   insertAbstracts = getInsertMultilingualTable(abstracts, 'abstracts');
   console.log(insertAbstracts);*/
   //await executeSQLQuery(insertAbstracts);
-  console.log('--Events - Insert at table urls');
-  const urls = mapMultilingualAttribute(dataSource, 'Url', 'ContactInfos');
-  insertUrls = getInsertMultilingualTable(urls, 'urls');
+  console.log("--Events - Insert at table urls");
+  const urls = mapMultilingualAttribute(dataSource, "Url", "ContactInfos");
+  insertUrls = getInsertMultilingualTable(urls, "urls");
   console.log(insertUrls);
   //await executeSQLQuery(insertUrls);
-  console.log('--Events - Insert Event data at table Events');
+  console.log("--Events - Insert Event data at table Events");
   const events = dataSource.map((event) => mapEvent(event));
   //const events = mapEvents(dataSource);
   insertEvents = getInsertEvents(events);
   console.log(insertEvents);
   //await executeSQLQuery(insertEvents);
-  console.log('--Events - Insert Event Organizers at table Agents');
+  console.log("--Events - Insert Event Organizers at table Agents");
   const organizers = dataSource.map((organizer) => mapAgent(organizer));
   insertOrganizers = getInsertAgents(organizers);
   console.log(insertOrganizers);
-  console.log('--Events - Insert Organizer name at multilingual tables');
-  const organizerNames = mapMultilingualAttributeOrganizer(dataSource,'CompanyName');
-  const insertOrganizerNames = (getInsertMultilingualTable(organizerNames, 'names'));
+  console.log("--Events - Insert Organizer name at multilingual tables");
+  const organizerNames = mapMultilingualAttributeOrganizer(dataSource, "CompanyName");
+  const insertOrganizerNames = getInsertMultilingualTable(organizerNames, "names");
   console.log(insertOrganizerNames);
-  console.log('--Events - Insert Organizer Url at multilingual tables');
-  const organizerUrls = mapMultilingualAttributeOrganizer(dataSource,'Url');
-  const insertOrganizerUrls = (getInsertMultilingualTable(organizerUrls, 'urls'));
+  console.log("--Events - Insert Organizer Url at multilingual tables");
+  const organizerUrls = mapMultilingualAttributeOrganizer(dataSource, "Url");
+  const insertOrganizerUrls = getInsertMultilingualTable(organizerUrls, "urls");
   console.log(insertOrganizerUrls);
   //await executeSQLQuery(insertOrganizers);
-  console.log('--Events - Insert Event Location at table Venues');
+  console.log("--Events - Insert Event Location at table Venues");
   let venues = dataSource.map((venue) => mapVenue(venue));
   insertVenues = getInsertVenues(venues);
   console.log(insertVenues);
-  console.log('--Events - Insert Venue name at table names');
-  let venueNames = mapMultilingualAttributeVenue(dataSource, 'Name');
+  console.log("--Events - Insert Venue name at table names");
+  let venueNames = mapMultilingualAttributeVenue(dataSource, "Name");
   venueNames = getUniques(venueNames);
   //insertVenueNames = getInsertMultilingualTable(getUniqueVenues(venueNames, 'resourceId', 'lang', 'content'), 'names');
-  insertVenueNames = getInsertMultilingualTable(venueNames, 'names');
+  insertVenueNames = getInsertMultilingualTable(venueNames, "names");
   console.log(insertVenueNames);
   //await executeSQLQuery(insertVenues);
 }
@@ -171,38 +170,34 @@ function getUniques(jsonArray) {
 async function executeSQLQuery(query) {
   try {
     return await pool.query(query);
-  }
-  catch (error) {
+  } catch (error) {
     console.log(error.message);
   }
 }
 
 function formatTimestampSQL(timestamp) {
-  if(timestamp == null)
-    timestamp = new Date().toISOString();
+  if (timestamp == null) timestamp = new Date().toISOString();
 
   timestamp = timestamp.replace(/Z/g, "");
   timestamp = timestamp.replace(/T/g, " ");
-  if ((timestamp[0] != "'") && (timestamp[timestamp.length-1] != "'")) {
-    timestamp = "'"+timestamp+"'";
+  if (timestamp[0] != "'" && timestamp[timestamp.length - 1] != "'") {
+    timestamp = "'" + timestamp + "'";
   }
-    
+
   return timestamp;
 }
 
 function checkQuotesSQL(input) {
   if (input != null) {
-    input = input.replace( /[\r\n]+/gm, "" );;
-    input = input.replace( /'/g, "''");
-    input = input.replace( /’/g, "’’");
+    input = input.replace(/[\r\n]+/gm, "");
+    input = input.replace(/'/g, "''");
+    input = input.replace(/’/g, "’’");
     return input;
-  }
-  else
-    return null;
+  } else return null;
 }
 
 function mapMultilingualAttribute(odhResource, field, extra) {
-  const attributes = []
+  const attributes = [];
 
   for (const ev of odhResource) {
     const keys = Object.keys(ev.Detail);
@@ -210,20 +205,20 @@ function mapMultilingualAttribute(odhResource, field, extra) {
     for (const key of keys) {
       let attribute = {};
       attribute.lang = key;
-      attribute.content = checkQuotesSQL(ev[extra][key][field]); 
+      attribute.content = checkQuotesSQL(ev[extra][key][field]);
       attribute.resourceId = ev.Id;
       //Filter inexistent fields
-      if ((attribute.content != null) && (attribute.content !=undefined)) {
+      if (attribute.content != null && attribute.content != undefined) {
         attributes.push(attribute);
       }
     }
   }
-  
+
   return attributes;
 }
 
 function mapMultilingualAttributeOrganizer(odhData, field) {
-  const attributes = []
+  const attributes = [];
 
   for (const ev of odhData) {
     const keys = Object.keys(ev.OrganizerInfos);
@@ -231,49 +226,49 @@ function mapMultilingualAttributeOrganizer(odhData, field) {
     for (const key of keys) {
       let attribute = {};
       attribute.lang = key;
-      attribute.content = checkQuotesSQL(ev.OrganizerInfos[key][field]); 
-      attribute.resourceId = ev.Id+"_organizer";
+      attribute.content = checkQuotesSQL(ev.OrganizerInfos[key][field]);
+      attribute.resourceId = ev.Id + "_organizer";
       //Filter inexistent fields
-      if ((attribute.content != null) && (attribute.content !=undefined)) {
+      if (attribute.content != null && attribute.content != undefined) {
         attributes.push(attribute);
       }
     }
   }
-  
+
   return attributes;
 }
 
 function mapMultilingualAttributeVenue(odhData, field, event_id) {
-  const attributes = []
+  const attributes = [];
 
   for (const ev of odhData) {
     const keys = Object.keys(ev.LocationInfo.TvInfo[field]);
     for (const key of keys) {
       let attribute = {};
       attribute.lang = key;
-      attribute.content = checkQuotesSQL(ev.LocationInfo.TvInfo[field][key]); 
+      attribute.content = checkQuotesSQL(ev.LocationInfo.TvInfo[field][key]);
       //attribute.resourceId = ev.LocationInfo.TvInfo.Id;
-      attribute.resourceId = ev.Id+"_venue";
+      attribute.resourceId = ev.Id + "_venue";
       //attribute.resourceId = ev.Id;
       //Filter inexistent fields
-      if ((attribute.content != null) && (attribute.content !=undefined)){
+      if (attribute.content != null && attribute.content != undefined) {
         attributes.push(attribute);
       }
     }
   }
-  
+
   return attributes;
 }
 
 function getInsertMultilingualTable(names, table) {
   names = getUniques(names);
-  let insert = "INSERT INTO "+table+" (resource_id, lang, content)\nVALUES\n";
+  let insert = "INSERT INTO " + table + " (resource_id, lang, content)\nVALUES\n";
   const length = names?.length;
   names?.forEach((name, index) => {
     const id = name.resourceId ? `'${name.resourceId}'` : null;
     const lang = name.lang ? `'${mappings.iso6391to6393[name.lang]}'` : null;
     const content = name.content ? `'${name.content}'` : null;
-    
+
     if (content != null) {
       insert += `(${id}, ${lang}, ${content}),\n`;
       /*insert += `(${id}, ${lang}, ${content})${
@@ -282,11 +277,10 @@ function getInsertMultilingualTable(names, table) {
     }
   });
   //TODO - Less hacky and more elegant solution than the code below
-  let ret = '';
+  let ret = "";
   if (insert.endsWith(",\n")) {
-     ret = insert.slice(0, -2) + ';\n';
-  }
-  else {
+    ret = insert.slice(0, -2) + ";\n";
+  } else {
     ret = insert;
   }
   return ret;
@@ -301,8 +295,8 @@ function mapResource(odhResource, type) {
   resource.data_provider = "http://tourism.opendatahub.bz.it/";
   //resource.last_update = _.isString(odhResource.LastChange)
   resource.last_update = odhResource.LastChange
-  //  ? odhResource.LastChange.replace(/Z/g, "") + "+01:00"
-  ? formatTimestampSQL(odhResource.LastChange)
+    ? //  ? odhResource.LastChange.replace(/Z/g, "") + "+01:00"
+      formatTimestampSQL(odhResource.LastChange)
     : formatTimestampSQL(new Date().toISOString());
   resource.created_at = formatTimestampSQL(new Date().toISOString());
   resource.simple_url = hasSimpleUrl(odhResource) ? getSimpleUrl(odhResource) : null;
@@ -336,8 +330,8 @@ function mapEvent(odhData) {
   const event = {};
   event.id = odhData.Id;
   event.capacity = null;
-  event.endDate = formatTimestampSQL(odhData['DateBegin']);
-  event.startDate = formatTimestampSQL(odhData['DateEnd']);
+  event.endDate = formatTimestampSQL(odhData["DateBegin"]);
+  event.startDate = formatTimestampSQL(odhData["DateEnd"]);
   //Default event series for testing
   event.parentId = null;
   event.publisherId = "publisher";
@@ -350,29 +344,27 @@ function mapEvent(odhData) {
 
 function getInsertEventSeries(eventSeries) {
   eventSeries = getUniques(eventSeries);
-  let insertEventSeries = 
-  "INSERT INTO event_series (id, frequency)\nVALUES\n";
+  let insertEventSeries = "INSERT INTO event_series (id, frequency)\nVALUES\n";
   const length = eventSeries?.length;
 
   eventSeries?.forEach((eventSerie, index) => {
     const id = eventSerie.id ? `'${eventSerie.id}'` : null;
     const frequency = eventSerie.frequency ? `'${eventSerie.frequency}'` : null;
-    
-    insertEventSeries += `(${id}, ${frequency})${
-      length - 1 > index ? "," : ";"
-    }\n`;
+
+    insertEventSeries += `(${id}, ${frequency})${length - 1 > index ? "," : ";"}\n`;
   });
 
   let insertResources = getInsertResources(eventSeries);
   let insert = insertResources + "\n" + insertEventSeries;
-  
+
   return insert;
 }
 
 function getInsertEvents(events) {
   events = getUniques(events);
 
-  let insert = "INSERT INTO events (id, capacity, end_date, start_date, parent_id, publisher_id, series_id, status)\nVALUES\n";
+  let insert =
+    "INSERT INTO events (id, capacity, end_date, start_date, parent_id, publisher_id, series_id, status)\nVALUES\n";
   const length = events?.length;
 
   events?.forEach((event, index) => {
@@ -386,101 +378,90 @@ function getInsertEvents(events) {
     const publisher_id = `'${event.publisherId}'`;
     const series_id = `'${event.seriesId}'`;
     const status = `'${event.status}'`;
-    
+
     insert += `(${id}, ${capacity}, ${end_date}, ${start_date}, ${parent_id}, 
-                ${publisher_id}, ${series_id}, ${status})${
-      length - 1 > index ? "," : ";"
-    }\n`;
+                ${publisher_id}, ${series_id}, ${status})${length - 1 > index ? "," : ";"}\n`;
   });
 
   return insert;
 }
 
-function mapVenue (odhData) {
+function mapVenue(odhData) {
   const venue = {};
 
   //venue.eventId = odhData.Id;
-  venue.id = odhData.Id+"_venue";
-  venue.id = odhData.LocationInfo.TvInfo.Id;
+  venue.id = odhData.Id + "_venue";
+  // venue.id = odhData.LocationInfo.TvInfo.Id;
   venue.odh_id = odhData.LocationInfo.TvInfo.Id;
-  venue.type = 'venues';
+  venue.eventId = odhData.Id;
+  venue.type = "venues";
   venue.data_provider = "http://tourism.opendatahub.bz.it/";
   venue.last_update = formatTimestampSQL(new Date().toISOString());
   venue.created_at = formatTimestampSQL(new Date().toISOString());
-  venue.simple_url = venue.simple_url ? `'${venue.simple_url}'` : null;    
+  venue.simple_url = venue.simple_url ? `'${venue.simple_url}'` : null;
   return venue;
 }
 
 //Create insert string for venues table
 function getInsertVenues(venues) {
   venues = getUniques(venues);
-  let insertVenues = 
-  "INSERT INTO venues (id)\nVALUES\n";
+  let insertVenues = "INSERT INTO venues (id)\nVALUES\n";
   const length = venues?.length;
 
   venues?.forEach((venue, index) => {
     const id = venue.id ? `'${venue.id}'` : null;
-    
-    insertVenues += `(${id})${
-      length - 1 > index ? "," : ";"
-    }\n`;
+
+    insertVenues += `(${id})${length - 1 > index ? "," : ";"}\n`;
   });
 
   //Create insert string for resources table
   let insertResources = getInsertResources(venues);
-    
-  let insertEventVenues =
-  "INSERT INTO event_venues (venue_id, event_id)\nVALUES\n";
-  
+
+  let insertEventVenues = "INSERT INTO event_venues (venue_id, event_id)\nVALUES\n";
+
   venues?.forEach((venue, index) => {
     const venue_id = `'${venue.id}'`;
     const event_id = `'${venue.eventId}'`;
-    
-    insertEventVenues += `(${venue_id},${event_id})${
-      length - 1 > index ? "," : ";"
-    }\n`;
+
+    insertEventVenues += `(${venue_id},${event_id})${length - 1 > index ? "," : ";"}\n`;
   });
 
   let insert = insertResources + "\n" + insertVenues + "\n" + insertEventVenues;
-  
+
   return insert;
 }
 
 function mapAgent(odhData, agentType) {
-  
   const agent = {};
 
-  agent.id = odhData.Id+"_organizer",
-  agent.odh_id = null,
-  agent.type = "agents",
-  agent.data_provider = "http://tourism.opendatahub.bz.it/",
-  agent.last_update = formatTimestampSQL(new Date().toISOString()),
-  agent.created_at = formatTimestampSQL(new Date().toISOString()),
-  agent.simple_url = null;
+  (agent.id = odhData.Id + "_organizer"),
+    (agent.odh_id = null),
+    (agent.type = "agents"),
+    (agent.data_provider = "http://tourism.opendatahub.bz.it/"),
+    (agent.last_update = formatTimestampSQL(new Date().toISOString())),
+    (agent.created_at = formatTimestampSQL(new Date().toISOString())),
+    (agent.simple_url = null);
 
   return agent;
 }
 
 function getInsertAgents(agents) {
   agents = getUniques(agents);
-  let insertAgents = 
-  "INSERT INTO agents (id)\nVALUES\n";
+  let insertAgents = "INSERT INTO agents (id)\nVALUES\n";
   const length = agents?.length;
 
   agents?.forEach((agent, index) => {
     const id = agent.id ? `'${agent.id}'` : null;
-    
-    insertAgents += `(${id})${
-      length - 1 > index ? "," : ";"
-    }\n`;
+
+    insertAgents += `(${id})${length - 1 > index ? "," : ";"}\n`;
   });
 
   let insertResources = getInsertResources(agents);
 
   let insert = insertResources + "\n" + insertAgents;
-  
+
   return insert;
-}  
+}
 
 function hasSimpleUrl(odhResource) {
   // TODO: Implement

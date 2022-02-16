@@ -1,5 +1,5 @@
 const { Router } = require("./router");
-const { SnowparkConnector } = require("../connectors/destinationdata2022/snowparks_connector");
+const { SnowparkConnector } = require("../connectors/snowparks_connector");
 const {
   deserializeSnowpark,
   serializeSingleResource,

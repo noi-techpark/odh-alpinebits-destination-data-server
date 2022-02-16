@@ -1,5 +1,5 @@
 const { Router } = require("./router");
-const { SkiSlopeConnector } = require("../connectors/destinationdata2022/ski_slope_connector");
+const { SkiSlopeConnector } = require("../connectors/ski_slope_connector");
 const {
   deserializeSkiSlope,
   serializeSingleResource,

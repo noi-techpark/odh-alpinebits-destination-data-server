@@ -1,4 +1,4 @@
-const { MediaObjectConnector } = require("../connectors/destinationdata2022/media_object_connector");
+const { MediaObjectConnector } = require("../connectors/media_object_connector");
 const {
   deserializeMediaObject,
   serializeResourceCollection,

@@ -1,21 +1,20 @@
-const { response } = require("express");
 const { Router } = require("./router");
 const selfUrl = `${process.env.REF_SERVER_URL}/${process.env.API_VERSION}`;
 const responseData = {
   jsonapi: { version: "1.0" },
   links: {
     self: selfUrl,
-    // agents: `${selfUrl}/agents`,
+    agents: `${selfUrl}/agents`,
     categories: `${selfUrl}/categories`,
     events: `${selfUrl}/events`,
-    // eventSeries: `${selfUrl}/eventSeries`,
+    eventSeries: `${selfUrl}/eventSeries`,
     features: `${selfUrl}/features`,
     lifts: `${selfUrl}/lifts`,
-    // mediaObjects: `${selfUrl}/mediaObjects`,
+    mediaObjects: `${selfUrl}/mediaObjects`,
     mountainAreas: `${selfUrl}/mountainAreas`,
     snowparks: `${selfUrl}/snowparks`,
     skiSlopes: `${selfUrl}/skiSlopes`,
-    // venues: `${selfUrl}/venues`
+    venues: `${selfUrl}/venues`,
   },
   data: null,
 };

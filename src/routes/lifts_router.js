@@ -1,5 +1,5 @@
 const { Router } = require("./router");
-const { LiftConnector } = require("../connectors/destinationdata2022/lift_connector");
+const { LiftConnector } = require("../connectors/lift_connector");
 const {
   deserializeLift,
   serializeSingleResource,

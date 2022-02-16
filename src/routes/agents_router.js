@@ -1,5 +1,5 @@
 const { Router } = require("./router");
-const { AgentConnector } = require("../connectors/destinationdata2022/agent_connector");
+const { AgentConnector } = require("../connectors/agent_connector");
 const {
   deserializeAgent,
   serializeAgent,
