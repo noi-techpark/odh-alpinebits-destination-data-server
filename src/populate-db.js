@@ -20,7 +20,7 @@ main();
 async function main() {
   let insert;
 
-  const dataSource = odhEvents.Items.slice(0, 399);
+  const dataSource = odhEvents.Items.slice(0, 99);
   //Creating event_series
   
 
@@ -127,16 +127,39 @@ async function main() {
   //await executeSQLQuery(insertOrganizers);
   console.log('--Events - Insert Event Location at table Venues');
   let venues = dataSource.map((venue) => mapVenue(venue));
-  insertVenues = getInsertVenues(venues)
+  insertVenues = getInsertVenues(venues);
   console.log(insertVenues);
   console.log('--Events - Insert Venue name at table names');
   let venueNames = mapMultilingualAttributeVenue(dataSource, 'Name');
   venueNames = getUniques(venueNames);
-  insertVenueNames = getInsertMultilingualTable(venueNames, 'names');
+  //insertVenueNames = getInsertMultilingualTable(getUniqueVenues(venueNames, 'resourceId', 'lang', 'content'), 'names');
   insertVenueNames = getInsertMultilingualTable(venueNames, 'names');
   console.log(insertVenueNames);
   //await executeSQLQuery(insertVenues);
 }
+
+/*function getUniqueVenues (venuesArray, field, field2=null, field3=null) {
+  venueSet = new Set();
+  ret = [];
+
+  for (elem of venuesArray) {
+    if (field2 == null) {
+      if (!venueSet.has(elem[field])) {
+        venueSet.add(elem[field]);
+        ret.push(elem);
+      }
+    }
+    else {
+      //if (!venueSet1.has(elem[field]) && !venueSet2.has(elem[field2])) {
+        let temp = `${elem[field]}:${elem[field2]}:${elem[field3]}`;
+        if (!venueSet.has(temp)) {
+        venueSet.add(temp);
+        ret.push(elem);
+      }
+    } 
+  }
+  return ret;
+}*/
 
 function getUniques(jsonArray) {
   const uniqueString = new Set(jsonArray.map(JSON.stringify));
@@ -220,7 +243,7 @@ function mapMultilingualAttributeOrganizer(odhData, field) {
   return attributes;
 }
 
-function mapMultilingualAttributeVenue(odhData, field) {
+function mapMultilingualAttributeVenue(odhData, field, event_id) {
   const attributes = []
 
   for (const ev of odhData) {
@@ -231,6 +254,7 @@ function mapMultilingualAttributeVenue(odhData, field) {
       attribute.content = checkQuotesSQL(ev.LocationInfo.TvInfo[field][key]); 
       //attribute.resourceId = ev.LocationInfo.TvInfo.Id;
       attribute.resourceId = ev.Id+"_venue";
+      //attribute.resourceId = ev.Id;
       //Filter inexistent fields
       if ((attribute.content != null) && (attribute.content !=undefined)){
         attributes.push(attribute);
@@ -375,9 +399,9 @@ function getInsertEvents(events) {
 function mapVenue (odhData) {
   const venue = {};
 
-  venue.eventId = odhData.Id;
+  //venue.eventId = odhData.Id;
   venue.id = odhData.Id+"_venue";
-  //venue.id = odhData.LocationInfo.TvInfo.Id+"_venue";
+  venue.id = odhData.LocationInfo.TvInfo.Id;
   venue.odh_id = odhData.LocationInfo.TvInfo.Id;
   venue.type = 'venues';
   venue.data_provider = "http://tourism.opendatahub.bz.it/";
