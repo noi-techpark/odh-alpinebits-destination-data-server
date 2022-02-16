@@ -20,8 +20,7 @@ main();
 async function main() {
   let insert;
 
-  const dataSource = odhEvents.Items.slice(0, 9);
-  //const dataSource = odhEvents.Items;
+  const dataSource = odhEvents.Items.slice(0, 399);
   //Creating event_series
   
 
@@ -56,10 +55,8 @@ async function main() {
   console.log('--OpenDatahub migration');
   console.log('--Creating default Db Entries...')
   //Creating publisher entry on resource and name tables
-  //let insertPublisher = getInsertResources(publishers);
   let insertPublisherAgent = getInsertAgents(publishers);
   let insertPublisherName = getInsertMultilingualTable(publisher.name, 'names');
-  //console.log(insertPublisher);
   console.log(insertPublisherAgent);
   console.log(insertPublisherName);
   //Creating default event series for testing
@@ -135,7 +132,7 @@ async function main() {
   console.log('--Events - Insert Venue name at table names');
   let venueNames = mapMultilingualAttributeVenue(dataSource, 'Name');
   venueNames = getUniques(venueNames);
-  //insertVenueNames = getInsertMultilingualTable(venueNames, 'names');
+  insertVenueNames = getInsertMultilingualTable(venueNames, 'names');
   insertVenueNames = getInsertMultilingualTable(venueNames, 'names');
   console.log(insertVenueNames);
   //await executeSQLQuery(insertVenues);
@@ -232,7 +229,8 @@ function mapMultilingualAttributeVenue(odhData, field) {
       let attribute = {};
       attribute.lang = key;
       attribute.content = checkQuotesSQL(ev.LocationInfo.TvInfo[field][key]); 
-      attribute.resourceId = ev.LocationInfo.TvInfo.Id;
+      //attribute.resourceId = ev.LocationInfo.TvInfo.Id;
+      attribute.resourceId = ev.Id+"_venue";
       //Filter inexistent fields
       if ((attribute.content != null) && (attribute.content !=undefined)){
         attributes.push(attribute);
@@ -378,9 +376,9 @@ function mapVenue (odhData) {
   const venue = {};
 
   venue.eventId = odhData.Id;
-  //venue.id = odhData.Id+"_venue";
-  venue.id = odhData.LocationInfo.TvInfo.Id+"_venue";
-  venue.odh_id = venue.id;
+  venue.id = odhData.Id+"_venue";
+  //venue.id = odhData.LocationInfo.TvInfo.Id+"_venue";
+  venue.odh_id = odhData.LocationInfo.TvInfo.Id;
   venue.type = 'venues';
   venue.data_provider = "http://tourism.opendatahub.bz.it/";
   venue.last_update = formatTimestampSQL(new Date().toISOString());
