@@ -20,17 +20,18 @@ main();
 async function main() {
   let insert;
 
-  const dataSource = odhEvents.Items.slice(0, 9);
+  const dataSource = odhEvents.Items.slice(0, 199);
+  //const dataSource = odhEvents.Items;
 
   //Creating Publisher
   const publisher = {}
   publisher.id = "publisher",
   publisher.odh_id = null,
   publisher.type = "agent",
-  publisher.data_provider = "http://tourism.opendatahub.bz.it/",
+  publisher.data_provider = "'http://tourism.opendatahub.bz.it/'",
   publisher.last_update = new Date().toISOString(),
   publisher.created_at = new Date().toISOString(),
-  publisher.simple_url = "https://lts.it",
+  publisher.simple_url = "'https://lts.it'",
   publisher.name = [
     {
       lang: 'de',
@@ -111,13 +112,12 @@ async function main() {
   console.log(insertOrganizerUrls);
   //await executeSQLQuery(insertOrganizers);
   console.log('--Events - Insert Event Location at table Venues');
-  const venues = dataSource.map((venue) => mapVenue(venue));
+  let venues = dataSource.map((venue) => mapVenue(venue));
   insertVenues = getInsertVenues(venues)
   console.log(insertVenues);
   console.log('--Events - Insert Venue name at table names');
-  const venueNames = mapMultilingualAttributeVenue(dataSource, 'Name');
-  console.log(venueNames);
-  insertVenueNames = getInsertMultilingualTable(venueNames);
+  let venueNames = mapMultilingualAttributeVenue(dataSource, 'Name');
+  insertVenueNames = getInsertMultilingualTable(venueNames, 'names');
   console.log(insertVenueNames);
   //await executeSQLQuery(insertVenues);
 }
@@ -154,7 +154,7 @@ function mapMultilingualAttribute(odhResource, field, extra) {
       attribute.content = checkQuotesSQL(ev[extra][key][field]); 
       attribute.resourceId = ev.Id;
       //Filter inexistent fields
-      if ((attribute.content != null) && (attribute.lang != null) && (attribute.resourceId != null)) {
+      if ((attribute.content != null) && (attribute.content !=undefined)) {
         attributes.push(attribute);
       }
     }
@@ -173,9 +173,9 @@ function mapMultilingualAttributeOrganizer(odhData, field) {
       let attribute = {};
       attribute.lang = key;
       attribute.content = checkQuotesSQL(ev.OrganizerInfos[key][field]); 
-      attribute.resourceId = ev.Id;
+      attribute.resourceId = ev.Id+"_organizer";
       //Filter inexistent fields
-      if ((attribute.content != null) && (attribute.lang != null) && (attribute.resourceId != null)) {
+      if ((attribute.content != null) && (attribute.content !=undefined)) {
         attributes.push(attribute);
       }
     }
@@ -193,9 +193,9 @@ function mapMultilingualAttributeVenue(odhData, field) {
       let attribute = {};
       attribute.lang = key;
       attribute.content = checkQuotesSQL(ev.LocationInfo.TvInfo[field][key]); 
-      attribute.resourceId = ev.Id;
+      attribute.resourceId = ev.LocationInfo.TvInfo.Id;
       //Filter inexistent fields
-      if ((attribute.content != null) && (attribute.lang != null) && (attribute.resourceId != null)) {
+      if ((attribute.content != null) && (attribute.content !=undefined)){
         attributes.push(attribute);
       }
     }
@@ -212,9 +212,11 @@ function getInsertMultilingualTable(names, table) {
     const lang = name.lang ? `'${mappings.iso6391to6393[name.lang]}'` : null;
     const content = name.content ? `'${name.content}'` : null;
     
-    insert += `(${id}, ${lang}, ${content})${
-      length - 1 > index ? "," : ";"
-    }\n`;
+    if (content != null) {
+      insert += `(${id}, ${lang}, ${content})${
+        length - 1 > index ? "," : ";"
+      }\n`;
+    }
   });
 
   return insert;
