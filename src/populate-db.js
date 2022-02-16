@@ -147,6 +147,7 @@ function getUniques(jsonArray) {
   const uniqueObjects = uniqueArray.map(JSON.parse);
   return uniqueObjects;
 }
+
 async function executeSQLQuery(query) {
   try {
     return await pool.query(query);
@@ -252,16 +253,21 @@ function getInsertMultilingualTable(names, table) {
     const content = name.content ? `'${name.content}'` : null;
     
     if (content != null) {
-      insert += `(${id}, ${lang}, ${content})${
+      insert += `(${id}, ${lang}, ${content}),\n`;
+      /*insert += `(${id}, ${lang}, ${content})${
         length - 1 > index ? "," : ";"
-      }\n`;
+      }\n`;*/
     }
-    //TODO - Less hacky and more elegant solution 
-    if (insert[insert.length-1] == ",")
-      insert[insert.length-1] = ";";
   });
-
-  return insert;
+  //TODO - Less hacky and more elegant solution than the code below
+  let ret = '';
+  if (insert.endsWith(",\n")) {
+     ret = insert.slice(0, -2) + ';\n';
+  }
+  else {
+    ret = insert;
+  }
+  return ret;
 }
 
 function mapResource(odhResource, type) {
@@ -281,28 +287,6 @@ function mapResource(odhResource, type) {
 
   return resource;
 }
-
-/*function getInsertResources(resources) {
-  resources = getUniques(resources);
-  let insert = "INSERT INTO resources (id,odh_id,type,data_provider,last_update,created_at,simple_url)\nVALUES\n";
-  const length = resources?.length;
-
-  resources?.forEach((resource, index) => {
-    const id = resource.id ? `'${resource.id}'` : null;
-    const odh_id = resource.odh_id ? `'${resource.odh_id}'` : null;
-    const type = resource.type ? `'${resource.type}'` : null;
-    const data_provider = resource.data_provider ? `'${resource.data_provider}'` : null;
-    const last_update = resource.last_update ? `'${resource.last_update}'` : null;
-    const created_at = resource.created_at ? `'${resource.created_at}'` : null;
-    const simple_url = resource.simple_url ? `'${resource.simple_url}'` : null;
-
-    insert += `(${id},${odh_id},${type},${data_provider},${last_update},${created_at},${simple_url})${
-      length - 1 > index ? "," : ";"
-    }\n`;
-  });
-
-  return insert;
-}*/
 
 function getInsertResources(resources) {
   resources = getUniques(resources);
@@ -395,7 +379,7 @@ function mapVenue (odhData) {
 
   venue.eventId = odhData.Id;
   //venue.id = odhData.Id+"_venue";
-  venue.id = odhData.LocationInfo.TvInfo.Id;
+  venue.id = odhData.LocationInfo.TvInfo.Id+"_venue";
   venue.odh_id = venue.id;
   venue.type = 'venues';
   venue.data_provider = "http://tourism.opendatahub.bz.it/";
@@ -422,23 +406,7 @@ function getInsertVenues(venues) {
 
   //Create insert string for resources table
   let insertResources = getInsertResources(venues);
-  /*let insertResources = 
-  "INSERT INTO resources (id,odh_id,type,data_provider,last_update,created_at,simple_url)\nVALUES\n";
-
-  venues?.forEach((venue, index) => {
-    const id = venue.id;
-    const odh_id = venue.id;
-    const type = 'venues';
-    const data_provider = "http://tourism.opendatahub.bz.it/";
-    const last_update = formatTimestampSQL(new Date().toISOString());
-    const created_at = formatTimestampSQL(new Date().toISOString());
-    const simple_url = venue.simple_url ? `'${venue.simple_url}'` : null;    
     
-    insertResources += `(${id},${odh_id},${type},${data_provider},${last_update},${created_at},${simple_url})${
-      length - 1 > index ? "," : ";"
-    }\n`;
-  });*/  
-  
   let insertEventVenues =
   "INSERT INTO event_venues (venue_id, event_id)\nVALUES\n";
   
@@ -486,23 +454,7 @@ function getInsertAgents(agents) {
   });
 
   let insertResources = getInsertResources(agents);
-  /*let insertResources = 
-  "INSERT INTO resources (id,odh_id,type,data_provider,last_update,created_at,simple_url)\nVALUES\n";
 
-  agents?.forEach((agent, index) => {
-    const id = agent.id;
-    const odh_id = agent.odh_id;
-    const type = agent.type;
-    const data_provider = agent.data_provider;
-    const last_update = agent.last_update;
-    const created_at = agent.created_at;
-    const simple_url = agent.simple_url;    
-    
-    insertResources += `(${id},${odh_id},${type},${data_provider},${last_update},${created_at},${simple_url})${
-      length - 1 > index ? "," : ";"
-    }\n`;
-  });  
-  */
   let insert = insertResources + "\n" + insertAgents;
   
   return insert;
