@@ -117,11 +117,19 @@ async function main() {
   console.log(insertVenues);
   console.log('--Events - Insert Venue name at table names');
   let venueNames = mapMultilingualAttributeVenue(dataSource, 'Name');
+  venueNames = getUniques(venueNames);
+  //insertVenueNames = getInsertMultilingualTable(venueNames, 'names');
   insertVenueNames = getInsertMultilingualTable(venueNames, 'names');
   console.log(insertVenueNames);
   //await executeSQLQuery(insertVenues);
 }
 
+function getUniques(jsonArray) {
+  const uniqueString = new Set(jsonArray.map(JSON.stringify));
+  const uniqueArray = Array.from(uniqueString);
+  const uniqueObjects = uniqueArray.map(JSON.parse);
+  return uniqueObjects;
+}
 async function executeSQLQuery(query) {
   try {
     return await pool.query(query);
@@ -205,6 +213,7 @@ function mapMultilingualAttributeVenue(odhData, field) {
 }
 
 function getInsertMultilingualTable(names, table) {
+  names = getUniques(names);
   let insert = "INSERT INTO "+table+" (resource_id, lang, content)\nVALUES\n";
   const length = names?.length;
   names?.forEach((name, index) => {
@@ -239,6 +248,7 @@ function mapResource(odhResource, type) {
 }
 
 function getInsertResources(resources) {
+  resources = getUniques(resources);
   let insert = "INSERT INTO resources (id,odh_id,type,data_provider,last_update,created_at,simple_url)\nVALUES\n";
   const length = resources?.length;
 
@@ -274,7 +284,8 @@ function mapEvent(odhData) {
 }
 
 function getInsertEvents(events) {
-  
+  events = getUniques(events);
+
   let insert = "INSERT INTO events (id, capacity, end_date, start_date, parent_id, publisher_id, status)\nVALUES\n";
   const length = events?.length;
 
@@ -307,6 +318,7 @@ function mapVenue (odhData) {
 
 //Create insert string for venues table
 function getInsertVenues(venues) {
+  venues = getUniques(venues);
   let insertVenues = 
   "INSERT INTO venues (id)\nVALUES\n";
   const length = venues?.length;
@@ -370,6 +382,7 @@ function mapAgent(odhData, agentType) {
 }
 
 function getInsertAgents(agents) {
+  agents = getUniques(agents);
   let insertAgents = 
   "INSERT INTO agents (id)\nVALUES\n";
   const length = agents?.length;
