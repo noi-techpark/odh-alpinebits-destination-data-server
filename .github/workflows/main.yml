@@ -1,0 +1,106 @@
+name: CI/CD
+
+on:
+  push:
+  pull_request:
+
+env:
+  PROJECT_NAME: alpinebits-destination-data-server
+  DOCKER_IMAGE: ghcr.io/${{ github.repository }}/${{ github.event.repository.name }}
+  DOCKER_TAG: ${{ github.sha }}
+  DOCKER_REGISTRY_HOST: ghcr.io
+  SERVER_PORT: 1003
+
+jobs:
+  test:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+      
+      - name: Create .env file
+        uses: noi-techpark/github-actions/env-file@v2
+        env:
+          X_DOCKER_IMAGE: ${{ env.DOCKER_IMAGE }}
+          X_DOCKER_TAG: ${{ env.DOCKER_TAG }}
+
+      - name: Build
+        run: docker-compose -f infrastructure/docker-compose.build.yml build
+    
+      - name: Shut down
+        run: docker-compose -f infrastructure/docker-compose.build.yml down || true
+
+  deploy-test:
+    runs-on: ubuntu-20.04
+    if: github.ref == 'refs/heads/main'
+    needs: test
+    concurrency: deploy-test
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v2
+
+      - name: Create .env file
+        uses: noi-techpark/github-actions/env-file@v2
+        env:
+          X_DOCKER_PROJECT_NAME: ${{ env.PROJECT_NAME }}
+          X_DOCKER_IMAGE: ${{ env.DOCKER_IMAGE }}
+          X_DOCKER_TAG: ${{ env.DOCKER_TAG }}
+          X_SERVER_PORT: ${{ env.SERVER_PORT }}
+          X_REF_SERVER_CORS_ORIGIN: "*"
+          X_REF_SERVER_URL: "https://destinationdata.alpinebits.opendatahub.testingmachine.eu"
+          X_ODH_BASE_URL: "https://tourism.opendatahub.bz.it/v1/"
+          X_ODH_TIMEOUT: "60000"
+
+      - name: Build and push 
+        uses: noi-techpark/github-actions/docker-build-and-push@v2
+        with:
+          docker-host: ${{ env.DOCKER_REGISTRY_HOST }}
+          docker-username: ${{ github.actor }}
+          docker-password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Deploy application
+        uses: noi-techpark/github-actions/docker-deploy@v2
+        with:
+          hosts: 'test'
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+          docker-host: ${{ env.DOCKER_REGISTRY_HOST }}
+          docker-username: 'noi-techpark-bot'
+          docker-password: ${{ secrets.GH_PERSONAL_ACCESS_TOKEN }}
+          project-name: ${{ env.PROJECT_NAME }}
+
+  deploy-prod:
+    runs-on: ubuntu-20.04
+    if: github.ref == 'refs/heads/prod'
+    needs: test
+    concurrency: deploy-prod
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v2
+
+      - name: Create .env file
+        uses: noi-techpark/github-actions/env-file@v2
+        env:
+          X_DOCKER_PROJECT_NAME: ${{ env.PROJECT_NAME }}
+          X_DOCKER_IMAGE: ${{ env.DOCKER_IMAGE }}
+          X_DOCKER_TAG: ${{ env.DOCKER_TAG }}
+          X_SERVER_PORT: ${{ env.SERVER_PORT }}
+          X_REF_SERVER_CORS_ORIGIN: "*"
+          X_REF_SERVER_URL: "https://destinationdata.alpinebits.opendatahub.bz.it"
+          X_ODH_BASE_URL: "https://tourism.opendatahub.bz.it/v1/"
+          X_ODH_TIMEOUT: "60000"
+
+      - name: Build and push 
+        uses: noi-techpark/github-actions/docker-build-and-push@v2
+        with:
+          docker-host: ${{ env.DOCKER_REGISTRY_HOST }}
+          docker-username: ${{ github.actor }}
+          docker-password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Deploy application
+        uses: noi-techpark/github-actions/docker-deploy@v2
+        with:
+          hosts: 'prod'
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+          docker-host: ${{ env.DOCKER_REGISTRY_HOST }}
+          docker-username: 'noi-techpark-bot'
+          docker-password: ${{ secrets.GH_PERSONAL_ACCESS_TOKEN }}
+          project-name: ${{ env.PROJECT_NAME }}
