@@ -52,6 +52,7 @@ jobs:
           X_REF_SERVER_URL: "https://destinationdata.alpinebits.opendatahub.testingmachine.eu"
           X_ODH_BASE_URL: "https://tourism.opendatahub.bz.it/v1/"
           X_ODH_TIMEOUT: "60000"
+          X_AUTH_METHOD: "none"
 
       - name: Build and push 
         uses: noi-techpark/github-actions/docker-build-and-push@v2
@@ -91,6 +92,7 @@ jobs:
           X_REF_SERVER_URL: "https://destinationdata.alpinebits.opendatahub.bz.it"
           X_ODH_BASE_URL: "https://tourism.opendatahub.bz.it/v1/"
           X_ODH_TIMEOUT: "60000"
+          X_AUTH_METHOD: "none"
 
       - name: Build and push 
         uses: noi-techpark/github-actions/docker-build-and-push@v2
