@@ -6,7 +6,7 @@ The server exposes data from the [OpenDataHub API](http://tourism.opendatahub.bz
 
 The current version of the server accepts HTTP GET requests on the following routes:
 
-[![CI](https://github.com/noi-techpark/odh-alpinebits-destination-data-server/actions/workflows/ci.yml/badge.svg)](https://github.com/noi-techpark/odh-alpinebits-destination-data-server/actions/workflows/ci.yml)
+[![CI/CD](https://github.com/noi-techpark/odh-alpinebits-destination-data-server/actions/workflows/main.yml/badge.svg)](https://github.com/noi-techpark/odh-alpinebits-destination-data-server/actions/workflows/main.yml)
 
 * /
 * /1.0
