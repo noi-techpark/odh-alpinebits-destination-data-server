@@ -3,19 +3,20 @@ name: CI/CD
 on:
   push:
     branches:
-      - main
-      - prod
+      - '1.0-main'
+      - '1.0-prod'
+
   pull_request:
     branches:
-      - main
-      - prod
+      - '1.0-main'
+      - '1.0-prod'
 
 env:
-  PROJECT_NAME: alpinebits-destination-data-server
-  DOCKER_IMAGE: ghcr.io/${{ github.repository }}/${{ github.event.repository.name }}-main
+  PROJECT_NAME: alpinebits-destination-data-v1.0-server
+  DOCKER_IMAGE: ghcr.io/${{ github.repository }}/${{ github.event.repository.name }}-v1.0
   DOCKER_TAG: ${{ github.sha }}
   REF_SERVER_PORT: 8080
-  SERVER_PORT: 1004
+  SERVER_PORT: 1003
 
 
 jobs:
