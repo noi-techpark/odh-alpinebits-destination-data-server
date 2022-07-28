@@ -39,9 +39,9 @@ jobs:
 
   deploy-test:
     runs-on: ubuntu-20.04
-    if: github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/1.0-main'
     needs: test
-    concurrency: deploy-test
+    concurrency: deploy-1.0-test
     steps:
       - name: Checkout source code
         uses: actions/checkout@v2
@@ -77,9 +77,9 @@ jobs:
 
   deploy-prod:
     runs-on: ubuntu-20.04
-    if: github.ref == 'refs/heads/prod'
+    if: github.ref == 'refs/heads/1.0-prod'
     needs: test
-    concurrency: deploy-prod
+    concurrency: deploy-1.0-prod
     steps:
       - name: Checkout source code
         uses: actions/checkout@v2
