@@ -7,7 +7,7 @@ SELECT mountain_areas.id,
   resource_objects.name,
   short_name AS "shortName",
   area,
-  total_park_length AS "totalParkLength",
+  total_park_area AS "totalParkArea",
   total_slope_length AS "totalSlopeLength",
   CASE
     WHEN area_owner_id IS NOT NULL

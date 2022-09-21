@@ -49,6 +49,8 @@ const {
   subAreas,
   venues,
   urls,
+  participationUrls,
+  registrationUrls,
 } = schemas;
 
 const UUID_GENERATE = "uuid_generate_v4()";
@@ -104,9 +106,9 @@ function createResourceTypesTable() {
 function createResourcesTable() {
   return connection.raw(`
     CREATE TABLE ${resources._name} (
-      ${resources.id} VARCHAR ( 50 ) DEFAULT ${UUID_GENERATE} PRIMARY KEY,
+      ${resources.id} VARCHAR ( 100 ) DEFAULT ${UUID_GENERATE} PRIMARY KEY,
       ${resources.type} VARCHAR ( 50 ) NOT NULL,
-      ${resources.odhId} VARCHAR ( 50 ),
+      ${resources.odhId} VARCHAR ( 100 ),
       ${resources.dataProvider} TEXT NOT NULL,
       ${resources.createdAt} TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
       ${resources.lastUpdate} TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -120,108 +122,165 @@ function createResourcesTable() {
 
 function createAgentsTable() {
   return connection.schema.createTable(agents._name, function (table) {
-    table.string(agents.id, 50).primary().references(resources.id).inTable(resources._name).onDelete(CASCADE);
+    table
+      .string(agents.id, 100)
+      .primary()
+      .references(resources.id)
+      .inTable(resources._name)
+      .onDelete(CASCADE);
   });
 }
 
 function createCategoriesTable() {
   return connection.schema.createTable(categories._name, function (table) {
-    table.string(categories.id, 50).primary().references(resources.id).inTable(resources._name).onDelete(CASCADE);
-    table.string(categories.namespace, 50).notNullable();
+    table
+      .string(categories.id, 100)
+      .primary()
+      .references(resources.id)
+      .inTable(resources._name)
+      .onDelete(CASCADE);
+    table.string(categories.namespace, 100).notNullable();
   });
 }
 
 function createCategoryCoveredTypesTable() {
-  return connection.schema.createTable(categoryCoveredTypes._name, function (table) {
-    table
-      .string(categoryCoveredTypes.categoryId, 50)
-      .references(categories.id)
-      .inTable(categories._name)
-      .onDelete(CASCADE);
-    table
-      .string(categoryCoveredTypes.type, 50)
-      .references(resourceTypes.type)
-      .inTable(resourceTypes._name)
-      .onDelete(CASCADE);
-    table.primary([categoryCoveredTypes.categoryId, categoryCoveredTypes.type]);
-  });
+  return connection.schema.createTable(
+    categoryCoveredTypes._name,
+    function (table) {
+      table
+        .string(categoryCoveredTypes.categoryId, 100)
+        .references(categories.id)
+        .inTable(categories._name)
+        .onDelete(CASCADE);
+      table
+        .string(categoryCoveredTypes.type, 100)
+        .references(resourceTypes.type)
+        .inTable(resourceTypes._name)
+        .onDelete(CASCADE);
+      table.primary([
+        categoryCoveredTypes.categoryId,
+        categoryCoveredTypes.type,
+      ]);
+    }
+  );
 }
 
 function createCategorySpecializationsTable() {
-  return connection.schema.createTable(categorySpecializations._name, function (table) {
-    table
-      .string(categorySpecializations.parentId, 50)
-      .references(categories.id)
-      .inTable(categories._name)
-      .onDelete(CASCADE);
-    table
-      .string(categorySpecializations.childId, 50)
-      .references(categories.id)
-      .inTable(categories._name)
-      .onDelete(CASCADE);
-    table.primary([categorySpecializations.parentId, categorySpecializations.childId]);
-  });
+  return connection.schema.createTable(
+    categorySpecializations._name,
+    function (table) {
+      table
+        .string(categorySpecializations.parentId, 100)
+        .references(categories.id)
+        .inTable(categories._name)
+        .onDelete(CASCADE);
+      table
+        .string(categorySpecializations.childId, 100)
+        .references(categories.id)
+        .inTable(categories._name)
+        .onDelete(CASCADE);
+      table.primary([
+        categorySpecializations.parentId,
+        categorySpecializations.childId,
+      ]);
+    }
+  );
 }
 
 function createFeaturesTable() {
   // TODO: update the relationship to snowparks
   return connection.schema.createTable(features._name, function (table) {
-    table.string(features.id, 50).primary().references(resources.id).inTable(resources._name).onDelete(CASCADE);
-    table.string(features.namespace, 50).notNullable();
+    table
+      .string(features.id, 100)
+      .primary()
+      .references(resources.id)
+      .inTable(resources._name)
+      .onDelete(CASCADE);
+    table.string(features.namespace, 100).notNullable();
   });
 }
 
 // At the moment, this should always be "snowparks"
 function createFeatureCoveredTypesTable() {
-  return connection.schema.createTable(featureCoveredTypes._name, function (table) {
-    table.string(featureCoveredTypes.featureId, 50).references(features.id).inTable(features._name).onDelete(CASCADE);
-    table
-      .string(featureCoveredTypes.type, 50)
-      .references(resourceTypes.type)
-      .inTable(resourceTypes._name)
-      .onDelete(CASCADE);
-    table.primary([featureCoveredTypes.featureId, featureCoveredTypes.type]);
-  });
+  return connection.schema.createTable(
+    featureCoveredTypes._name,
+    function (table) {
+      table
+        .string(featureCoveredTypes.featureId, 100)
+        .references(features.id)
+        .inTable(features._name)
+        .onDelete(CASCADE);
+      table
+        .string(featureCoveredTypes.type, 100)
+        .references(resourceTypes.type)
+        .inTable(resourceTypes._name)
+        .onDelete(CASCADE);
+      table.primary([featureCoveredTypes.featureId, featureCoveredTypes.type]);
+    }
+  );
 }
 
 function createFeatureSpecializationsTable() {
-  return connection.schema.createTable(featureSpecializations._name, function (table) {
-    table
-      .string(featureSpecializations.parentId, 50)
-      .references(features.categoryId)
-      .inTable(features._name)
-      .onDelete(CASCADE);
-    table
-      .string(featureSpecializations.childId, 50)
-      .references(features.categoryId)
-      .inTable(features._name)
-      .onDelete(CASCADE);
-    table.primary([featureSpecializations.parentId, featureSpecializations.childId]);
-  });
+  return connection.schema.createTable(
+    featureSpecializations._name,
+    function (table) {
+      table
+        .string(featureSpecializations.parentId, 100)
+        .references(features.categoryId)
+        .inTable(features._name)
+        .onDelete(CASCADE);
+      table
+        .string(featureSpecializations.childId, 100)
+        .references(features.categoryId)
+        .inTable(features._name)
+        .onDelete(CASCADE);
+      table.primary([
+        featureSpecializations.parentId,
+        featureSpecializations.childId,
+      ]);
+    }
+  );
 }
 
 function createMediaObjectsTable() {
   return connection.schema.createTable(mediaObjects._name, function (table) {
-    table.string(mediaObjects.id, 50).primary().references(resources.id).inTable(resources._name).onDelete(CASCADE);
-    table.string(mediaObjects.copyrightOwnerId, 50).references(agents.id).inTable(agents._name).onDelete(SET_NULL);
+    table
+      .string(mediaObjects.id, 100)
+      .primary()
+      .references(resources.id)
+      .inTable(resources._name)
+      .onDelete(CASCADE);
+    table
+      .string(mediaObjects.copyrightOwnerId, 100)
+      .references(agents.id)
+      .inTable(agents._name)
+      .onDelete(SET_NULL);
     table.string(mediaObjects.contentType);
     table.integer(mediaObjects.duration);
     table.integer(mediaObjects.height);
-    table.string(mediaObjects.license, 50);
+    table.string(mediaObjects.license, 100);
     table.integer(mediaObjects.width);
   });
 }
 
 function createSeriesFrequenciesTable() {
-  return connection.schema.createTable(seriesFrequencies._name, function (table) {
-    table.string(seriesFrequencies.frequency, 50).primary();
-    table.string(seriesFrequencies.title, 50);
-  });
+  return connection.schema.createTable(
+    seriesFrequencies._name,
+    function (table) {
+      table.string(seriesFrequencies.frequency, 50).primary();
+      table.string(seriesFrequencies.title, 50);
+    }
+  );
 }
 
 function createEventSeriesTable() {
   return connection.schema.createTable(eventSeries._name, function (table) {
-    table.string(eventSeries.id, 50).primary().references(resources.id).inTable(resources._name).onDelete(CASCADE);
+    table
+      .string(eventSeries.id, 100)
+      .primary()
+      .references(resources.id)
+      .inTable(resources._name)
+      .onDelete(CASCADE);
     table
       .string(eventSeries.frequency, 50)
       .references(seriesFrequencies.frequency)
@@ -239,14 +298,40 @@ function createEventStatusTable() {
 
 function createEventsTable() {
   return connection.schema.createTable(events._name, function (table) {
-    table.string(events.id, 50).primary().references(resources.id).inTable(resources._name).onDelete(CASCADE);
-    table.integer(events.capacity);
+    table
+      .string(events.id, 100)
+      .primary()
+      .references(resources.id)
+      .inTable(resources._name)
+      .onDelete(CASCADE);
     table.timestamp(events.endDate, { useTz: true });
     table.timestamp(events.startDate, { useTz: true });
-    table.string(events.parentId, 50).references(events.id).inTable(events._name).onDelete(SET_NULL);
-    table.string(events.publisherId, 50).references(agents.id).inTable(agents._name).notNullable().onDelete(CASCADE);
-    table.string(events.seriesId, 50).references(eventSeries.id).inTable(eventSeries._name).onDelete(SET_NULL);
-    table.string(events.status, 50).references(eventStatus.status).inTable(eventStatus._name).onDelete(SET_NULL);
+    table
+      .string(events.parentId, 100)
+      .references(events.id)
+      .inTable(events._name)
+      .onDelete(SET_NULL);
+    table
+      .string(events.publisherId, 100)
+      .references(agents.id)
+      .inTable(agents._name)
+      .notNullable()
+      .onDelete(CASCADE);
+    table
+      .string(events.seriesId, 100)
+      .references(eventSeries.id)
+      .inTable(eventSeries._name)
+      .onDelete(SET_NULL);
+    table
+      .string(events.status, 50)
+      .references(eventStatus.status)
+      .inTable(eventStatus._name)
+      .onDelete(SET_NULL);
+    table.integer(events.inPersonCapacity);
+    table.integer(events.onlineCapacity);
+    table.text(events.simpleParticipationUrl);
+    table.text(events.simpleRegistrationUrl);
+    table.boolean(events.recorded);
   });
 }
 
@@ -259,8 +344,16 @@ function createLanguageCodesTable() {
 
 function createAbstractsTable() {
   return connection.schema.createTable(abstracts._name, function (table) {
-    table.string(abstracts.lang, 3).references(languageCodes.lang).inTable(languageCodes._name).onDelete(CASCADE);
-    table.string(abstracts.resourceId, 50).references(resources.id).inTable(resources._name).onDelete(CASCADE);
+    table
+      .string(abstracts.lang, 3)
+      .references(languageCodes.lang)
+      .inTable(languageCodes._name)
+      .onDelete(CASCADE);
+    table
+      .string(abstracts.resourceId, 100)
+      .references(resources.id)
+      .inTable(resources._name)
+      .onDelete(CASCADE);
     table.text(abstracts.content).notNullable();
     table.primary([abstracts.lang, abstracts.resourceId]);
   });
@@ -268,8 +361,16 @@ function createAbstractsTable() {
 
 function createDescriptionsTable() {
   return connection.schema.createTable(descriptions._name, function (table) {
-    table.string(descriptions.lang, 3).references(languageCodes.lang).inTable(languageCodes._name).onDelete(CASCADE);
-    table.string(descriptions.resourceId, 50).references(resources.id).inTable(resources._name).onDelete(CASCADE);
+    table
+      .string(descriptions.lang, 3)
+      .references(languageCodes.lang)
+      .inTable(languageCodes._name)
+      .onDelete(CASCADE);
+    table
+      .string(descriptions.resourceId, 100)
+      .references(resources.id)
+      .inTable(resources._name)
+      .onDelete(CASCADE);
     table.text(descriptions.content).notNullable();
     table.primary([descriptions.lang, descriptions.resourceId]);
   });
@@ -277,8 +378,16 @@ function createDescriptionsTable() {
 
 function createNamesTable() {
   return connection.schema.createTable(names._name, function (table) {
-    table.string(names.lang, 3).references(languageCodes.lang).inTable(languageCodes._name).onDelete(CASCADE);
-    table.string(names.resourceId, 50).references(resources.id).inTable(resources._name).onDelete(CASCADE);
+    table
+      .string(names.lang, 3)
+      .references(languageCodes.lang)
+      .inTable(languageCodes._name)
+      .onDelete(CASCADE);
+    table
+      .string(names.resourceId, 100)
+      .references(resources.id)
+      .inTable(resources._name)
+      .onDelete(CASCADE);
     table.text(names.content).notNullable();
     table.primary([names.lang, names.resourceId]);
   });
@@ -286,8 +395,16 @@ function createNamesTable() {
 
 function createShortNamesTable() {
   return connection.schema.createTable(shortNames._name, function (table) {
-    table.string(shortNames.lang, 3).references(languageCodes.lang).inTable(languageCodes._name).onDelete(CASCADE);
-    table.string(shortNames.resourceId, 50).references(resources.id).inTable(resources._name).onDelete(CASCADE);
+    table
+      .string(shortNames.lang, 3)
+      .references(languageCodes.lang)
+      .inTable(languageCodes._name)
+      .onDelete(CASCADE);
+    table
+      .string(shortNames.resourceId, 100)
+      .references(resources.id)
+      .inTable(resources._name)
+      .onDelete(CASCADE);
     table.text(shortNames.content).notNullable();
     table.primary([shortNames.lang, shortNames.resourceId]);
   });
@@ -295,11 +412,59 @@ function createShortNamesTable() {
 
 function createUrlsTable() {
   return connection.schema.createTable(urls._name, function (table) {
-    table.string(urls.lang, 3).references(languageCodes.lang).inTable(languageCodes._name).onDelete(CASCADE);
-    table.string(urls.resourceId, 50).references(resources.id).inTable(resources._name).onDelete(CASCADE);
+    table
+      .string(urls.lang, 3)
+      .references(languageCodes.lang)
+      .inTable(languageCodes._name)
+      .onDelete(CASCADE);
+    table
+      .string(urls.resourceId, 100)
+      .references(resources.id)
+      .inTable(resources._name)
+      .onDelete(CASCADE);
     table.text(urls.content).notNullable();
     table.primary([urls.lang, urls.resourceId]);
   });
+}
+
+function createParticipationUrlsTable() {
+  return connection.schema.createTable(
+    participationUrls._name,
+    function (table) {
+      table
+        .string(participationUrls.lang, 3)
+        .references(languageCodes.lang)
+        .inTable(languageCodes._name)
+        .onDelete(CASCADE);
+      table
+        .string(participationUrls.eventId, 100)
+        .references(events.id)
+        .inTable(events._name)
+        .onDelete(CASCADE);
+      table.text(participationUrls.content).notNullable();
+      table.primary([participationUrls.lang, participationUrls.eventId]);
+    }
+  );
+}
+
+function createRegistrationUrlsTable() {
+  return connection.schema.createTable(
+    registrationUrls._name,
+    function (table) {
+      table
+        .string(registrationUrls.lang, 3)
+        .references(languageCodes.lang)
+        .inTable(languageCodes._name)
+        .onDelete(CASCADE);
+      table
+        .string(registrationUrls.eventId, 100)
+        .references(events.id)
+        .inTable(events._name)
+        .onDelete(CASCADE);
+      table.text(registrationUrls.content).notNullable();
+      table.primary([registrationUrls.lang, registrationUrls.eventId]);
+    }
+  );
 }
 
 function createAddressesTable() {
@@ -313,8 +478,16 @@ function createAddressesTable() {
 
 function createCitiesTable() {
   return connection.schema.createTable(cities._name, function (table) {
-    table.string(cities.lang, 3).references(languageCodes.lang).inTable(languageCodes._name).onDelete(CASCADE);
-    table.integer(cities.addressId).references(addresses.id).inTable(addresses._name).onDelete(CASCADE);
+    table
+      .string(cities.lang, 3)
+      .references(languageCodes.lang)
+      .inTable(languageCodes._name)
+      .onDelete(CASCADE);
+    table
+      .integer(cities.addressId)
+      .references(addresses.id)
+      .inTable(addresses._name)
+      .onDelete(CASCADE);
     table.text(cities.content).notNullable();
     table.primary([cities.lang, cities.addressId]);
   });
@@ -322,8 +495,16 @@ function createCitiesTable() {
 
 function createComplementsTable() {
   return connection.schema.createTable(complements._name, function (table) {
-    table.string(complements.lang, 3).references(languageCodes.lang).inTable(languageCodes._name).onDelete(CASCADE);
-    table.integer(complements.addressId).references(addresses.id).inTable(addresses._name).onDelete(CASCADE);
+    table
+      .string(complements.lang, 3)
+      .references(languageCodes.lang)
+      .inTable(languageCodes._name)
+      .onDelete(CASCADE);
+    table
+      .integer(complements.addressId)
+      .references(addresses.id)
+      .inTable(addresses._name)
+      .onDelete(CASCADE);
     table.primary([complements.lang, complements.addressId]);
 
     table.text(complements.content).notNullable();
@@ -332,8 +513,16 @@ function createComplementsTable() {
 
 function createRegionsTable() {
   return connection.schema.createTable(regions._name, function (table) {
-    table.string(regions.lang, 3).references(languageCodes.lang).inTable(languageCodes._name).onDelete(CASCADE);
-    table.integer(regions.addressId).references(addresses.id).inTable(addresses._name).onDelete(CASCADE);
+    table
+      .string(regions.lang, 3)
+      .references(languageCodes.lang)
+      .inTable(languageCodes._name)
+      .onDelete(CASCADE);
+    table
+      .integer(regions.addressId)
+      .references(addresses.id)
+      .inTable(addresses._name)
+      .onDelete(CASCADE);
     table.primary([regions.lang, regions.addressId]);
 
     table.text(regions.content).notNullable();
@@ -342,8 +531,16 @@ function createRegionsTable() {
 
 function createStreetsTable() {
   return connection.schema.createTable(streets._name, function (table) {
-    table.string(streets.lang, 3).references(languageCodes.lang).inTable(languageCodes._name).onDelete(CASCADE);
-    table.integer(streets.addressId).references(addresses.id).inTable(addresses._name).onDelete(CASCADE);
+    table
+      .string(streets.lang, 3)
+      .references(languageCodes.lang)
+      .inTable(languageCodes._name)
+      .onDelete(CASCADE);
+    table
+      .integer(streets.addressId)
+      .references(addresses.id)
+      .inTable(addresses._name)
+      .onDelete(CASCADE);
     table.primary([streets.lang, streets.addressId]);
 
     table.text(streets.content).notNullable();
@@ -354,8 +551,17 @@ function createContactPointsTable() {
   return connection.schema.createTable(contactPoints._name, function (table) {
     table.increments(contactPoints.id);
 
-    table.string(contactPoints.agentId, 50).references(agents.id).inTable(agents._name).notNullable().onDelete(CASCADE);
-    table.integer(contactPoints.addressId).references(addresses.id).inTable(addresses._name).onDelete(SET_NULL);
+    table
+      .string(contactPoints.agentId, 100)
+      .references(agents.id)
+      .inTable(agents._name)
+      .notNullable()
+      .onDelete(CASCADE);
+    table
+      .integer(contactPoints.addressId)
+      .references(addresses.id)
+      .inTable(addresses._name)
+      .onDelete(SET_NULL);
 
     table.jsonb(contactPoints.availableHours);
     table.string(contactPoints.email, 100);
@@ -366,9 +572,18 @@ function createContactPointsTable() {
 // TODO: review whether all columns in places should be nullable
 function createPlacesTable() {
   return connection.schema.createTable(places._name, function (table) {
-    table.string(places.id, 50).primary().references(resources.id).inTable(resources._name).onDelete(CASCADE);
+    table
+      .string(places.id, 100)
+      .primary()
+      .references(resources.id)
+      .inTable(resources._name)
+      .onDelete(CASCADE);
 
-    table.integer(places.addressId).references(addresses.id).inTable(addresses._name).onDelete(SET_NULL);
+    table
+      .integer(places.addressId)
+      .references(addresses.id)
+      .inTable(addresses._name)
+      .onDelete(SET_NULL);
 
     table.jsonb(places.geometries);
     table.integer(places.length);
@@ -380,8 +595,16 @@ function createPlacesTable() {
 
 function createHowToArriveTable() {
   return connection.schema.createTable(howToArrive._name, function (table) {
-    table.string(howToArrive.lang, 3).references(languageCodes.lang).inTable(languageCodes._name).onDelete(CASCADE);
-    table.string(howToArrive.placeId, 50).references(places.id).inTable(places._name).onDelete(CASCADE);
+    table
+      .string(howToArrive.lang, 3)
+      .references(languageCodes.lang)
+      .inTable(languageCodes._name)
+      .onDelete(CASCADE);
+    table
+      .string(howToArrive.placeId, 100)
+      .references(places.id)
+      .inTable(places._name)
+      .onDelete(CASCADE);
     table.primary([howToArrive.lang, howToArrive.placeId]);
 
     table.text(howToArrive.content).notNullable();
@@ -391,7 +614,7 @@ function createHowToArriveTable() {
 function createSnowConditionsTable() {
   return connection.schema.createTable(snowConditions._name, function (table) {
     table
-      .string(snowConditions.id, 50)
+      .string(snowConditions.id, 100)
       .primary()
       .references(places.id)
       .inTable(places._name)
@@ -414,21 +637,39 @@ function createSnowConditionsTable() {
 // TODO: add propagation trigger to delete place
 function createVenuesTable() {
   return connection.schema.createTable(venues._name, function (table) {
-    table.string(venues.id, 50).primary().references(resources.id).inTable(resources._name).onDelete(CASCADE);
+    table
+      .string(venues.id, 100)
+      .primary()
+      .references(resources.id)
+      .inTable(resources._name)
+      .onDelete(CASCADE);
   });
 }
 
 function createEventVenuesTable() {
   return connection.schema.createTable(eventVenues._name, function (table) {
-    table.string(eventVenues.venueId, 50).references(venues.id).inTable(venues._name).onDelete(CASCADE);
-    table.string(eventVenues.eventId, 50).references(events.id).inTable(events._name).onDelete(CASCADE);
+    table
+      .string(eventVenues.venueId, 100)
+      .references(venues.id)
+      .inTable(venues._name)
+      .onDelete(CASCADE);
+    table
+      .string(eventVenues.eventId, 100)
+      .references(events.id)
+      .inTable(events._name)
+      .onDelete(CASCADE);
     table.primary([eventVenues.venueId, eventVenues.eventId]);
   });
 }
 
 function createLiftsTable() {
   return connection.schema.createTable(lifts._name, function (table) {
-    table.string(lifts.id, 50).primary().references(resources.id).inTable(resources._name).onDelete(CASCADE);
+    table
+      .string(lifts.id, 100)
+      .primary()
+      .references(resources.id)
+      .inTable(resources._name)
+      .onDelete(CASCADE);
 
     table.integer(lifts.capacity);
     table.integer(lifts.personsPerChair);
@@ -437,18 +678,31 @@ function createLiftsTable() {
 
 function createMountainAreasTable() {
   return connection.schema.createTable(mountainAreas._name, function (table) {
-    table.string(mountainAreas.id, 50).primary().references(resources.id).inTable(resources._name).onDelete(CASCADE);
-    table.string(mountainAreas.areaOwnerId, 50).references(agents.id).inTable(agents._name);
+    table
+      .string(mountainAreas.id, 100)
+      .primary()
+      .references(resources.id)
+      .inTable(resources._name)
+      .onDelete(CASCADE);
+    table
+      .string(mountainAreas.areaOwnerId, 100)
+      .references(agents.id)
+      .inTable(agents._name);
 
     table.integer(mountainAreas.area);
-    table.integer(mountainAreas.totalParkLength);
+    table.integer(mountainAreas.totalParkArea);
     table.integer(mountainAreas.totalSlopeLength);
   });
 }
 
 function createSkiSlopesTable() {
   return connection.schema.createTable(skiSlopes._name, function (table) {
-    table.string(skiSlopes.id, 50).primary().references(resources.id).inTable(resources._name).onDelete(CASCADE);
+    table
+      .string(skiSlopes.id, 100)
+      .primary()
+      .references(resources.id)
+      .inTable(resources._name)
+      .onDelete(CASCADE);
 
     table.string(skiSlopes.difficultyEu, 20);
     table.string(skiSlopes.difficultyUs, 20);
@@ -457,7 +711,12 @@ function createSkiSlopesTable() {
 
 function createSnowparksTable() {
   return connection.schema.createTable(snowparks._name, function (table) {
-    table.string(snowparks.id, 50).primary().references(resources.id).inTable(resources._name).onDelete(CASCADE);
+    table
+      .string(snowparks.id, 100)
+      .primary()
+      .references(resources.id)
+      .inTable(resources._name)
+      .onDelete(CASCADE);
 
     table.string(snowparks.difficulty, 20);
   });
@@ -465,110 +724,209 @@ function createSnowparksTable() {
 
 function createAreaLiftsTable() {
   return connection.schema.createTable(areaLifts._name, function (table) {
-    table.string(areaLifts.areaId, 50).references(mountainAreas.id).inTable(mountainAreas._name).onDelete(CASCADE);
-    table.string(areaLifts.liftId, 50).references(lifts.id).inTable(lifts._name).onDelete(CASCADE);
+    table
+      .string(areaLifts.areaId, 100)
+      .references(mountainAreas.id)
+      .inTable(mountainAreas._name)
+      .onDelete(CASCADE);
+    table
+      .string(areaLifts.liftId, 100)
+      .references(lifts.id)
+      .inTable(lifts._name)
+      .onDelete(CASCADE);
     table.primary([areaLifts.areaId, areaLifts.liftId]);
   });
 }
 
 function createAreaSkiSlopesTable() {
   return connection.schema.createTable(areaSkiSlopes._name, function (table) {
-    table.string(areaSkiSlopes.areaId, 50).references(mountainAreas.id).inTable(mountainAreas._name).onDelete(CASCADE);
-    table.string(areaSkiSlopes.skiSlopeId, 50).references(skiSlopes.id).inTable(skiSlopes._name).onDelete(CASCADE);
+    table
+      .string(areaSkiSlopes.areaId, 100)
+      .references(mountainAreas.id)
+      .inTable(mountainAreas._name)
+      .onDelete(CASCADE);
+    table
+      .string(areaSkiSlopes.skiSlopeId, 100)
+      .references(skiSlopes.id)
+      .inTable(skiSlopes._name)
+      .onDelete(CASCADE);
     table.primary([areaSkiSlopes.areaId, areaSkiSlopes.skiSlopeId]);
   });
 }
 
 function createAreaSnowparksTable() {
   return connection.schema.createTable(areaSnowparks._name, function (table) {
-    table.string(areaSnowparks.areaId, 50).references(mountainAreas.id).inTable(mountainAreas._name).onDelete(CASCADE);
-    table.string(areaSnowparks.snowparkId, 50).references(snowparks.id).inTable(snowparks._name).onDelete(CASCADE);
+    table
+      .string(areaSnowparks.areaId, 100)
+      .references(mountainAreas.id)
+      .inTable(mountainAreas._name)
+      .onDelete(CASCADE);
+    table
+      .string(areaSnowparks.snowparkId, 100)
+      .references(snowparks.id)
+      .inTable(snowparks._name)
+      .onDelete(CASCADE);
     table.primary([areaSnowparks.areaId, areaSnowparks.snowparkId]);
   });
 }
 
 function createSubAreasTable() {
   return connection.schema.createTable(subAreas._name, function (table) {
-    table.string(subAreas.parentId, 50).references(mountainAreas.id).inTable(mountainAreas._name).onDelete(CASCADE);
-    table.string(subAreas.childId, 50).references(mountainAreas.id).inTable(mountainAreas._name).onDelete(CASCADE);
+    table
+      .string(subAreas.parentId, 100)
+      .references(mountainAreas.id)
+      .inTable(mountainAreas._name)
+      .onDelete(CASCADE);
+    table
+      .string(subAreas.childId, 100)
+      .references(mountainAreas.id)
+      .inTable(mountainAreas._name)
+      .onDelete(CASCADE);
     table.primary([subAreas.parentId, subAreas.childId]);
   });
 }
 
 function createConnectionsTable() {
   return connection.schema.createTable(connections._name, function (table) {
-    table.string(connections.aId, 50).references(places.id).inTable(places._name).onDelete(CASCADE);
-    table.string(connections.bId, 50).references(places.id).inTable(places._name).onDelete(CASCADE);
+    table
+      .string(connections.aId, 100)
+      .references(places.id)
+      .inTable(places._name)
+      .onDelete(CASCADE);
+    table
+      .string(connections.bId, 100)
+      .references(places.id)
+      .inTable(places._name)
+      .onDelete(CASCADE);
     table.primary([connections.aId, connections.bId]);
   });
 }
 
 function createResourceCategoriesTable() {
-  return connection.schema.createTable(resourceCategories._name, function (table) {
-    table
-      .string(resourceCategories.categoryId, 50)
-      .references(categories.id)
-      .inTable(categories._name)
-      .onDelete(CASCADE);
-    table.string(resourceCategories.resourceId, 50).references(resources.id).inTable(resources._name).onDelete(CASCADE);
-    table.primary([resourceCategories.resourceId, resourceCategories.categoryId]);
-  });
+  return connection.schema.createTable(
+    resourceCategories._name,
+    function (table) {
+      table
+        .string(resourceCategories.categoryId, 100)
+        .references(categories.id)
+        .inTable(categories._name)
+        .onDelete(CASCADE);
+      table
+        .string(resourceCategories.resourceId, 100)
+        .references(resources.id)
+        .inTable(resources._name)
+        .onDelete(CASCADE);
+      table.primary([
+        resourceCategories.resourceId,
+        resourceCategories.categoryId,
+      ]);
+    }
+  );
 }
 
 function createResourceFeaturesTable() {
-  return connection.schema.createTable(resourceFeatures._name, function (table) {
-    table.string(resourceFeatures.featureId, 50).references(features.id).inTable(features._name).onDelete(CASCADE);
-    table.string(resourceFeatures.resourceId, 50).references(resources.id).inTable(resources._name).onDelete(CASCADE);
-    table.primary([resourceFeatures.resourceId, resourceFeatures.featureId]);
-  });
+  return connection.schema.createTable(
+    resourceFeatures._name,
+    function (table) {
+      table
+        .string(resourceFeatures.featureId, 100)
+        .references(features.id)
+        .inTable(features._name)
+        .onDelete(CASCADE);
+      table
+        .string(resourceFeatures.resourceId, 100)
+        .references(resources.id)
+        .inTable(resources._name)
+        .onDelete(CASCADE);
+      table.primary([resourceFeatures.resourceId, resourceFeatures.featureId]);
+    }
+  );
 }
 
 function createContributorsTable() {
   return connection.schema.createTable(contributors._name, function (table) {
-    table.string(contributors.contributorId, 50).references(agents.id).inTable(agents._name).onDelete(CASCADE);
-    table.string(contributors.eventId, 50).references(events.id).inTable(events._name).onDelete(CASCADE);
+    table
+      .string(contributors.contributorId, 100)
+      .references(agents.id)
+      .inTable(agents._name)
+      .onDelete(CASCADE);
+    table
+      .string(contributors.eventId, 100)
+      .references(events.id)
+      .inTable(events._name)
+      .onDelete(CASCADE);
     table.primary([contributors.contributorId, contributors.eventId]);
   });
 }
 
 function createOrganizersTable() {
   return connection.schema.createTable(organizers._name, function (table) {
-    table.string(organizers.organizerId, 50).references(agents.id).inTable(agents._name).onDelete(CASCADE);
-    table.string(organizers.eventId, 50).references(events.id).inTable(events._name).onDelete(CASCADE);
+    table
+      .string(organizers.organizerId, 100)
+      .references(agents.id)
+      .inTable(agents._name)
+      .onDelete(CASCADE);
+    table
+      .string(organizers.eventId, 100)
+      .references(events.id)
+      .inTable(events._name)
+      .onDelete(CASCADE);
     table.primary([organizers.organizerId, organizers.eventId]);
   });
 }
 
 function createSponsorsTable() {
   return connection.schema.createTable(sponsors._name, function (table) {
-    table.string(sponsors.sponsorId, 50).references(agents.id).inTable(agents._name).onDelete(CASCADE);
-    table.string(sponsors.eventId, 50).references(events.id).inTable(events._name).onDelete(CASCADE);
+    table
+      .string(sponsors.sponsorId, 100)
+      .references(agents.id)
+      .inTable(agents._name)
+      .onDelete(CASCADE);
+    table
+      .string(sponsors.eventId, 100)
+      .references(events.id)
+      .inTable(events._name)
+      .onDelete(CASCADE);
     table.primary([sponsors.sponsorId, sponsors.eventId]);
   });
 }
 
 function createSponsorsTable() {
   return connection.schema.createTable(sponsors._name, function (table) {
-    table.string(sponsors.sponsorId, 50).references(agents.id).inTable(agents._name).onDelete(CASCADE);
-    table.string(sponsors.eventId, 50).references(events.id).inTable(events._name).onDelete(CASCADE);
+    table
+      .string(sponsors.sponsorId, 100)
+      .references(agents.id)
+      .inTable(agents._name)
+      .onDelete(CASCADE);
+    table
+      .string(sponsors.eventId, 100)
+      .references(events.id)
+      .inTable(events._name)
+      .onDelete(CASCADE);
     table.primary([sponsors.sponsorId, sponsors.eventId]);
   });
 }
 
 function createMultimediaDescriptionsTable() {
-  return connection.schema.createTable(multimediaDescriptions._name, function (table) {
-    table
-      .string(multimediaDescriptions.resourceId, 50)
-      .references(resources.id)
-      .inTable(resources._name)
-      .onDelete(CASCADE);
-    table
-      .string(multimediaDescriptions.mediaObjectId, 50)
-      .references(mediaObjects.id)
-      .inTable(mediaObjects._name)
-      .onDelete(CASCADE);
-    table.primary([multimediaDescriptions.resourceId, multimediaDescriptions.mediaObjectId]);
-  });
+  return connection.schema.createTable(
+    multimediaDescriptions._name,
+    function (table) {
+      table
+        .string(multimediaDescriptions.resourceId, 100)
+        .references(resources.id)
+        .inTable(resources._name)
+        .onDelete(CASCADE);
+      table
+        .string(multimediaDescriptions.mediaObjectId, 100)
+        .references(mediaObjects.id)
+        .inTable(mediaObjects._name)
+        .onDelete(CASCADE);
+      table.primary([
+        multimediaDescriptions.resourceId,
+        multimediaDescriptions.mediaObjectId,
+      ]);
+    }
+  );
 }
 
 function createDeleteContactPointAddressTrigger() {
@@ -688,6 +1046,30 @@ function createUrlObjectsView() {
         )::json AS "url"
       FROM urls
       GROUP BY resource_id;
+  `);
+}
+
+function createParticipationUrlObjectsView() {
+  return connection.raw(`
+  CREATE VIEW participation_url_objects AS
+    SELECT event_id AS "id",
+        COALESCE(
+          json_object_agg(DISTINCT lang, content) FILTER (WHERE lang IS NOT NULL)
+        )::json AS "url"
+      FROM participation_urls
+      GROUP BY event_id;
+  `);
+}
+
+function createRegistrationUrlObjectsView() {
+  return connection.raw(`
+  CREATE VIEW registration_url_objects AS
+    SELECT event_id AS "id",
+        COALESCE(
+          json_object_agg(DISTINCT lang, content) FILTER (WHERE lang IS NOT NULL)
+        )::json AS "url"
+      FROM registration_urls
+      GROUP BY event_id;
   `);
 }
 
@@ -958,6 +1340,8 @@ function createAllViews() {
     .then(() => createNameObjectsView())
     .then(() => createShortNameObjectsView())
     .then(() => createUrlObjectsView())
+    .then(() => createParticipationUrlObjectsView())
+    .then(() => createRegistrationUrlObjectsView())
     .then(() => createCategoriesArraysView())
     .then(() => createFeaturesArraysView())
     .then(() => createMultimediaDescriptionsArraysView())
@@ -984,6 +1368,8 @@ function dropAllViews() {
     dropViewIfExists(views.nameObjects._name),
     dropViewIfExists(views.shortNameObjects._name),
     dropViewIfExists(views.urlObjects._name),
+    dropViewIfExists(views.participationUrlObjects._name),
+    dropViewIfExists(views.registrationUrlObjects._name),
     dropViewIfExists(views.categoriesArrays._name),
     dropViewIfExists(views.featuresArrays._name),
     dropViewIfExists(views.multimediaDescriptionsArrays._name),
@@ -1022,6 +1408,8 @@ function dropAllTables() {
     dropTableIfExists(names._name),
     dropTableIfExists(shortNames._name),
     dropTableIfExists(urls._name),
+    dropTableIfExists(participationUrls._name),
+    dropTableIfExists(registrationUrls._name),
     dropTableIfExists(agents._name),
     dropTableIfExists(addresses._name),
     dropTableIfExists(cities._name),
@@ -1080,6 +1468,8 @@ function createAllTables() {
     .then(() => createNamesTable())
     .then(() => createShortNamesTable())
     .then(() => createUrlsTable())
+    .then(() => createParticipationUrlsTable())
+    .then(() => createRegistrationUrlsTable())
     .then(() => createAddressesTable())
     .then(() => createCitiesTable())
     .then(() => createComplementsTable())

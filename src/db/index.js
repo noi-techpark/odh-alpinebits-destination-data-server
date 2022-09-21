@@ -117,13 +117,17 @@ module.exports = {
     events: {
       _name: "events",
       id: "id",
-      capacity: "capacity",
       endDate: "end_date",
-      parentId: "parent_id",
+      parentId: "parent_id", // TODO: replace with relationship table
       publisherId: "publisher_id",
       seriesId: "series_id",
       startDate: "start_date",
       status: "status",
+      inPersonCapacity: "in_person_capacity",
+      onlineCapacity: "online_capacity",
+      simpleParticipationUrl: "simple_participation_url",
+      simpleRegistrationUrl: "simple_registration_url",
+      recorded: "recorded",
     },
     eventSeries: {
       _name: "event_series",
@@ -188,7 +192,7 @@ module.exports = {
       id: "id",
       area: "area",
       areaOwnerId: "area_owner_id",
-      totalParkLength: "total_park_length",
+      totalParkArea: "total_park_area",
       totalSlopeLength: "total_slope_length",
     },
     multimediaDescriptions: {
@@ -310,6 +314,18 @@ module.exports = {
       lang: "lang",
       content: "content",
     },
+    participationUrls: {
+      _name: "participation_urls",
+      eventId: "event_id",
+      lang: "lang",
+      content: "content",
+    },
+    registrationUrls: {
+      _name: "registration_urls",
+      eventId: "event_id",
+      lang: "lang",
+      content: "content",
+    },
   },
   views: {
     abstractObjects: {
@@ -336,6 +352,16 @@ module.exports = {
       _name: "url_objects",
       id: "id",
       url: "url",
+    },
+    participationUrlObjects: {
+      _name: "participation_url_objects",
+      id: "id",
+      participationUrl: "participation_url",
+    },
+    registrationUrlObjects: {
+      _name: "registration_url_objects",
+      id: "id",
+      registrationUrl: "registration_url",
     },
     categoriesArrays: {
       _name: "categories_arrays",

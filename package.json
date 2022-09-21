@@ -10,10 +10,11 @@
     "test": "jest",
     "db": "docker-compose -f docker-compose_postgres.yml up",
     "pgadmin": "node pgadmin-setup.js && docker-compose -f docker-compose_pgadmin.yml up",
-    "create-tables": "node src/db/create_tables.js",
+    "create-tables": "node --trace-warnings src/db/create_tables.js",
     "insert-defaults": "node src/db/insert_defaults.js",
     "test-db": "node src/db/test.js",
-    "generate-scripts": "node src/populate-db.js"
+    "generate-scripts": "node src/populate-db.js",
+    "import-odh-data": "node src/import/index.js"
   },
   "repository": {
     "type": "git",

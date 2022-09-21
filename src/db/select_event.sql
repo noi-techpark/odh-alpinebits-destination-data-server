@@ -1,5 +1,6 @@
 SELECT events.id,
-  capacity,
+  in_person_capacity AS "inPersonCapacity",
+  online_capacity AS "onlineCapacity",
   end_date AS "endDate",
   start_date AS "startDate",
   status,

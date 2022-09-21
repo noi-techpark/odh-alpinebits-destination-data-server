@@ -11,7 +11,9 @@ class EventConnector extends ResourceConnector {
   }
 
   create(event) {
-    return this.runTransaction(() => this.insertEvent(event).then(() => this.retrieveEvent(event.id)));
+    return this.runTransaction(() =>
+      this.insertEvent(event).then(() => this.retrieveEvent(event.id))
+    );
   }
 
   retrieve(id) {
@@ -23,7 +25,9 @@ class EventConnector extends ResourceConnector {
     if (!event.id) throw new Error("missing id");
 
     return this.runTransaction(() =>
-      this.retrieveEvent(event.id).then((oldEvent) => this.updateEvent(oldEvent, event))
+      this.retrieveEvent(event.id).then((oldEvent) =>
+        this.updateEvent(oldEvent, event)
+      )
     );
   }
 
@@ -64,7 +68,9 @@ class EventConnector extends ResourceConnector {
         this.updateSponsors(newEvent),
         this.updateSubEvents(newEvent),
       ]).then((promises) => {
-        newEvent.lastUpdate = _.first(_.flatten(promises))[resources.lastUpdate];
+        newEvent.lastUpdate = _.first(_.flatten(promises))[
+          resources.lastUpdate
+        ];
         return newEvent;
       });
     }
@@ -90,7 +96,7 @@ class EventConnector extends ResourceConnector {
           this.insertOrganizers(event),
           this.insertSponsors(event),
           this.insertSubEvents(event),
-          this.insertEventVenues(venues),
+          this.insertEventVenues(event),
         ])
       )
       .then(() => event.id);
@@ -104,16 +110,22 @@ class EventConnector extends ResourceConnector {
   }
 
   updateContributors(event) {
-    return dbFn.deleteContributors(this.connection, event.id).then(() => this.insertContributors(event));
+    return dbFn
+      .deleteContributors(this.connection, event.id)
+      .then(() => this.insertContributors(event));
   }
 
   insertEventVenues(event) {
-    const inserts = event?.venues?.map((venue) => dbFn.insertEventVenue(this.connection, event.id, venue.id));
+    const inserts = event?.venues?.map((venue) =>
+      dbFn.insertEventVenue(this.connection, event.id, venue.id)
+    );
     return Promise.all(inserts ?? []);
   }
 
   updateEventVenues(event) {
-    return dbFn.deleteEventVenues(this.connection, event.id).then(() => this.insertEventVenues(event));
+    return dbFn
+      .deleteEventVenues(this.connection, event.id)
+      .then(() => this.insertEventVenues(event));
   }
 
   insertOrganizers(event) {
@@ -124,25 +136,35 @@ class EventConnector extends ResourceConnector {
   }
 
   updateOrganizers(event) {
-    return dbFn.deleteOrganizers(this.connection, event.id).then(() => this.insertOrganizers(event));
+    return dbFn
+      .deleteOrganizers(this.connection, event.id)
+      .then(() => this.insertOrganizers(event));
   }
 
   insertSponsors(event) {
-    const inserts = event?.sponsors?.map((sponsor) => dbFn.insertSponsor(this.connection, event.id, sponsor.id));
+    const inserts = event?.sponsors?.map((sponsor) =>
+      dbFn.insertSponsor(this.connection, event.id, sponsor.id)
+    );
     return Promise.all(inserts ?? []);
   }
 
   updateSponsors(event) {
-    return dbFn.deleteSponsors(this.connection, event.id).then(() => this.insertSponsors(event));
+    return dbFn
+      .deleteSponsors(this.connection, event.id)
+      .then(() => this.insertSponsors(event));
   }
 
   insertSubEvents(event) {
-    const inserts = event?.subEvents?.map((subEvent) => dbFn.updateSubEvent(this.connection, event.id, subEvent.id));
+    const inserts = event?.subEvents?.map((subEvent) =>
+      dbFn.updateSubEvent(this.connection, event.id, subEvent.id)
+    );
     return Promise.all(inserts ?? []);
   }
 
   updateSubEvents(event) {
-    return dbFn.deleteSubEvents(this.connection, event.id).then(() => this.insertSubEvents(event));
+    return dbFn
+      .deleteSubEvents(this.connection, event.id)
+      .then(() => this.insertSubEvents(event));
   }
 
   // TODO: add venues
