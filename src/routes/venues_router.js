@@ -11,108 +11,44 @@ class VenuesRouter extends Router {
   constructor(app) {
     super();
 
-    this.addUnimplementedGetRoute(`/venues/:id/categories`);
-    this.addUnimplementedGetRoute(`/venues/:id/multimediaDescriptions`);
-
     this.addPostRoute(`/venues`, this.postVenue);
     this.addGetRoute(`/venues`, this.getVenues);
     this.addGetRoute(`/venues/:id`, this.getVenueById);
     this.addDeleteRoute(`/venues/:id`, this.deleteVenue);
     this.addPatchRoute(`/venues/:id`, this.patchVenue);
 
+    this.addGetRoute(`/venues/:id/categories`, this.getVenueCategories);
+    this.addGetRoute(
+      `/venues/:id/multimediaDescriptions`,
+      this.getVenueMultimediaDescriptions
+    );
+
     if (app) {
       this.installRoutes(app);
     }
   }
 
-  getVenues = async (request) => {
-    // Process request and authentication
-    // Retrieve data
-    const connector = new VenueConnector();
-    const parsedRequest = new Request(request);
+  postVenue = (request) =>
+    this.postResource(request, VenueConnector, deserializeVenue);
 
-    // Return to the client
-    try {
-      return connector.retrieve().then((venues) => serializeResourceCollection(venues, parsedRequest));
-      // return connector.retrieve();
-    } catch (error) {
-      console.error(error);
-      throw error;
-    }
-  };
+  getVenues = (request) => this.getResources(request, VenueConnector);
 
-  getVenueById = async (request) => {
-    // Process request and authentication
-    // Retrieve data
-    const parsedRequest = new Request(request);
-    const connector = new VenueConnector(parsedRequest);
+  getVenueById = (request) => this.getResourceById(request, VenueConnector);
 
-    // Return to the client
-    try {
-      return connector.retrieve().then((venue) => serializeSingleResource(venue, parsedRequest));
-    } catch (error) {
-      console.error(error);
-      throw error;
-    }
-  };
+  deleteVenue = (request) => this.deleteResource(request, VenueConnector);
 
-  postVenue = async (request) => {
-    // Process request and authentication
-    const { body } = request;
-    // Validate object
-    this.validate(body);
-    // Store data
-    const venue = deserializeVenue(body.data);
-    const parsedRequest = new Request(request);
-    const connector = new VenueConnector(parsedRequest);
-
-    // Return to the client
-    try {
-      return connector.create(venue).then((venue) => serializeSingleResource(venue, parsedRequest));
-    } catch (error) {
-      console.error(error);
-      throw error;
-    }
-  };
-
-  patchVenue = async (request) => {
-    // Process request and authentication
-    const { body } = request;
-    // Validate object
-    this.validate(body);
-    // Store data
-    const venue = deserializeVenue(body.data);
-    const parsedRequest = new Request(request);
-    const connector = new VenueConnector(parsedRequest);
-
-    // Return to the client
-    try {
-      return connector.update(venue).then((_venue) => serializeSingleResource(_venue, parsedRequest));
-    } catch (error) {
-      console.error(error);
-      throw error;
-    }
-  };
-
-  deleteVenue = async (request) => {
-    // Process request and authentication
-    // Retrieve data
-    const parsedRequest = new Request(request);
-    const connector = new VenueConnector(parsedRequest);
-    console.log("delete venue");
-
-    // Return to the client
-    try {
-      return connector.delete();
-    } catch (error) {
-      console.error(error);
-      throw error;
-    }
-  };
+  patchVenue = (request) =>
+    this.patchResource(request, VenueConnector, deserializeVenue);
 
   validate(venueMessage) {
     console.log("The venue message HAS NOT BEEN validated.");
   }
+
+  getVenueCategories = async (request) =>
+    this.getResourceCategories(request, VenueConnector);
+
+  getVenueMultimediaDescriptions = async (request) =>
+    this.getResourceMultimediaDescriptions(request, VenueConnector);
 }
 
 module.exports = {

@@ -14,11 +14,12 @@ SELECT media_objects.id,
   resource_objects.url,
   resource_objects.categories,
   CASE
-    WHEN copyright_owner_id IS NOT NULL
+    WHEN license_holder_id IS NOT NULL
       THEN json_build_object(
-        'id', copyright_owner_id,
+        'id', license_holder_id,
         'type', 'agents'
       )
-  END AS "copyrightOwner"
+  END AS "licenseHolder",
+  COUNT(media_objects.id) OVER() AS total
 FROM media_objects
   LEFT JOIN resource_objects ON resource_objects.id = media_objects.id

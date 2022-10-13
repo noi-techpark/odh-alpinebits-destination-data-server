@@ -1,19 +1,10 @@
 const { Router } = require("./router");
 const { LiftConnector } = require("../connectors/lift_connector");
-const {
-  deserializeLift,
-  serializeSingleResource,
-  serializeResourceCollection,
-} = require("../model/destinationdata2022");
-const { Request } = require("../model/request/request");
+const { deserializeLift } = require("../model/destinationdata2022");
 
 class LiftsRouter extends Router {
   constructor(app) {
     super();
-
-    this.addUnimplementedGetRoute(`/lifts/:id/categories`);
-    this.addUnimplementedGetRoute(`/lifts/:id/connections`);
-    this.addUnimplementedGetRoute(`/lifts/:id/multimediaDescriptions`);
 
     this.addPostRoute(`/lifts`, this.postLift);
     this.addGetRoute(`/lifts`, this.getLifts);
@@ -21,99 +12,42 @@ class LiftsRouter extends Router {
     this.addDeleteRoute(`/lifts/:id`, this.deleteLift);
     this.addPatchRoute(`/lifts/:id`, this.patchLift);
 
+    this.addGetRoute(`/lifts/:id/categories`, this.getLiftCategories);
+    this.addGetRoute(`/lifts/:id/connections`, this.getLiftConnections);
+    this.addGetRoute(
+      `/lifts/:id/multimediaDescriptions`,
+      this.getLiftMultimediaDescriptions
+    );
+
     if (app) {
       this.installRoutes(app);
     }
   }
 
-  getLifts = async (request) => {
-    // Process request and authentication
-    // Retrieve data
-    const connector = new LiftConnector();
-    const parsedRequest = new Request(request);
+  postLift = (request) =>
+    this.postResource(request, LiftConnector, deserializeLift);
 
-    // Return to the client
-    try {
-      return connector.retrieve().then((lifts) => serializeResourceCollection(lifts, parsedRequest));
-      // return connector.retrieve();
-    } catch (error) {
-      console.error(error);
-      throw error;
-    }
-  };
+  getLifts = (request) => this.getResources(request, LiftConnector);
 
-  getLiftById = async (request) => {
-    // Process request and authentication
-    // Retrieve data
-    const parsedRequest = new Request(request);
-    const connector = new LiftConnector(parsedRequest);
+  getLiftById = (request) => this.getResourceById(request, LiftConnector);
 
-    // Return to the client
-    try {
-      return connector.retrieve().then((lift) => serializeSingleResource(lift, parsedRequest));
-    } catch (error) {
-      console.error(error);
-      throw error;
-    }
-  };
+  deleteLift = (request) => this.deleteResource(request, LiftConnector);
 
-  postLift = async (request) => {
-    // Process request and authentication
-    const { body } = request;
-    // Validate object
-    this.validate(body);
-    // Store data
-    const lift = deserializeLift(body.data);
-    const parsedRequest = new Request(request);
-    const connector = new LiftConnector(parsedRequest);
-
-    // Return to the client
-    try {
-      return connector.create(lift).then((lift) => serializeSingleResource(lift, parsedRequest));
-    } catch (error) {
-      console.error(error);
-      throw error;
-    }
-  };
-
-  patchLift = async (request) => {
-    // Process request and authentication
-    const { body } = request;
-    // Validate object
-    this.validate(body);
-    // Store data
-    const lift = deserializeLift(body.data);
-    const parsedRequest = new Request(request);
-    const connector = new LiftConnector(parsedRequest);
-
-    // Return to the client
-    try {
-      return connector.update(lift).then((lift) => serializeSingleResource(lift, parsedRequest));
-    } catch (error) {
-      console.error(error);
-      throw error;
-    }
-  };
-
-  deleteLift = async (request) => {
-    // Process request and authentication
-    // Retrieve data
-    const parsedRequest = new Request(request);
-    const connector = new LiftConnector(parsedRequest);
-    console.log("delete lift");
-
-    // Return to the client
-    try {
-      return connector.delete();
-    } catch (error) {
-      console.error(error);
-      throw error;
-    }
-  };
+  patchLift = (request) =>
+    this.patchResource(request, LiftConnector, deserializeLift);
 
   validate(liftMessage) {
     console.log("The lift message HAS NOT BEEN validated.");
   }
+
+  getLiftCategories = async (request) =>
+    this.getResourceCategories(request, LiftConnector);
+
+  getLiftConnections = async (request) =>
+    this.getPlaceConnections(request, LiftConnector);
+
+  getLiftMultimediaDescriptions = async (request) =>
+    this.getResourceMultimediaDescriptions(request, LiftConnector);
 }
 
 module.exports = {

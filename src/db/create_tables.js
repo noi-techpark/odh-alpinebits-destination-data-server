@@ -251,7 +251,7 @@ function createMediaObjectsTable() {
       .inTable(resources._name)
       .onDelete(CASCADE);
     table
-      .string(mediaObjects.copyrightOwnerId, 100)
+      .string(mediaObjects.licenseHolderId, 100)
       .references(agents.id)
       .inTable(agents._name)
       .onDelete(SET_NULL);
@@ -1055,7 +1055,7 @@ function createParticipationUrlObjectsView() {
     SELECT event_id AS "id",
         COALESCE(
           json_object_agg(DISTINCT lang, content) FILTER (WHERE lang IS NOT NULL)
-        )::json AS "url"
+        )::json AS "participation_url"
       FROM participation_urls
       GROUP BY event_id;
   `);
@@ -1067,7 +1067,7 @@ function createRegistrationUrlObjectsView() {
     SELECT event_id AS "id",
         COALESCE(
           json_object_agg(DISTINCT lang, content) FILTER (WHERE lang IS NOT NULL)
-        )::json AS "url"
+        )::json AS "registration_url"
       FROM registration_urls
       GROUP BY event_id;
   `);

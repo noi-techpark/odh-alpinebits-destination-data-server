@@ -1,24 +1,34 @@
 const { Router } = require("./router");
-const { MountainAreaConnector } = require("../connectors/mountain_area_connector");
 const {
-  deserializeMountainArea,
-  serializeSingleResource,
-  serializeResourceCollection,
-} = require("../model/destinationdata2022");
-const { Request } = require("../model/request/request");
+  MountainAreaConnector,
+} = require("../connectors/mountain_area_connector");
+const { deserializeMountainArea } = require("../model/destinationdata2022");
+const { AgentConnector } = require("../connectors/agent_connector");
+const { LiftConnector } = require("../connectors/lift_connector");
+const { SkiSlopeConnector } = require("../connectors/ski_slope_connector");
+const { SnowparkConnector } = require("../connectors/snowparks_connector");
 
 class MountainAreasRouter extends Router {
   constructor(app) {
     super();
 
-    this.addUnimplementedGetRoute(`/mountainAreas/:id/areaOwner`);
-    this.addUnimplementedGetRoute(`/mountainAreas/:id/categories`);
-    this.addUnimplementedGetRoute(`/mountainAreas/:id/connections`);
-    this.addUnimplementedGetRoute(`/mountainAreas/:id/lifts`);
-    this.addUnimplementedGetRoute(`/mountainAreas/:id/multimediaDescriptions`);
-    this.addUnimplementedGetRoute(`/mountainAreas/:id/skiSlopes`);
-    this.addUnimplementedGetRoute(`/mountainAreas/:id/snowparks`);
-    this.addUnimplementedGetRoute(`/mountainAreas/:id/subAreas`);
+    this.addGetRoute(
+      `/mountainAreas/:id/areaOwner`,
+      this.getMountainAreaAreaOwner
+    );
+    this.addGetRoute(`/mountainAreas/:id/lifts`, this.getMountainAreaLifts);
+    this.addGetRoute(
+      `/mountainAreas/:id/skiSlopes`,
+      this.getMountainAreaSkiSlopes
+    );
+    this.addGetRoute(
+      `/mountainAreas/:id/snowparks`,
+      this.getMountainAreaSnowparks
+    );
+    this.addGetRoute(
+      `/mountainAreas/:id/subAreas`,
+      this.getMountainAreaSubAreas
+    );
 
     this.addPostRoute(`/mountainAreas`, this.postMountainArea);
     this.addGetRoute(`/mountainAreas`, this.getMountainArea);
@@ -26,103 +36,107 @@ class MountainAreasRouter extends Router {
     this.addDeleteRoute(`/mountainAreas/:id`, this.deleteMountainArea);
     this.addPatchRoute(`/mountainAreas/:id`, this.patchMountainArea);
 
+    this.addGetRoute(
+      `/mountainAreas/:id/categories`,
+      this.getMountainAreaCategories
+    );
+    this.addGetRoute(
+      `/mountainAreas/:id/connections`,
+      this.getMountainAreaConnections
+    );
+    this.addGetRoute(
+      `/mountainAreas/:id/multimediaDescriptions`,
+      this.getMountainAreaMultimediaDescriptions
+    );
+
     if (app) {
       this.installRoutes(app);
     }
   }
 
-  getMountainArea = async (request) => {
-    // Process request and authentication
-    // Retrieve data
-    const connector = new MountainAreaConnector();
-    const parsedRequest = new Request(request);
+  postMountainArea = (request) =>
+    this.postResource(request, MountainAreaConnector, deserializeMountainArea);
 
-    // Return to the client
-    try {
-      return connector.retrieve().then((mountainAreas) => serializeResourceCollection(mountainAreas, parsedRequest));
-      // return connector.retrieve();
-    } catch (error) {
-      console.error(error);
-      throw error;
-    }
-  };
+  getMountainArea = (request) =>
+    this.getResources(request, MountainAreaConnector);
 
-  getMountainAreaById = async (request) => {
-    // Process request and authentication
-    // Retrieve data
-    const parsedRequest = new Request(request);
-    const connector = new MountainAreaConnector(parsedRequest);
+  getMountainAreaById = (request) =>
+    this.getResourceById(request, MountainAreaConnector);
 
-    // Return to the client
-    try {
-      return connector.retrieve().then((mountainArea) => serializeSingleResource(mountainArea, parsedRequest));
-    } catch (error) {
-      console.error(error);
-      throw error;
-    }
-  };
+  deleteMountainArea = (request) =>
+    this.deleteResource(request, MountainAreaConnector);
 
-  postMountainArea = async (request) => {
-    // Process request and authentication
-    const { body } = request;
-    // Validate object
-    this.validate(body);
-    // Store data
-    const mountainArea = deserializeMountainArea(body.data);
-    const parsedRequest = new Request(request);
-    const connector = new MountainAreaConnector(parsedRequest);
-
-    // Return to the client
-    try {
-      return connector
-        .create(mountainArea)
-        .then((mountainArea) => serializeSingleResource(mountainArea, parsedRequest));
-    } catch (error) {
-      console.error(error);
-      throw error;
-    }
-  };
-
-  patchMountainArea = async (request) => {
-    // Process request and authentication
-    const { body } = request;
-    // Validate object
-    this.validate(body);
-    // Store data
-    const mountainArea = deserializeMountainArea(body.data);
-    const parsedRequest = new Request(request);
-    const connector = new MountainAreaConnector(parsedRequest);
-
-    // Return to the client
-    try {
-      return connector
-        .update(mountainArea)
-        .then((mountainArea) => serializeSingleResource(mountainArea, parsedRequest));
-    } catch (error) {
-      console.error(error);
-      throw error;
-    }
-  };
-
-  deleteMountainArea = async (request) => {
-    // Process request and authentication
-    // Retrieve data
-    const parsedRequest = new Request(request);
-    const connector = new MountainAreaConnector(parsedRequest);
-    console.log("delete mountainArea");
-
-    // Return to the client
-    try {
-      return connector.delete();
-    } catch (error) {
-      console.error(error);
-      throw error;
-    }
-  };
+  patchMountainArea = (request) =>
+    this.patchResource(request, MountainAreaConnector, deserializeMountainArea);
 
   validate(mountainAreaMessage) {
     console.log("The mountainArea message HAS NOT BEEN validated.");
   }
+
+  getMountainAreaCategories = async (request) =>
+    this.getResourceCategories(request, MountainAreaConnector);
+
+  getMountainAreaConnections = async (request) =>
+    this.getPlaceConnections(request, MountainAreaConnector);
+
+  getMountainAreaMultimediaDescriptions = async (request) =>
+    this.getResourceMultimediaDescriptions(request, MountainAreaConnector);
+
+  getMountainAreaAreaOwner = async (request) => {
+    const fnRetrieveAreaOwner = (mountainArea, parsedRequest) =>
+      new AgentConnector(parsedRequest).retrieveAreaOwner(mountainArea);
+    return this.getResourceRelationshipToOne(
+      request,
+      MountainAreaConnector,
+      fnRetrieveAreaOwner
+    );
+  };
+
+  getMountainAreaLifts = async (request) => {
+    const fnRetrieveLifts = (mountainArea, parsedRequest) =>
+      new LiftConnector(parsedRequest).retrieveMountainAreaLifts(mountainArea);
+    return this.getResourceRelationshipToMany(
+      request,
+      MountainAreaConnector,
+      fnRetrieveLifts
+    );
+  };
+
+  getMountainAreaSkiSlopes = async (request) => {
+    const fnRetrieveSkiSlopes = (mountainArea, parsedRequest) =>
+      new SkiSlopeConnector(parsedRequest).retrieveMountainAreaSkiSlopes(
+        mountainArea
+      );
+    return this.getResourceRelationshipToMany(
+      request,
+      MountainAreaConnector,
+      fnRetrieveSkiSlopes
+    );
+  };
+
+  getMountainAreaSnowparks = async (request) => {
+    const fnRetrieveSnowparks = (mountainArea, parsedRequest) =>
+      new SnowparkConnector(parsedRequest).retrieveMountainAreaSnowparks(
+        mountainArea
+      );
+    return this.getResourceRelationshipToMany(
+      request,
+      MountainAreaConnector,
+      fnRetrieveSnowparks
+    );
+  };
+
+  getMountainAreaSubAreas = async (request) => {
+    const fnRetrieveSubAreas = (mountainArea, parsedRequest) =>
+      new MountainAreaConnector(parsedRequest).retrieveMountainAreaSubAreas(
+        mountainArea
+      );
+    return this.getResourceRelationshipToMany(
+      request,
+      MountainAreaConnector,
+      fnRetrieveSubAreas
+    );
+  };
 }
 
 module.exports = {

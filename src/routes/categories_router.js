@@ -1,19 +1,10 @@
 const { Router } = require("./router");
 const { CategoryConnector } = require("../connectors/category_connector");
-const {
-  deserializeCategory,
-  serializeResourceCollection,
-  serializeSingleResource,
-} = require("../model/destinationdata2022");
-const { Request } = require("../model/request/request");
+const { deserializeCategory } = require("../model/destinationdata2022");
 
 class CategoriesRouter extends Router {
   constructor(app) {
     super();
-
-    this.addUnimplementedGetRoute(`/categories/:id/children`);
-    this.addUnimplementedGetRoute(`/categories/:id/multimediaDescriptions`);
-    this.addUnimplementedGetRoute(`/categories/:id/parents`);
 
     this.addPostRoute(`/categories`, this.postCategory);
     this.addGetRoute(`/categories`, this.getCategories);
@@ -21,98 +12,57 @@ class CategoriesRouter extends Router {
     this.addDeleteRoute(`/categories/:id`, this.deleteCategory);
     this.addPatchRoute(`/categories/:id`, this.patchCategory);
 
+    this.addGetRoute(`/categories/:id/children`, this.getCategoryChildren);
+    this.addGetRoute(
+      `/categories/:id/multimediaDescriptions`,
+      this.getCategoryMultimediaDescriptions
+    );
+    this.addGetRoute(`/categories/:id/parents`, this.getCategoryParents);
+
     if (app) {
       this.installRoutes(app);
     }
   }
 
-  getCategories = async (request) => {
-    // Process request and authentication
-    // Retrieve data
-    const connector = new CategoryConnector();
-    const parsedRequest = new Request(request);
+  postCategory = (request) =>
+    this.postResource(request, CategoryConnector, deserializeCategory);
 
-    // Return to the client
-    try {
-      return connector.retrieve().then((categories) => serializeResourceCollection(categories, parsedRequest));
-    } catch (error) {
-      console.error(error);
-      throw error;
-    }
-  };
+  getCategories = (request) => this.getResources(request, CategoryConnector);
 
-  getCategoryById = async (request) => {
-    // Process request and authentication
-    // Retrieve data
-    const parsedRequest = new Request(request);
-    const connector = new CategoryConnector(parsedRequest);
+  getCategoryById = (request) =>
+    this.getResourceById(request, CategoryConnector);
 
-    // Return to the client
-    try {
-      return connector.retrieve().then((category) => serializeSingleResource(category, parsedRequest));
-    } catch (error) {
-      console.error(error);
-      throw error;
-    }
-  };
+  deleteCategory = (request) => this.deleteResource(request, CategoryConnector);
 
-  postCategory = async (request) => {
-    // Process request and authentication
-    const parsedRequest = new Request(request);
-    const { body } = request;
-    // Validate object
-    this.validate(body);
-    // Store data
-    const category = deserializeCategory(body.data);
-    const connector = new CategoryConnector();
-
-    // Return to the client
-    try {
-      return connector.create(category).then((category) => serializeSingleResource(category, parsedRequest));
-    } catch (error) {
-      console.error(error);
-      throw error;
-    }
-  };
-
-  patchCategory = async (request) => {
-    // Process request and authentication
-    const parsedRequest = new Request(request);
-    const { body } = request;
-    // Validate object
-    this.validate(body);
-    // Store data
-    const category = deserializeCategory(body.data);
-    const connector = new CategoryConnector();
-
-    // Return to the client
-    try {
-      return connector.update(category).then((category) => serializeSingleResource(category, parsedRequest));
-    } catch (error) {
-      console.error(error);
-      throw error;
-    }
-  };
-
-  deleteCategory = async (request) => {
-    // Process request and authentication
-    // Retrieve data
-    const parsedRequest = new Request(request);
-    const connector = new CategoryConnector(parsedRequest);
-    console.log("delete category");
-
-    // Return to the client
-    try {
-      return connector.delete();
-    } catch (error) {
-      console.error(error);
-      throw error;
-    }
-  };
+  patchCategory = (request) =>
+    this.patchResource(request, CategoryConnector, deserializeCategory);
 
   validate(categoryMessage) {
     console.log("The category message HAS NOT BEEN validated.");
   }
+
+  getCategoryChildren = async (request) => {
+    const fnRetrieveCategories = (category, parsedRequest) =>
+      new CategoryConnector(parsedRequest).retrieveCategoryChildren(category);
+    return this.getResourceRelationshipToMany(
+      request,
+      CategoryConnector,
+      fnRetrieveCategories
+    );
+  };
+
+  getCategoryMultimediaDescriptions = async (request) =>
+    this.getResourceMultimediaDescriptions(request, CategoryConnector);
+
+  getCategoryParents = async (request) => {
+    const fnRetrieveCategories = (category, parsedRequest) =>
+      new CategoryConnector(parsedRequest).retrieveCategoryParents(category);
+    return this.getResourceRelationshipToMany(
+      request,
+      CategoryConnector,
+      fnRetrieveCategories
+    );
+  };
 }
 
 module.exports = {

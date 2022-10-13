@@ -1,19 +1,13 @@
 const { Router } = require("./router");
-const { EventSeriesConnector } = require("./../connectors/event_series_connector");
 const {
-  deserializeEventSeries,
-  serializeResourceCollection,
-  serializeSingleResource,
-} = require("../model/destinationdata2022");
-const { Request } = require("../model/request/request");
+  EventSeriesConnector,
+} = require("./../connectors/event_series_connector");
+const { EventConnector } = require("./../connectors/event_connector");
+const { deserializeEventSeries } = require("../model/destinationdata2022");
 
 class EventSeriesRouter extends Router {
   constructor(app) {
     super();
-
-    this.addUnimplementedGetRoute(`/eventSeries/:id/categories`);
-    this.addUnimplementedGetRoute(`/eventSeries/:id/editions`);
-    this.addUnimplementedGetRoute(`/eventSeries/:id/multimediaDescriptions`);
 
     this.addPostRoute(`/eventSeries`, this.postEventSeries);
     this.addGetRoute(`/eventSeries`, this.getEventSeries);
@@ -21,99 +15,55 @@ class EventSeriesRouter extends Router {
     this.addDeleteRoute(`/eventSeries/:id`, this.deleteEventSeries);
     this.addPatchRoute(`/eventSeries/:id`, this.patchEventSeries);
 
+    this.addGetRoute(
+      `/eventSeries/:id/categories`,
+      this.getEventSeriesCategories
+    );
+    this.addGetRoute(`/eventSeries/:id/editions`, this.getEventSeriesEditions);
+    this.addGetRoute(
+      `/eventSeries/:id/multimediaDescriptions`,
+      this.getEventSeriesMultimediaDescriptions
+    );
+
     if (app) {
       this.installRoutes(app);
     }
   }
 
-  getEventSeries = async (request) => {
-    // Process request and authentication
-    // Retrieve data
-    const connector = new EventSeriesConnector();
-    const parsedRequest = new Request(request);
+  postEventSeries = (request) =>
+    this.postResource(request, EventSeriesConnector, deserializeEventSeries);
 
-    // Return to the client
-    try {
-      return connector
-        .retrieve()
-        .then((eventSeriesCollection) => serializeResourceCollection(eventSeriesCollection, parsedRequest));
-    } catch (error) {
-      console.error(error);
-      throw error;
-    }
-  };
+  getEventSeries = (request) =>
+    this.getResources(request, EventSeriesConnector);
 
-  getEventSeriesById = async (request) => {
-    // Process request and authentication
-    // Retrieve data
-    const parsedRequest = new Request(request);
-    const connector = new EventSeriesConnector(parsedRequest);
+  getEventSeriesById = (request) =>
+    this.getResourceById(request, EventSeriesConnector);
 
-    // Return to the client
-    try {
-      return connector.retrieve().then((eventSeries) => serializeSingleResource(eventSeries, parsedRequest));
-    } catch (error) {
-      console.error(error);
-      throw error;
-    }
-  };
+  deleteEventSeries = (request) =>
+    this.deleteResource(request, EventSeriesConnector);
 
-  postEventSeries = async (request) => {
-    // Process request and authentication
-    const { body } = request;
-    // Validate object
-    this.validate(body);
-    // Store data
-    const eventSeries = deserializeEventSeries(body.data);
-    const parsedRequest = new Request(request);
-    const connector = new EventSeriesConnector(parsedRequest);
-
-    // Return to the client
-    try {
-      return connector.create(eventSeries).then((eventSeries) => serializeSingleResource(eventSeries, parsedRequest));
-    } catch (error) {
-      console.error(error);
-      throw error;
-    }
-  };
-
-  patchEventSeries = async (request) => {
-    // Process request and authentication
-    const { body } = request;
-    // Validate object
-    this.validate(body);
-    // Store data
-    const eventSeries = deserializeEventSeries(body.data);
-    const parsedRequest = new Request(request);
-    const connector = new EventSeriesConnector(parsedRequest);
-
-    // Return to the client
-    try {
-      return connector.update(eventSeries).then((eventSeries) => serializeSingleResource(eventSeries, parsedRequest));
-    } catch (error) {
-      console.error(error);
-      throw error;
-    }
-  };
-
-  deleteEventSeries = async (request) => {
-    // Process request and authentication
-    // Retrieve data
-    const parsedRequest = new Request(request);
-    const connector = new EventSeriesConnector(parsedRequest);
-
-    // Return to the client
-    try {
-      return connector.delete();
-    } catch (error) {
-      console.error(error);
-      throw error;
-    }
-  };
+  patchEventSeries = (request) =>
+    this.patchResource(request, EventSeriesConnector, deserializeEventSeries);
 
   validate(eventSeriesMessage) {
     console.log("The event series message HAS NOT BEEN validated.");
   }
+
+  getEventSeriesCategories = async (request) =>
+    this.getResourceCategories(request, EventSeriesConnector);
+
+  getEventSeriesEditions = async (request) => {
+    const fnRetrieveEditions = (event, parsedRequest) =>
+      new EventConnector(parsedRequest).retrieveEventSeriesEditions(event);
+    return this.getResourceRelationshipToMany(
+      request,
+      EventSeriesConnector,
+      fnRetrieveEditions
+    );
+  };
+
+  getEventSeriesMultimediaDescriptions = async (request) =>
+    this.getResourceMultimediaDescriptions(request, EventSeriesConnector);
 }
 
 module.exports = {

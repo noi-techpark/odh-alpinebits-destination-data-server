@@ -3,6 +3,7 @@ const dbFn = require("../db/functions");
 const { schemas } = require("../db");
 const { ResourceConnector } = require("./resource_connector");
 const { Venue } = require("../model/destinationdata2022/venue");
+const { DestinationDataError } = require("../errors");
 
 class VenueConnector extends ResourceConnector {
   constructor(request) {
@@ -10,7 +11,9 @@ class VenueConnector extends ResourceConnector {
   }
 
   create(venue) {
-    return this.runTransaction(() => this.insertVenue(venue).then(() => this.retrieveVenue(venue.id)));
+    return this.runTransaction(() =>
+      this.insertVenue(venue).then(() => this.retrieveVenue(venue.id))
+    );
   }
 
   retrieve(id) {
@@ -18,11 +21,18 @@ class VenueConnector extends ResourceConnector {
     return this.runTransaction(() => this.retrieveVenue(venueId));
   }
 
+  retrieveEventVenues(resource) {
+    const venuesIds = resource?.venues?.map((ref) => ref.id) ?? [];
+    return this.runTransaction(() => this.retrieveVenue(venuesIds));
+  }
+
   update(venue) {
     if (!venue.id) throw new Error("missing id");
 
     return this.runTransaction(() =>
-      this.retrieveVenue(venue.id).then((oldVenue) => this.updateVenue(oldVenue, venue))
+      this.retrieveVenue(venue.id).then((oldVenue) =>
+        this.updateVenue(oldVenue, venue)
+      )
     );
   }
 
@@ -36,16 +46,23 @@ class VenueConnector extends ResourceConnector {
   }
 
   retrieveVenue(id) {
-    return dbFn.selectVenueFromId(this.connection, id).then((rows) => {
-      if (_.isString(id)) {
-        if (_.size(rows) === 1) {
-          return this.mapRowToVenue(_.first(rows));
+    const offset = !_.isString(id) ? this.getOffset() : null;
+    const limit = !_.isString(id) ? this.getLimit() : null;
+
+    return dbFn
+      .selectVenueFromId(this.connection, id, offset, limit)
+      .then((rows) => {
+        if (_.isString(id)) {
+          if (_.size(rows) === 1) {
+            return this.mapRowToVenue(_.first(rows));
+          }
+          DestinationDataError.throwNotFound(
+            `Venue resource(s) not found. ID(s): ${id}`
+          );
+        } else {
+          return rows?.map(this.mapRowToVenue);
         }
-        throw new Error("Not found");
-      } else {
-        return rows?.map(this.mapRowToVenue);
-      }
-    });
+      });
   }
 
   updateVenue(oldVenue, newInput) {
@@ -56,7 +73,9 @@ class VenueConnector extends ResourceConnector {
     if (this.shouldUpdate(oldVenue, newVenue)) {
       return Promise.all([this.updateResource(newVenue)])
         .then((promises) => {
-          newVenue.lastUpdate = _.first(_.flatten(promises))[schemas.resources.lastUpdate];
+          newVenue.lastUpdate = _.first(_.flatten(promises))[
+            schemas.resources.lastUpdate
+          ];
           return this.updatePlace(newVenue);
         })
         .then(() => newVenue);

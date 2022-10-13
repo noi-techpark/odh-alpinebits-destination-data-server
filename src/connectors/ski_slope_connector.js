@@ -3,6 +3,7 @@ const dbFn = require("../db/functions");
 const { schemas } = require("../db");
 const { ResourceConnector } = require("./resource_connector");
 const { SkiSlope } = require("../model/destinationdata2022/ski_slope");
+const { DestinationDataError } = require("../errors");
 
 class SkiSlopeConnector extends ResourceConnector {
   constructor(request) {
@@ -10,7 +11,11 @@ class SkiSlopeConnector extends ResourceConnector {
   }
 
   create(skiSlope) {
-    return this.runTransaction(() => this.insertSkiSlope(skiSlope).then(() => this.retrieveSkiSlope(skiSlope.id)));
+    return this.runTransaction(() =>
+      this.insertSkiSlope(skiSlope).then(() =>
+        this.retrieveSkiSlope(skiSlope.id)
+      )
+    );
   }
 
   retrieve(id) {
@@ -18,11 +23,23 @@ class SkiSlopeConnector extends ResourceConnector {
     return this.runTransaction(() => this.retrieveSkiSlope(skiSlopeId));
   }
 
+  retrieveResourceSkiSlopeConnections(resource) {
+    const skiSlopesIds = resource?.connections?.map((ref) => ref.id) ?? [];
+    return this.runTransaction(() => this.retrieveSkiSlope(skiSlopesIds));
+  }
+
+  retrieveMountainAreaSkiSlopes(mountainArea) {
+    const skiSlopesIds = mountainArea?.skiSlopes?.map((ref) => ref.id) ?? [];
+    return this.runTransaction(() => this.retrieveSkiSlope(skiSlopesIds));
+  }
+
   update(skiSlope) {
     if (!skiSlope.id) throw new Error("missing id");
 
     return this.runTransaction(() =>
-      this.retrieveSkiSlope(skiSlope.id).then((oldSkiSlope) => this.updateSkiSlope(oldSkiSlope, skiSlope))
+      this.retrieveSkiSlope(skiSlope.id).then((oldSkiSlope) =>
+        this.updateSkiSlope(oldSkiSlope, skiSlope)
+      )
     );
   }
 
@@ -36,16 +53,23 @@ class SkiSlopeConnector extends ResourceConnector {
   }
 
   retrieveSkiSlope(id) {
-    return dbFn.selectSkiSlopeFromId(this.connection, id).then((rows) => {
-      if (_.isString(id)) {
-        if (_.size(rows) === 1) {
-          return this.mapRowToSkiSlope(_.first(rows));
+    const offset = !_.isString(id) ? this.getOffset() : null;
+    const limit = !_.isString(id) ? this.getLimit() : null;
+
+    return dbFn
+      .selectSkiSlopeFromId(this.connection, id, offset, limit)
+      .then((rows) => {
+        if (_.isString(id)) {
+          if (_.size(rows) === 1) {
+            return this.mapRowToSkiSlope(_.first(rows));
+          }
+          DestinationDataError.throwNotFound(
+            `Ski Slope resource(s) not found. ID(s): ${id}`
+          );
+        } else {
+          return rows?.map(this.mapRowToSkiSlope);
         }
-        throw new Error("Not found");
-      } else {
-        return rows?.map(this.mapRowToSkiSlope);
-      }
-    });
+      });
   }
 
   updateSkiSlope(oldSkiSlope, newInput) {
@@ -56,7 +80,9 @@ class SkiSlopeConnector extends ResourceConnector {
     if (this.shouldUpdate(oldSkiSlope, newSkiSlope)) {
       return Promise.all([this.updateResource(newSkiSlope)])
         .then((promises) => {
-          newSkiSlope.lastUpdate = _.first(_.flatten(promises))[schemas.resources.lastUpdate];
+          newSkiSlope.lastUpdate = _.first(_.flatten(promises))[
+            schemas.resources.lastUpdate
+          ];
           return this.updatePlace(newSkiSlope);
         })
         .then(() => newSkiSlope);

@@ -3,7 +3,8 @@ const dbFn = require("../db/functions");
 const { ResourceConnector } = require("./resource_connector");
 const { Event } = require("../model/destinationdata2022/event");
 const { schemas } = require("../db");
-const { events, resources } = schemas;
+const { DestinationDataError } = require("../errors");
+const { events, resources, participationUrls, registrationUrls } = schemas;
 
 class EventConnector extends ResourceConnector {
   constructor(request) {
@@ -19,6 +20,16 @@ class EventConnector extends ResourceConnector {
   retrieve(id) {
     const eventId = id ?? this?.request?.params?.id;
     return this.runTransaction(() => this.retrieveEvent(eventId));
+  }
+
+  retrieveEventSubEvents(event) {
+    const subEventsIds = event?.subEvents?.map((ref) => ref.id) ?? [];
+    return this.runTransaction(() => this.retrieveEvent(subEventsIds));
+  }
+
+  retrieveEventSeriesEditions(series) {
+    const editionsIds = series?.editions?.map((ref) => ref.id) ?? [];
+    return this.runTransaction(() => this.retrieveEvent(editionsIds));
   }
 
   update(event) {
@@ -41,16 +52,23 @@ class EventConnector extends ResourceConnector {
   }
 
   retrieveEvent(id) {
-    return dbFn.selectEventFromId(this.connection, id).then((rows) => {
-      if (_.isString(id)) {
-        if (_.size(rows) === 1) {
-          return this.mapRowToEvent(_.first(rows));
+    const offset = !_.isString(id) ? this.getOffset() : null;
+    const limit = !_.isString(id) ? this.getLimit() : null;
+
+    return dbFn
+      .selectEventFromId(this.connection, id, offset, limit)
+      .then((rows) => {
+        if (_.isString(id)) {
+          if (_.size(rows) === 1) {
+            return this.mapRowToEvent(_.first(rows));
+          }
+          DestinationDataError.throwNotFound(
+            `Event resource(s) not found. ID(s): ${id}`
+          );
+        } else {
+          return rows?.map(this.mapRowToEvent);
         }
-        throw new Error("Not found");
-      } else {
-        return rows?.map(this.mapRowToEvent);
-      }
-    });
+      });
   }
 
   updateEvent(oldEvent, newInput) {
@@ -97,6 +115,16 @@ class EventConnector extends ResourceConnector {
           this.insertSponsors(event),
           this.insertSubEvents(event),
           this.insertEventVenues(event),
+          this.insertResourceText(
+            participationUrls._name,
+            event.participationUrl,
+            event.id
+          ),
+          this.insertResourceText(
+            registrationUrls._name,
+            event.registrationUrl,
+            event.id
+          ),
         ])
       )
       .then(() => event.id);
@@ -172,11 +200,19 @@ class EventConnector extends ResourceConnector {
   mapEventToColumns(event) {
     return {
       [events.id]: event?.id,
-      [events.capacity]: event?.capacity,
+      [events.inPersonCapacity]: event?.inPersonCapacity,
       [events.endDate]: event?.endDate,
+      [events.onlineCapacity]: event?.onlineCapacity,
       [events.parentId]: event?.parent?.id,
       [events.publisherId]: event?.publisher?.id,
+      [events.recorded]: event?.recorded,
       [events.seriesId]: event?.series?.id,
+      [events.simpleParticipationUrl]: _.isString(event?.simpleParticipationUrl)
+        ? event?.simpleParticipationUrl
+        : null,
+      [events.simpleRegistrationUrl]: _.isString(event?.simpleRegistrationUrl)
+        ? event?.simpleRegistrationUrl
+        : null,
       [events.startDate]: event?.startDate,
       [events.status]: event?.status,
     };

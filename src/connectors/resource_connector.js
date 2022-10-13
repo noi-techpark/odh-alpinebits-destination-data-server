@@ -31,15 +31,30 @@ function logNoChange(key) {
 }
 
 function logAddition(key, oldValue, newValue) {
-  console.log(`${colors.FgGreen}ADD ${key}${colors.FgWhite}`, oldValue, "=>", newValue);
+  console.log(
+    `${colors.FgGreen}ADD ${key}${colors.FgWhite}`,
+    oldValue,
+    "=>",
+    newValue
+  );
 }
 
 function logRemoval(key, oldValue, newValue) {
-  console.log(`${colors.FgRed}REMOVE ${key}${colors.FgWhite}`, oldValue, "=>", newValue);
+  console.log(
+    `${colors.FgRed}REMOVE ${key}${colors.FgWhite}`,
+    oldValue,
+    "=>",
+    newValue
+  );
 }
 
 function logUpdate(key, oldValue, newValue) {
-  console.log(`${colors.FgYellow}UPDATE ${key}${colors.FgWhite}`, oldValue, "=>", newValue);
+  console.log(
+    `${colors.FgYellow}UPDATE ${key}${colors.FgWhite}`,
+    oldValue,
+    "=>",
+    newValue
+  );
 }
 
 class ResourceConnector {
@@ -103,10 +118,22 @@ class ResourceConnector {
     return dbFn.insertResource(this.connection, columns).then((resourceId) => {
       resource.id = resourceId;
       return Promise.all([
-        this.insertResourceText(abstracts._name, resource.abstract, resource.id),
-        this.insertResourceText(descriptions._name, resource.description, resource.id),
+        this.insertResourceText(
+          abstracts._name,
+          resource.abstract,
+          resource.id
+        ),
+        this.insertResourceText(
+          descriptions._name,
+          resource.description,
+          resource.id
+        ),
         this.insertResourceText(names._name, resource.name, resource.id),
-        this.insertResourceText(shortNames._name, resource.shortName, resource.id),
+        this.insertResourceText(
+          shortNames._name,
+          resource.shortName,
+          resource.id
+        ),
         this.insertResourceText(urls._name, resource.url, resource.id),
         this.insertCategories(resource),
         // TODO: add insertFeatures
@@ -121,9 +148,17 @@ class ResourceConnector {
     return Promise.all([
       dbFn.updateResource(this.connection, columns),
       this.updateResourceText(abstracts._name, resource.abstract, resource.id),
-      this.updateResourceText(descriptions._name, resource.description, resource.id),
+      this.updateResourceText(
+        descriptions._name,
+        resource.description,
+        resource.id
+      ),
       this.updateResourceText(names._name, resource.name, resource.id),
-      this.updateResourceText(shortNames._name, resource.shortName, resource.id),
+      this.updateResourceText(
+        shortNames._name,
+        resource.shortName,
+        resource.id
+      ),
       this.updateResourceText(urls._name, resource.url, resource.id),
       this.updateCategories(resource),
       // TODO: add updateFeatures
@@ -135,7 +170,13 @@ class ResourceConnector {
     const inserts = !_.isObject(text)
       ? []
       : _.entries(text)?.map(([lang, content]) =>
-          dbFn.insertResourceText(this.connection, tableName, resourceId, lang, content)
+          dbFn.insertResourceText(
+            this.connection,
+            tableName,
+            resourceId,
+            lang,
+            content
+          )
         );
     return Promise.all(inserts);
   }
@@ -154,12 +195,18 @@ class ResourceConnector {
   }
 
   updateCategories(resource) {
-    return dbFn.deleteResourceCategories(this.connection, resource.id).then(() => this.insertCategories(resource));
+    return dbFn
+      .deleteResourceCategories(this.connection, resource.id)
+      .then(() => this.insertCategories(resource));
   }
 
   insertMultimediaDescriptions(resource) {
     const inserts = resource?.multimediaDescriptions?.map((description) =>
-      dbFn.insertMultimediaDescriptions(this.connection, resource.id, description.id)
+      dbFn.insertMultimediaDescriptions(
+        this.connection,
+        resource.id,
+        description.id
+      )
     );
     return Promise.all(inserts ?? []);
   }
@@ -179,7 +226,11 @@ class ResourceConnector {
       address.id = _.first(rows);
       return Promise.all([
         this.insertAddressText(cities._name, address.city, address.id),
-        this.insertAddressText(complements._name, address.complement, address.id),
+        this.insertAddressText(
+          complements._name,
+          address.complement,
+          address.id
+        ),
         this.insertAddressText(regions._name, address.region, address.id),
         this.insertAddressText(streets._name, address.street, address.id),
       ]).then(() => address.id);
@@ -190,7 +241,13 @@ class ResourceConnector {
     const inserts = !_.isObject(text)
       ? []
       : _.entries(text)?.map(([lang, content]) =>
-          dbFn.insertAddressText(this.connection, tableName, addressId, lang, content)
+          dbFn.insertAddressText(
+            this.connection,
+            tableName,
+            addressId,
+            lang,
+            content
+          )
         );
     return Promise.all(inserts);
   }
@@ -207,7 +264,11 @@ class ResourceConnector {
       })
       .then(() =>
         Promise.all([
-          this.insertPlaceText(howToArrive._name, resource.howToArrive, resource.id),
+          this.insertPlaceText(
+            howToArrive._name,
+            resource.howToArrive,
+            resource.id
+          ),
           this.insertSnowCondition(resource),
           this.insertPlaceConnections(resource),
         ])
@@ -222,14 +283,22 @@ class ResourceConnector {
   }
 
   updatePlace(resource) {
-    return dbFn.deletePlace(this.connection, resource.id).then(() => this.insertPlace(resource));
+    return dbFn
+      .deletePlace(this.connection, resource.id)
+      .then(() => this.insertPlace(resource));
   }
 
   insertPlaceText(tableName, text, placeId) {
     const inserts = !_.isObject(text)
       ? []
       : _.entries(text)?.map(([lang, content]) =>
-          dbFn.insertPlaceText(this.connection, tableName, placeId, lang, content)
+          dbFn.insertPlaceText(
+            this.connection,
+            tableName,
+            placeId,
+            lang,
+            content
+          )
         );
     return Promise.all(inserts);
   }
@@ -263,11 +332,15 @@ class ResourceConnector {
     return {
       [schemas.places.id]: place?.id,
       [schemas.places.addressId]: place?.addressId,
-      [schemas.places.geometries]: place?.geometries ? JSON.stringify(place?.geometries) : undefined,
+      [schemas.places.geometries]: place?.geometries
+        ? JSON.stringify(place?.geometries)
+        : undefined,
       [schemas.places.length]: place?.length,
       [schemas.places.maxAltitude]: place?.maxAltitude,
       [schemas.places.minAltitude]: place?.minAltitude,
-      [schemas.places.openingHours]: place?.openingHours ? JSON.stringify(place?.openingHours) : undefined,
+      [schemas.places.openingHours]: place?.openingHours
+        ? JSON.stringify(place?.openingHours)
+        : undefined,
     };
   }
 
@@ -275,15 +348,20 @@ class ResourceConnector {
     return {
       [schemas.snowConditions.id]: place?.id,
       [schemas.snowConditions.baseSnow]: place?.snowCondition?.baseSnow,
-      [schemas.snowConditions.baseSnowRangeLower]: place?.snowCondition?.baseSnowRange?.lower,
-      [schemas.snowConditions.baseSnowRangeUpper]: place?.snowCondition?.baseSnowRange?.upper,
+      [schemas.snowConditions.baseSnowRangeLower]:
+        place?.snowCondition?.baseSnowRange?.lower,
+      [schemas.snowConditions.baseSnowRangeUpper]:
+        place?.snowCondition?.baseSnowRange?.upper,
       [schemas.snowConditions.groomed]: place?.snowCondition?.groomed,
       [schemas.snowConditions.latestStorm]: place?.snowCondition?.latestStorm,
       [schemas.snowConditions.obtainedIn]: place?.snowCondition?.obtainedIn,
-      [schemas.snowConditions.primarySurface]: place?.snowCondition?.primarySurface,
-      [schemas.snowConditions.secondarySurface]: place?.snowCondition?.secondarySurface,
+      [schemas.snowConditions.primarySurface]:
+        place?.snowCondition?.primarySurface,
+      [schemas.snowConditions.secondarySurface]:
+        place?.snowCondition?.secondarySurface,
       [schemas.snowConditions.snowMaking]: place?.snowCondition?.snowMaking,
-      [schemas.snowConditions.snowOverNight]: place?.snowCondition?.snowOverNight,
+      [schemas.snowConditions.snowOverNight]:
+        place?.snowCondition?.snowOverNight,
     };
   }
 
@@ -293,9 +371,13 @@ class ResourceConnector {
     const serverLastUpdate = serversResource?.lastUpdate?.toISOString();
 
     if (clientLastUpdate < serverLastUpdate) {
-      throw new Error("Outdated: expected last update at " + serversResource.lastUpdate);
+      throw new Error(
+        "Outdated: expected last update at " + serversResource.lastUpdate
+      );
     } else if (clientLastUpdate > serverLastUpdate) {
-      throw new Error("Ahead: expected last update at " + serversResource.lastUpdate);
+      throw new Error(
+        "Ahead: expected last update at " + serversResource.lastUpdate
+      );
     }
   }
 
@@ -347,6 +429,23 @@ class ResourceConnector {
     _.entries(incomingMessage).forEach(([field, value]) => {
       if (!_.isUndefined(value)) updatedResource[field] = value;
     });
+  }
+
+  getOffset() {
+    if (_.isEmpty(this.request)) return 0;
+
+    const pageSize = this.request?.query?.page?.size || 10;
+    const pageNumber = this.request?.query?.page?.number || 1;
+
+    return (pageNumber - 1) * pageSize;
+  }
+
+  getLimit() {
+    if (_.isEmpty(this.request)) return 100;
+
+    const pageSize = this.request?.query?.page?.size || 10;
+
+    return pageSize;
   }
 }
 

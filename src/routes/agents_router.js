@@ -1,19 +1,10 @@
 const { Router } = require("./router");
 const { AgentConnector } = require("../connectors/agent_connector");
-const {
-  deserializeAgent,
-  serializeAgent,
-  serializeSingleResource,
-  serializeResourceCollection,
-} = require("../model/destinationdata2022");
-const { Request } = require("../model/request/request");
+const { deserializeAgent } = require("../model/destinationdata2022");
 
 class AgentsRouter extends Router {
   constructor(app) {
     super();
-
-    this.addUnimplementedGetRoute(`/agents/:id/categories`);
-    this.addUnimplementedGetRoute(`/agents/:id/multimediaDescriptions`);
 
     this.addPostRoute(`/agents`, this.postAgent);
     this.addGetRoute(`/agents`, this.getAgents);
@@ -21,99 +12,38 @@ class AgentsRouter extends Router {
     this.addDeleteRoute(`/agents/:id`, this.deleteAgent);
     this.addPatchRoute(`/agents/:id`, this.patchAgent);
 
+    this.addGetRoute(`/agents/:id/categories`, this.getAgentCategories);
+    this.addGetRoute(
+      `/agents/:id/multimediaDescriptions`,
+      this.getAgentMultimediaDescriptions
+    );
+
     if (app) {
       this.installRoutes(app);
     }
   }
 
-  getAgents = async (request) => {
-    // Process request and authentication
-    // Retrieve data
-    const connector = new AgentConnector();
-    const parsedRequest = new Request(request);
+  postAgent = (request) =>
+    this.postResource(request, AgentConnector, deserializeAgent);
 
-    // Return to the client
-    try {
-      return connector.retrieve().then((agents) => serializeResourceCollection(agents, parsedRequest));
-      // return connector.retrieve();
-    } catch (error) {
-      console.error(error);
-      throw error;
-    }
-  };
+  getAgents = (request) => this.getResources(request, AgentConnector);
 
-  getAgentById = async (request) => {
-    // Process request and authentication
-    // Retrieve data
-    const parsedRequest = new Request(request);
-    const connector = new AgentConnector(parsedRequest);
+  getAgentById = (request) => this.getResourceById(request, AgentConnector);
 
-    // Return to the client
-    try {
-      return connector.retrieve().then((agent) => serializeSingleResource(agent, parsedRequest));
-    } catch (error) {
-      console.error(error);
-      throw error;
-    }
-  };
+  deleteAgent = (request) => this.deleteResource(request, AgentConnector);
 
-  postAgent = async (request) => {
-    // Process request and authentication
-    const { body } = request;
-    // Validate object
-    this.validate(body);
-    // Store data
-    const agent = deserializeAgent(body.data);
-    const parsedRequest = new Request(request);
-    const connector = new AgentConnector(parsedRequest);
-
-    // Return to the client
-    try {
-      return connector.create(agent).then((agent) => serializeSingleResource(agent, parsedRequest));
-    } catch (error) {
-      console.error(error);
-      throw error;
-    }
-  };
-
-  patchAgent = async (request) => {
-    // Process request and authentication
-    const { body } = request;
-    // Validate object
-    this.validate(body);
-    // Store data
-    const agent = deserializeAgent(body.data);
-    const parsedRequest = new Request(request);
-    const connector = new AgentConnector(parsedRequest);
-
-    // Return to the client
-    try {
-      return connector.update(agent).then((agent) => serializeSingleResource(agent, parsedRequest));
-    } catch (error) {
-      console.error(error);
-      throw error;
-    }
-  };
-
-  deleteAgent = async (request) => {
-    // Process request and authentication
-    // Retrieve data
-    const parsedRequest = new Request(request);
-    const connector = new AgentConnector(parsedRequest);
-    console.log("delete agent");
-
-    // Return to the client
-    try {
-      return connector.delete();
-    } catch (error) {
-      console.error(error);
-      throw error;
-    }
-  };
+  patchAgent = (request) =>
+    this.patchResource(request, AgentConnector, deserializeAgent);
 
   validate(agentMessage) {
     console.log("The agent message HAS NOT BEEN validated.");
   }
+
+  getAgentCategories = async (request) =>
+    this.getResourceCategories(request, AgentConnector);
+
+  getAgentMultimediaDescriptions = async (request) =>
+    this.getResourceMultimediaDescriptions(request, AgentConnector);
 }
 
 module.exports = {

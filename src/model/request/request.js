@@ -34,13 +34,34 @@ class Request {
     this.params = expressRequest.params;
 
     this.query = Object.assign({}, expressRequest.query);
-    this.query.page = typeof expressRequest.query.page !== "undefined" ? expressRequest.query.page : null;
-    this.query.fields = typeof expressRequest.query.fields !== "undefined" ? expressRequest.query.fields : null;
-    this.query.include = typeof expressRequest.query.include !== "undefined" ? expressRequest.query.include : null;
-    this.query.filter = typeof expressRequest.query.filter !== "undefined" ? expressRequest.query.filter : null;
-    this.query.sort = typeof expressRequest.query.sort !== "undefined" ? expressRequest.query.sort : null;
-    this.query.random = typeof expressRequest.query.random !== "undefined" ? expressRequest.query.random : null;
-    this.query.search = typeof expressRequest.query.search !== "undefined" ? expressRequest.query.search : null;
+    this.query.page =
+      typeof expressRequest.query.page !== "undefined"
+        ? expressRequest.query.page
+        : null;
+    this.query.fields =
+      typeof expressRequest.query.fields !== "undefined"
+        ? expressRequest.query.fields
+        : null;
+    this.query.include =
+      typeof expressRequest.query.include !== "undefined"
+        ? expressRequest.query.include
+        : null;
+    this.query.filter =
+      typeof expressRequest.query.filter !== "undefined"
+        ? expressRequest.query.filter
+        : null;
+    this.query.sort =
+      typeof expressRequest.query.sort !== "undefined"
+        ? expressRequest.query.sort
+        : null;
+    this.query.random =
+      typeof expressRequest.query.random !== "undefined"
+        ? expressRequest.query.random
+        : null;
+    this.query.search =
+      typeof expressRequest.query.search !== "undefined"
+        ? expressRequest.query.search
+        : null;
 
     this.supportedFeatures = {
       include: true,
@@ -60,6 +81,11 @@ class Request {
     this.typesInIncluded = [];
   }
 
+  setMaxPagination() {
+    _.set(this, "query.page.size", 999);
+    _.set(this, "query.page.number", 1);
+  }
+
   validate() {
     const { query } = this;
 
@@ -68,7 +94,9 @@ class Request {
         .filter(([_feature, isSupported]) => isSupported)
         .reduce(
           (supportedFeatures, [feature, _isSupported]) =>
-            supportedFeatures ? `${supportedFeatures}, "${feature}"` : `"${feature}"`,
+            supportedFeatures
+              ? `${supportedFeatures}, "${feature}"`
+              : `"${feature}"`,
           ""
         );
       const description = !_.isEmpty(features)
@@ -103,7 +131,11 @@ class Request {
       DestinationDataError.throwUnknownQueryError(description);
     }
 
-    if (include !== null && include !== undefined && !testSchema(include, schemas.include)) {
+    if (
+      include !== null &&
+      include !== undefined &&
+      !testSchema(include, schemas.include)
+    ) {
       const problematicQueries = this.selfUrl.match(regex).join("&");
       const description = `The 'include' query contains issues: '${problematicQueries}'`;
       DestinationDataError.throwBadQueryError(description);
@@ -116,7 +148,11 @@ class Request {
       });
       const includeRelationships = include.split(",");
 
-      if (includeRelationships.some((relationshipName) => !relationshipNames.includes(relationshipName))) {
+      if (
+        includeRelationships.some(
+          (relationshipName) => !relationshipNames.includes(relationshipName)
+        )
+      ) {
         DestinationDataError.throwBadQueryError(
           `The 'include' query contains relationships that are not available in the requested resource(s): 'include=${include}'`
         );
@@ -147,7 +183,11 @@ class Request {
       DestinationDataError.throwUnknownQueryError(description);
     }
 
-    if (fields !== null && fields !== undefined && !testSchema(fields, schemas.fields)) {
+    if (
+      fields !== null &&
+      fields !== undefined &&
+      !testSchema(fields, schemas.fields)
+    ) {
       const problematicQueries = this.selfUrl.match(regex).join("&");
       const description = `The 'fields' query contains issues: '${problematicQueries}'`;
       DestinationDataError.throwBadQueryError(description);
@@ -160,7 +200,9 @@ class Request {
         const _dummyInstance = new ResourceClass();
         const allFields = _dummyInstance.getFieldsNames();
 
-        if (fieldNamesArray.some((fieldName) => !allFields.includes(fieldName))) {
+        if (
+          fieldNamesArray.some((fieldName) => !allFields.includes(fieldName))
+        ) {
           DestinationDataError.throwBadQueryError(
             `The 'fields' query contains attributes or relationships that are not available in the selected resource: 'fields[${resourceType}]=${fieldNames}'`
           );
@@ -179,7 +221,11 @@ class Request {
       DestinationDataError.throwUnknownQueryError(description);
     }
 
-    if (page !== null && page !== undefined && !testSchema(page, schemas.page)) {
+    if (
+      page !== null &&
+      page !== undefined &&
+      !testSchema(page, schemas.page)
+    ) {
       const problematicQueries = this.selfUrl.match(regex).join("&");
       const description = `The 'page' query contains issues: '${problematicQueries}'`;
       DestinationDataError.throwBadQueryError(description);
@@ -207,7 +253,11 @@ class Request {
       DestinationDataError.throwUnknownQueryError(description);
     }
 
-    if (sort !== null && sort !== undefined && !testSchema(sort, schemas.sort)) {
+    if (
+      sort !== null &&
+      sort !== undefined &&
+      !testSchema(sort, schemas.sort)
+    ) {
       const problematicQueries = this.selfUrl.match(regex).join("&");
       const description = `The 'sort' query contains issues: '${problematicQueries}'`;
       DestinationDataError.throwBadQueryError(description);
@@ -224,7 +274,11 @@ class Request {
       DestinationDataError.throwUnknownQueryError(description);
     }
 
-    if (random !== null && random !== undefined && !testSchema(random, schemas.random)) {
+    if (
+      random !== null &&
+      random !== undefined &&
+      !testSchema(random, schemas.random)
+    ) {
       const problematicQueries = this.selfUrl.match(regex).join("&");
       const description = `The 'random' query contains issues: '${problematicQueries}'`;
       DestinationDataError.throwBadQueryError(description);
@@ -241,7 +295,11 @@ class Request {
       DestinationDataError.throwUnknownQueryError(description);
     }
 
-    if (search !== null && search !== undefined && !testSchema(search, schemas.search)) {
+    if (
+      search !== null &&
+      search !== undefined &&
+      !testSchema(search, schemas.search)
+    ) {
       const problematicQueries = this.selfUrl.match(regex).join("&");
       const description = `The 'search' query contains issues: '${problematicQueries}'`;
       DestinationDataError.throwBadQueryError(description);
@@ -258,7 +316,11 @@ class Request {
       DestinationDataError.throwUnknownQueryError(description);
     }
 
-    if (filter !== null && filter !== undefined && !testSchema(filter, schemas.filter)) {
+    if (
+      filter !== null &&
+      filter !== undefined &&
+      !testSchema(filter, schemas.filter)
+    ) {
       const problematicQueries = this.selfUrl.match(regex).join("&");
       const description = `The 'filter' query contains issues: '${problematicQueries}'`;
       DestinationDataError.throwBadQueryError(description);

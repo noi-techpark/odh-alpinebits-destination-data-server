@@ -4,7 +4,7 @@ const { ResourceConnector } = require("./resource_connector");
 const { Category } = require("../model/destinationdata2022/category");
 
 const { schemas } = require("../db");
-const { abstracts, descriptions, names, shortNames, urls } = schemas;
+const { DestinationDataError } = require("../errors");
 
 class CategoryConnector extends ResourceConnector {
   constructor(request) {
@@ -12,7 +12,11 @@ class CategoryConnector extends ResourceConnector {
   }
 
   create(category) {
-    return this.runTransaction(() => this.insertCategory(category).then(() => this.retrieveCategory(category.id)));
+    return this.runTransaction(() =>
+      this.insertCategory(category).then(() =>
+        this.retrieveCategory(category.id)
+      )
+    );
   }
 
   // TODO: change default sorting on response
@@ -21,9 +25,26 @@ class CategoryConnector extends ResourceConnector {
     return this.runTransaction(() => this.retrieveCategory(categoryId));
   }
 
+  retrieveResourceCategories(resource) {
+    const categoriesIds = resource?.categories?.map((ref) => ref.id) ?? [];
+    return this.runTransaction(() => this.retrieveCategory(categoriesIds));
+  }
+
+  retrieveCategoryChildren(resource) {
+    const childrenIds = resource?.children?.map((ref) => ref.id) ?? [];
+    return this.runTransaction(() => this.retrieveCategory(childrenIds));
+  }
+
+  retrieveCategoryParents(resource) {
+    const parentsIds = resource?.parents?.map((ref) => ref.id) ?? [];
+    return this.runTransaction(() => this.retrieveCategory(parentsIds));
+  }
+
   update(category) {
     return this.runTransaction(() =>
-      this.retrieveCategory(category.id).then((oldCategory) => this.updateCategory(oldCategory, category))
+      this.retrieveCategory(category.id).then((oldCategory) =>
+        this.updateCategory(oldCategory, category)
+      )
     );
   }
 
@@ -33,16 +54,23 @@ class CategoryConnector extends ResourceConnector {
   }
 
   retrieveCategory(id) {
-    return dbFn.selectCategoryFromId(this.connection, id).then((rows) => {
-      if (_.isString(id)) {
-        if (_.size(rows) === 1) {
-          return this.mapRowToCategory(_.first(rows));
+    const offset = !_.isString(id) ? this.getOffset() : null;
+    const limit = !_.isString(id) ? this.getLimit() : null;
+
+    return dbFn
+      .selectCategoryFromId(this.connection, id, offset, limit)
+      .then((rows) => {
+        if (_.isString(id)) {
+          if (_.size(rows) === 1) {
+            return this.mapRowToCategory(_.first(rows));
+          }
+          DestinationDataError.throwNotFound(
+            `Category resource(s) not found. ID(s): ${id}`
+          );
+        } else {
+          return rows?.map(this.mapRowToCategory);
         }
-        throw new Error("Not found");
-      } else {
-        return rows?.map(this.mapRowToCategory);
-      }
-    });
+      });
   }
 
   updateCategory(oldCategory, newInput) {
@@ -93,7 +121,11 @@ class CategoryConnector extends ResourceConnector {
 
   insertMultimediaDescriptions(category) {
     const inserts = category?.multimediaDescriptions?.map((description) =>
-      dbFn.insertMultimediaDescriptions(this.connection, category.id, description.id)
+      dbFn.insertMultimediaDescriptions(
+        this.connection,
+        category.id,
+        description.id
+      )
     );
     return Promise.all(inserts ?? []);
   }
@@ -138,7 +170,9 @@ class CategoryConnector extends ResourceConnector {
   }
 
   updateParentCategories(category) {
-    return dbFn.deleteParentCategories(this.connection, category.id).then(() => this.insertParentCategories(category));
+    return dbFn
+      .deleteParentCategories(this.connection, category.id)
+      .then(() => this.insertParentCategories(category));
   }
 
   mapCategoryToColumns(category) {

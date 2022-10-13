@@ -1,20 +1,12 @@
 const { Router } = require("./router");
 const { SnowparkConnector } = require("../connectors/snowparks_connector");
-const {
-  deserializeSnowpark,
-  serializeSingleResource,
-  serializeResourceCollection,
-} = require("../model/destinationdata2022");
-const { Request } = require("../model/request/request");
+const { deserializeSnowpark } = require("../model/destinationdata2022");
 
 class SnowparksRouter extends Router {
   constructor(app) {
     super();
 
-    this.addUnimplementedGetRoute(`/snowparks/:id/categories`);
-    this.addUnimplementedGetRoute(`/snowparks/:id/connections`);
     this.addUnimplementedGetRoute(`/snowparks/:id/features`);
-    this.addUnimplementedGetRoute(`/snowparks/:id/multimediaDescriptions`);
 
     this.addPostRoute(`/snowparks`, this.postSnowpark);
     this.addGetRoute(`/snowparks`, this.getSnowpark);
@@ -22,99 +14,43 @@ class SnowparksRouter extends Router {
     this.addDeleteRoute(`/snowparks/:id`, this.deleteSnowpark);
     this.addPatchRoute(`/snowparks/:id`, this.patchSnowpark);
 
+    this.addGetRoute(`/snowparks/:id/categories`, this.getSnowparkCategories);
+    this.addGetRoute(`/snowparks/:id/connections`, this.getSnowparkConnections);
+    this.addGetRoute(
+      `/snowparks/:id/multimediaDescriptions`,
+      this.getSnowparkMultimediaDescriptions
+    );
+
     if (app) {
       this.installRoutes(app);
     }
   }
 
-  getSnowpark = async (request) => {
-    // Process request and authentication
-    // Retrieve data
-    const connector = new SnowparkConnector();
-    const parsedRequest = new Request(request);
+  postSnowpark = (request) =>
+    this.postResource(request, SnowparkConnector, deserializeSnowpark);
 
-    // Return to the client
-    try {
-      return connector.retrieve().then((snowparks) => serializeResourceCollection(snowparks, parsedRequest));
-      // return connector.retrieve();
-    } catch (error) {
-      console.error(error);
-      throw error;
-    }
-  };
+  getSnowpark = (request) => this.getResources(request, SnowparkConnector);
 
-  getSnowparkById = async (request) => {
-    // Process request and authentication
-    // Retrieve data
-    const parsedRequest = new Request(request);
-    const connector = new SnowparkConnector(parsedRequest);
+  getSnowparkById = (request) =>
+    this.getResourceById(request, SnowparkConnector);
 
-    // Return to the client
-    try {
-      return connector.retrieve().then((snowpark) => serializeSingleResource(snowpark, parsedRequest));
-    } catch (error) {
-      console.error(error);
-      throw error;
-    }
-  };
+  deleteSnowpark = (request) => this.deleteResource(request, SnowparkConnector);
 
-  postSnowpark = async (request) => {
-    // Process request and authentication
-    const { body } = request;
-    // Validate object
-    this.validate(body);
-    // Store data
-    const snowpark = deserializeSnowpark(body.data);
-    const parsedRequest = new Request(request);
-    const connector = new SnowparkConnector(parsedRequest);
-
-    // Return to the client
-    try {
-      return connector.create(snowpark).then((snowpark) => serializeSingleResource(snowpark, parsedRequest));
-    } catch (error) {
-      console.error(error);
-      throw error;
-    }
-  };
-
-  patchSnowpark = async (request) => {
-    // Process request and authentication
-    const { body } = request;
-    // Validate object
-    this.validate(body);
-    // Store data
-    const snowpark = deserializeSnowpark(body.data);
-    const parsedRequest = new Request(request);
-    const connector = new SnowparkConnector(parsedRequest);
-
-    // Return to the client
-    try {
-      return connector.update(snowpark).then((snowpark) => serializeSingleResource(snowpark, parsedRequest));
-    } catch (error) {
-      console.error(error);
-      throw error;
-    }
-  };
-
-  deleteSnowpark = async (request) => {
-    // Process request and authentication
-    // Retrieve data
-    const parsedRequest = new Request(request);
-    const connector = new SnowparkConnector(parsedRequest);
-    console.log("delete snowpark");
-
-    // Return to the client
-    try {
-      return connector.delete();
-    } catch (error) {
-      console.error(error);
-      throw error;
-    }
-  };
+  patchSnowpark = (request) =>
+    this.patchResource(request, SnowparkConnector, deserializeSnowpark);
 
   validate(snowparkMessage) {
     console.log("The snowpark message HAS NOT BEEN validated.");
   }
+
+  getSnowparkCategories = async (request) =>
+    this.getResourceCategories(request, SnowparkConnector);
+
+  getSnowparkConnections = async (request) =>
+    this.getPlaceConnections(request, SnowparkConnector);
+
+  getSnowparkMultimediaDescriptions = async (request) =>
+    this.getResourceMultimediaDescriptions(request, SnowparkConnector);
 }
 
 module.exports = {

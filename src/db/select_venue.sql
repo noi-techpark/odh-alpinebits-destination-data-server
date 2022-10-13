@@ -11,7 +11,8 @@ SELECT venues.id,
   resource_objects.media AS "multimediaDescriptions",
   place_objects.address,
   place_objects.geometries,
-  place_objects.how_to_arrive AS "howToArrive"
+  place_objects.how_to_arrive AS "howToArrive",
+  COUNT(venues.id) OVER() AS total
 FROM venues
   LEFT JOIN resource_objects ON resource_objects.id = venues.id
   LEFT JOIN place_objects ON place_objects.id = venues.id

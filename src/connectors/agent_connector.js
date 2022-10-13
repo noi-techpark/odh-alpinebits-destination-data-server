@@ -3,6 +3,8 @@ const dbFn = require("../db/functions");
 const { schemas } = require("../db");
 const { ResourceConnector } = require("./resource_connector");
 const { Agent } = require("../model/destinationdata2022/agent");
+const { DestinationDataError } = require("../errors");
+const errors = require("../errors");
 
 class AgentConnector extends ResourceConnector {
   constructor(request) {
@@ -10,7 +12,9 @@ class AgentConnector extends ResourceConnector {
   }
 
   create(agent) {
-    return this.runTransaction(() => this.insertAgent(agent).then(() => this.retrieveAgent(agent.id)));
+    return this.runTransaction(() =>
+      this.insertAgent(agent).then(() => this.retrieveAgent(agent.id))
+    );
   }
 
   retrieve(id) {
@@ -18,11 +22,64 @@ class AgentConnector extends ResourceConnector {
     return this.runTransaction(() => this.retrieveAgent(agentId));
   }
 
+  retrieveEventContributors(resource) {
+    const agentsIds = resource?.contributors?.map((ref) => ref.id) ?? [];
+    return this.runTransaction(() => this.retrieveAgent(agentsIds));
+  }
+
+  retrieveEventPublisher(resource) {
+    const agentsId = resource?.publisher?.id ?? "";
+    return this.runTransaction(() => this.retrieveAgent(agentsId)).catch(
+      (err) => {
+        if (err?.title === errors.notFound.title) {
+          return null;
+        }
+        throw err;
+      }
+    );
+  }
+
+  retrieveAreaOwner(mountainArea) {
+    const ownerId = mountainArea?.areaOwner?.id ?? "";
+    return this.runTransaction(() => this.retrieveAgent(ownerId)).catch(
+      (err) => {
+        if (err?.title === errors.notFound.title) {
+          return null;
+        }
+        throw err;
+      }
+    );
+  }
+
+  retrieveLicenseHolder(mediaObject) {
+    const licenseHolderId = mediaObject?.licenseHolder?.id ?? "";
+    return this.runTransaction(() => this.retrieveAgent(licenseHolderId)).catch(
+      (err) => {
+        if (err?.title === errors.notFound.title) {
+          return null;
+        }
+        throw err;
+      }
+    );
+  }
+
+  retrieveEventOrganizers(resource) {
+    const agentsIds = resource?.organizers?.map((ref) => ref.id) ?? [];
+    return this.runTransaction(() => this.retrieveAgent(agentsIds));
+  }
+
+  retrieveEventSponsors(resource) {
+    const agentsIds = resource?.sponsors?.map((ref) => ref.id) ?? [];
+    return this.runTransaction(() => this.retrieveAgent(agentsIds));
+  }
+
   update(agent) {
     if (!agent.id) throw new Error("missing id");
 
     return this.runTransaction(() =>
-      this.retrieveAgent(agent.id).then((oldAgent) => this.updateAgent(oldAgent, agent))
+      this.retrieveAgent(agent.id).then((oldAgent) =>
+        this.updateAgent(oldAgent, agent)
+      )
     );
   }
 
@@ -36,16 +93,23 @@ class AgentConnector extends ResourceConnector {
   }
 
   retrieveAgent(id) {
-    return dbFn.selectAgentFromId(this.connection, id).then((rows) => {
-      if (_.isString(id)) {
-        if (_.size(rows) === 1) {
-          return this.mapRowToAgent(_.first(rows));
+    const offset = !_.isString(id) ? this.getOffset() : null;
+    const limit = !_.isString(id) ? this.getLimit() : null;
+
+    return dbFn
+      .selectAgentFromId(this.connection, id, offset, limit)
+      .then((rows) => {
+        if (_.isString(id)) {
+          if (_.size(rows) === 1) {
+            return this.mapRowToAgent(_.first(rows));
+          }
+          DestinationDataError.throwNotFound(
+            `Agent resource(s) not found. ID(s): ${id}`
+          );
+        } else {
+          return rows?.map(this.mapRowToAgent);
         }
-        throw new Error("Not found");
-      } else {
-        return rows?.map(this.mapRowToAgent);
-      }
-    });
+      });
   }
 
   updateAgent(oldAgent, newInput) {
@@ -56,8 +120,13 @@ class AgentConnector extends ResourceConnector {
     });
 
     if (this.shouldUpdate(oldAgent, newAgent)) {
-      return Promise.all([this.updateResource(newAgent), this.updateContactPoints(newAgent)]).then((promises) => {
-        newAgent.lastUpdate = _.first(_.flatten(promises))[schemas.resources.lastUpdate];
+      return Promise.all([
+        this.updateResource(newAgent),
+        this.updateContactPoints(newAgent),
+      ]).then((promises) => {
+        newAgent.lastUpdate = _.first(_.flatten(promises))[
+          schemas.resources.lastUpdate
+        ];
         return newAgent;
       });
     }
@@ -82,20 +151,30 @@ class AgentConnector extends ResourceConnector {
   }
 
   insertContactPoints(agent) {
-    const inserts = agent?.contactPoints?.map((point) => this.insertContactPoint(point, agent));
+    const inserts = agent?.contactPoints?.map((point) =>
+      this.insertContactPoint(point, agent)
+    );
     return Promise.all(inserts ?? []);
   }
 
   insertContactPoint(contact, agent) {
     return this.insertAddress(contact.address).then((addressId) => {
-      const columns = this.mapContactPointToColumns(contact, addressId, agent.id);
+      const columns = this.mapContactPointToColumns(
+        contact,
+        addressId,
+        agent.id
+      );
       return dbFn.insertContactPoint(this.connection, columns);
     });
   }
 
   updateContactPoints(agent) {
-    const inserts = agent?.contactPoints?.map((contact) => this.insertContactPoint(contact, agent));
-    return dbFn.deleteContactPoints(this.connection, agent.id).then(() => Promise.all(inserts ?? []));
+    const inserts = agent?.contactPoints?.map((contact) =>
+      this.insertContactPoint(contact, agent)
+    );
+    return dbFn
+      .deleteContactPoints(this.connection, agent.id)
+      .then(() => Promise.all(inserts ?? []));
   }
 
   mapAgentToColumns(agent) {

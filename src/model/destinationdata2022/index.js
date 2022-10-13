@@ -41,7 +41,8 @@ function deserializeResourceFields(resource, json) {
   resource.type = type ?? resource?.type;
 
   resource.dataProvider = meta?.dataProvider ?? resource?.dataProvider;
-  resource.lastUpdate = (meta?.lastUpdate && new Date(meta?.lastUpdate)) ?? resource?.lastUpdate; // TODO: review whether we should deserialize by creating an instance of Date();
+  resource.lastUpdate =
+    (meta?.lastUpdate && new Date(meta?.lastUpdate)) ?? resource?.lastUpdate; // TODO: review whether we should deserialize by creating an instance of Date();
 
   resource.abstract = attributes?.abstract ?? resource?.abstract;
   resource.description = attributes?.description ?? resource?.description;
@@ -55,9 +56,11 @@ function deserializeResourceFields(resource, json) {
 function deserializeIndividualResourceFields(individualResource, json) {
   const { relationships } = json;
 
-  individualResource.categories = relationships?.categories?.data ?? individualResource?.categories;
+  individualResource.categories =
+    relationships?.categories?.data ?? individualResource?.categories;
   individualResource.multimediaDescriptions =
-    relationships?.multimediaDescriptions?.data ?? individualResource?.multimediaDescriptions;
+    relationships?.multimediaDescriptions?.data ??
+    individualResource?.multimediaDescriptions;
 
   return individualResource;
 }
@@ -84,7 +87,9 @@ function deserializeCategory(json) {
   category.resourceTypes = attributes?.resourceTypes ?? category?.resourceTypes;
 
   category.children = relationships?.children?.data ?? category?.children;
-  category.multimediaDescriptions = relationships?.multimediaDescriptions?.data ?? category?.multimediaDescriptions;
+  category.multimediaDescriptions =
+    relationships?.multimediaDescriptions?.data ??
+    category?.multimediaDescriptions;
   category.parents = relationships?.parents?.data ?? category?.parents;
 
   return category;
@@ -111,8 +116,14 @@ function deserializeEvent(json) {
   deserializeResourceFields(event, json);
   deserializeIndividualResourceFields(event, json);
 
-  event.capacity = attributes?.capacity ?? event?.capacity;
   event.endDate = attributes?.endDate ?? event?.endDate;
+  event.inPersonCapacity =
+    attributes?.inPersonCapacity ?? event?.inPersonCapacity;
+  event.onlineCapacity = attributes?.onlineCapacity ?? event?.onlineCapacity;
+  event.participationUrl =
+    attributes?.participationUrl ?? event?.participationUrl;
+  event.recorded = attributes?.recorded ?? event?.recorded;
+  event.registrationUrl = attributes?.registrationUrl ?? event?.registrationUrl;
   event.startDate = attributes?.startDate ?? event?.startDate;
   event.status = attributes?.status ?? event?.status;
 
@@ -137,7 +148,9 @@ function deserializeFeature(json) {
   feature.resourceTypes = attributes?.resourceTypes ?? feature?.resourceTypes;
 
   feature.children = relationships?.children?.data ?? feature?.children;
-  feature.multimediaDescriptions = relationships?.multimediaDescriptions?.data ?? feature?.multimediaDescriptions;
+  feature.multimediaDescriptions =
+    relationships?.multimediaDescriptions?.data ??
+    feature?.multimediaDescriptions;
   feature.parents = relationships?.parents?.data ?? feature?.parents;
 
   return feature;
@@ -155,8 +168,10 @@ function deserializeMediaObject(json) {
   mediaObject.license = attributes?.license ?? mediaObject?.license;
   mediaObject.width = attributes?.width ?? mediaObject?.width;
 
-  mediaObject.categories = relationships?.categories?.data ?? mediaObject?.categories;
-  mediaObject.copyrightOwner = relationships?.copyrightOwner?.data ?? mediaObject?.copyrightOwner;
+  mediaObject.categories =
+    relationships?.categories?.data ?? mediaObject?.categories;
+  mediaObject.licenseHolder =
+    relationships?.licenseHolder?.data ?? mediaObject?.licenseHolder;
 
   return mediaObject;
 }
@@ -206,20 +221,32 @@ function deserializeMountainArea(json) {
 
   mountainArea.area = attributes?.area ?? mountainArea?.area;
   mountainArea.geometries = attributes?.geometries ?? mountainArea?.geometries;
-  mountainArea.howToArrive = attributes?.howToArrive ?? mountainArea?.howToArrive;
-  mountainArea.maxAltitude = attributes?.maxAltitude ?? mountainArea?.maxAltitude;
-  mountainArea.minAltitude = attributes?.minAltitude ?? mountainArea?.minAltitude;
-  mountainArea.openingHours = attributes?.openingHours ?? mountainArea?.openingHours;
-  mountainArea.snowCondition = attributes?.snowCondition ?? mountainArea?.snowCondition;
-  mountainArea.totalParkArea = attributes?.totalParkArea ?? mountainArea?.totalParkArea;
-  mountainArea.totalTrailLength = attributes?.totalTrailLength ?? mountainArea?.totalTrailLength;
+  mountainArea.howToArrive =
+    attributes?.howToArrive ?? mountainArea?.howToArrive;
+  mountainArea.maxAltitude =
+    attributes?.maxAltitude ?? mountainArea?.maxAltitude;
+  mountainArea.minAltitude =
+    attributes?.minAltitude ?? mountainArea?.minAltitude;
+  mountainArea.openingHours =
+    attributes?.openingHours ?? mountainArea?.openingHours;
+  mountainArea.snowCondition =
+    attributes?.snowCondition ?? mountainArea?.snowCondition;
+  mountainArea.totalParkArea =
+    attributes?.totalParkArea ?? mountainArea?.totalParkArea;
+  mountainArea.totalTrailLength =
+    attributes?.totalTrailLength ?? mountainArea?.totalTrailLength;
 
-  mountainArea.areaOwner = relationships?.areaOwner?.data ?? mountainArea?.areaOwner;
-  mountainArea.connections = relationships?.connections?.data ?? mountainArea?.connections;
+  mountainArea.areaOwner =
+    relationships?.areaOwner?.data ?? mountainArea?.areaOwner;
+  mountainArea.connections =
+    relationships?.connections?.data ?? mountainArea?.connections;
   mountainArea.lifts = relationships?.lifts?.data ?? mountainArea?.lifts;
-  mountainArea.snowparks = relationships?.snowparks?.data ?? mountainArea?.snowparks;
-  mountainArea.subAreas = relationships?.subAreas?.data ?? mountainArea?.subAreas;
-  mountainArea.skiSlopes = relationships?.skiSlopes?.data ?? mountainArea?.skiSlopes;
+  mountainArea.snowparks =
+    relationships?.snowparks?.data ?? mountainArea?.snowparks;
+  mountainArea.subAreas =
+    relationships?.subAreas?.data ?? mountainArea?.subAreas;
+  mountainArea.skiSlopes =
+    relationships?.skiSlopes?.data ?? mountainArea?.skiSlopes;
 
   return mountainArea;
 }
@@ -241,7 +268,8 @@ function deserializeSkiSlope(json) {
   skiSlope.openingHours = attributes?.openingHours ?? skiSlope?.openingHours;
   skiSlope.snowCondition = attributes?.snowCondition ?? skiSlope?.snowCondition;
 
-  skiSlope.connections = relationships?.connections?.data ?? skiSlope?.connections;
+  skiSlope.connections =
+    relationships?.connections?.data ?? skiSlope?.connections;
 
   return skiSlope;
 }
@@ -263,7 +291,8 @@ function deserializeSnowpark(json) {
   snowpark.openingHours = attributes?.openingHours ?? snowpark?.openingHours;
   snowpark.snowCondition = attributes?.snowCondition ?? snowpark?.snowCondition;
 
-  snowpark.connections = relationships?.connections?.data ?? snowpark?.connections;
+  snowpark.connections =
+    relationships?.connections?.data ?? snowpark?.connections;
   snowpark.features = relationships?.features?.data ?? snowpark?.features;
 
   return snowpark;
@@ -330,8 +359,14 @@ function serializeIndividualResource(individualResource) {
 
   const { relationships } = json;
 
-  relationships.categories = toRelationshipToManyObject("categories", individualResource);
-  relationships.multimediaDescriptions = toRelationshipToManyObject("multimediaDescriptions", individualResource);
+  relationships.categories = toRelationshipToManyObject(
+    "categories",
+    individualResource
+  );
+  relationships.multimediaDescriptions = toRelationshipToManyObject(
+    "multimediaDescriptions",
+    individualResource
+  );
 
   return json;
 }
@@ -352,10 +387,15 @@ function serializeCategory(category) {
   const { attributes, relationships } = json;
 
   attributes.namespace = category.namespace;
-  attributes.resourceTypes = !_.isEmpty(category.resourceTypes) ? category.resourceTypes : null;
+  attributes.resourceTypes = !_.isEmpty(category.resourceTypes)
+    ? category.resourceTypes
+    : null;
 
   relationships.children = toRelationshipToManyObject("children", category);
-  relationships.multimediaDescriptions = toRelationshipToManyObject("multimediaDescriptions", category);
+  relationships.multimediaDescriptions = toRelationshipToManyObject(
+    "multimediaDescriptions",
+    category
+  );
   relationships.parents = toRelationshipToManyObject("parents", category);
 
   return json;
@@ -373,23 +413,30 @@ function serializeEventSeries(eventSeries) {
   return json;
 }
 
-function serializeEvent(events) {
-  const json = serializeIndividualResource(events);
+function serializeEvent(event) {
+  const json = serializeIndividualResource(event);
 
   const { attributes, relationships } = json;
 
-  attributes.capacity = events.capacity;
-  attributes.endDate = events.endDate;
-  attributes.startDate = events.startDate;
-  attributes.status = events.status;
+  attributes.endDate = event.endDate;
+  attributes.inPersonCapacity = event.inPersonCapacity;
+  attributes.onlineCapacity = event.onlineCapacity;
+  attributes.participationUrl = event.participationUrl;
+  attributes.recorded = event.recorded;
+  attributes.registrationUrl = event.registrationUrl;
+  attributes.startDate = event.startDate;
+  attributes.status = event.status;
 
-  relationships.contributors = toRelationshipToManyObject("contributors", events);
-  relationships.organizers = toRelationshipToManyObject("organizers", events);
-  relationships.publisher = toRelationshipToOneObject("publisher", events);
-  relationships.series = toRelationshipToOneObject("series", events);
-  relationships.sponsors = toRelationshipToManyObject("sponsors", events);
-  relationships.subEvents = toRelationshipToManyObject("subEvents", events);
-  relationships.venues = toRelationshipToManyObject("venues", events);
+  relationships.contributors = toRelationshipToManyObject(
+    "contributors",
+    event
+  );
+  relationships.organizers = toRelationshipToManyObject("organizers", event);
+  relationships.publisher = toRelationshipToOneObject("publisher", event);
+  relationships.series = toRelationshipToOneObject("series", event);
+  relationships.sponsors = toRelationshipToManyObject("sponsors", event);
+  relationships.subEvents = toRelationshipToManyObject("subEvents", event);
+  relationships.venues = toRelationshipToManyObject("venues", event);
 
   return json;
 }
@@ -400,10 +447,15 @@ function serializeFeature(feature) {
   const { attributes, relationships } = json;
 
   attributes.namespace = feature.namespace;
-  attributes.resourceTypes = !_.isEmpty(feature.resourceTypes) ? feature.resourceTypes : null;
+  attributes.resourceTypes = !_.isEmpty(feature.resourceTypes)
+    ? feature.resourceTypes
+    : null;
 
   relationships.children = toRelationshipToManyObject("children", feature);
-  relationships.multimediaDescriptions = toRelationshipToManyObject("multimediaDescriptions", feature);
+  relationships.multimediaDescriptions = toRelationshipToManyObject(
+    "multimediaDescriptions",
+    feature
+  );
   relationships.parents = toRelationshipToManyObject("parents", feature);
 
   return json;
@@ -420,8 +472,14 @@ function serializeMediaObject(mediaObject) {
   attributes.license = mediaObject.license;
   attributes.width = mediaObject.width;
 
-  relationships.categories = toRelationshipToManyObject("categories", mediaObject);
-  relationships.copyrightOwner = toRelationshipToOneObject("copyrightOwner", mediaObject);
+  relationships.categories = toRelationshipToManyObject(
+    "categories",
+    mediaObject
+  );
+  relationships.licenseHolder = toRelationshipToOneObject(
+    "licenseHolder",
+    mediaObject
+  );
 
   return json;
 }
@@ -473,7 +531,10 @@ function serializeSkiSlope(skiSlope) {
   attributes.openingHours = _.cloneDeep(skiSlope.openingHours) ?? null;
   attributes.snowCondition = _.cloneDeep(skiSlope.snowCondition) ?? null;
 
-  relationships.connections = toRelationshipToManyObject("connections", skiSlope);
+  relationships.connections = toRelationshipToManyObject(
+    "connections",
+    skiSlope
+  );
 
   return json;
 }
@@ -493,7 +554,10 @@ function serializeSnowpark(snowpark) {
   attributes.openingHours = _.cloneDeep(snowpark.openingHours) ?? null;
   attributes.snowCondition = _.cloneDeep(snowpark.snowCondition) ?? null;
 
-  relationships.connections = toRelationshipToManyObject("connections", snowpark);
+  relationships.connections = toRelationshipToManyObject(
+    "connections",
+    snowpark
+  );
   relationships.features = toRelationshipToManyObject("features", snowpark);
 
   return json;
@@ -512,50 +576,89 @@ function serializeMountainArea(mountainArea) {
   attributes.openingHours = _.cloneDeep(mountainArea.openingHours) ?? null;
   attributes.snowCondition = _.cloneDeep(mountainArea.snowCondition) ?? null;
   attributes.totalParkArea = _.cloneDeep(mountainArea.totalParkArea) ?? null;
-  attributes.totalTrailLength = _.cloneDeep(mountainArea.totalTrailLength) ?? null;
+  attributes.totalTrailLength =
+    _.cloneDeep(mountainArea.totalTrailLength) ?? null;
 
-  relationships.areaOwner = toRelationshipToOneObject("areaOwner", mountainArea);
-  relationships.connections = toRelationshipToManyObject("connections", mountainArea);
+  relationships.areaOwner = toRelationshipToOneObject(
+    "areaOwner",
+    mountainArea
+  );
+  relationships.connections = toRelationshipToManyObject(
+    "connections",
+    mountainArea
+  );
   relationships.lifts = toRelationshipToManyObject("lifts", mountainArea);
-  relationships.snowparks = toRelationshipToManyObject("snowparks", mountainArea);
+  relationships.snowparks = toRelationshipToManyObject(
+    "snowparks",
+    mountainArea
+  );
   relationships.subAreas = toRelationshipToManyObject("subAreas", mountainArea);
-  relationships.skiSlopes = toRelationshipToManyObject("skiSlopes", mountainArea);
+  relationships.skiSlopes = toRelationshipToManyObject(
+    "skiSlopes",
+    mountainArea
+  );
 
   return json;
 }
 
-function serializeAnyResource(resource) {
-  switch (resource.type) {
+function serializeAnyResource(resource, request) {
+  switch (resource?.type) {
     case "agents":
-      return serializeAgent(resource);
+      resource = serializeAgent(resource);
+      break;
     case "categories":
-      return serializeCategory(resource);
+      resource = serializeCategory(resource);
+      break;
     case "events":
-      return serializeEvent(resource);
+      resource = serializeEvent(resource);
+      break;
     case "eventSeries":
-      return serializeEventSeries(resource);
+      resource = serializeEventSeries(resource);
+      break;
     case "features":
-      return serializeFeature(resource);
+      resource = serializeFeature(resource);
+      break;
     case "lifts":
-      return serializeLift(resource);
+      resource = serializeLift(resource);
+      break;
     case "mediaObjects":
-      return serializeMediaObject(resource);
+      resource = serializeMediaObject(resource);
+      break;
     case "mountainAreas":
-      return serializeMountainArea(resource);
+      resource = serializeMountainArea(resource);
+      break;
     case "skiSlopes":
-      return serializeSkiSlope(resource);
+      resource = serializeSkiSlope(resource);
+      break;
     case "snowparks":
-      return serializeSnowpark(resource);
+      resource = serializeSnowpark(resource);
+      break;
     case "venues":
-      return serializeVenue(resource);
+      resource = serializeVenue(resource);
+      break;
   }
 
-  if (!_.isEmpty(resource)) throw new Error("Unexpected input");
+  removeNonSelectedFields(resource, request);
 
-  return null;
+  return resource;
 }
 
-function serializeSingleResource(resource, request) {
+function removeNonSelectedFields(resource, request) {
+  const type = resource?.type;
+  const selectedFields = request?.query?.fields?.[type] ?? "";
+
+  if (_.isEmpty(selectedFields)) return;
+
+  for (const field of Object.keys(resource.attributes)) {
+    if (!selectedFields.includes(field)) delete resource.attributes[field];
+  }
+
+  for (const field of Object.keys(resource.relationships)) {
+    if (!selectedFields.includes(field)) delete resource.relationships[field];
+  }
+}
+
+function serializeSingleResource(resource, request, include) {
   const links = {
     swagger: process.env.SWAGGER_URL,
     self: request.selfUrl,
@@ -564,25 +667,23 @@ function serializeSingleResource(resource, request) {
   return {
     jsonapi: { version: "1.0" },
     links,
-    data: serializeAnyResource(resource),
-    include: [],
+    data: !_.isEmpty(resource) ? serializeAnyResource(resource, request) : null,
+    include: request?.query?.include
+      ? include?.map((resource) => serializeAnyResource(resource, request)) ??
+        []
+      : undefined,
   };
 }
 
-function serializeResourceCollection(resources, request) {
-  const size = request?.query?.page?.size ?? 10;
-  const number = request?.query?.page?.number ?? 1;
-
-  const count = resources?.length ?? 0;
-
-  const indexFirst = size * (number - 1);
-  const indexLast = size * number;
-  const resourcesPage = resources?.slice(indexFirst, indexLast);
+function serializeResourceCollection(resources, request, include) {
+  const size = parseInt(request?.query?.page?.size) || 10;
+  const number = parseInt(request?.query?.page?.number) || 1;
+  const count = parseInt(resources?.[0].total) || 0;
 
   const current = number;
   const first = 1;
   const last = Math.ceil(count / size);
-  const prev = number > 1 ? number - 1 : 1;
+  const prev = number <= 1 ? 1 : number > last ? last : number - 1;
   const next = number < last ? number + 1 : last;
 
   const { selfUrl } = request;
@@ -614,8 +715,11 @@ function serializeResourceCollection(resources, request) {
       count,
     },
     links,
-    data: resourcesPage?.map((resource) => serializeAnyResource(resource)),
-    include: [],
+    data: resources?.map((resource) => serializeAnyResource(resource, request)),
+    include: request?.query?.include
+      ? include?.map((resource) => serializeAnyResource(resource, request)) ??
+        []
+      : undefined,
   };
 }
 

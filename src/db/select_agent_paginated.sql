@@ -10,7 +10,7 @@ SELECT agents.id,
   resource_objects.categories,
   resource_objects.media AS "multimediaDescriptions",
   COALESCE(contact_points_array.contacts, 'null') AS "contactPoints",
-  COUNT(agents.id) OVER() AS total
+  count(agents.id) OVER() AS total
 FROM agents
   LEFT JOIN resource_objects ON resource_objects.id = agents.id
   LEFT JOIN (
@@ -27,3 +27,6 @@ FROM agents
       LEFT JOIN address_objects ON address_objects.id = contact_points.address_id
     GROUP BY contact_points.agent_id
   ) AS contact_points_array ON contact_points_array.id = agents.id
+ORDER BY agents.id
+OFFSET 8
+LIMIT 3

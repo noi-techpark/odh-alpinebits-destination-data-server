@@ -71,11 +71,14 @@ function deleteLanguageCodes(connection) {
 function deleteCategories(connection) {
   return connection(categories._name)
     .del(categories.resourceId)
-    .then((resourceIds) => connection(resources._name).whereIn(resources.id, resourceIds).del());
+    .then((resourceIds) =>
+      connection(resources._name).whereIn(resources.id, resourceIds).del()
+    );
 }
 
 function checkNotNullable(field, field_name) {
-  if (!field && typeof field !== "boolean") throw new Error(`Missing not nullable field: ${field_name}`);
+  if (!field && typeof field !== "boolean")
+    throw new Error(`Missing not nullable field: ${field_name}`);
 }
 
 function insertResourceType(connection, resourceType) {
@@ -286,39 +289,63 @@ function insertResource(connection, resource) {
   checkNotNullable(type, resources.type);
   checkNotNullable(dataProvider, resources.dataProvider);
 
-  return insert(connection, resources._name, resource, resources.id).then((array) => _.first(array));
+  return insert(connection, resources._name, resource, resources.id).then(
+    (array) => _.first(array)
+  );
 }
 
 function insertAgent(connection, agent) {
-  return insert(connection, agents._name, agent, agents.id).then((array) => _.first(array));
+  return insert(connection, agents._name, agent, agents.id).then((array) =>
+    _.first(array)
+  );
 }
 
 function insertVenue(connection, venue) {
-  return insert(connection, venues._name, venue, venues.id).then((array) => _.first(array));
+  return insert(connection, venues._name, venue, venues.id).then((array) =>
+    _.first(array)
+  );
 }
 
 function insertLift(connection, lift) {
-  return insert(connection, lifts._name, lift, lifts.id).then((array) => _.first(array));
+  return insert(connection, lifts._name, lift, lifts.id).then((array) =>
+    _.first(array)
+  );
 }
 
 function insertMountainArea(connection, mountainArea) {
-  return insert(connection, mountainAreas._name, mountainArea, mountainAreas.id).then((array) => _.first(array));
+  return insert(
+    connection,
+    mountainAreas._name,
+    mountainArea,
+    mountainAreas.id
+  ).then((array) => _.first(array));
 }
 
 function insertSkiSlope(connection, skiSlope) {
-  return insert(connection, skiSlopes._name, skiSlope, skiSlopes.id).then((array) => _.first(array));
+  return insert(connection, skiSlopes._name, skiSlope, skiSlopes.id).then(
+    (array) => _.first(array)
+  );
 }
 
 function insertSnowpark(connection, snowpark) {
-  return insert(connection, snowparks._name, snowpark, snowparks.id).then((array) => _.first(array));
+  return insert(connection, snowparks._name, snowpark, snowparks.id).then(
+    (array) => _.first(array)
+  );
 }
 
 function insertPlace(connection, place) {
-  return insert(connection, places._name, place, places.id).then((array) => _.first(array));
+  return insert(connection, places._name, place, places.id).then((array) =>
+    _.first(array)
+  );
 }
 
 function insertSnowCondition(connection, snowCondition) {
-  return insert(connection, snowConditions._name, snowCondition, snowConditions.id).then((array) => _.first(array));
+  return insert(
+    connection,
+    snowConditions._name,
+    snowCondition,
+    snowConditions.id
+  ).then((array) => _.first(array));
 }
 
 function insertCategory(connection, category) {
@@ -328,11 +355,18 @@ function insertCategory(connection, category) {
   checkNotNullable(categoryId, categories.id);
   checkNotNullable(namespace, categories.namespace);
 
-  return insert(connection, categories._name, category, categories.id).then((array) => _.first(array));
+  return insert(connection, categories._name, category, categories.id).then(
+    (array) => _.first(array)
+  );
 }
 
 function insertMediaObject(connection, mediaObject) {
-  return insert(connection, mediaObjects._name, mediaObject, mediaObjects.id).then((array) => _.first(array));
+  return insert(
+    connection,
+    mediaObjects._name,
+    mediaObject,
+    mediaObjects.id
+  ).then((array) => _.first(array));
 }
 
 function insertEvent(connection, event) {
@@ -342,7 +376,9 @@ function insertEvent(connection, event) {
   checkNotNullable(eventId, events.id);
   checkNotNullable(publisherId, events.publisherId);
 
-  return insert(connection, events._name, event, events.id).then((array) => _.first(array));
+  return insert(connection, events._name, event, events.id).then((array) =>
+    _.first(array)
+  );
 }
 
 function insertEventSeries(connection, eventSeries) {
@@ -350,7 +386,12 @@ function insertEventSeries(connection, eventSeries) {
 
   checkNotNullable(eventSeriesId, eventSeriesSchema.id);
 
-  return insert(connection, eventSeriesSchema._name, eventSeries, eventSeriesSchema.id).then((array) => _.first(array));
+  return insert(
+    connection,
+    eventSeriesSchema._name,
+    eventSeries,
+    eventSeriesSchema.id
+  ).then((array) => _.first(array));
 }
 
 function insertResourceCategory(connection, resourceId, categoryId) {
@@ -490,75 +531,105 @@ function select(connection, tableName, where, selection) {
   return connection(tableName).select(returnColumns).where(where);
 }
 
-function selectUsingFile(connection, queryFileName, where) {
+function selectUsingFile(connection, queryFileName, where, offset, limit) {
   const queryPath = path.resolve(__dirname, queryFileName);
+  offset = `${offset ? "OFFSET " + offset : ""}`;
+  limit = `${limit ? "LIMIT " + limit : ""} `;
+
   return fs.promises
     .readFile(queryPath, "utf-8")
-    .then((query) => connection.raw(`${query} ${where};`))
+    .then((query) => {
+      // console.log("run query", `${query} ${where} ${offset} ${limit};`);
+      return connection.raw(`${query} ${where} ${offset} ${limit};`);
+    })
     .then((result) => result?.rows)
     .catch((queryError) => {
       throw queryError;
     });
 }
 
-function selectAgentFromId(connection, id) {
+function selectAgentFromId(connection, ids, offset, limit) {
   const selectAgentFile = "select_agent.sql";
-  const where = _.isString(id) ? `WHERE agents.id = '${id}'` : "";
-  return selectUsingFile(connection, selectAgentFile, where);
+  let where = getWhereIdMatchesClause(ids, "agents.id");
+  return selectUsingFile(connection, selectAgentFile, where, offset, limit);
 }
 
-function selectVenueFromId(connection, id) {
+function selectVenueFromId(connection, ids, offset, limit) {
   const selectVenueFile = "select_venue.sql";
-  const where = _.isString(id) ? `WHERE venues.id = '${id}'` : "";
-  return selectUsingFile(connection, selectVenueFile, where);
+  const where = getWhereIdMatchesClause(ids, "venues.id");
+  return selectUsingFile(connection, selectVenueFile, where, offset, limit);
 }
 
-function selectLiftFromId(connection, id) {
+function selectLiftFromId(connection, ids, offset, limit) {
   const selectLiftFile = "select_lift.sql";
-  const where = _.isString(id) ? `WHERE lifts.id = '${id}'` : "";
-  return selectUsingFile(connection, selectLiftFile, where);
+  const where = getWhereIdMatchesClause(ids, "lifts.id");
+  return selectUsingFile(connection, selectLiftFile, where, offset, limit);
 }
 
-function selectMountainAreaFromId(connection, id) {
+function selectMountainAreaFromId(connection, ids, offset, limit) {
   const selectMountainAreaFile = "select_mountain_area.sql";
-  const where = _.isString(id) ? `WHERE mountain_areas.id = '${id}'` : "";
-  return selectUsingFile(connection, selectMountainAreaFile, where);
+  const where = getWhereIdMatchesClause(ids, "mountain_areas.id");
+  return selectUsingFile(
+    connection,
+    selectMountainAreaFile,
+    where,
+    offset,
+    limit
+  );
 }
 
-function selectSkiSlopeFromId(connection, id) {
+function selectSkiSlopeFromId(connection, ids, offset, limit) {
   const selectSkiSlopeFile = "select_ski_slope.sql";
-  const where = _.isString(id) ? `WHERE ski_slopes.id = '${id}'` : "";
-  return selectUsingFile(connection, selectSkiSlopeFile, where);
+  const where = getWhereIdMatchesClause(ids, "ski_slopes.id");
+  return selectUsingFile(connection, selectSkiSlopeFile, where, offset, limit);
 }
 
-function selectSnowparkFromId(connection, id) {
+function selectSnowparkFromId(connection, ids, offset, limit) {
   const selectSnowparkFile = "select_snowpark.sql";
-  const where = _.isString(id) ? `WHERE snowparks.id = '${id}'` : "";
-  return selectUsingFile(connection, selectSnowparkFile, where);
+  const where = getWhereIdMatchesClause(ids, "snowparks.id");
+  return selectUsingFile(connection, selectSnowparkFile, where, offset, limit);
 }
 
-function selectCategoryFromId(connection, id) {
+function selectCategoryFromId(connection, ids, offset, limit) {
   const selectCategoryFile = "select_category.sql";
-  const where = _.isString(id) ? `WHERE categories.id = '${id}'` : "";
-  return selectUsingFile(connection, selectCategoryFile, where);
+  const where = getWhereIdMatchesClause(ids, "categories.id");
+  return selectUsingFile(connection, selectCategoryFile, where, offset, limit);
 }
 
-function selectMediaObjectFromId(connection, id) {
+function selectFeatureFromId(connection, ids, offset, limit) {
+  const selectFeatureFile = "select_feature.sql";
+  const where = getWhereIdMatchesClause(ids, "features.id");
+  return selectUsingFile(connection, selectFeatureFile, where, offset, limit);
+}
+
+function selectMediaObjectFromId(connection, ids, offset, limit) {
   const selectMediaObjectFile = "select_media_object.sql";
-  const where = _.isString(id) ? `WHERE media_objects.id = '${id}'` : "";
-  return selectUsingFile(connection, selectMediaObjectFile, where);
+  const where = getWhereIdMatchesClause(ids, "media_objects.id");
+  return selectUsingFile(
+    connection,
+    selectMediaObjectFile,
+    where,
+    offset,
+    limit
+  );
 }
 
-function selectEventFromId(connection, id) {
+function selectEventFromId(connection, ids, offset, limit) {
   const selectEventFile = "select_event.sql";
-  const where = _.isString(id) ? `WHERE events.id = '${id}'` : "";
-  return selectUsingFile(connection, selectEventFile, where);
+  const where = getWhereIdMatchesClause(ids, "events.id");
+  return selectUsingFile(connection, selectEventFile, where, offset, limit);
 }
 
-function selectEventSeriesFromId(connection, id) {
+function selectEventSeriesFromId(connection, ids, offset, limit) {
   const selectEventSeriesFile = "select_event_series.sql";
-  const where = _.isString(id) ? `WHERE event_series.id = '${id}'` : "";
-  return selectUsingFile(connection, selectEventSeriesFile, where);
+  const where = getWhereIdMatchesClause(ids, "event_series.id");
+  return selectUsingFile(
+    connection,
+    selectEventSeriesFile,
+    where,
+    offset,
+    limit
+  );
 }
 
 function selectResourceFromId(connection, resourceId) {
@@ -628,6 +699,20 @@ function selectContactPointsFromId(connection, agentId) {
     .where(columns);
 }
 
+function getWhereIdMatchesClause(ids, fieldName) {
+  let where = "";
+
+  if (_.isString(ids)) where = `WHERE ${fieldName} = '${ids}'`;
+  else if (_.isArray(ids)) {
+    const idList = ids.map((id) => `'${id}'`).join(", ");
+    where = !_.isEmpty(idList)
+      ? `WHERE ${fieldName} in (${idList})`
+      : `WHERE ${fieldName} in ('')`;
+  }
+
+  return where;
+}
+
 function deleteResource(connection, resourceId, type) {
   const columns = {
     [resources.id]: resourceId,
@@ -652,7 +737,10 @@ function deleteCategory(connection, id) {
 
 function update(connection, tableName, where, columns, returning) {
   const returnColumns = getReturningColumns(returning);
-  return connection(tableName).where(where).update(columns).returning(returnColumns);
+  return connection(tableName)
+    .where(where)
+    .update(columns)
+    .returning(returnColumns);
 }
 
 function updateResource(connection, resource) {
@@ -986,6 +1074,7 @@ module.exports = {
   selectSkiSlopeFromId,
   selectSnowparkFromId,
   selectCategoryFromId,
+  selectFeatureFromId,
   selectResourceFromId,
   selectAbstractsFromId,
   selectDescriptionsFromId,

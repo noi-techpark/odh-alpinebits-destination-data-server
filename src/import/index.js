@@ -1130,8 +1130,9 @@ function getEventPublisherId(eventItem) {
 }
 
 function getEventPublisherName(eventItem) {
-  const name = eventItem.OrgRID ? eventItem.OrgRID : "Open Data Hub";
-  return { ita: name };
+  if (eventItem.OrgRID) return { ita: eventItem.OrgRID };
+  if (eventItem.Source) return { ita: eventItem.Source };
+  return { ita: "Open Data Hub" };
 }
 
 function getEventStartDate(event) {

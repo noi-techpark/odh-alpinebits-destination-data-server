@@ -3,6 +3,7 @@ const dbFn = require("../db/functions");
 const { ResourceConnector } = require("./resource_connector");
 const { MediaObject } = require("../model/destinationdata2022/media_object");
 const { schemas } = require("../db");
+const { DestinationDataError } = require("../errors");
 const { mediaObjects } = schemas;
 
 class MediaObjectConnector extends ResourceConnector {
@@ -12,13 +13,21 @@ class MediaObjectConnector extends ResourceConnector {
 
   create(mediaObject) {
     return this.runTransaction(() =>
-      this.insertMediaObject(mediaObject).then(() => this.retrieveMediaObject(mediaObject.id))
+      this.insertMediaObject(mediaObject).then(() =>
+        this.retrieveMediaObject(mediaObject.id)
+      )
     );
   }
 
   retrieve(id) {
     const mediaObjectId = id ?? this?.request?.params?.id;
     return this.runTransaction(() => this.retrieveMediaObject(mediaObjectId));
+  }
+
+  retrieveResourceMultimediaDescriptions(resource) {
+    const mediaObjectsIds =
+      resource?.multimediaDescriptions?.map((ref) => ref.id) ?? [];
+    return this.runTransaction(() => this.retrieveMediaObject(mediaObjectsIds));
   }
 
   update(mediaObject) {
@@ -41,16 +50,23 @@ class MediaObjectConnector extends ResourceConnector {
   }
 
   retrieveMediaObject(id) {
-    return dbFn.selectMediaObjectFromId(this.connection, id).then((rows) => {
-      if (_.isString(id)) {
-        if (_.size(rows) === 1) {
-          return this.mapRowToMediaObject(_.first(rows));
+    const offset = !_.isString(id) ? this.getOffset() : null;
+    const limit = !_.isString(id) ? this.getLimit() : null;
+
+    return dbFn
+      .selectMediaObjectFromId(this.connection, id, offset, limit)
+      .then((rows) => {
+        if (_.isString(id)) {
+          if (_.size(rows) === 1) {
+            return this.mapRowToMediaObject(_.first(rows));
+          }
+          DestinationDataError.throwNotFound(
+            `Media Object resource(s) not found. ID(s): ${id}`
+          );
+        } else {
+          return rows?.map(this.mapRowToMediaObject);
         }
-        throw new Error("Not found");
-      } else {
-        return rows?.map(this.mapRowToMediaObject);
-      }
-    });
+      });
   }
 
   updateMediaObject(oldMediaObject, newInput) {
@@ -61,10 +77,14 @@ class MediaObjectConnector extends ResourceConnector {
     });
 
     if (this.shouldUpdate(oldMediaObject, newMediaObject)) {
-      return Promise.all([this.updateResource(newMediaObject)]).then((promises) => {
-        newMediaObject.lastUpdate = _.first(_.flatten(promises))[schemas.resources.lastUpdate];
-        return newMediaObject;
-      });
+      return Promise.all([this.updateResource(newMediaObject)]).then(
+        (promises) => {
+          newMediaObject.lastUpdate = _.first(_.flatten(promises))[
+            schemas.resources.lastUpdate
+          ];
+          return newMediaObject;
+        }
+      );
     }
 
     this.throwNoUpdate(oldMediaObject);
@@ -89,7 +109,7 @@ class MediaObjectConnector extends ResourceConnector {
     return {
       [mediaObjects.id]: mediaObject?.id,
       [mediaObjects.contentType]: mediaObject?.contentType,
-      [mediaObjects.copyrightOwnerId]: mediaObject?.copyrightOwner?.id,
+      [mediaObjects.licenseHolderId]: mediaObject?.licenseHolder?.id,
       [mediaObjects.duration]: mediaObject?.duration,
       [mediaObjects.height]: mediaObject?.height,
       [mediaObjects.license]: mediaObject?.license,

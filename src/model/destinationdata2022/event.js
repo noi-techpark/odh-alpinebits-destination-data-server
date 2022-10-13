@@ -4,8 +4,12 @@ class Event extends IndividualResource {
   constructor() {
     super();
 
-    this.capacity = undefined;
     this.endDate = undefined;
+    this.inPersonCapacity = undefined;
+    this.onlineCapacity = undefined;
+    this.participationUrl = undefined;
+    this.recorded = undefined;
+    this.registrationUrl = undefined;
     this.startDate = undefined;
     this.status = undefined;
 

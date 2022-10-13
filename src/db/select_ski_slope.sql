@@ -21,7 +21,8 @@ SELECT ski_slopes.id,
   place_objects.min_altitude AS "minAltitude",
   place_objects.opening_hours AS "openingHours",
   snow_condition_objects.snow_condition AS "snowCondition",
-  connections_arrays.connections
+  connections_arrays.connections,
+  COUNT(ski_slopes.id) OVER() AS total
 FROM ski_slopes
   LEFT JOIN resource_objects ON resource_objects.id = ski_slopes.id
   LEFT JOIN place_objects ON place_objects.id = ski_slopes.id

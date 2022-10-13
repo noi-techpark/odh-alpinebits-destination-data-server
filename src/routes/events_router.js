@@ -1,25 +1,15 @@
 const { Router } = require("./router");
 const { EventConnector } = require("./../connectors/event_connector");
+const { deserializeEvent } = require("../model/destinationdata2022");
+const { AgentConnector } = require("../connectors/agent_connector");
 const {
-  deserializeEvent,
-  serializeResourceCollection,
-  serializeSingleResource,
-} = require("../model/destinationdata2022");
-const { Request } = require("../model/request/request");
+  EventSeriesConnector,
+} = require("../connectors/event_series_connector");
+const { VenueConnector } = require("../connectors/venue_connector");
 
 class EventsRouter extends Router {
   constructor(app) {
     super();
-
-    this.addUnimplementedGetRoute(`/events/:id/categories`);
-    this.addUnimplementedGetRoute(`/events/:id/contributors`);
-    this.addUnimplementedGetRoute(`/events/:id/multimediaDescriptions`);
-    this.addUnimplementedGetRoute(`/events/:id/organizers`);
-    this.addUnimplementedGetRoute(`/events/:id/publisher`);
-    this.addUnimplementedGetRoute(`/events/:id/series`);
-    this.addUnimplementedGetRoute(`/events/:id/sponsors`);
-    this.addUnimplementedGetRoute(`/events/:id/subEvents`);
-    this.addUnimplementedGetRoute(`/events/:id/venues`);
 
     this.addPostRoute(`/events`, this.postEvent);
     this.addGetRoute(`/events`, this.getEvents);
@@ -27,100 +17,115 @@ class EventsRouter extends Router {
     this.addDeleteRoute(`/events/:id`, this.deleteEvent);
     this.addPatchRoute(`/events/:id`, this.patchEvent);
 
+    this.addGetRoute(`/events/:id/categories`, this.getEventCategories);
+    this.addGetRoute(`/events/:id/contributors`, this.getEventContributors);
+    this.addGetRoute(
+      `/events/:id/multimediaDescriptions`,
+      this.getEventMultimediaDescriptions
+    );
+    this.addGetRoute(`/events/:id/organizers`, this.getEventOrganizers);
+    this.addGetRoute(`/events/:id/publisher`, this.getEventPublisher);
+    this.addGetRoute(`/events/:id/series`, this.getEventSeries);
+    this.addGetRoute(`/events/:id/sponsors`, this.getEventSponsors);
+    this.addGetRoute(`/events/:id/subEvents`, this.getEventSubEvents);
+    this.addGetRoute(`/events/:id/venues`, this.getEventVenues);
+
     if (app) {
       this.installRoutes(app);
     }
   }
 
-  getEvents = async (request) => {
-    // Process request and authentication
-    // Retrieve data
-    const connector = new EventConnector();
-    const parsedRequest = new Request(request);
+  postEvent = (request) =>
+    this.postResource(request, EventConnector, deserializeEvent);
 
-    // Return to the client
-    try {
-      return connector.retrieve().then((events) => serializeResourceCollection(events, parsedRequest));
-    } catch (error) {
-      console.error(error);
-      throw error;
-    }
-  };
+  getEvents = (request) => this.getResources(request, EventConnector);
 
-  getEventById = async (request) => {
-    // Process request and authentication
-    // Retrieve data
-    const parsedRequest = new Request(request);
-    const connector = new EventConnector(parsedRequest);
+  getEventById = (request) => this.getResourceById(request, EventConnector);
 
-    // Return to the client
-    try {
-      return connector.retrieve().then((event) => serializeSingleResource(event, parsedRequest));
-    } catch (error) {
-      console.error(error);
-      throw error;
-    }
-  };
+  deleteEvent = (request) => this.deleteResource(request, EventConnector);
 
-  postEvent = async (request) => {
-    // Process request and authentication
-    const { body } = request;
-    // Validate object
-    this.validate(body);
-    // Store data
-    const event = deserializeEvent(body.data);
-    const parsedRequest = new Request(request);
-    const connector = new EventConnector(parsedRequest);
-
-    // Return to the client
-    try {
-      return connector.create(event).then((event) => serializeSingleResource(event, parsedRequest));
-    } catch (error) {
-      console.error(error);
-      throw error;
-    }
-  };
-
-  patchEvent = async (request) => {
-    // Process request and authentication
-    const { body } = request;
-    // Validate object
-    this.validate(body);
-    // Store data
-    const event = deserializeEvent(body.data);
-    const parsedRequest = new Request(request);
-    const connector = new EventConnector(parsedRequest);
-
-    console.log(event);
-
-    // Return to the client
-    try {
-      return connector.update(event).then((event) => serializeSingleResource(event, parsedRequest));
-    } catch (error) {
-      console.error(error);
-      throw error;
-    }
-  };
-
-  deleteEvent = async (request) => {
-    // Process request and authentication
-    // Retrieve data
-    const parsedRequest = new Request(request);
-    const connector = new EventConnector(parsedRequest);
-    console.log("delete event");
-
-    // Return to the client
-    try {
-      return connector.delete();
-    } catch (error) {
-      console.error(error);
-      throw error;
-    }
-  };
+  patchEvent = (request) =>
+    this.patchResource(request, EventConnector, deserializeEvent);
 
   validate(eventMessage) {
     console.log("The event message HAS NOT BEEN validated.");
   }
+
+  getEventCategories = async (request) =>
+    this.getResourceCategories(request, EventConnector);
+
+  getEventMultimediaDescriptions = async (request) =>
+    this.getResourceMultimediaDescriptions(request, EventConnector);
+
+  getEventSeries = async (request) => {
+    const fnRetrieveEventSeries = (event, parsedRequest) =>
+      new EventSeriesConnector(parsedRequest).retrieveEventEventSeries(event);
+    return this.getResourceRelationshipToOne(
+      request,
+      EventConnector,
+      fnRetrieveEventSeries
+    );
+  };
+
+  getEventPublisher = async (request) => {
+    const fnRetrieveAgent = (event, parsedRequest) =>
+      new AgentConnector(parsedRequest).retrieveEventPublisher(event);
+    return this.getResourceRelationshipToOne(
+      request,
+      EventConnector,
+      fnRetrieveAgent
+    );
+  };
+
+  getEventContributors = async (request) => {
+    const fnRetrieveAgents = (event, parsedRequest) =>
+      new AgentConnector(parsedRequest).retrieveEventContributors(event);
+    return this.getResourceRelationshipToMany(
+      request,
+      EventConnector,
+      fnRetrieveAgents
+    );
+  };
+
+  getEventOrganizers = async (request) => {
+    const fnRetrieveAgents = (event, parsedRequest) =>
+      new AgentConnector(parsedRequest).retrieveEventOrganizers(event);
+    return this.getResourceRelationshipToMany(
+      request,
+      EventConnector,
+      fnRetrieveAgents
+    );
+  };
+
+  getEventSponsors = async (request) => {
+    const fnRetrieveAgents = (event, parsedRequest) =>
+      new AgentConnector(parsedRequest).retrieveEventSponsors(event);
+    return this.getResourceRelationshipToMany(
+      request,
+      EventConnector,
+      fnRetrieveAgents
+    );
+  };
+
+  getEventSubEvents = async (request) => {
+    const fnRetrieveEvents = (event, parsedRequest) =>
+      new EventConnector(parsedRequest).retrieveEventSubEvents(event);
+    return this.getResourceRelationshipToMany(
+      request,
+      EventConnector,
+      fnRetrieveEvents
+    );
+  };
+
+  getEventVenues = async (request) => {
+    const fnRetrieveVenues = (event, parsedRequest) =>
+      new VenueConnector(parsedRequest).retrieveEventVenues(event);
+    return this.getResourceRelationshipToMany(
+      request,
+      EventConnector,
+      fnRetrieveVenues
+    );
+  };
 }
 
 module.exports = {

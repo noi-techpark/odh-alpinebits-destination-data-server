@@ -3,6 +3,7 @@ const dbFn = require("../db/functions");
 const { schemas } = require("../db");
 const { ResourceConnector } = require("./resource_connector");
 const { MountainArea } = require("../model/destinationdata2022/mountain_area");
+const { DestinationDataError } = require("../errors");
 
 class MountainAreaConnector extends ResourceConnector {
   constructor(request) {
@@ -11,13 +12,25 @@ class MountainAreaConnector extends ResourceConnector {
 
   create(mountainArea) {
     return this.runTransaction(() =>
-      this.insertMountainArea(mountainArea).then(() => this.retrieveMountainArea(mountainArea.id))
+      this.insertMountainArea(mountainArea).then(() =>
+        this.retrieveMountainArea(mountainArea.id)
+      )
     );
   }
 
   retrieve(id) {
     const mountainAreaId = id ?? this?.request?.params?.id;
     return this.runTransaction(() => this.retrieveMountainArea(mountainAreaId));
+  }
+
+  retrieveResourceMountainAreaConnections(resource) {
+    const areasIds = resource?.connections?.map((ref) => ref.id) ?? [];
+    return this.runTransaction(() => this.retrieveMountainArea(areasIds));
+  }
+
+  retrieveMountainAreaSubAreas(mountainArea) {
+    const subAreasIds = mountainArea?.subAreas?.map((ref) => ref.id) ?? [];
+    return this.runTransaction(() => this.retrieveMountainArea(subAreasIds));
   }
 
   update(mountainArea) {
@@ -40,16 +53,23 @@ class MountainAreaConnector extends ResourceConnector {
   }
 
   retrieveMountainArea(id) {
-    return dbFn.selectMountainAreaFromId(this.connection, id).then((rows) => {
-      if (_.isString(id)) {
-        if (_.size(rows) === 1) {
-          return this.mapRowToMountainArea(_.first(rows));
+    const offset = !_.isString(id) ? this.getOffset() : null;
+    const limit = !_.isString(id) ? this.getLimit() : null;
+
+    return dbFn
+      .selectMountainAreaFromId(this.connection, id, offset, limit)
+      .then((rows) => {
+        if (_.isString(id)) {
+          if (_.size(rows) === 1) {
+            return this.mapRowToMountainArea(_.first(rows));
+          }
+          DestinationDataError.throwNotFound(
+            `Mountain Area resource(s) not found. ID(s): ${id}`
+          );
+        } else {
+          return rows?.map(this.mapRowToMountainArea);
         }
-        throw new Error("Not found");
-      } else {
-        return rows?.map(this.mapRowToMountainArea);
-      }
-    });
+      });
   }
 
   updateMountainArea(oldMountainArea, newInput) {
@@ -61,7 +81,9 @@ class MountainAreaConnector extends ResourceConnector {
     if (this.shouldUpdate(oldMountainArea, newMountainArea)) {
       return Promise.all([this.updateResource(newMountainArea)])
         .then((promises) => {
-          newMountainArea.lastUpdate = _.first(_.flatten(promises))[schemas.resources.lastUpdate];
+          newMountainArea.lastUpdate = _.first(_.flatten(promises))[
+            schemas.resources.lastUpdate
+          ];
           return this.updatePlace(newMountainArea);
         })
         .then(() => newMountainArea);
@@ -95,12 +117,16 @@ class MountainAreaConnector extends ResourceConnector {
   }
 
   insertAreaLifts(mountainArea) {
-    const inserts = mountainArea?.lifts?.map((lift) => dbFn.insertAreaLift(this.connection, mountainArea.id, lift.id));
+    const inserts = mountainArea?.lifts?.map((lift) =>
+      dbFn.insertAreaLift(this.connection, mountainArea.id, lift.id)
+    );
     return Promise.all(inserts ?? []);
   }
 
   updateAreaLifts(mountainArea) {
-    return dbFn.deleteAreaLifts(this.connection, mountainArea.id).then(() => this.insertAreaLifts(mountainArea));
+    return dbFn
+      .deleteAreaLifts(this.connection, mountainArea.id)
+      .then(() => this.insertAreaLifts(mountainArea));
   }
 
   insertAreaSkiSlopes(mountainArea) {
@@ -137,7 +163,9 @@ class MountainAreaConnector extends ResourceConnector {
   }
 
   updateSubAreas(mountainArea) {
-    return dbFn.deleteSubAreas(this.connection, mountainArea.id).then(() => this.insertSubAreas(mountainArea));
+    return dbFn
+      .deleteSubAreas(this.connection, mountainArea.id)
+      .then(() => this.insertSubAreas(mountainArea));
   }
 
   mapMountainAreaToColumns(mountainArea) {

@@ -1,18 +1,13 @@
-const { MediaObjectConnector } = require("../connectors/media_object_connector");
+const { AgentConnector } = require("../connectors/agent_connector");
 const {
-  deserializeMediaObject,
-  serializeResourceCollection,
-  serializeSingleResource,
-} = require("../model/destinationdata2022");
-const { Request } = require("../model/request/request");
+  MediaObjectConnector,
+} = require("../connectors/media_object_connector");
+const { deserializeMediaObject } = require("../model/destinationdata2022");
 const { Router } = require("./router");
 
 class MediaObjectsRouter extends Router {
   constructor(app) {
     super();
-
-    this.addUnimplementedGetRoute(`/mediaObjects/:id/categories`);
-    this.addUnimplementedGetRoute(`/mediaObjects/:id/copyrightOwner`);
 
     this.addPostRoute(`/mediaObjects`, this.postMediaObject);
     this.addGetRoute(`/mediaObjects`, this.getMediaObjects);
@@ -20,98 +15,51 @@ class MediaObjectsRouter extends Router {
     this.addDeleteRoute(`/mediaObjects/:id`, this.deleteMediaObject);
     this.addPatchRoute(`/mediaObjects/:id`, this.patchMediaObject);
 
+    this.addGetRoute(
+      `/mediaObjects/:id/categories`,
+      this.getMediaObjectCategories
+    );
+    this.addGetRoute(
+      `/mediaObjects/:id/licenseHolder`,
+      this.getMediaObjectLicenseHolder
+    );
+
     if (app) {
       this.installRoutes(app);
     }
   }
 
-  getMediaObjects = async (request) => {
-    // Process request and authentication
-    // Retrieve data
-    const connector = new MediaObjectConnector();
-    const parsedRequest = new Request(request);
+  postMediaObject = (request) =>
+    this.postResource(request, MediaObjectConnector, deserializeMediaObject);
 
-    // Return to the client
-    try {
-      return connector.retrieve().then((mediaObjects) => serializeResourceCollection(mediaObjects, parsedRequest));
-    } catch (error) {
-      console.error(error);
-      throw error;
-    }
-  };
+  getMediaObjects = (request) =>
+    this.getResources(request, MediaObjectConnector);
 
-  getMediaObjectById = async (request) => {
-    // Process request and authentication
-    // Retrieve data
-    const parsedRequest = new Request(request);
-    const connector = new MediaObjectConnector(parsedRequest);
+  getMediaObjectById = (request) =>
+    this.getResourceById(request, MediaObjectConnector);
 
-    // Return to the client
-    try {
-      return connector.retrieve().then((mediaObject) => serializeSingleResource(mediaObject, parsedRequest));
-    } catch (error) {
-      console.error(error);
-      throw error;
-    }
-  };
+  deleteMediaObject = (request) =>
+    this.deleteResource(request, MediaObjectConnector);
 
-  postMediaObject = async (request) => {
-    // Process request and authentication
-    const { body } = request;
-    // Validate object
-    this.validate(body);
-    // Store data
-    const mediaObject = deserializeMediaObject(body.data);
-    const parsedRequest = new Request(request);
-    const connector = new MediaObjectConnector(parsedRequest);
-
-    // Return to the client
-    try {
-      return connector.create(mediaObject).then((mediaObject) => serializeSingleResource(mediaObject, parsedRequest));
-    } catch (error) {
-      console.error(error);
-      throw error;
-    }
-  };
-
-  patchMediaObject = async (request) => {
-    // Process request and authentication
-    const { body } = request;
-    // Validate object
-    this.validate(body);
-    // Store data
-    const mediaObject = deserializeMediaObject(body.data);
-    const parsedRequest = new Request(request);
-    const connector = new MediaObjectConnector(parsedRequest);
-
-    // Return to the client
-    try {
-      return connector.update(mediaObject).then((mediaObject) => serializeSingleResource(mediaObject, parsedRequest));
-    } catch (error) {
-      console.error(error);
-      throw error;
-    }
-  };
-
-  deleteMediaObject = async (request) => {
-    // Process request and authentication
-    // Retrieve data
-    const parsedRequest = new Request(request);
-    const connector = new MediaObjectConnector(parsedRequest);
-    console.log("delete media object");
-
-    // Return to the client
-    try {
-      return connector.delete();
-    } catch (error) {
-      console.error(error);
-      throw error;
-    }
-  };
+  patchMediaObject = (request) =>
+    this.patchResource(request, MediaObjectConnector, deserializeMediaObject);
 
   validate(mediaObjectMessage) {
     console.log("The media object message HAS NOT BEEN validated.");
   }
+
+  getMediaObjectCategories = async (request) =>
+    this.getResourceCategories(request, MediaObjectConnector);
+
+  getMediaObjectLicenseHolder = async (request) => {
+    const fnRetrieveLicenseHolder = (mediaObject, parsedRequest) =>
+      new AgentConnector(parsedRequest).retrieveLicenseHolder(mediaObject);
+    return this.getResourceRelationshipToOne(
+      request,
+      MediaObjectConnector,
+      fnRetrieveLicenseHolder
+    );
+  };
 }
 
 module.exports = {

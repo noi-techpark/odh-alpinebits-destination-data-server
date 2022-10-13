@@ -2,8 +2,11 @@ SELECT events.id,
   in_person_capacity AS "inPersonCapacity",
   online_capacity AS "onlineCapacity",
   end_date AS "endDate",
+  recorded,
   start_date AS "startDate",
   status,
+  COALESCE(to_json(events.simple_participation_url), participation_url_objects.participation_url) AS "participationUrl",
+  COALESCE(to_json(events.simple_registration_url), registration_url_objects.registration_url) AS "registrationUrl",
   resource_objects.type,
   data_provider AS "dataProvider",
   last_update AS "lastUpdate",
@@ -32,7 +35,8 @@ SELECT events.id,
   END AS "series",
   COALESCE(sponsors_array.sponsors) AS "sponsors",
   COALESCE(sub_events_array.sub_events) AS "subEvents",
-  COALESCE(event_venues_array.venues) AS "venues"
+  COALESCE(event_venues_array.venues) AS "venues",
+  COUNT(events.id) OVER() AS total
 FROM events
   LEFT JOIN resource_objects ON resource_objects.id = events.id
   LEFT JOIN (
@@ -90,3 +94,5 @@ FROM events
     FROM event_venues
     GROUP BY id
   ) AS event_venues_array ON event_venues_array.id = events.id
+  LEFT JOIN participation_url_objects ON participation_url_objects.id = events.id
+  LEFT JOIN registration_url_objects ON registration_url_objects.id = events.id

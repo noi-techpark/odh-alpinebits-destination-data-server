@@ -29,7 +29,8 @@ SELECT mountain_areas.id,
   area_lifts_arrays.lifts,
   area_ski_slopes_arrays.ski_slopes AS "skiSlopes",
   area_snowparks_arrays.snowparks,
-  sub_areas_arrays.sub_areas AS "subAreas"
+  sub_areas_arrays.sub_areas AS "subAreas",
+  COUNT(mountain_areas.id) OVER() AS total
 FROM mountain_areas
   LEFT JOIN resource_objects ON resource_objects.id = mountain_areas.id
   LEFT JOIN place_objects ON place_objects.id = mountain_areas.id

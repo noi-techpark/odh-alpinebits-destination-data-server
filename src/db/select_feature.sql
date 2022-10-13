@@ -1,4 +1,4 @@
-SELECT categories.id,
+SELECT features.id,
   namespace,
   resource_objects.type,
   resource_types_array.types AS "resourceTypes",
@@ -12,34 +12,34 @@ SELECT categories.id,
   resource_objects.media AS "multimediaDescriptions",
   COALESCE(children_array.children) AS "children",
   COALESCE(parents_array.parents) AS "parents",
-  COUNT(categories.id) OVER() AS total
-FROM categories
-  LEFT JOIN resource_objects ON resource_objects.id = categories.id
+  COUNT(features.id) OVER() AS total
+FROM features
+  LEFT JOIN resource_objects ON resource_objects.id = features.id
   LEFT JOIN (
-    SELECT category_id AS "id",
+    SELECT feature_id AS "id",
       json_agg(to_json("type")) FILTER (WHERE "type" IS NOT NULL) AS "types"
-    FROM category_covered_types
-    GROUP BY category_id
-  ) AS resource_types_array ON resource_types_array.id = categories.id
+    FROM feature_covered_types
+    GROUP BY feature_id
+  ) AS resource_types_array ON resource_types_array.id = features.id
   LEFT JOIN (
     SELECT parent_id AS "id",
       json_agg(
         json_build_object(
           'id', child_id,
-          'type', 'categories'
+          'type', 'features'
         )
       ) FILTER (WHERE child_id IS NOT NULL) AS "children"
-    FROM category_specializations
+    FROM feature_specializations
     GROUP BY parent_id
-  ) AS children_array ON children_array.id = categories.id
+  ) AS children_array ON children_array.id = features.id
   LEFT JOIN (
     SELECT child_id AS "id",
       json_agg(
         json_build_object(
           'id', parent_id,
-          'type', 'categories'
+          'type', 'features'
         )
       ) FILTER (WHERE parent_id IS NOT NULL) AS "parents"
-    FROM category_specializations
+    FROM feature_specializations
     GROUP BY child_id
-  ) AS parents_array ON parents_array.id = categories.id
+  ) AS parents_array ON parents_array.id = features.id

@@ -10,7 +10,8 @@ SELECT event_series.id,
   resource_objects.url,
   resource_objects.categories,
   resource_objects.media AS "multimediaDescriptions",
-  COALESCE(editions_array.editions) AS "editions"
+  COALESCE(editions_array.editions) AS "editions",
+  COUNT(event_series.id) OVER() AS total
 FROM event_series
   LEFT JOIN resource_objects ON resource_objects.id = event_series.id
   LEFT JOIN (

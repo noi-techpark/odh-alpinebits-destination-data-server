@@ -3,6 +3,8 @@ const dbFn = require("../db/functions");
 const { ResourceConnector } = require("./resource_connector");
 const { schemas } = require("../db");
 const { EventSeries } = require("../model/destinationdata2022/event_series");
+const { DestinationDataError } = require("../errors");
+const errors = require("../errors");
 const { eventSeries: eventSeriesSchema, resources } = schemas;
 
 class EventSeriesConnector extends ResourceConnector {
@@ -12,13 +14,27 @@ class EventSeriesConnector extends ResourceConnector {
 
   create(eventSeries) {
     return this.runTransaction(() =>
-      this.insertEventSeries(eventSeries).then(() => this.retrieveEventSeries(eventSeries.id))
+      this.insertEventSeries(eventSeries).then(() =>
+        this.retrieveEventSeries(eventSeries.id)
+      )
     );
   }
 
   retrieve(id) {
     const eventSeriesId = id ?? this?.request?.params?.id;
     return this.runTransaction(() => this.retrieveEventSeries(eventSeriesId));
+  }
+
+  retrieveEventEventSeries(event) {
+    const seriesId = event?.series?.id ?? "";
+    return this.runTransaction(() => this.retrieveEventSeries(seriesId)).catch(
+      (err) => {
+        if (err?.title === errors.notFound.title) {
+          return null;
+        }
+        throw err;
+      }
+    );
   }
 
   update(eventSeries) {
@@ -41,16 +57,23 @@ class EventSeriesConnector extends ResourceConnector {
   }
 
   retrieveEventSeries(id) {
-    return dbFn.selectEventSeriesFromId(this.connection, id).then((rows) => {
-      if (_.isString(id)) {
-        if (_.size(rows) === 1) {
-          return this.mapRowToEventSeries(_.first(rows));
+    const offset = !_.isString(id) ? this.getOffset() : null;
+    const limit = !_.isString(id) ? this.getLimit() : null;
+
+    return dbFn
+      .selectEventSeriesFromId(this.connection, id, offset, limit)
+      .then((rows) => {
+        if (_.isString(id)) {
+          if (_.size(rows) === 1) {
+            return this.mapRowToEventSeries(_.first(rows));
+          }
+          DestinationDataError.throwNotFound(
+            `Event Series resource(s) not found. ID(s): ${id}`
+          );
+        } else {
+          return rows?.map(this.mapRowToEventSeries);
         }
-        throw new Error("Not found");
-      } else {
-        return rows?.map(this.mapRowToEventSeries);
-      }
-    });
+      });
   }
 
   updateEventSeries(oldEventSeries, newInput) {
@@ -61,12 +84,15 @@ class EventSeriesConnector extends ResourceConnector {
     });
 
     if (this.shouldUpdate(oldEventSeries, newEventSeries)) {
-      return Promise.all([this.updateResource(newEventSeries), this.updateEditions(newEventSeries)]).then(
-        (promises) => {
-          newEventSeries.lastUpdate = _.first(_.flatten(promises))[resources.lastUpdate];
-          return newEventSeries;
-        }
-      );
+      return Promise.all([
+        this.updateResource(newEventSeries),
+        this.updateEditions(newEventSeries),
+      ]).then((promises) => {
+        newEventSeries.lastUpdate = _.first(_.flatten(promises))[
+          resources.lastUpdate
+        ];
+        return newEventSeries;
+      });
     }
 
     this.throwNoUpdate(oldEventSeries);
@@ -96,7 +122,9 @@ class EventSeriesConnector extends ResourceConnector {
   }
 
   updateEditions(eventSeries) {
-    return dbFn.deleteEditions(this.connection, eventSeries.id).then(() => this.insertEditions(eventSeries));
+    return dbFn
+      .deleteEditions(this.connection, eventSeries.id)
+      .then(() => this.insertEditions(eventSeries));
   }
 
   mapEventSeriesToColumns(eventSeries) {

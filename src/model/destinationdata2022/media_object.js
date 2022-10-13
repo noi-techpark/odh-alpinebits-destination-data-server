@@ -11,7 +11,7 @@ class MediaObject extends Resource {
     this.width = undefined;
 
     this.categories = undefined;
-    this.copyrightOwner = undefined;
+    this.licenseHolder = undefined;
   }
 }
 

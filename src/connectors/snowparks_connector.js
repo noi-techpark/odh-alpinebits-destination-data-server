@@ -3,6 +3,7 @@ const dbFn = require("../db/functions");
 const { schemas } = require("../db");
 const { ResourceConnector } = require("./resource_connector");
 const { Snowpark } = require("../model/destinationdata2022/snowpark");
+const { DestinationDataError } = require("../errors");
 
 class SnowparkConnector extends ResourceConnector {
   constructor(request) {
@@ -10,7 +11,11 @@ class SnowparkConnector extends ResourceConnector {
   }
 
   create(snowpark) {
-    return this.runTransaction(() => this.insertSnowpark(snowpark).then(() => this.retrieveSnowpark(snowpark.id)));
+    return this.runTransaction(() =>
+      this.insertSnowpark(snowpark).then(() =>
+        this.retrieveSnowpark(snowpark.id)
+      )
+    );
   }
 
   retrieve(id) {
@@ -18,11 +23,23 @@ class SnowparkConnector extends ResourceConnector {
     return this.runTransaction(() => this.retrieveSnowpark(snowparkId));
   }
 
+  retrieveResourceSnowparkConnections(resource) {
+    const snowparksIds = resource?.connections?.map((ref) => ref.id) ?? [];
+    return this.runTransaction(() => this.retrieveSnowpark(snowparksIds));
+  }
+
+  retrieveMountainAreaSnowparks(mountainArea) {
+    const snowparksIds = mountainArea?.snowparks?.map((ref) => ref.id) ?? [];
+    return this.runTransaction(() => this.retrieveSnowpark(snowparksIds));
+  }
+
   update(snowpark) {
     if (!snowpark.id) throw new Error("missing id");
 
     return this.runTransaction(() =>
-      this.retrieveSnowpark(snowpark.id).then((oldSnowpark) => this.updateSnowpark(oldSnowpark, snowpark))
+      this.retrieveSnowpark(snowpark.id).then((oldSnowpark) =>
+        this.updateSnowpark(oldSnowpark, snowpark)
+      )
     );
   }
 
@@ -36,16 +53,23 @@ class SnowparkConnector extends ResourceConnector {
   }
 
   retrieveSnowpark(id) {
-    return dbFn.selectSnowparkFromId(this.connection, id).then((rows) => {
-      if (_.isString(id)) {
-        if (_.size(rows) === 1) {
-          return this.mapRowToSnowpark(_.first(rows));
+    const offset = !_.isString(id) ? this.getOffset() : null;
+    const limit = !_.isString(id) ? this.getLimit() : null;
+
+    return dbFn
+      .selectSnowparkFromId(this.connection, id, offset, limit)
+      .then((rows) => {
+        if (_.isString(id)) {
+          if (_.size(rows) === 1) {
+            return this.mapRowToSnowpark(_.first(rows));
+          }
+          DestinationDataError.throwNotFound(
+            `Snowpark resource(s) not found. ID(s): ${id}`
+          );
+        } else {
+          return rows?.map(this.mapRowToSnowpark);
         }
-        throw new Error("Not found");
-      } else {
-        return rows?.map(this.mapRowToSnowpark);
-      }
-    });
+      });
   }
 
   updateSnowpark(oldSnowpark, newInput) {
@@ -56,7 +80,9 @@ class SnowparkConnector extends ResourceConnector {
     if (this.shouldUpdate(oldSnowpark, newSnowpark)) {
       return Promise.all([this.updateResource(newSnowpark)])
         .then((promises) => {
-          newSnowpark.lastUpdate = _.first(_.flatten(promises))[schemas.resources.lastUpdate];
+          newSnowpark.lastUpdate = _.first(_.flatten(promises))[
+            schemas.resources.lastUpdate
+          ];
           return this.updatePlace(newSnowpark);
         })
         .then(() => newSnowpark);

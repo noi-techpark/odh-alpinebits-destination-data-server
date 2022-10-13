@@ -18,7 +18,8 @@ SELECT lifts.id,
   place_objects.max_altitude AS "maxAltitude",
   place_objects.min_altitude AS "minAltitude",
   place_objects.opening_hours AS "openingHours",
-  connections_arrays.connections
+  connections_arrays.connections,
+  COUNT(lifts.id) OVER() AS total
 FROM lifts
   LEFT JOIN resource_objects ON resource_objects.id = lifts.id
   LEFT JOIN place_objects ON place_objects.id = lifts.id

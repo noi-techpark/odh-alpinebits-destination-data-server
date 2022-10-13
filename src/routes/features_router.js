@@ -1,18 +1,22 @@
 const { Router } = require("./router");
-const { Agent } = require("./../model/destinationdata/agents");
-const { Feature } = require("./../model/destinationdata/feature");
-const { MediaObject } = require("./../model/destinationdata/media_object");
-const responseTransform = require("../model/odh2destinationdata/response_transform");
-const { Category } = require("../model/destinationdata/category");
+const { FeatureConnector } = require("../connectors/feature_connector");
+const { deserializeFeature } = require("../model/destinationdata2022");
 
 class FeaturesRouter extends Router {
   constructor(app) {
     super();
 
+    this.addPostRoute(`/features`, this.postFeature);
     this.addGetRoute(`/features`, this.getFeatures);
     this.addGetRoute(`/features/:id`, this.getFeatureById);
+    this.addDeleteRoute(`/features/:id`, this.deleteFeature);
+    this.addPatchRoute(`/features/:id`, this.patchFeature);
+
     this.addGetRoute(`/features/:id/children`, this.getFeatureChildren);
-    this.addGetRoute(`/features/:id/multimediaDescriptions`, this.getFeatureMultimediaDescriptions);
+    this.addGetRoute(
+      `/features/:id/multimediaDescriptions`,
+      this.getFeatureMultimediaDescriptions
+    );
     this.addGetRoute(`/features/:id/parents`, this.getFeatureParents);
 
     if (app) {
@@ -20,84 +24,38 @@ class FeaturesRouter extends Router {
     }
   }
 
-  getFeatures = (request) => {
-    const parseRequestFn = (request) => {
-      const typesInData = [Feature];
-      const typesInIncluded = [Feature, MediaObject];
-      const supportedFeatures = ["include", "fields", "page"];
-      return this.parseRequest(request, typesInData, typesInIncluded, supportedFeatures);
-    };
-    const fetchFn = () => [];
-    return this.handleGetRequest(
+  getFeatures = (request) => this.getResources(request, FeatureConnector);
+
+  getFeatureById = (request) => this.getResourceById(request, FeatureConnector);
+
+  postFeature = (request) =>
+    this.postResource(request, FeatureConnector, deserializeFeature);
+
+  patchFeature = (request) =>
+    this.patchResource(request, FeatureConnector, deserializeFeature);
+
+  deleteFeature = (request) => this.deleteResource(request, FeatureConnector);
+
+  getFeatureChildren = async (request) => {
+    const fnRetrieveFeatures = (feature, parsedRequest) =>
+      new FeatureConnector(parsedRequest).retrieveFeatureChildren(feature);
+    return this.getResourceRelationshipToMany(
       request,
-      parseRequestFn,
-      fetchFn,
-      responseTransform.transformToFeatureCollection,
-      this.validate
+      FeatureConnector,
+      fnRetrieveFeatures
     );
   };
 
-  getFeatureById = (request) => {
-    const parseRequestFn = (request) => {
-      const typesInData = [Feature];
-      const typesInIncluded = [Feature, MediaObject];
-      return this.parseRequest(request, typesInData, typesInIncluded);
-    };
-    const fetchFn = () => null;
-    return this.handleGetRequest(
-      request,
-      parseRequestFn,
-      fetchFn,
-      responseTransform.transformToFeatureObject,
-      this.validate
-    );
-  };
+  getFeatureMultimediaDescriptions = async (request) =>
+    this.getResourceMultimediaDescriptions(request, FeatureConnector);
 
-  getFeatureChildren = (request) => {
-    const parseRequestFn = (request) => {
-      const typesInData = [Feature];
-      const typesInIncluded = [Feature, MediaObject];
-      return this.parseRequest(request, typesInData, typesInIncluded);
-    };
-    const fetchFn = () => [];
-    return this.handleGetRequest(
+  getFeatureParents = async (request) => {
+    const fnRetrieveFeatures = (feature, parsedRequest) =>
+      new FeatureConnector(parsedRequest).retrieveFeatureParents(feature);
+    return this.getResourceRelationshipToMany(
       request,
-      parseRequestFn,
-      fetchFn,
-      responseTransform.transformToFeatureChildren,
-      this.validate
-    );
-  };
-
-  getFeatureMultimediaDescriptions = (request) => {
-    const parseRequestFn = (request) => {
-      const typesInData = [MediaObject];
-      const typesInIncluded = [Agent, Category];
-      return this.parseRequest(request, typesInData, typesInIncluded);
-    };
-    const fetchFn = () => [];
-    return this.handleGetRequest(
-      request,
-      parseRequestFn,
-      fetchFn,
-      responseTransform.transformToFeatureMultimediaDescriptions,
-      this.validate
-    );
-  };
-
-  getFeatureParents = (request) => {
-    const parseRequestFn = (request) => {
-      const typesInData = [Feature];
-      const typesInIncluded = [Feature, MediaObject];
-      return this.parseRequest(request, typesInData, typesInIncluded);
-    };
-    const fetchFn = () => [];
-    return this.handleGetRequest(
-      request,
-      parseRequestFn,
-      fetchFn,
-      responseTransform.transformToFeatureParents,
-      this.validate
+      FeatureConnector,
+      fnRetrieveFeatures
     );
   };
 }

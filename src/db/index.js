@@ -185,7 +185,7 @@ module.exports = {
       height: "height",
       license: "license",
       width: "width",
-      copyrightOwnerId: "copyright_owner_id",
+      licenseHolderId: "license_holder_id",
     },
     mountainAreas: {
       _name: "mountain_areas",
