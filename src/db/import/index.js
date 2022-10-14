@@ -1,16 +1,20 @@
 const fs = require("fs");
 const sanitizeHtml = require("sanitize-html");
 const _ = require("lodash");
+const axios = require("axios");
 
-const db = require("../db");
+const knex = require("../connect");
+const db = require("..");
 const { schemas } = db;
-const mappings = require("../model/mappings");
+const mappings = require("../../model/mappings");
 
 let idCounter = 1;
+
 const htmlSanitizeOpts = {
   allowedTags: [],
   allowedAttributes: {},
 };
+
 const odhTagMapping = {
   aufstiegsanlagen: db.defaults.resourceTypes.lifts,
   "ski alpin": db.defaults.resourceTypes.skiSlopes,
@@ -19,6 +23,16 @@ const odhTagMapping = {
   loipen: db.defaults.resourceTypes.skiSlopes,
   snowpark: db.defaults.resourceTypes.snowparks,
 };
+
+const axiosOpts = {
+  baseURL: process.env.ODH_BASE_URL,
+  timeout: process.env.ODH_TIMEOUT,
+  headers: {
+    Accept: "application/json",
+    Referer: "Destinationdata",
+  },
+};
+const axiosInstance = axios.create(axiosOpts);
 
 const {
   AgentValue,
@@ -45,24 +59,77 @@ const {
   AbstractValue,
   UrlValue,
 } = require("./model");
+const errors = require("../../errors");
 
-const odhEventTopicData = getOdhData(process.argv[2]);
-const odhEventData = getOdhData(process.argv[3]);
-const odhActivityTypeData = getOdhData(process.argv[4]);
-const odhActivityData = getOdhData(process.argv[5]);
-const odhSkiAreaData = getOdhData(process.argv[6]);
-const odhSkiRegionData = getOdhData(process.argv[7]);
-const odhMountainAreaData = [...odhSkiAreaData, ...odhSkiRegionData];
+function fetch(path) {
+  console.log(`  Fetching data from ${path}`);
 
-odhEventTopicData.forEach((item) => processEventTopic(item));
-odhEventData.Items.forEach((item) => processEvent(item));
-odhActivityTypeData.forEach((item) => processActivityType(item));
-odhActivityData.Items.forEach((item) => processActivity(item));
-odhMountainAreaData.forEach((item) => processMountainArea(item));
+  return axiosInstance
+    .get(path)
+    .then((res) => {
+      if (!res.data || res.status !== 200)
+        errors.DestinationDataError.throwNotFound();
+      return res.data;
+    })
+    .catch((error) => error);
+}
 
-generateQueries();
+function getOdhEventTopicData() {
+  const path = "https://api.tourism.testingmachine.eu/v1/EventTopics";
 
-/** *************************** CLASSES *************************** */
+  return fetch(path);
+}
+
+function getOdhEventData() {
+  const path = "https://api.tourism.testingmachine.eu/v1/Event?pagesize=10000";
+
+  return fetch(path);
+}
+
+function getOdhActivityData() {
+  const path =
+    "https://api.tourism.testingmachine.eu/v1/Activity?pagesize=10000&odhtagfilter=ski alpin,ski alpin (rundkurs),rodelbahnen,loipen,aufstiegsanlagen,snowpark";
+
+  return fetch(path);
+}
+
+function getOdhActivityTypeData() {
+  const path = "https://api.tourism.testingmachine.eu/v1/ActivityTypes";
+
+  return fetch(path);
+}
+
+function getOdhMountainAreaData() {
+  const pathSkiArea = "https://api.tourism.testingmachine.eu/v1/SkiArea";
+  const pathSkiRegion = "https://api.tourism.testingmachine.eu/v1/SkiRegion";
+
+  return Promise.all([fetch(pathSkiArea), fetch(pathSkiRegion)]).then(
+    (promises) => promises.flat()
+  );
+}
+
+Promise.all([
+  getOdhEventTopicData().then((data) =>
+    data.forEach((item) => processEventTopic(item))
+  ),
+  getOdhEventData().then((data) =>
+    data.Items.forEach((item) => processEvent(item))
+  ),
+  getOdhActivityTypeData().then((data) =>
+    data.forEach((item) => processActivityType(item))
+  ),
+  getOdhActivityData().then((data) =>
+    data.Items.forEach((item) => processActivity(item))
+  ),
+  getOdhMountainAreaData().then((data) =>
+    data.forEach((item) => processMountainArea(item))
+  ),
+])
+  .then(() => runQueries())
+  .catch((err) => {
+    console.error(err);
+    process.exit(1);
+  });
 
 /** *************************** FUNCTIONS *************************** */
 
@@ -1018,7 +1085,7 @@ function processEvent(item) {
   ResourceCategoryValue.values.push(inPersonEventCategory);
 }
 
-function generateQueries() {
+function runQueries() {
   const data =
     `DELETE FROM ${schemas.contactPoints._name};` +
     `\nDELETE FROM ${schemas.addresses._name};` +
@@ -1049,6 +1116,20 @@ function generateQueries() {
   const outputFilePath = "./output.pgsql";
 
   fs.writeFileSync(outputFilePath, data);
+
+  knex
+    .transaction(function (trx) {
+      return trx.raw(data);
+    })
+    .then(function () {
+      console.log("Import completed");
+    })
+    .catch(function (error) {
+      console.log("Error on import");
+      console.error(error);
+      process.exit(1);
+    })
+    .finally(() => process.exit(0));
 }
 
 function getItemId(item) {

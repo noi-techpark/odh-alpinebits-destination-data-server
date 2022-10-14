@@ -6,12 +6,6 @@ const user = process.env.DB_USERNAME;
 const password = process.env.DB_PASSWORD;
 const database = process.env.DB_NAME;
 
-console.log("host", host);
-console.log("port", port);
-console.log("user", user);
-console.log("password", password);
-console.log("database", database);
-
 const knex = require("knex")({
   client: "pg",
   connection: {

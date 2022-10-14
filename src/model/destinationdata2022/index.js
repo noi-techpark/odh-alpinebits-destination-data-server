@@ -678,7 +678,7 @@ function serializeSingleResource(resource, request, include) {
 function serializeResourceCollection(resources, request, include) {
   const size = parseInt(request?.query?.page?.size) || 10;
   const number = parseInt(request?.query?.page?.number) || 1;
-  const count = parseInt(resources?.[0].total) || 0;
+  const count = parseInt(resources?.[0]?.total) || 0;
 
   const current = number;
   const first = 1;

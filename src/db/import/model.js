@@ -1,6 +1,6 @@
 const _ = require("lodash");
 
-const db = require("../db");
+const db = require("..");
 
 function getInsertQuery(tableName, columnNames, values, conflictColumns) {
   if (_.isEmpty(values)) return "";

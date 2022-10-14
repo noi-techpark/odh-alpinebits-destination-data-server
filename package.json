@@ -12,18 +12,16 @@
     "pgadmin": "node pgadmin-setup.js && docker-compose -f docker-compose_pgadmin.yml up",
     "create-tables": "node --trace-warnings src/db/create_tables.js",
     "insert-defaults": "node src/db/insert_defaults.js",
-    "test-db": "node src/db/test.js",
-    "generate-scripts": "node src/populate-db.js",
-    "import-odh-data": "node src/import/index.js"
+    "import-odh-data": "node src/db/import/index.js"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/noi-techpark/odh-alpinebits-destination-data-server.git"
   },
-  "author": "Tiago Prince Sales <tiago.princesales@unibz.it>",
+  "author": "Tiago Prince Sales <t.princesales@utwente.nl>",
   "contributors": [
-    "Tiago Prince Sales <tiago.princesales@unibz.it>",
-    "Claudenir Morais Fonseca <cmoraisfonseca@unibz.it>"
+    "Tiago Prince Sales <t.princesales@utwente.nl>",
+    "Claudenir M. Fonseca <c.moraisfonseca@utwente.nl>"
   ],
   "bugs": {
     "url": "https://github.com/noi-techpark/odh-alpinebits-destination-data-server/issues"
