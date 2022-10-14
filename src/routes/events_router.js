@@ -1,26 +1,31 @@
 const { Router } = require("./router");
 const { EventConnector } = require("./../connectors/event_connector");
-const { Agent } = require("./../model/destinationdata/agents");
-const { Category } = require("./../model/destinationdata/category");
-const { Event } = require("./../model/destinationdata/event");
-const { EventSeries } = require("./../model/destinationdata/event_series");
-const { MediaObject } = require("./../model/destinationdata/media_object");
-const { Venue } = require("./../model/destinationdata/venue");
-const responseTransform = require("../model/odh2destinationdata/response_transform");
-const requestTransform = require("../model/request2odh/request_transform");
+const { deserializeEvent } = require("../model/destinationdata2022");
+const { AgentConnector } = require("../connectors/agent_connector");
+const {
+  EventSeriesConnector,
+} = require("../connectors/event_series_connector");
+const { VenueConnector } = require("../connectors/venue_connector");
 
 class EventsRouter extends Router {
   constructor(app) {
     super();
 
+    this.addPostRoute(`/events`, this.postEvent);
     this.addGetRoute(`/events`, this.getEvents);
     this.addGetRoute(`/events/:id`, this.getEventById);
+    this.addDeleteRoute(`/events/:id`, this.deleteEvent);
+    this.addPatchRoute(`/events/:id`, this.patchEvent);
+
     this.addGetRoute(`/events/:id/categories`, this.getEventCategories);
     this.addGetRoute(`/events/:id/contributors`, this.getEventContributors);
-    this.addGetRoute(`/events/:id/multimediaDescriptions`, this.getEventMultimediaDescriptions);
+    this.addGetRoute(
+      `/events/:id/multimediaDescriptions`,
+      this.getEventMultimediaDescriptions
+    );
     this.addGetRoute(`/events/:id/organizers`, this.getEventOrganizers);
     this.addGetRoute(`/events/:id/publisher`, this.getEventPublisher);
-    this.addGetRoute(`/events/:id/series`, this.getEventEventSeries);
+    this.addGetRoute(`/events/:id/series`, this.getEventSeries);
     this.addGetRoute(`/events/:id/sponsors`, this.getEventSponsors);
     this.addGetRoute(`/events/:id/subEvents`, this.getEventSubEvents);
     this.addGetRoute(`/events/:id/venues`, this.getEventVenues);
@@ -30,192 +35,95 @@ class EventsRouter extends Router {
     }
   }
 
-  getEvents = (request) => {
-    const parseRequestFn = (request) => {
-      const typesInData = [Event];
-      const typesInIncluded = [Agent, Category, Event, EventSeries, MediaObject, Venue];
-      const supportedFeatures = ["include", "fields", "filter", "page", "random", "search", "sort"];
-      return this.parseRequest(request, typesInData, typesInIncluded, supportedFeatures);
-    };
-    const fetchFn = (parsedRequest) =>
-      new EventConnector(parsedRequest, requestTransform.transformGetEventsRequest).fetch();
+  postEvent = (request) =>
+    this.postResource(request, EventConnector, deserializeEvent);
 
-    return this.handleRequest(
+  getEvents = (request) => this.getResources(request, EventConnector);
+
+  getEventById = (request) => this.getResourceById(request, EventConnector);
+
+  deleteEvent = (request) => this.deleteResource(request, EventConnector);
+
+  patchEvent = (request) =>
+    this.patchResource(request, EventConnector, deserializeEvent);
+
+  validate(eventMessage) {
+    console.log("The event message HAS NOT BEEN validated.");
+  }
+
+  getEventCategories = async (request) =>
+    this.getResourceCategories(request, EventConnector);
+
+  getEventMultimediaDescriptions = async (request) =>
+    this.getResourceMultimediaDescriptions(request, EventConnector);
+
+  getEventSeries = async (request) => {
+    const fnRetrieveEventSeries = (event, parsedRequest) =>
+      new EventSeriesConnector(parsedRequest).retrieveEventEventSeries(event);
+    return this.getResourceRelationshipToOne(
       request,
-      parseRequestFn,
-      fetchFn,
-      responseTransform.transformToEventCollection,
-      this.validate
+      EventConnector,
+      fnRetrieveEventSeries
     );
   };
 
-  getEventById = (request) => {
-    const parseRequestFn = (request) => {
-      const typesInData = [Event];
-      const typesInIncluded = [Agent, Category, Event, EventSeries, MediaObject, Venue];
-      return this.parseRequest(request, typesInData, typesInIncluded);
-    };
-    const fetchFn = (parsedRequest) => new EventConnector(parsedRequest, null).fetch();
-
-    return this.handleRequest(
+  getEventPublisher = async (request) => {
+    const fnRetrieveAgent = (event, parsedRequest) =>
+      new AgentConnector(parsedRequest).retrieveEventPublisher(event);
+    return this.getResourceRelationshipToOne(
       request,
-      parseRequestFn,
-      fetchFn,
-      responseTransform.transformToEventObject,
-      this.validate
+      EventConnector,
+      fnRetrieveAgent
     );
   };
 
-  getEventCategories = (request) => {
-    const parseRequestFn = (request) => {
-      const typesInData = [Category];
-      const typesInIncluded = [Category, MediaObject];
-      return this.parseRequest(request, typesInData, typesInIncluded);
-    };
-    const fetchFn = (parsedRequest) => new EventConnector(parsedRequest, null).fetch();
-
-    return this.handleRequest(
+  getEventContributors = async (request) => {
+    const fnRetrieveAgents = (event, parsedRequest) =>
+      new AgentConnector(parsedRequest).retrieveEventContributors(event);
+    return this.getResourceRelationshipToMany(
       request,
-      parseRequestFn,
-      fetchFn,
-      responseTransform.transformToEventCategories,
-      this.validate
+      EventConnector,
+      fnRetrieveAgents
     );
   };
 
-  getEventContributors = (request) => {
-    const parseRequestFn = (request) => {
-      const typesInData = [Agent];
-      const typesInIncluded = [Category, MediaObject];
-      return this.parseRequest(request, typesInData, typesInIncluded);
-    };
-    const fetchFn = (parsedRequest) => new EventConnector(parsedRequest, null).fetch();
-
-    return this.handleRequest(
+  getEventOrganizers = async (request) => {
+    const fnRetrieveAgents = (event, parsedRequest) =>
+      new AgentConnector(parsedRequest).retrieveEventOrganizers(event);
+    return this.getResourceRelationshipToMany(
       request,
-      parseRequestFn,
-      fetchFn,
-      responseTransform.transformToEventContributors,
-      this.validate
+      EventConnector,
+      fnRetrieveAgents
     );
   };
 
-  getEventEventSeries = (request) => {
-    const parseRequestFn = (request) => {
-      const typesInData = [EventSeries];
-      const typesInIncluded = [Category, Event, MediaObject];
-      return this.parseRequest(request, typesInData, typesInIncluded);
-    };
-    const fetchFn = (parsedRequest) => new EventConnector(parsedRequest, null).fetch();
-
-    return this.handleRequest(
+  getEventSponsors = async (request) => {
+    const fnRetrieveAgents = (event, parsedRequest) =>
+      new AgentConnector(parsedRequest).retrieveEventSponsors(event);
+    return this.getResourceRelationshipToMany(
       request,
-      parseRequestFn,
-      fetchFn,
-      responseTransform.transformToEventEventSeries,
-      this.validate
+      EventConnector,
+      fnRetrieveAgents
     );
   };
 
-  getEventMultimediaDescriptions = (request) => {
-    const parseRequestFn = (request) => {
-      const typesInData = [MediaObject];
-      const typesInIncluded = [Agent, Category, MediaObject];
-      return this.parseRequest(request, typesInData, typesInIncluded);
-    };
-    const fetchFn = (parsedRequest) => new EventConnector(parsedRequest, null).fetch();
-
-    return this.handleRequest(
+  getEventSubEvents = async (request) => {
+    const fnRetrieveEvents = (event, parsedRequest) =>
+      new EventConnector(parsedRequest).retrieveEventSubEvents(event);
+    return this.getResourceRelationshipToMany(
       request,
-      parseRequestFn,
-      fetchFn,
-      responseTransform.transformToEventMultimediaDescriptions,
-      this.validate
+      EventConnector,
+      fnRetrieveEvents
     );
   };
 
-  getEventOrganizers = (request) => {
-    const parseRequestFn = (request) => {
-      const typesInData = [Agent];
-      const typesInIncluded = [Category, MediaObject];
-      return this.parseRequest(request, typesInData, typesInIncluded);
-    };
-    const fetchFn = (parsedRequest) => new EventConnector(parsedRequest, null).fetch();
-
-    return this.handleRequest(
+  getEventVenues = async (request) => {
+    const fnRetrieveVenues = (event, parsedRequest) =>
+      new VenueConnector(parsedRequest).retrieveEventVenues(event);
+    return this.getResourceRelationshipToMany(
       request,
-      parseRequestFn,
-      fetchFn,
-      responseTransform.transformToEventOrganizers,
-      this.validate
-    );
-  };
-
-  getEventPublisher = (request) => {
-    const parseRequestFn = (request) => {
-      const typesInData = [Agent];
-      const typesInIncluded = [Category, MediaObject];
-      return this.parseRequest(request, typesInData, typesInIncluded);
-    };
-    const fetchFn = (parsedRequest) => new EventConnector(parsedRequest, null).fetch();
-
-    return this.handleRequest(
-      request,
-      parseRequestFn,
-      fetchFn,
-      responseTransform.transformToEventPublisher,
-      this.validate
-    );
-  };
-
-  getEventSponsors = (request) => {
-    const parseRequestFn = (request) => {
-      const typesInData = [Agent];
-      const typesInIncluded = [Category, MediaObject];
-      return this.parseRequest(request, typesInData, typesInIncluded);
-    };
-    const fetchFn = (parsedRequest) => new EventConnector(parsedRequest, null).fetch();
-
-    return this.handleRequest(
-      request,
-      parseRequestFn,
-      fetchFn,
-      responseTransform.transformToEventSponsors,
-      this.validate
-    );
-  };
-
-  getEventSubEvents = (request) => {
-    const parseRequestFn = (request) => {
-      const typesInData = [Event];
-      const typesInIncluded = [Agent, Category, Event, EventSeries, MediaObject, Venue];
-      return this.parseRequest(request, typesInData, typesInIncluded);
-    };
-    const fetchFn = (parsedRequest) => new EventConnector(parsedRequest, null).fetch();
-
-    return this.handleRequest(
-      request,
-      parseRequestFn,
-      fetchFn,
-      responseTransform.transformToEventSubEvents,
-      this.validate
-    );
-  };
-
-  getEventVenues = (request) => {
-    const parseRequestFn = (request) => {
-      const typesInData = [Venue];
-      const typesInIncluded = [Category, MediaObject];
-      return this.parseRequest(request, typesInData, typesInIncluded);
-    };
-    const fetchFn = (parsedRequest) => new EventConnector(parsedRequest, null).fetch();
-
-    return this.handleRequest(
-      request,
-      parseRequestFn,
-      fetchFn,
-      responseTransform.transformToEventVenues,
-      this.validate
+      EventConnector,
+      fnRetrieveVenues
     );
   };
 }

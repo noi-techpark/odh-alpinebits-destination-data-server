@@ -1,205 +1,182 @@
-const { DestinationDataError: Error } = require("../errors");
-const axios = require("axios");
 const _ = require("lodash");
+const dbFn = require("../db/functions");
+const { schemas } = require("../db");
+const { ResourceConnector } = require("./resource_connector");
+const { MountainArea } = require("../model/destinationdata2022/mountain_area");
+const { DestinationDataError } = require("../errors");
 
-const ACTIVITY_PATH = "Activity";
-const SKI_AREA_PATH = "Skiarea";
-const SKI_REGION_PATH = "Skiregion";
-const ODH_TAG_MAP = {
-  trails: "ski alpin,ski alpin (rundkurs),rodelbahnen,loipen",
-  lifts: "aufstiegsanlagen",
-  snowparks: "snowpark",
-};
-
-class MountainAreaConnector {
-  constructor(request, requestTransformFn) {
-    const odhItemId = request.params.id;
-    const odhQueries = requestTransformFn ? requestTransformFn(request) : null;
-
-    this.id = odhItemId ? `/${odhItemId}` : "";
-    this.queries = odhQueries ? `?${odhQueries}` : "";
-    this.skiAreaPath = SKI_AREA_PATH + this.id + this.queries;
-    this.skiRegionPath = SKI_REGION_PATH + this.id + this.queries;
-
-    this.request = request;
-
-    this.odhHostUrl = process.env.ODH_BASE_URL;
-    this.axiosOpts = {
-      baseURL: process.env.ODH_BASE_URL,
-      timeout: process.env.ODH_TIMEOUT,
-      headers: {
-        Accept: "application/json",
-        Referer: "Destinationdata",
-      },
-    };
-
-    this.include = request.query.include;
+class MountainAreaConnector extends ResourceConnector {
+  constructor(request) {
+    super(request);
   }
 
-  async fetch() {
-    try {
-      const requests = [this.fetchSkyAreas(), this.fetchSkyRegions()];
-      let fetched = await Promise.all(requests);
-
-      if (fetched.every((item) => item instanceof Error)) {
-        throw fetched[0];
-      }
-
-      // Always an array. The router and the transformation shall check if the request was for one item or a collection
-      const Items = fetched
-        .filter((item) => !!item)
-        .filter((item) => !(item instanceof Error)) // removes not found errors when fetching specific area
-        .reduce((prev, current) => {
-          if (Array.isArray(current)) prev.push(...current);
-          else prev.push(current);
-          return prev;
-        }, []);
-
-      const page = this.request.query.page || {};
-      const size = page.size || 10;
-      const number = page.number || 1;
-      const minIndex = (number - 1) * size;
-      const maxIndex = number * size;
-
-      const data = this.id
-        ? Items[0]
-        : {
-            TotalResults: Items.length,
-            TotalPages: Math.ceil(Items.length / size),
-            CurrentPage: number,
-            Items: Items.slice(minIndex, maxIndex),
-          };
-
-      if (Array.isArray(data.Items)) {
-        for (const item of data.Items) {
-          item.subResources = await this.fetchSubResources(item);
-        }
-      } else {
-        data.subResources = await this.fetchSubResources(data);
-      }
-
-      return data;
-    } catch (error) {
-      if (!(error instanceof Error)) Error.throwConnectionError(error);
-      else throw error;
-    }
+  create(mountainArea) {
+    return this.runTransaction(() =>
+      this.insertMountainArea(mountainArea).then(() =>
+        this.retrieveMountainArea(mountainArea.id)
+      )
+    );
   }
 
-  async fetchSkyAreas() {
-    try {
-      const instance = axios.create(this.axiosOpts);
-      console.log(`  Fetching data from ${this.odhHostUrl + this.skiAreaPath}`);
-      const skiAreaResponse = await instance.get(this.skiAreaPath).catch((error) => error);
-      let data;
-
-      if (typeof skiAreaResponse.data === "string") data = JSON.parse(skiAreaResponse.data);
-      else data = skiAreaResponse.data;
-
-      if (!data || skiAreaResponse.status !== 200) {
-        Error.throwNotFound();
-      }
-
-      return data;
-    } catch (error) {
-      if (!(error instanceof Error)) Error.throwConnectionError(error);
-      else return error;
-    }
+  retrieve(id) {
+    const mountainAreaId = id ?? this?.request?.params?.id;
+    return this.runTransaction(() => this.retrieveMountainArea(mountainAreaId));
   }
 
-  async fetchSkyRegions() {
-    try {
-      const instance = axios.create(this.axiosOpts);
-      console.log(`  Fetching data from ${this.odhHostUrl + this.skiRegionPath}`);
-      const skiRegionResponse = await instance.get(this.skiRegionPath).catch((error) => error);
-      let data;
-
-      if (typeof skiRegionResponse.data === "string") data = JSON.parse(skiRegionResponse.data);
-      else data = skiRegionResponse.data;
-
-      if (!data || skiRegionResponse.status !== 200) {
-        Error.throwNotFound();
-      }
-
-      return data;
-    } catch (error) {
-      if (!(error instanceof Error)) Error.throwConnectionError(error);
-      else return error;
-    }
+  retrieveResourceMountainAreaConnections(resource) {
+    const areasIds = resource?.connections?.map((ref) => ref.id) ?? [];
+    return this.runTransaction(() => this.retrieveMountainArea(areasIds));
   }
 
-  async fetchSubResources(area) {
-    const areaId = "SkiRegionId" in area ? `ska${area.Id}` : `skr${area.Id}`;
-    let path;
+  retrieveMountainAreaSubAreas(mountainArea) {
+    const subAreasIds = mountainArea?.subAreas?.map((ref) => ref.id) ?? [];
+    return this.runTransaction(() => this.retrieveMountainArea(subAreasIds));
+  }
 
-    if (!this.id && !this.include) {
-      path =
-        ACTIVITY_PATH +
-        "?odhtagfilter=aufstiegsanlagen,ski alpin,ski alpin (rundkurs),rodelbahnen,loipen,snowpark" +
-        "&pagesize=10000&fields=Id,SmgTags&areafilter=" +
-        areaId;
-    } else {
-      path =
-        ACTIVITY_PATH +
-        "?odhtagfilter=aufstiegsanlagen,ski alpin,ski alpin (rundkurs),rodelbahnen,loipen,snowpark" +
-        "&pagesize=10000&areafilter=" +
-        areaId;
-    }
+  update(mountainArea) {
+    if (!mountainArea.id) throw new Error("missing id");
 
-    const response = await this.fetchSubResourcesOfType(path);
-    const subResources = {
-      lifts: [],
-      skiSlopes: [],
-      snowparks: [],
-    };
+    return this.runTransaction(() =>
+      this.retrieveMountainArea(mountainArea.id).then((oldMountainArea) =>
+        this.updateMountainArea(oldMountainArea, mountainArea)
+      )
+    );
+  }
 
-    if (response) {
-      response.forEach((item) => {
-        const tags = item.SmgTags || [];
+  delete(id) {
+    const mountainAreaId = id ?? this.request?.params?.id;
+    return this.runTransaction(() => this.deleteMountainArea(mountainAreaId));
+  }
 
-        if (tags.includes("aufstiegsanlagen")) {
-          subResources.lifts.push(item);
-        } else if (tags.includes("snowpark")) {
-          subResources.snowparks.push(item);
-        } else if (
-          tags.includes("ski alpin") ||
-          tags.includes("ski alpin (rundkurs)") ||
-          tags.includes("rodelbahnen")
-        ) {
-          subResources.skiSlopes.push(item);
+  deleteMountainArea(id) {
+    return this.deleteResource(id, "mountainAreas");
+  }
+
+  retrieveMountainArea(id) {
+    const offset = !_.isString(id) ? this.getOffset() : null;
+    const limit = !_.isString(id) ? this.getLimit() : null;
+
+    return dbFn
+      .selectMountainAreaFromId(this.connection, id, offset, limit)
+      .then((rows) => {
+        if (_.isString(id)) {
+          if (_.size(rows) === 1) {
+            return this.mapRowToMountainArea(_.first(rows));
+          }
+          DestinationDataError.throwNotFound(
+            `Mountain Area resource(s) not found. ID(s): ${id}`
+          );
+        } else {
+          return rows?.map(this.mapRowToMountainArea);
         }
       });
-    }
-
-    subResources.lifts = !_.isEmpty(subResources.lifts) ? subResources.lifts : null;
-    subResources.skiSlopes = !_.isEmpty(subResources.skiSlopes) ? subResources.skiSlopes : null;
-    subResources.snowparks = !_.isEmpty(subResources.snowparks) ? subResources.snowparks : null;
-
-    return subResources;
   }
 
-  async fetchSubResourcesOfType(path) {
-    try {
-      console.log(`  Sub-request ${this.odhHostUrl}/${path}`);
+  updateMountainArea(oldMountainArea, newInput) {
+    const newMountainArea = _.create(oldMountainArea);
 
-      const instance = axios.create(this.axiosOpts);
-      const response = await instance.get(path).catch((error) => error);
-      let data;
+    this.ignoreNonListedFields(newInput, newMountainArea);
 
-      if (typeof response.data === "string") data = JSON.parse(response.data);
-      else data = response.data;
-
-      if (!data || response.status !== 200) {
-        Error.throwNotFound(`Route to mountain area sub-resource not found: '${path}'`);
-      }
-
-      return data && data.Items ? data.Items : data;
-    } catch (error) {
-      if (!(error instanceof Error)) Error.throwConnectionError(error);
-      else return error;
+    // TODO: recover new "lastUpdate" value
+    if (this.shouldUpdate(oldMountainArea, newMountainArea)) {
+      return Promise.all([this.updateResource(newMountainArea)])
+        .then((promises) => {
+          newMountainArea.lastUpdate = _.first(_.flatten(promises))[
+            schemas.resources.lastUpdate
+          ];
+          return this.updatePlace(newMountainArea);
+        })
+        .then(() => newMountainArea);
     }
+
+    this.throwNoUpdate(oldMountainArea);
+  }
+
+  mapRowToMountainArea(row) {
+    const mountainArea = new MountainArea();
+    _.assign(mountainArea, row);
+    return mountainArea;
+  }
+
+  insertMountainArea(mountainArea) {
+    return this.insertResource(mountainArea)
+      .then(() => {
+        const columns = this.mapMountainAreaToColumns(mountainArea);
+        return dbFn.insertMountainArea(this.connection, columns);
+      })
+      .then(() =>
+        Promise.all([
+          this.insertPlace(mountainArea),
+          this.insertAreaLifts(mountainArea),
+          this.insertAreaSkiSlopes(mountainArea),
+          this.insertAreaSnowparks(mountainArea),
+          this.insertSubAreas(mountainArea),
+        ])
+      )
+      .then(() => mountainArea.id);
+  }
+
+  insertAreaLifts(mountainArea) {
+    const inserts = mountainArea?.lifts?.map((lift) =>
+      dbFn.insertAreaLift(this.connection, mountainArea.id, lift.id)
+    );
+    return Promise.all(inserts ?? []);
+  }
+
+  updateAreaLifts(mountainArea) {
+    return dbFn
+      .deleteAreaLifts(this.connection, mountainArea.id)
+      .then(() => this.insertAreaLifts(mountainArea));
+  }
+
+  insertAreaSkiSlopes(mountainArea) {
+    const inserts = mountainArea?.skiSlopes?.map((skiSlope) =>
+      dbFn.insertAreaSkiSlope(this.connection, mountainArea.id, skiSlope.id)
+    );
+    return Promise.all(inserts ?? []);
+  }
+
+  updateAreaSkiSlopes(mountainArea) {
+    return dbFn
+      .deleteAreaSkiSlopes(this.connection, mountainArea.id)
+      .then(() => this.insertAreaSkiSlopes(mountainArea));
+  }
+
+  insertAreaSnowparks(mountainArea) {
+    const inserts = mountainArea?.snowparks?.map((snowpark) =>
+      dbFn.insertAreaSnowpark(this.connection, mountainArea.id, snowpark.id)
+    );
+    return Promise.all(inserts ?? []);
+  }
+
+  updateAreaSnowparks(mountainArea) {
+    return dbFn
+      .deleteAreaSnowparks(this.connection, mountainArea.id)
+      .then(() => this.insertAreaSnowparks(mountainArea));
+  }
+
+  insertSubAreas(mountainArea) {
+    const inserts = mountainArea?.subAreas?.map((subArea) =>
+      dbFn.insertSubArea(this.connection, mountainArea.id, subArea.id)
+    );
+    return Promise.all(inserts ?? []);
+  }
+
+  updateSubAreas(mountainArea) {
+    return dbFn
+      .deleteSubAreas(this.connection, mountainArea.id)
+      .then(() => this.insertSubAreas(mountainArea));
+  }
+
+  mapMountainAreaToColumns(mountainArea) {
+    return {
+      [schemas.mountainAreas.id]: mountainArea?.id,
+      [schemas.mountainAreas.area]: mountainArea?.area,
+      [schemas.mountainAreas.areaOwnerId]: mountainArea?.areaOwner?.id,
+      [schemas.mountainAreas.totalParkLength]: mountainArea?.totalParkLength,
+      [schemas.mountainAreas.totalSlopeLength]: mountainArea?.totalSlopeLength,
+    };
   }
 }
 
-module.exports = {
-  MountainAreaConnector,
-};
+module.exports = { MountainAreaConnector };

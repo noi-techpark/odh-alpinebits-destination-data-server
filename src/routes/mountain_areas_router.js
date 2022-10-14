@@ -1,205 +1,140 @@
 const { Router } = require("./router");
-const { MountainAreaConnector } = require("./../connectors/mountain_area_connector");
-const { Agent } = require("./../model/destinationdata/agents");
-const { Category } = require("./../model/destinationdata/category");
-const { Lift } = require("../model/destinationdata/lift");
-const { MediaObject } = require("./../model/destinationdata/media_object");
-const { MountainArea } = require("../model/destinationdata/mountain_area");
-const { SkiSlope } = require("../model/destinationdata/ski_slope");
-const { Snowpark } = require("../model/destinationdata/snowpark");
-const responseTransform = require("../model/odh2destinationdata/response_transform");
-const { Feature } = require("../model/destinationdata/feature");
+const {
+  MountainAreaConnector,
+} = require("../connectors/mountain_area_connector");
+const { deserializeMountainArea } = require("../model/destinationdata2022");
+const { AgentConnector } = require("../connectors/agent_connector");
+const { LiftConnector } = require("../connectors/lift_connector");
+const { SkiSlopeConnector } = require("../connectors/ski_slope_connector");
+const { SnowparkConnector } = require("../connectors/snowparks_connector");
 
 class MountainAreasRouter extends Router {
   constructor(app) {
     super();
 
-    this.addGetRoute(`/mountainAreas`, this.getMountainAreas);
+    this.addGetRoute(
+      `/mountainAreas/:id/areaOwner`,
+      this.getMountainAreaAreaOwner
+    );
+    this.addGetRoute(`/mountainAreas/:id/lifts`, this.getMountainAreaLifts);
+    this.addGetRoute(
+      `/mountainAreas/:id/skiSlopes`,
+      this.getMountainAreaSkiSlopes
+    );
+    this.addGetRoute(
+      `/mountainAreas/:id/snowparks`,
+      this.getMountainAreaSnowparks
+    );
+    this.addGetRoute(
+      `/mountainAreas/:id/subAreas`,
+      this.getMountainAreaSubAreas
+    );
+
+    this.addPostRoute(`/mountainAreas`, this.postMountainArea);
+    this.addGetRoute(`/mountainAreas`, this.getMountainArea);
     this.addGetRoute(`/mountainAreas/:id`, this.getMountainAreaById);
-    this.addGetRoute(`/mountainAreas/:id/areaOwner`, this.getAreaOwner);
-    this.addGetRoute(`/mountainAreas/:id/categories`, this.getCategories);
-    this.addGetRoute(`/mountainAreas/:id/connections`, this.getConnections);
-    this.addGetRoute(`/mountainAreas/:id/lifts`, this.getLifts);
-    this.addGetRoute(`/mountainAreas/:id/multimediaDescriptions`, this.getMultimediaDescriptions);
-    this.addGetRoute(`/mountainAreas/:id/skiSlopes`, this.getSkiSlopes);
-    this.addGetRoute(`/mountainAreas/:id/snowparks`, this.getSnowparks);
-    this.addGetRoute(`/mountainAreas/:id/subAreas`, this.getSubAreas);
+    this.addDeleteRoute(`/mountainAreas/:id`, this.deleteMountainArea);
+    this.addPatchRoute(`/mountainAreas/:id`, this.patchMountainArea);
+
+    this.addGetRoute(
+      `/mountainAreas/:id/categories`,
+      this.getMountainAreaCategories
+    );
+    this.addGetRoute(
+      `/mountainAreas/:id/connections`,
+      this.getMountainAreaConnections
+    );
+    this.addGetRoute(
+      `/mountainAreas/:id/multimediaDescriptions`,
+      this.getMountainAreaMultimediaDescriptions
+    );
 
     if (app) {
       this.installRoutes(app);
     }
   }
 
-  getMountainAreas = (request) => {
-    const parseRequestFn = (request) => {
-      const typesInData = [MountainArea];
-      const typesInIncluded = [Agent, Category, Lift, MediaObject, MountainArea, SkiSlope, Snowpark];
-      // TODO: Add additional features (filter, sort)
-      const supportedFeatures = ["include", "fields", "page"];
-      return this.parseRequest(request, typesInData, typesInIncluded, supportedFeatures);
-    };
+  postMountainArea = (request) =>
+    this.postResource(request, MountainAreaConnector, deserializeMountainArea);
 
-    const fetchFn = (parsedRequest) => new MountainAreaConnector(parsedRequest).fetch();
+  getMountainArea = (request) =>
+    this.getResources(request, MountainAreaConnector);
 
-    return this.handleRequest(
+  getMountainAreaById = (request) =>
+    this.getResourceById(request, MountainAreaConnector);
+
+  deleteMountainArea = (request) =>
+    this.deleteResource(request, MountainAreaConnector);
+
+  patchMountainArea = (request) =>
+    this.patchResource(request, MountainAreaConnector, deserializeMountainArea);
+
+  validate(mountainAreaMessage) {
+    console.log("The mountainArea message HAS NOT BEEN validated.");
+  }
+
+  getMountainAreaCategories = async (request) =>
+    this.getResourceCategories(request, MountainAreaConnector);
+
+  getMountainAreaConnections = async (request) =>
+    this.getPlaceConnections(request, MountainAreaConnector);
+
+  getMountainAreaMultimediaDescriptions = async (request) =>
+    this.getResourceMultimediaDescriptions(request, MountainAreaConnector);
+
+  getMountainAreaAreaOwner = async (request) => {
+    const fnRetrieveAreaOwner = (mountainArea, parsedRequest) =>
+      new AgentConnector(parsedRequest).retrieveAreaOwner(mountainArea);
+    return this.getResourceRelationshipToOne(
       request,
-      parseRequestFn,
-      fetchFn,
-      responseTransform.transformToMountainAreaCollection,
-      this.validate
+      MountainAreaConnector,
+      fnRetrieveAreaOwner
     );
   };
 
-  getMountainAreaById = (request) => {
-    const parseRequestFn = (request) => {
-      const typesInData = [MountainArea];
-      const typesInIncluded = [Agent, Category, Lift, MediaObject, MountainArea, SkiSlope, Snowpark];
-      return this.parseRequest(request, typesInData, typesInIncluded);
-    };
-    const fetchFn = (parsedRequest) => new MountainAreaConnector(parsedRequest).fetch();
-
-    return this.handleRequest(
+  getMountainAreaLifts = async (request) => {
+    const fnRetrieveLifts = (mountainArea, parsedRequest) =>
+      new LiftConnector(parsedRequest).retrieveMountainAreaLifts(mountainArea);
+    return this.getResourceRelationshipToMany(
       request,
-      parseRequestFn,
-      fetchFn,
-      responseTransform.transformToMountainAreaObject,
-      this.validate
+      MountainAreaConnector,
+      fnRetrieveLifts
     );
   };
 
-  getAreaOwner = (request) => {
-    const parseRequestFn = (request) => {
-      const typesInData = [Category];
-      const typesInIncluded = [Category, MediaObject];
-      return this.parseRequest(request, typesInData, typesInIncluded);
-    };
-    const fetchFn = (parsedRequest) => new MountainAreaConnector(parsedRequest).fetch();
-
-    return this.handleRequest(
+  getMountainAreaSkiSlopes = async (request) => {
+    const fnRetrieveSkiSlopes = (mountainArea, parsedRequest) =>
+      new SkiSlopeConnector(parsedRequest).retrieveMountainAreaSkiSlopes(
+        mountainArea
+      );
+    return this.getResourceRelationshipToMany(
       request,
-      parseRequestFn,
-      fetchFn,
-      responseTransform.transformToMountainAreaAreaOwner,
-      this.validate
+      MountainAreaConnector,
+      fnRetrieveSkiSlopes
     );
   };
 
-  getCategories = (request) => {
-    const parseRequestFn = (request) => {
-      const typesInData = [Category];
-      const typesInIncluded = [Category, MediaObject];
-      return this.parseRequest(request, typesInData, typesInIncluded);
-    };
-    const fetchFn = (parsedRequest) => new MountainAreaConnector(parsedRequest).fetch();
-
-    return this.handleRequest(
+  getMountainAreaSnowparks = async (request) => {
+    const fnRetrieveSnowparks = (mountainArea, parsedRequest) =>
+      new SnowparkConnector(parsedRequest).retrieveMountainAreaSnowparks(
+        mountainArea
+      );
+    return this.getResourceRelationshipToMany(
       request,
-      parseRequestFn,
-      fetchFn,
-      responseTransform.transformToMountainAreaCategories,
-      this.validate
+      MountainAreaConnector,
+      fnRetrieveSnowparks
     );
   };
 
-  getConnections = (request) => {
-    const parseRequestFn = (request) => {
-      const typesInData = [Lift, MountainArea, SkiSlope, Snowpark];
-      const typesInIncluded = [Agent, Category, Feature, Lift, MediaObject, MountainArea, SkiSlope, Snowpark];
-      return this.parseRequest(request, typesInData, typesInIncluded);
-    };
-    const fetchFn = (parsedRequest) => new MountainAreaConnector(parsedRequest).fetch();
-
-    return this.handleRequest(
+  getMountainAreaSubAreas = async (request) => {
+    const fnRetrieveSubAreas = (mountainArea, parsedRequest) =>
+      new MountainAreaConnector(parsedRequest).retrieveMountainAreaSubAreas(
+        mountainArea
+      );
+    return this.getResourceRelationshipToMany(
       request,
-      parseRequestFn,
-      fetchFn,
-      responseTransform.transformToMountainAreaConnections,
-      this.validate
-    );
-  };
-
-  getLifts = (request) => {
-    const parseRequestFn = (request) => {
-      const typesInData = [Lift, MountainArea, SkiSlope, Snowpark];
-      const typesInIncluded = [Agent, Category, Feature, Lift, MediaObject, MountainArea, SkiSlope, Snowpark];
-      return this.parseRequest(request, typesInData, typesInIncluded);
-    };
-    const fetchFn = (parsedRequest) => new MountainAreaConnector(parsedRequest).fetch();
-
-    return this.handleRequest(
-      request,
-      parseRequestFn,
-      fetchFn,
-      responseTransform.transformToMountainAreaLifts,
-      this.validate
-    );
-  };
-
-  getMultimediaDescriptions = (request) => {
-    const parseRequestFn = (request) => {
-      const typesInData = [MediaObject];
-      const typesInIncluded = [Agent, Category, MediaObject];
-      return this.parseRequest(request, typesInData, typesInIncluded);
-    };
-    const fetchFn = (parsedRequest) => new MountainAreaConnector(parsedRequest).fetch();
-
-    return this.handleRequest(
-      request,
-      parseRequestFn,
-      fetchFn,
-      responseTransform.transformToMountainAreaMultimediaDescriptions,
-      this.validate
-    );
-  };
-
-  getSubAreas = (request) => {
-    const parseRequestFn = (request) => {
-      const typesInData = [Lift, MountainArea, SkiSlope, Snowpark];
-      const typesInIncluded = [Agent, Category, Feature, Lift, MediaObject, MountainArea, SkiSlope, Snowpark];
-      return this.parseRequest(request, typesInData, typesInIncluded);
-    };
-    const fetchFn = (parsedRequest) => new MountainAreaConnector(parsedRequest).fetch();
-
-    return this.handleRequest(
-      request,
-      parseRequestFn,
-      fetchFn,
-      responseTransform.transformToMountainAreaSubAreas,
-      this.validate
-    );
-  };
-
-  getSkiSlopes = (request) => {
-    const parseRequestFn = (request) => {
-      const typesInData = [Lift, MountainArea, SkiSlope, Snowpark];
-      const typesInIncluded = [Agent, Category, Feature, Lift, MediaObject, MountainArea, SkiSlope, Snowpark];
-      return this.parseRequest(request, typesInData, typesInIncluded);
-    };
-    const fetchFn = (parsedRequest) => new MountainAreaConnector(parsedRequest).fetch();
-
-    return this.handleRequest(
-      request,
-      parseRequestFn,
-      fetchFn,
-      responseTransform.transformToMountainAreaSkiSlopes,
-      this.validate
-    );
-  };
-
-  getSnowparks = (request) => {
-    const parseRequestFn = (request) => {
-      const typesInData = [Lift, MountainArea, SkiSlope, Snowpark];
-      const typesInIncluded = [Agent, Category, Feature, Lift, MediaObject, MountainArea, SkiSlope, Snowpark];
-      return this.parseRequest(request, typesInData, typesInIncluded);
-    };
-    const fetchFn = (parsedRequest) => new MountainAreaConnector(parsedRequest).fetch();
-
-    return this.handleRequest(
-      request,
-      parseRequestFn,
-      fetchFn,
-      responseTransform.transformToMountainAreaSnowparks,
-      this.validate
+      MountainAreaConnector,
+      fnRetrieveSubAreas
     );
   };
 }
