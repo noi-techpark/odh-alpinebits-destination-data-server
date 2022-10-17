@@ -47,6 +47,8 @@ npm install
 
 ### Setup
 
+#### Setup Environment Variables
+
 The server requires an `.env` file from which it loads general configurations.
 
 You can reuse `.env.example` or create your own.
@@ -55,6 +57,33 @@ To use `.env.example`, run:
 
 ```
 cp .evn.example .env
+```
+
+#### Setup Database
+
+The server must be connected to a PostgreSQL database. During development, the following commands can be used to get Docker instances of PostgreSQL and PgAdmin running, which will be configured with the variables setup on the `.env` file:
+
+```
+npm run db
+npm run pgadmin
+```
+
+The following commands can be then used to (i) create all necessary tables and views...
+
+```
+npm run create-tables
+```
+
+...(ii) insert default values (e.g., language codes, and standardized categories)... 
+
+```
+npm run insert-defaults
+```
+
+... and (iii) to populate the database with data imported from the [OpenDataHub API](http://tourism.opendatahub.bz.it/)
+
+```
+npm run import-odh-data
 ```
 
 ### Run

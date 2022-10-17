@@ -1,0 +1,260 @@
+{
+  "jsonapi": {
+    "version": "1.0"
+  },
+  "meta": {
+    "count": 24791,
+    "pages": 12396
+  },
+  "links": {
+    "first": "http://example.com/2021-04/events?page[number]=1&include=publisher&fields[agents]=name",
+    "last": "http://example.com/2021-04/events?page[number]=12396&include=publisher&fields[agents]=name",
+    "next": "http://example.com/2021-04/events?page[number]=16&include=publisher&fields[agents]=name",
+    "prev": "http://example.com/2021-04/events?page[number]=14&include=publisher&fields[agents]=name",
+    "self": "http://example.com/2021-04/events?page[number]=15&include=publisher&fields[agents]=name"
+  },
+  "data": [
+    {
+      "type": "events",
+      "id": "47FD17D2DE264AAEBF6E44B3C32D1367",
+      "meta": {
+        "dataProvider": "http://tourism.opendatahub.bz.it/",
+        "lastUpdate": "2019-07-27T00:05:53.8397873+01:00"
+      },
+      "links": {
+        "self": "http://example.com/2021-04/events/47FD17D2DE264AAEBF6E44B3C32D1367"
+      },
+      "attributes": {
+        "abstract": null,
+        "description": {
+          "deu": "2019 feiert das Dolomiten UNESCO Welterbe sein zehnjähriges Jubiläum. Das Dolomites UNESCO Fest in St.Vigil/San Vigilio ist die Hauptveranstaltung der Jubiläumsfeierlichkeiten. \n10:00 Uhr: Heilige Messe mit Paul Renner und Pfarrer Heinrich Perathoner\n11:00-17.00 Uhr: Das Herzstück des Festes bilden die Beiträge verschiedener Institutionen und Vereine, die auf der Erlebnismeile mit einem vielseitigen Programm, mit Spielen, kulinarische Köstlichkeiten und geführten Wanderungen für Kinder und Erwachsene für das Welterbe sensibilisieren und informieren. \n11:30 Uhr: Offizielle Reden\n14:30 Uhr: Großer Festumzug der Sagen des Fanesreiches\nAb 18:00 Uhr: Musikalischer Unterhaltung mit Alexander d’Al Plan und Ermes Costa und kulinarische Köstlichkeiten.\nAb 20:00 Uhr: Konzert der Band Volxrock ",
+          "eng": "On 29.06.2019 the official  10th anniversary of Dolomiti UNESCO  will take place in St. Vigil in Enneberg. With this great event, St. Vigil can point out the importance and great importance of the UNESCO trademark for our landscape, above all for the local population and, consequently, for all visitors. \n10:00 am: Holy Mass with Paul Renner and Pastor Heinrich Perathoner \n10 am - 6pm: Cultural, gastronomy & musical programme for kids and adults: \n\n2:30 pm: Big  parade of the legends of the Fanes empire \n6 pm: Music intertaiment with Alexander d’Al Plan & Ermes Costa and culinary dishes\n8 pm: Concert with the band Volkrock ",
+          "ita": "Il 29.06.2019 si svolgerà il  10 ° anniversario ufficiale delle Dolomiti UNESCO  a San Vigilio. Con questo grande evento, San Vigilio può sottolineare l'importanza e la grande importanza del marchio UNESCO per il nostro paesaggio, soprattutto per la popolazione locale e, di conseguenza, per tutti gli ospiti. \nOre 10:00:  Santa Messa con Paul Renner e Heinrich Perathoner \nOre 11:00-17:00: Il cuore della manifestazione è il miglio esplorativo; qui grandi e piccini potranno visitare ed esplorare i diversi stand informativi, culinari e naturalistici offerti dalle istituzioni ed associazioni, come anche partecipare a delle escursioni guidate. \nOre 11:30: discorsi ufficiali \nOre 14:30: Grande sfilata delle leggende del Fanes \nOre 18:00: Intrattenimento con Alexander d’Al Plan e Ermes Costa e gustosità culinarie.\nOre 20:00: Concerto con il gruppo Volkrock "
+        },
+        "name": {
+          "deu": "10 years \"Dolomites UNESCO\" Fest",
+          "eng": "10 years \"Dolomites UNESCO\" Fest",
+          "ita": "10 years \"Dolomites UNESCO\" Fest"
+        },
+        "shortName": null,
+        "url": {
+          "deu": "https://www.sanvigilio.com",
+          "eng": "https://www.sanvigilio.com",
+          "ita": "https://www.sanvigilio.com"
+        },
+        "capacity": null,
+        "endDate": "2019-06-28T22:00:00.000Z",
+        "startDate": "2019-06-28T22:00:00.000Z",
+        "status": null
+      },
+      "relationships": {
+        "categories": {
+          "data": [
+            {
+              "id": "odh:gastronomy-and-regional-products",
+              "type": "categories"
+            },
+            {
+              "id": "schema:FoodEvent",
+              "type": "categories"
+            },
+            {
+              "id": "odh:music-and-dance",
+              "type": "categories"
+            },
+            {
+              "id": "schema:MusicEvent",
+              "type": "categories"
+            },
+            {
+              "id": "odh:guided-tours",
+              "type": "categories"
+            }
+          ],
+          "links": {
+            "related": "http://example.com/2021-04/events/47FD17D2DE264AAEBF6E44B3C32D1367/categories"
+          }
+        },
+        "multimediaDescriptions": null,
+        "contributors": null,
+        "organizers": {
+          "data": [
+            {
+              "type": "agents",
+              "id": "BE0C0655D12747A6B7D60E1BB41C324D"
+            }
+          ],
+          "links": {
+            "related": "http://example.com/2021-04/events/47FD17D2DE264AAEBF6E44B3C32D1367/organizers"
+          }
+        },
+        "publisher": {
+          "data": {
+            "type": "agents",
+            "id": "47FD17D2DE264AAEBF6E44B3C32D1367_publisher"
+          },
+          "links": {
+            "related": "http://example.com/2021-04/events/47FD17D2DE264AAEBF6E44B3C32D1367/publisher"
+          }
+        },
+        "series": null,
+        "sponsors": null,
+        "subEvents": null,
+        "venues": {
+          "data": [
+            {
+              "type": "venues",
+              "id": "47FD17D2DE264AAEBF6E44B3C32D1367_venue"
+            }
+          ],
+          "links": {
+            "related": "http://example.com/2021-04/events/47FD17D2DE264AAEBF6E44B3C32D1367/venues"
+          }
+        }
+      }
+    },
+    {
+      "type": "events",
+      "id": "BFF16EC65D344F66BC1AB47D20347D74",
+      "meta": {
+        "dataProvider": "http://tourism.opendatahub.bz.it/",
+        "lastUpdate": "2020-08-12T00:05:26.4618267+01:00"
+      },
+      "links": {
+        "self": "http://example.com/2021-04/events/BFF16EC65D344F66BC1AB47D20347D74"
+      },
+      "attributes": {
+        "abstract": null,
+        "description": {
+          "deu": "International angesehene Lehrmeister der verschiedensten Disziplinen leiten Seminare und vielfältige Zusammenkünfte. Ob nun kostenlose Yoga-Lektionen oder Vorträge, ob Konzerte, Ausstellungen, Darbietungen oder spezielle Yoga Einheiten für Kinder: „Merano in Yoga“ ist ein Festival für Einsteiger und Fortgeschrittene gleichermaßen. Auch die vegetarische bzw. vegane Küche ist ein wesentlicher Bestandteil der Veranstaltung. Ein großer Ausstellerbereich im Kursaal rundet die 10. Ausgabe ab. \nMasterclass € 25,00, Workshop | Green Yoga € 20,00, Watsu € 35,00, Open Class (Tagescarnet) € 10,00.",
+          "eng": "Important international teachers of different arts keep seminars and meetings. There will be free lessons, lectures, concerts, exhibitions, shows, children-yoga, vegetarian and vegan cuisine, a holistic area and a shop spot. It’s a festival for everyone, beginners, lovers and those already introduced to oriental doctrines and techniques to find some well-being.\nMasterclass € 25.00, Workshop | Green Yoga € 20.00, Watsu € 35.00, Open Class (carnet for a whole day) € 10.00.",
+          "ita": "Importanti maestri internazionali di diverse discipline conducono seminari e incontri. Lezioni gratuite, conferenze, concerti, mostre, spettacoli, yoga-bimbi, cucina vegetariana e vegana, un’area olistica e una zona emporio: un festival per tutti, principianti, appassionati e praticanti delle discipline orientali e di tecniche per la ricerca del benessere.\nMasterclass € 25,00, Workshop | Green Yoga € 20,00, Watsu € 35,00, Open Class (carnet per un intera giornata) € 10,00."
+        },
+        "name": {
+          "deu": "10. Yoga-Meeting \"Merano in Yoga\"",
+          "eng": "10th Merano in Yoga meeting",
+          "ita": "10a edizione di \"Merano in Yoga\""
+        },
+        "shortName": null,
+        "url": {
+          "deu": "http://www.yogameeting.org/",
+          "eng": "http://www.yogameeting.org/",
+          "ita": "http://www.yogameeting.org/"
+        },
+        "capacity": null,
+        "endDate": "2021-04-10T22:00:00.000Z",
+        "startDate": "2021-04-08T22:00:00.000Z",
+        "status": null
+      },
+      "relationships": {
+        "categories": {
+          "data":  [
+            {
+              "id": "odh:meetings-and-lectures",
+              "type": "categories"
+            },
+            {
+              "id": "schema:BusinessEvent",
+              "type": "categories"
+            },
+            {
+              "id": "odh:sport",
+              "type": "categories"
+            },
+            {
+              "id": "schema:SportsEvent",
+              "type": "categories"
+            },
+            {
+              "id": "odh:courses-and-education",
+              "type": "categories"
+            },
+            {
+              "id": "schema:EducationEvent",
+              "type": "categories"
+            }
+          ],
+          "links": {
+            "related": "http://example.com/2021-04/events/BFF16EC65D344F66BC1AB47D20347D74/categories"
+          }
+        },
+        "multimediaDescriptions": null,
+        "contributors": null,
+        "organizers": {
+          "data": [
+            {
+              "type": "agents",
+              "id": "24B24F080F464557A53B73008174ECE9"
+            }
+          ],
+          "links": {
+            "related": "http://example.com/2021-04/events/BFF16EC65D344F66BC1AB47D20347D74/organizers"
+          }
+        },
+        "publisher": {
+          "data": {
+            "type": "agents",
+            "id": "BFF16EC65D344F66BC1AB47D20347D74_publisher"
+          },
+          "links": {
+            "related": "http://example.com/2021-04/events/BFF16EC65D344F66BC1AB47D20347D74/publisher"
+          }
+        },
+        "series": null,
+        "sponsors": null,
+        "subEvents": null,
+        "venues": {
+          "data": [
+            {
+              "type": "venues",
+              "id": "BFF16EC65D344F66BC1AB47D20347D74_venue"
+            }
+          ],
+          "links": {
+            "related": "http://example.com/2021-04/events/BFF16EC65D344F66BC1AB47D20347D74/venues"
+          }
+        }
+      }
+    }
+  ],
+  "included": [
+    {
+      "type": "agents",
+      "id": "47FD17D2DE264AAEBF6E44B3C32D1367_publisher",
+      "meta": {
+        "dataProvider": "http://tourism.opendatahub.bz.it/",
+        "lastUpdate": "2019-07-27T00:05:53.8397873+01:00"
+      },
+      "links": {
+        "self": "http://example.com/2021-04/agents/47FD17D2DE264AAEBF6E44B3C32D1367_publisher"
+      },
+      "attributes": {
+        "name": {
+          "deu": "LTS - Landesverband der Tourismusorganisationen Südtirols",
+          "eng": "LTS - Landesverband der Tourismusorganisationen Südtirols",
+          "ita": "LTS - Landesverband der Tourismusorganisationen Südtirols"
+        }
+      },
+      "relationships": {}
+    },
+    {
+      "type": "agents",
+      "id": "BFF16EC65D344F66BC1AB47D20347D74_publisher",
+      "meta": {
+        "dataProvider": "http://tourism.opendatahub.bz.it/",
+        "lastUpdate": "2020-08-12T00:05:26.4618267+01:00"
+      },
+      "links": {
+        "self": "http://example.com/2021-04/agents/BFF16EC65D344F66BC1AB47D20347D74_publisher"
+      },
+      "attributes": {
+        "name": {
+          "deu": "LTS - Landesverband der Tourismusorganisationen Südtirols",
+          "eng": "LTS - Landesverband der Tourismusorganisationen Südtirols",
+          "ita": "LTS - Landesverband der Tourismusorganisationen Südtirols"
+        }
+      },
+      "relationships": {}
+    }
+  ]
+}
