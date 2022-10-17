@@ -15,7 +15,7 @@ env:
   DOCKER_IMAGE: ghcr.io/${{ github.repository }}/${{ github.event.repository.name }}-v2022-04
   DOCKER_TAG: ${{ github.sha }}
   REF_SERVER_PORT: 8080
-  SERVER_PORT: 1008
+  SERVER_PORT: 1018
 
 
 jobs:
@@ -63,7 +63,12 @@ jobs:
           X_PASSWORD: supersecret
           X_API_VERSION: 2022-04
           X_SWAGGER_URL: https://swagger.opendatahub.bz.it/?url=https://destinationdata.alpinebits.opendatahub.testingmachine.eu/specification.json
-
+          X_DB_HOSTNAME: ${{ secrets.DB_HOST_TEST }}
+          X_DB_NAME: "destinationdata"
+          X_DB_PORT: 5432
+          X_DB_EXT_PORT: 5432
+          X_DB_USERNAME: ${{ secrets.DB_USER_TEST }}
+          X_DB_PASSWORD: ${{ secrets.DB_PSWD_TEST }}
 
       - name: Build and push 
         uses: noi-techpark/github-actions/docker-build-and-push@v2
