@@ -122,3 +122,4 @@ docker-compose start
 * *The whole test suite may take between 15 and 25 seconds to be executed, as it makes multiple HTTP requests to the OpenDataHub API.*
 
 For the tests, we are using the [Jest](https://jestjs.io/) framework.
+
