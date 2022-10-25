@@ -9,6 +9,9 @@ const { schemas } = db;
 const mappings = require("../../model/mappings");
 
 let idCounter = 1;
+const areaIdToLifts = {};
+const areaIdToSkiSlopes = {};
+const areaIdToSnowparks = {};
 
 const htmlSanitizeOpts = {
   allowedTags: [],
@@ -58,6 +61,9 @@ const {
   ShortNameValue,
   AbstractValue,
   UrlValue,
+  AreaLiftValue,
+  AreaSkiSlopeValue,
+  AreaSnowparkValue,
 } = require("./model");
 const errors = require("../../errors");
 
@@ -121,10 +127,12 @@ Promise.all([
   getOdhActivityData().then((data) =>
     data.Items.forEach((item) => processActivity(item))
   ),
-  getOdhMountainAreaData().then((data) =>
-    data.forEach((item) => processMountainArea(item))
-  ),
 ])
+  .then(() =>
+    getOdhMountainAreaData().then((data) =>
+      data.forEach((item) => processMountainArea(item))
+    )
+  )
   .then(() => runQueries())
   .catch((err) => {
     console.error(err);
@@ -249,15 +257,43 @@ function processMountainArea(item) {
   // // multimediaDescriptions
   // // TODO: turn webcam feeds into multimedia descriptions
 
-  // // TODO: process these (lifts, snowparks, and ski slopes) on a new request?
-  // area lifts table
-  // // lifts
+  for (const areaId of item?.AreaId || []) {
+    // area lifts table
+    // // lifts
 
-  // area snowparks table
-  // // snowparks
+    areaIdToLifts[areaId]?.forEach((liftId) => {
+      const areaLiftValue = new AreaLiftValue();
 
-  // area skiSlopes table
-  // // skiSlopes
+      areaLiftValue.areaId = mountainAreaValue.id;
+      areaLiftValue.liftId = liftId;
+
+      AreaLiftValue.values.push(areaLiftValue);
+    });
+
+    // area snowparks table
+    // // snowparks
+
+    areaIdToSkiSlopes[areaId]?.forEach((skiSlopeId) => {
+      const areaSkiSlopeValue = new AreaSkiSlopeValue();
+
+      areaSkiSlopeValue.areaId = mountainAreaValue.id;
+      areaSkiSlopeValue.skiSlopeId = skiSlopeId;
+
+      AreaSkiSlopeValue.values.push(areaSkiSlopeValue);
+    });
+
+    // area skiSlopes table
+    // // skiSlopes
+
+    areaIdToSnowparks[areaId]?.forEach((snowparkId) => {
+      const areaSnowparkValue = new AreaSnowparkValue();
+
+      areaSnowparkValue.areaId = mountainAreaValue.id;
+      areaSnowparkValue.snowparkId = snowparkId;
+
+      AreaSnowparkValue.values.push(areaSnowparkValue);
+    });
+  }
 }
 
 function getMountainAreaType() {
@@ -580,6 +616,16 @@ function processActivity(item) {
 
     ResourceCategoryValue.addValue(activityCategory);
   }
+
+  // Mountain areas' lifts, ski slopes, and snowparks (part 1)
+
+  registerAreaIds(item, activityResourceValue);
+}
+
+function registerAreaIds(activity, resourceValue) {
+  activity?.AreaId?.forEach((areaId) =>
+    addActivityAreaIdEntry(areaId, resourceValue.type, resourceValue.id)
+  );
 }
 
 function getActivitySimpleUrl(activity) {
@@ -801,6 +847,50 @@ function getActivityCategoriesIds(activity) {
   return activity?.SmgTags?.map((tag) => tag?.replace(/-|\/|\s/g, "-"))
     ?.map((tag) => tag?.replace(/-+/g, "-"))
     ?.map((tag) => `odh:${_.deburr(tag)}`);
+}
+
+function addActivityAreaIdEntry(areaId, resourceType, resourceId) {
+  switch (resourceType) {
+    case db.defaults.resourceTypes.lifts:
+      return addLiftAreaIdEntry(areaId, resourceId);
+    case db.defaults.resourceTypes.skiSlopes:
+      return addSkiSlopeAreaIdEntry(areaId, resourceId);
+    case db.defaults.resourceTypes.snowparks:
+      return addSnowparkAreaIdEntry(areaId, resourceId);
+  }
+}
+
+function addLiftAreaIdEntry(areaId, liftId) {
+  let entries = areaIdToLifts[areaId];
+
+  if (_.isEmpty(entries)) {
+    entries = [];
+    areaIdToLifts[areaId] = entries;
+  }
+
+  entries.push(liftId);
+}
+
+function addSkiSlopeAreaIdEntry(areaId, skiSlopeId) {
+  let entries = areaIdToSkiSlopes[areaId];
+
+  if (_.isEmpty(entries)) {
+    entries = [];
+    areaIdToSkiSlopes[areaId] = entries;
+  }
+
+  entries.push(skiSlopeId);
+}
+
+function addSnowparkAreaIdEntry(areaId, snowparkId) {
+  let entries = areaIdToSnowparks[areaId];
+
+  if (_.isEmpty(entries)) {
+    entries = [];
+    areaIdToSnowparks[areaId] = entries;
+  }
+
+  entries.push(snowparkId);
 }
 
 function processEventTopic(odhTopic) {
@@ -1111,6 +1201,9 @@ function runQueries() {
     `\n\n${CityValue.getInsertQuery()}` +
     `\n\n${StreetValue.getInsertQuery()}` +
     `\n\n${UrlValue.getInsertQuery()}` +
+    `\n\n${AreaLiftValue.getInsertQuery()}` +
+    `\n\n${AreaSkiSlopeValue.getInsertQuery()}` +
+    `\n\n${AreaSnowparkValue.getInsertQuery()}` +
     `\n\n${ContactPointValue.getInsertQuery()}`;
 
   const outputFilePath = "./output.pgsql";

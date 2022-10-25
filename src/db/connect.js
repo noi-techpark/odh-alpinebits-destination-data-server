@@ -1,10 +1,10 @@
 require("custom-env").env();
 
 const host = process.env.DB_HOST;
+const database = process.env.DB_NAME;
 const port = process.env.DB_PORT;
 const user = process.env.DB_USERNAME;
 const password = process.env.DB_PASSWORD;
-const database = process.env.DB_NAME;
 
 const knex = require("knex")({
   client: "pg",
@@ -15,16 +15,16 @@ const knex = require("knex")({
     password,
     database,
   },
-  pool: {
-    // min: 2,
-    // max: 6,
-    // createTimeoutMillis: 3000,
-    // acquireTimeoutMillis: 30000,
-    // idleTimeoutMillis: 30000,
-    // reapIntervalMillis: 1000,
-    // createRetryIntervalMillis: 100,
-    propagateCreateError: false, // <- default is true, set to false
-  },
+  // pool: {
+  // min: 2,
+  // max: 6,
+  // createTimeoutMillis: 300000,
+  // acquireTimeoutMillis: 300000,
+  // idleTimeoutMillis: 300000,
+  // reapIntervalMillis: 10000,
+  // createRetryIntervalMillis: 1000,
+  // propagateCreateError: false, // <- default is true, set to false
+  // },
 });
 
 module.exports = knex;

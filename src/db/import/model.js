@@ -864,6 +864,99 @@ class EventVenueValue {
   }
 }
 
+class AreaLiftValue {
+  static values = [];
+
+  static getInsertQuery() {
+    const schema = db.schemas.areaLifts;
+    const tableName = schema._name;
+    const columnNames = [schema.areaId, schema.liftId];
+    const conflictColumns = [schema.areaId, schema.liftId];
+    const values = AreaLiftValue.values.map((rel) => rel.toValue());
+
+    return getInsertQuery(tableName, columnNames, values, conflictColumns);
+  }
+
+  static getDeleteQuery() {
+    const tableName = db.schemas.areaLifts._name;
+    return getDeleteQuery(tableName);
+  }
+
+  constructor() {
+    this.areaId = null;
+    this.liftId = null;
+  }
+
+  toValue() {
+    return (
+      `(${toBracketsStringOrNull(this.areaId)}` +
+      `, ${toBracketsStringOrNull(this.liftId)})`
+    );
+  }
+}
+
+class AreaSkiSlopeValue {
+  static values = [];
+
+  static getInsertQuery() {
+    const schema = db.schemas.areaSkiSlopes;
+    const tableName = schema._name;
+    const columnNames = [schema.areaId, schema.skiSlopeId];
+    const conflictColumns = [schema.areaId, schema.skiSlopeId];
+    const values = AreaSkiSlopeValue.values.map((rel) => rel.toValue());
+
+    return getInsertQuery(tableName, columnNames, values, conflictColumns);
+  }
+
+  static getDeleteQuery() {
+    const tableName = db.schemas.areaSkiSlopes._name;
+    return getDeleteQuery(tableName);
+  }
+
+  constructor() {
+    this.areaId = null;
+    this.skiSlopeId = null;
+  }
+
+  toValue() {
+    return (
+      `(${toBracketsStringOrNull(this.areaId)}` +
+      `, ${toBracketsStringOrNull(this.skiSlopeId)})`
+    );
+  }
+}
+
+class AreaSnowparkValue {
+  static values = [];
+
+  static getInsertQuery() {
+    const schema = db.schemas.areaSnowparks;
+    const tableName = schema._name;
+    const columnNames = [schema.areaId, schema.snowparkId];
+    const conflictColumns = [schema.areaId, schema.snowparkId];
+    const values = AreaSnowparkValue.values.map((rel) => rel.toValue());
+
+    return getInsertQuery(tableName, columnNames, values, conflictColumns);
+  }
+
+  static getDeleteQuery() {
+    const tableName = db.schemas.areaSnowparks._name;
+    return getDeleteQuery(tableName);
+  }
+
+  constructor() {
+    this.areaId = null;
+    this.snowparkId = null;
+  }
+
+  toValue() {
+    return (
+      `(${toBracketsStringOrNull(this.areaId)}` +
+      `, ${toBracketsStringOrNull(this.snowparkId)})`
+    );
+  }
+}
+
 module.exports = {
   ResourceValue,
   AgentValue,
@@ -889,4 +982,7 @@ module.exports = {
   PlaceValue,
   ResourceCategoryValue,
   CategoryCoveredTypesValue,
+  AreaLiftValue,
+  AreaSkiSlopeValue,
+  AreaSnowparkValue,
 };
