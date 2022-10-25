@@ -531,16 +531,27 @@ function select(connection, tableName, where, selection) {
   return connection(tableName).select(returnColumns).where(where);
 }
 
-function selectUsingFile(connection, queryFileName, where, offset, limit) {
+function selectUsingFile(
+  connection,
+  queryFileName,
+  where,
+  offset,
+  limit,
+  orderBy
+) {
   const queryPath = path.resolve(__dirname, queryFileName);
   offset = `${offset ? "OFFSET " + offset : ""}`;
   limit = `${limit ? "LIMIT " + limit : ""} `;
+  orderBy = `${!_.isEmpty(orderBy) ? "ORDER BY " + orderBy.join(", ") : ""}`;
 
   return fs.promises
     .readFile(queryPath, "utf-8")
     .then((query) => {
-      // console.log("run query", `${query} ${where} ${offset} ${limit};`);
-      return connection.raw(`${query} ${where} ${offset} ${limit};`);
+      console.log(
+        "run query",
+        `${query} ${where} ${orderBy} ${offset} ${limit};`
+      );
+      return connection.raw(`${query} ${where} ${orderBy} ${offset} ${limit};`);
     })
     .then((result) => result?.rows)
     .catch((queryError) => {
@@ -548,25 +559,46 @@ function selectUsingFile(connection, queryFileName, where, offset, limit) {
     });
 }
 
-function selectAgentFromId(connection, ids, offset, limit) {
+function selectAgentFromId(connection, ids, offset, limit, orderBy) {
   const selectAgentFile = "select_agent.sql";
   let where = getWhereIdMatchesClause(ids, "agents.id");
-  return selectUsingFile(connection, selectAgentFile, where, offset, limit);
+  return selectUsingFile(
+    connection,
+    selectAgentFile,
+    where,
+    offset,
+    limit,
+    orderBy
+  );
 }
 
-function selectVenueFromId(connection, ids, offset, limit) {
+function selectVenueFromId(connection, ids, offset, limit, orderBy) {
   const selectVenueFile = "select_venue.sql";
   const where = getWhereIdMatchesClause(ids, "venues.id");
-  return selectUsingFile(connection, selectVenueFile, where, offset, limit);
+  return selectUsingFile(
+    connection,
+    selectVenueFile,
+    where,
+    offset,
+    limit,
+    orderBy
+  );
 }
 
-function selectLiftFromId(connection, ids, offset, limit) {
+function selectLiftFromId(connection, ids, offset, limit, orderBy) {
   const selectLiftFile = "select_lift.sql";
   const where = getWhereIdMatchesClause(ids, "lifts.id");
-  return selectUsingFile(connection, selectLiftFile, where, offset, limit);
+  return selectUsingFile(
+    connection,
+    selectLiftFile,
+    where,
+    offset,
+    limit,
+    orderBy
+  );
 }
 
-function selectMountainAreaFromId(connection, ids, offset, limit) {
+function selectMountainAreaFromId(connection, ids, offset, limit, orderBy) {
   const selectMountainAreaFile = "select_mountain_area.sql";
   const where = getWhereIdMatchesClause(ids, "mountain_areas.id");
   return selectUsingFile(
@@ -574,35 +606,64 @@ function selectMountainAreaFromId(connection, ids, offset, limit) {
     selectMountainAreaFile,
     where,
     offset,
-    limit
+    limit,
+    orderBy
   );
 }
 
-function selectSkiSlopeFromId(connection, ids, offset, limit) {
+function selectSkiSlopeFromId(connection, ids, offset, limit, orderBy) {
   const selectSkiSlopeFile = "select_ski_slope.sql";
   const where = getWhereIdMatchesClause(ids, "ski_slopes.id");
-  return selectUsingFile(connection, selectSkiSlopeFile, where, offset, limit);
+  return selectUsingFile(
+    connection,
+    selectSkiSlopeFile,
+    where,
+    offset,
+    limit,
+    orderBy
+  );
 }
 
-function selectSnowparkFromId(connection, ids, offset, limit) {
+function selectSnowparkFromId(connection, ids, offset, limit, orderBy) {
   const selectSnowparkFile = "select_snowpark.sql";
   const where = getWhereIdMatchesClause(ids, "snowparks.id");
-  return selectUsingFile(connection, selectSnowparkFile, where, offset, limit);
+  return selectUsingFile(
+    connection,
+    selectSnowparkFile,
+    where,
+    offset,
+    limit,
+    orderBy
+  );
 }
 
-function selectCategoryFromId(connection, ids, offset, limit) {
+function selectCategoryFromId(connection, ids, offset, limit, orderBy) {
   const selectCategoryFile = "select_category.sql";
   const where = getWhereIdMatchesClause(ids, "categories.id");
-  return selectUsingFile(connection, selectCategoryFile, where, offset, limit);
+  return selectUsingFile(
+    connection,
+    selectCategoryFile,
+    where,
+    offset,
+    limit,
+    orderBy
+  );
 }
 
-function selectFeatureFromId(connection, ids, offset, limit) {
+function selectFeatureFromId(connection, ids, offset, limit, orderBy) {
   const selectFeatureFile = "select_feature.sql";
   const where = getWhereIdMatchesClause(ids, "features.id");
-  return selectUsingFile(connection, selectFeatureFile, where, offset, limit);
+  return selectUsingFile(
+    connection,
+    selectFeatureFile,
+    where,
+    offset,
+    limit,
+    orderBy
+  );
 }
 
-function selectMediaObjectFromId(connection, ids, offset, limit) {
+function selectMediaObjectFromId(connection, ids, offset, limit, orderBy) {
   const selectMediaObjectFile = "select_media_object.sql";
   const where = getWhereIdMatchesClause(ids, "media_objects.id");
   return selectUsingFile(
@@ -610,17 +671,25 @@ function selectMediaObjectFromId(connection, ids, offset, limit) {
     selectMediaObjectFile,
     where,
     offset,
-    limit
+    limit,
+    orderBy
   );
 }
 
-function selectEventFromId(connection, ids, offset, limit) {
+function selectEventFromId(connection, ids, offset, limit, orderBy) {
   const selectEventFile = "select_event.sql";
   const where = getWhereIdMatchesClause(ids, "events.id");
-  return selectUsingFile(connection, selectEventFile, where, offset, limit);
+  return selectUsingFile(
+    connection,
+    selectEventFile,
+    where,
+    offset,
+    limit,
+    orderBy
+  );
 }
 
-function selectEventSeriesFromId(connection, ids, offset, limit) {
+function selectEventSeriesFromId(connection, ids, offset, limit, orderBy) {
   const selectEventSeriesFile = "select_event_series.sql";
   const where = getWhereIdMatchesClause(ids, "event_series.id");
   return selectUsingFile(
@@ -628,7 +697,8 @@ function selectEventSeriesFromId(connection, ids, offset, limit) {
     selectEventSeriesFile,
     where,
     offset,
-    limit
+    limit,
+    orderBy
   );
 }
 

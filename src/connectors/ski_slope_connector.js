@@ -55,9 +55,10 @@ class SkiSlopeConnector extends ResourceConnector {
   retrieveSkiSlope(id) {
     const offset = !_.isString(id) ? this.getOffset() : null;
     const limit = !_.isString(id) ? this.getLimit() : null;
+    const orderBy = !_.isString(id) ? this.getOrderBy() : null;
 
     return dbFn
-      .selectSkiSlopeFromId(this.connection, id, offset, limit)
+      .selectSkiSlopeFromId(this.connection, id, offset, limit, orderBy)
       .then((rows) => {
         if (_.isString(id)) {
           if (_.size(rows) === 1) {

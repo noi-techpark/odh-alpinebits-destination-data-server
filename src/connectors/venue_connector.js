@@ -48,9 +48,10 @@ class VenueConnector extends ResourceConnector {
   retrieveVenue(id) {
     const offset = !_.isString(id) ? this.getOffset() : null;
     const limit = !_.isString(id) ? this.getLimit() : null;
+    const orderBy = !_.isString(id) ? this.getOrderBy() : null;
 
     return dbFn
-      .selectVenueFromId(this.connection, id, offset, limit)
+      .selectVenueFromId(this.connection, id, offset, limit, orderBy)
       .then((rows) => {
         if (_.isString(id)) {
           if (_.size(rows) === 1) {

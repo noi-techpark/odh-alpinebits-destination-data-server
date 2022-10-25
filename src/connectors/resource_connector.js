@@ -447,6 +447,84 @@ class ResourceConnector {
 
     return pageSize;
   }
+
+  mapFieldToColumns(field) {
+    switch (field) {
+      case "id":
+        return schemas.resources.id;
+      case "dataProvider":
+        return schemas.resources.dataProvider;
+      case "lastUpdate":
+        return schemas.resources.lastUpdate;
+      case "type":
+        return schemas.resources.type;
+      case "namespace":
+        return schemas.categories.namespace;
+      case "endDate":
+        return schemas.events.endDate;
+      case "inPersonCapacity":
+        return schemas.events.inPersonCapacity;
+      case "onlineCapacity":
+        return schemas.events.onlineCapacity;
+      case "recorded":
+        return schemas.events.recorded;
+      case "startDate":
+        return schemas.events.startDate;
+      case "status":
+        return schemas.events.status;
+      case "frequency":
+        return schemas.eventSeries.frequency;
+      case "namespace":
+        return schemas.features.namespace;
+      case "namespace":
+        return schemas.features.namespace;
+      case "capacity":
+        return schemas.lifts.capacity;
+      case "personsPerChair":
+        return schemas.lifts.personsPerChair;
+      case "contentType":
+        return schemas.mediaObjects.contentType;
+      case "duration":
+        return schemas.mediaObjects.duration;
+      case "height":
+        return schemas.mediaObjects.height;
+      case "license":
+        return schemas.mediaObjects.license;
+      case "width":
+        return schemas.mediaObjects.width;
+      case "area":
+        return schemas.mountainAreas.area;
+      case "totalParkArea":
+        return schemas.mountainAreas.totalParkArea;
+      case "totalSlopeLength":
+        return schemas.mountainAreas.totalSlopeLength;
+      case "difficulty.eu":
+        return schemas.skiSlopes.difficultyEu;
+      case "difficulty.us":
+        return schemas.skiSlopes.difficultyUs;
+      case "difficulty":
+        return schemas.snowparks.difficulty;
+      case "length":
+        return schemas.places.length;
+      case "maxAltitude":
+        return schemas.places.maxAltitude;
+      case "minAltitude":
+        return schemas.places.minAltitude;
+    }
+
+    return null;
+  }
+
+  getOrderBy() {
+    return _.isEmpty(this.request?.query?.sort)
+      ? []
+      : this.request?.query?.sort?.split(",")?.map((field) => {
+          const desc = field?.startsWith("-");
+          field = field.replace("-", "");
+          const column = this.mapFieldToColumns(field);
+          return `${column}${desc ? " DESC" : ""}`;
+        });
+  }
 }
 
 module.exports = { ResourceConnector };
