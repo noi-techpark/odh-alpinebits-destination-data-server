@@ -66,7 +66,7 @@ class Request {
     this.supportedFeatures = {
       include: true,
       fields: true,
-      page: false,
+      page: true,
       filter: false,
       sort: false,
       random: false,

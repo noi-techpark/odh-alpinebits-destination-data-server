@@ -11,6 +11,7 @@ const { SkiSlope } = require("./ski_slope");
 const { Snowpark } = require("./snowpark");
 
 const _ = require("lodash");
+const { DestinationDataError } = require("../../errors");
 const baseUrl = `${process.env.REF_SERVER_URL}/${process.env.API_VERSION}`;
 
 const baseResourceSerialization = {
@@ -686,6 +687,11 @@ function serializeResourceCollection(resources, request, include) {
   const prev = number <= 1 ? 1 : number > last ? last : number - 1;
   const next = number < last ? number + 1 : last;
 
+  const meta = {
+    pages: last,
+    count,
+  };
+
   const { selfUrl } = request;
   const links = { swagger: process.env.SWAGGER_URL };
   const regexPageQuery = /page\[number\]=[0-9]+/;
@@ -708,12 +714,13 @@ function serializeResourceCollection(resources, request, include) {
     links.last = selfUrl + separator + pageQuery + last;
   }
 
+  if (number > 1 && !count) {
+    DestinationDataError.throwPageNotFound(meta, links);
+  }
+
   return {
     jsonapi: { version: "1.0" },
-    meta: {
-      pages: last,
-      count,
-    },
+    meta,
     links,
     data: resources?.map((resource) => serializeAnyResource(resource, request)),
     include: request?.query?.include
