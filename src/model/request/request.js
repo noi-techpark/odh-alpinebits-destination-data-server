@@ -67,7 +67,7 @@ class Request {
       include: true,
       fields: true,
       page: true,
-      filter: false,
+      filter: true,
       sort: true,
       random: false,
       search: false,

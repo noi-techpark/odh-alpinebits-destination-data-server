@@ -559,9 +559,9 @@ function selectUsingFile(
     });
 }
 
-function selectAgentFromId(connection, ids, offset, limit, orderBy) {
+function selectAgentFromId(connection, ids, offset, limit, orderBy, filters) {
   const selectAgentFile = "select_agent.sql";
-  let where = getWhereIdMatchesClause(ids, "agents.id");
+  let where = getWhereIdMatchesClause(ids, "agents.id", filters);
   return selectUsingFile(
     connection,
     selectAgentFile,
@@ -572,9 +572,9 @@ function selectAgentFromId(connection, ids, offset, limit, orderBy) {
   );
 }
 
-function selectVenueFromId(connection, ids, offset, limit, orderBy) {
+function selectVenueFromId(connection, ids, offset, limit, orderBy, filters) {
   const selectVenueFile = "select_venue.sql";
-  const where = getWhereIdMatchesClause(ids, "venues.id");
+  const where = getWhereIdMatchesClause(ids, "venues.id", filters);
   return selectUsingFile(
     connection,
     selectVenueFile,
@@ -585,9 +585,9 @@ function selectVenueFromId(connection, ids, offset, limit, orderBy) {
   );
 }
 
-function selectLiftFromId(connection, ids, offset, limit, orderBy) {
+function selectLiftFromId(connection, ids, offset, limit, orderBy, filters) {
   const selectLiftFile = "select_lift.sql";
-  const where = getWhereIdMatchesClause(ids, "lifts.id");
+  const where = getWhereIdMatchesClause(ids, "lifts.id", filters);
   return selectUsingFile(
     connection,
     selectLiftFile,
@@ -598,9 +598,16 @@ function selectLiftFromId(connection, ids, offset, limit, orderBy) {
   );
 }
 
-function selectMountainAreaFromId(connection, ids, offset, limit, orderBy) {
+function selectMountainAreaFromId(
+  connection,
+  ids,
+  offset,
+  limit,
+  orderBy,
+  filters
+) {
   const selectMountainAreaFile = "select_mountain_area.sql";
-  const where = getWhereIdMatchesClause(ids, "mountain_areas.id");
+  const where = getWhereIdMatchesClause(ids, "mountain_areas.id", filters);
   return selectUsingFile(
     connection,
     selectMountainAreaFile,
@@ -611,9 +618,16 @@ function selectMountainAreaFromId(connection, ids, offset, limit, orderBy) {
   );
 }
 
-function selectSkiSlopeFromId(connection, ids, offset, limit, orderBy) {
+function selectSkiSlopeFromId(
+  connection,
+  ids,
+  offset,
+  limit,
+  orderBy,
+  filters
+) {
   const selectSkiSlopeFile = "select_ski_slope.sql";
-  const where = getWhereIdMatchesClause(ids, "ski_slopes.id");
+  const where = getWhereIdMatchesClause(ids, "ski_slopes.id", filters);
   return selectUsingFile(
     connection,
     selectSkiSlopeFile,
@@ -624,9 +638,16 @@ function selectSkiSlopeFromId(connection, ids, offset, limit, orderBy) {
   );
 }
 
-function selectSnowparkFromId(connection, ids, offset, limit, orderBy) {
+function selectSnowparkFromId(
+  connection,
+  ids,
+  offset,
+  limit,
+  orderBy,
+  filters
+) {
   const selectSnowparkFile = "select_snowpark.sql";
-  const where = getWhereIdMatchesClause(ids, "snowparks.id");
+  const where = getWhereIdMatchesClause(ids, "snowparks.id", filters);
   return selectUsingFile(
     connection,
     selectSnowparkFile,
@@ -637,9 +658,16 @@ function selectSnowparkFromId(connection, ids, offset, limit, orderBy) {
   );
 }
 
-function selectCategoryFromId(connection, ids, offset, limit, orderBy) {
+function selectCategoryFromId(
+  connection,
+  ids,
+  offset,
+  limit,
+  orderBy,
+  filters
+) {
   const selectCategoryFile = "select_category.sql";
-  const where = getWhereIdMatchesClause(ids, "categories.id");
+  const where = getWhereIdMatchesClause(ids, "categories.id", filters);
   return selectUsingFile(
     connection,
     selectCategoryFile,
@@ -650,9 +678,9 @@ function selectCategoryFromId(connection, ids, offset, limit, orderBy) {
   );
 }
 
-function selectFeatureFromId(connection, ids, offset, limit, orderBy) {
+function selectFeatureFromId(connection, ids, offset, limit, orderBy, filters) {
   const selectFeatureFile = "select_feature.sql";
-  const where = getWhereIdMatchesClause(ids, "features.id");
+  const where = getWhereIdMatchesClause(ids, "features.id", filters);
   return selectUsingFile(
     connection,
     selectFeatureFile,
@@ -663,9 +691,16 @@ function selectFeatureFromId(connection, ids, offset, limit, orderBy) {
   );
 }
 
-function selectMediaObjectFromId(connection, ids, offset, limit, orderBy) {
+function selectMediaObjectFromId(
+  connection,
+  ids,
+  offset,
+  limit,
+  orderBy,
+  filters
+) {
   const selectMediaObjectFile = "select_media_object.sql";
-  const where = getWhereIdMatchesClause(ids, "media_objects.id");
+  const where = getWhereIdMatchesClause(ids, "media_objects.id", filters);
   return selectUsingFile(
     connection,
     selectMediaObjectFile,
@@ -676,9 +711,9 @@ function selectMediaObjectFromId(connection, ids, offset, limit, orderBy) {
   );
 }
 
-function selectEventFromId(connection, ids, offset, limit, orderBy) {
+function selectEventFromId(connection, ids, offset, limit, orderBy, filters) {
   const selectEventFile = "select_event.sql";
-  const where = getWhereIdMatchesClause(ids, "events.id");
+  const where = getWhereIdMatchesClause(ids, "events.id", filters);
   return selectUsingFile(
     connection,
     selectEventFile,
@@ -689,9 +724,16 @@ function selectEventFromId(connection, ids, offset, limit, orderBy) {
   );
 }
 
-function selectEventSeriesFromId(connection, ids, offset, limit, orderBy) {
+function selectEventSeriesFromId(
+  connection,
+  ids,
+  offset,
+  limit,
+  orderBy,
+  filters
+) {
   const selectEventSeriesFile = "select_event_series.sql";
-  const where = getWhereIdMatchesClause(ids, "event_series.id");
+  const where = getWhereIdMatchesClause(ids, "event_series.id", filters);
   return selectUsingFile(
     connection,
     selectEventSeriesFile,
@@ -769,16 +811,18 @@ function selectContactPointsFromId(connection, agentId) {
     .where(columns);
 }
 
-function getWhereIdMatchesClause(ids, fieldName) {
-  let where = "";
+function getWhereIdMatchesClause(ids, fieldName, filters) {
+  const clauses = [];
 
-  if (_.isString(ids)) where = `WHERE ${fieldName} = '${ids}'`;
+  if (_.isString(ids)) clauses.push(`${fieldName} = '${ids}'`);
   else if (_.isArray(ids)) {
     const idList = ids.map((id) => `'${id}'`).join(", ");
-    where = !_.isEmpty(idList)
-      ? `WHERE ${fieldName} in (${idList})`
-      : `WHERE ${fieldName} in ('')`;
+    clauses.push(`${fieldName} in (${_.isEmpty(ids) ? "" : idList})`);
   }
+
+  if (!_.isEmpty(filters)) clauses.push(filters);
+
+  const where = _.isEmpty(clauses) ? "" : `WHERE ${clauses.join(", ")}`;
 
   return where;
 }

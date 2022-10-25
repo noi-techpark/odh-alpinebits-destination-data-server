@@ -2,7 +2,7 @@ const _ = require("lodash");
 const knex = require("../db/connect");
 const dbFn = require("../db/functions");
 
-const { schemas } = require("../db");
+const { schemas, views } = require("../db");
 const {
   abstracts,
   descriptions,
@@ -498,10 +498,6 @@ class ResourceConnector {
         return schemas.mountainAreas.totalParkArea;
       case "totalSlopeLength":
         return schemas.mountainAreas.totalSlopeLength;
-      case "difficulty.eu":
-        return schemas.skiSlopes.difficultyEu;
-      case "difficulty.us":
-        return schemas.skiSlopes.difficultyUs;
       case "difficulty":
         return schemas.snowparks.difficulty;
       case "length":
@@ -510,6 +506,49 @@ class ResourceConnector {
         return schemas.places.maxAltitude;
       case "minAltitude":
         return schemas.places.minAltitude;
+      /* ------------ */
+      case "difficulty.eu":
+        return schemas.skiSlopes.difficultyEu;
+      case "difficulty.us":
+        return schemas.skiSlopes.difficultyUs;
+      // case "children":
+      // TODO: add 'children_array' view
+      // case "parents":
+      // TODO: add 'parents_array' view
+      // case "contributors":
+      // TODO: add 'contributors_array' view
+      // case "organizers":
+      // TODO: add 'organizers_array' view
+      // case "sponsors":
+      // TODO: add 'sponsors_array' view
+      // case "subEvents":
+      // TODO: add 'subEvents_array' view
+      // case "venues":
+      // TODO: add 'venues_array' view
+      // case "editions":
+      // TODO: add 'editions_array' view
+      case "categories":
+        return views.categoriesArrays._name;
+      case "multimediaDescriptions":
+        return views.multimediaDescriptionsArrays._name;
+      case "publisher":
+        return schemas.events.publisherId;
+      case "series":
+        return schemas.events.seriesId;
+      case "connections":
+        return views.connectionsArrays._name;
+      case "licenseHolder":
+        return schemas.mediaObjects.licenseHolderId;
+      case "areaOwner":
+        return schemas.mountainAreas.areaOwnerId;
+      case "lifts":
+        return views.areaLiftsArrays._name;
+      case "skiSlopes":
+        return views.areaSkiSlopesArrays._name;
+      case "snowparks":
+        return views.areaSnowparksArrays._name;
+      case "subAreas":
+        return views.subAreasArrays._name;
     }
 
     return null;
@@ -524,6 +563,33 @@ class ResourceConnector {
           const column = this.mapFieldToColumns(field);
           return `${column}${desc ? " DESC" : ""}`;
         });
+  }
+
+  getFilters() {
+    if (_.isEmpty(this.request?.query?.filter)) return [];
+
+    return Object.entries(this.request?.query?.filter)?.map(
+      ([field, filterAndValue]) =>
+        [
+          this.mapFieldToColumns(field),
+          this.mapFilterAndValue(filterAndValue),
+        ].join(" ")
+    );
+  }
+
+  mapFilterAndValue(filterAndValue) {
+    if (_.isEmpty(filterAndValue) || !_.isObject(filterAndValue)) return null;
+
+    return Object.entries(filterAndValue)?.map(([operation, value]) => {
+      if (operation === "exists")
+        return value === "true" ? "IS NOT NULL" : "IS NULL";
+      if (operation === "eq") return `= '${value}'`;
+      if (operation === "neq") return `!= '${value}'`;
+      if (operation === "gt") return `> '${value}'`;
+      if (operation === "gte") return `>= '${value}'`;
+      if (operation === "lt") return `< '${value}'`;
+      if (operation === "lte") return `<= '${value}'`;
+    });
   }
 }
 

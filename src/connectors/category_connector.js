@@ -57,9 +57,17 @@ class CategoryConnector extends ResourceConnector {
     const offset = !_.isString(id) ? this.getOffset() : null;
     const limit = !_.isString(id) ? this.getLimit() : null;
     const orderBy = !_.isString(id) ? this.getOrderBy() : null;
+    const filters = !_.isString(id) ? this.getFilters() : null;
 
     return dbFn
-      .selectCategoryFromId(this.connection, id, offset, limit, orderBy)
+      .selectCategoryFromId(
+        this.connection,
+        id,
+        offset,
+        limit,
+        orderBy,
+        filters
+      )
       .then((rows) => {
         if (_.isString(id)) {
           if (_.size(rows) === 1) {
