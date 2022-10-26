@@ -57,28 +57,54 @@ const UUID_GENERATE = "uuid_generate_v4()";
 const SET_NULL = "SET NULL";
 const CASCADE = "CASCADE";
 
+console.log("Running transaction()");
 knex
   .transaction(function (trx) {
     connection = trx;
 
+    console.log("Running setupDatabase()");
     setupDatabase()
-      .then(() => dropAllViews())
-      .then(() => dropAllTables())
-      .then(() => createAllTables())
-      .then(() => createAllViews())
-      .then(() => createAllTriggers())
+      .then(() => {
+        console.log("Running dropAllViews()");
+        return dropAllViews();
+      })
+      .then(() => {
+        console.log("Running dropAllTables()");
+        return dropAllTables();
+      })
+      .then(() => {
+        console.log("Running createAllTables()");
+        return createAllTables();
+      })
+      .then(() => {
+        console.log("Running createAllViews()");
+        return createAllViews();
+      })
+      .then(() => {
+        console.log("Running createAllTriggers()");
+        return createAllTriggers();
+      })
       .then(() => {
         console.log("Tables successfully (re)created.");
         return connection.commit();
       })
       .catch((err) => {
-        console.error("Failed to (re)create tables.");
-        console.log(err);
-        return connection.rollback();
+        console.error("Failed to (re)create tables.", err);
+        connection.rollback();
+        process.exit(1);
       })
-      .finally(() => (connection = null));
+      .finally(() => {
+        connection.destroy();
+        process.exit(0);
+      });
   })
-  .finally(() => knex.destroy());
+  .catch((err) => {
+    console.error(err);
+    process.exit(1);
+  })
+  .finally(() => {
+    process.exit(0);
+  });
 
 function setupDatabase() {
   return addUuidGenerator();
@@ -255,6 +281,7 @@ function createMediaObjectsTable() {
       .references(agents.id)
       .inTable(agents._name)
       .onDelete(SET_NULL);
+    table.string(mediaObjects.author);
     table.string(mediaObjects.contentType);
     table.integer(mediaObjects.duration);
     table.integer(mediaObjects.height);

@@ -21,7 +21,7 @@ function testSchema(input, schema) {
 
   if (!isValid) {
     // TODO: re-enable log after tests are done
-    // console.log("  The input is not valid against the provided schema");
+    console.log("  The input is not valid against the provided schema");
   }
 
   return isValid;
@@ -66,9 +66,9 @@ class Request {
     this.supportedFeatures = {
       include: true,
       fields: true,
-      page: false,
-      filter: false,
-      sort: false,
+      page: true,
+      filter: true,
+      sort: true,
       random: false,
       search: false,
     };
@@ -107,7 +107,7 @@ class Request {
 
     if ([query.sort, query.random].every((item) => item !== null)) {
       const regex = /(sort|random)(.+?(?=&|$))/g;
-      const problematicQueries = this.selfUrl.match(regex).join("&");
+      const problematicQueries = this.selfUrl.match(regex)?.join("&");
       const description = `The query 'random' and 'sort' are incompatible: '${problematicQueries}'`;
       DestinationDataError.throwQueryConflictError(description);
     }
@@ -126,7 +126,7 @@ class Request {
     const regex = /include(.+?(?=&|$))/g;
 
     if (!this.supportedFeatures.include && include) {
-      const problematicQueries = this.selfUrl.match(regex).join("&");
+      const problematicQueries = this.selfUrl.match(regex)?.join("&");
       const description = `This endpoint does not support the following queries: '${problematicQueries}'`;
       DestinationDataError.throwUnknownQueryError(description);
     }
@@ -136,28 +136,29 @@ class Request {
       include !== undefined &&
       !testSchema(include, schemas.include)
     ) {
-      const problematicQueries = this.selfUrl.match(regex).join("&");
-      const description = `The 'include' query contains issues: '${problematicQueries}'`;
+      const problematicQueries = this.selfUrl.match(regex)?.join("&");
+      const description = `The 'include' query contains issues in the values passed: '${problematicQueries}'`;
       DestinationDataError.throwBadQueryError(description);
     }
 
-    if (include) {
-      const relationshipNames = this.typesInData.flatMap((ResourceType) => {
-        const _dummyResource = new ResourceType();
-        return _dummyResource.getRelationshipsNames();
-      });
-      const includeRelationships = include.split(",");
+    // TODO: update and re-enable
+    // if (include) {
+    //   const relationshipNames = this.typesInData.flatMap((ResourceType) => {
+    //     const _dummyResource = new ResourceType();
+    //     return _dummyResource.getRelationshipsNames();
+    //   });
+    //   const includeRelationships = include.split(",");
 
-      if (
-        includeRelationships.some(
-          (relationshipName) => !relationshipNames.includes(relationshipName)
-        )
-      ) {
-        DestinationDataError.throwBadQueryError(
-          `The 'include' query contains relationships that are not available in the requested resource(s): 'include=${include}'`
-        );
-      }
-    }
+    //   if (
+    //     includeRelationships.some(
+    //       (relationshipName) => !relationshipNames.includes(relationshipName)
+    //     )
+    //   ) {
+    //     DestinationDataError.throwBadQueryError(
+    //       `The 'include' query contains relationships that are not available in the requested resource(s): 'include=${include}'`
+    //     );
+    //   }
+    // }
   }
 
   validateFieldsQuery() {
@@ -178,7 +179,7 @@ class Request {
     };
 
     if (!this.supportedFeatures.fields && fields) {
-      const problematicQueries = this.selfUrl.match(regex).join("&");
+      const problematicQueries = this.selfUrl.match(regex)?.join("&");
       const description = `This endpoint does not support the following queries: '${problematicQueries}'`;
       DestinationDataError.throwUnknownQueryError(description);
     }
@@ -188,8 +189,8 @@ class Request {
       fields !== undefined &&
       !testSchema(fields, schemas.fields)
     ) {
-      const problematicQueries = this.selfUrl.match(regex).join("&");
-      const description = `The 'fields' query contains issues: '${problematicQueries}'`;
+      const problematicQueries = this.selfUrl.match(regex)?.join("&");
+      const description = `The 'fields' query contains issues in the values passed: '${problematicQueries}'`;
       DestinationDataError.throwBadQueryError(description);
     }
 
@@ -216,7 +217,7 @@ class Request {
     const regex = /page(.+?(?=&|$))/g;
 
     if (!this.supportedFeatures.page && page) {
-      const problematicQueries = this.selfUrl.match(regex).join("&");
+      const problematicQueries = this.selfUrl.match(regex)?.join("&");
       const description = `This endpoint does not support the following queries: '${problematicQueries}'`;
       DestinationDataError.throwUnknownQueryError(description);
     }
@@ -226,8 +227,8 @@ class Request {
       page !== undefined &&
       !testSchema(page, schemas.page)
     ) {
-      const problematicQueries = this.selfUrl.match(regex).join("&");
-      const description = `The 'page' query contains issues: '${problematicQueries}'`;
+      const problematicQueries = this.selfUrl.match(regex)?.join("&");
+      const description = `The 'page' query contains issues in the values passed: '${problematicQueries}'`;
       DestinationDataError.throwBadQueryError(description);
     }
 
@@ -248,7 +249,7 @@ class Request {
     const regex = /sort(.+?(?=&|$))/g;
 
     if (!this.supportedFeatures.sort && sort) {
-      const problematicQueries = this.selfUrl.match(regex).join("&");
+      const problematicQueries = this.selfUrl.match(regex)?.join("&");
       const description = `This endpoint does not support the following queries: '${problematicQueries}'`;
       DestinationDataError.throwUnknownQueryError(description);
     }
@@ -258,8 +259,8 @@ class Request {
       sort !== undefined &&
       !testSchema(sort, schemas.sort)
     ) {
-      const problematicQueries = this.selfUrl.match(regex).join("&");
-      const description = `The 'sort' query contains issues: '${problematicQueries}'`;
+      const problematicQueries = this.selfUrl.match(regex)?.join("&");
+      const description = `The 'sort' query contains issues in the values passed: '${problematicQueries}'`;
       DestinationDataError.throwBadQueryError(description);
     }
   }
@@ -269,7 +270,7 @@ class Request {
     const regex = /random(.+?(?=&|$))/g;
 
     if (!this.supportedFeatures.random && random) {
-      const problematicQueries = this.selfUrl.match(regex).join("&");
+      const problematicQueries = this.selfUrl.match(regex)?.join("&");
       const description = `This endpoint does not support the following queries: '${problematicQueries}'`;
       DestinationDataError.throwUnknownQueryError(description);
     }
@@ -279,8 +280,8 @@ class Request {
       random !== undefined &&
       !testSchema(random, schemas.random)
     ) {
-      const problematicQueries = this.selfUrl.match(regex).join("&");
-      const description = `The 'random' query contains issues: '${problematicQueries}'`;
+      const problematicQueries = this.selfUrl.match(regex)?.join("&");
+      const description = `The 'random' query contains issues in the values passed: '${problematicQueries}'`;
       DestinationDataError.throwBadQueryError(description);
     }
   }
@@ -290,7 +291,7 @@ class Request {
     const regex = /search(.+?(?=&|$))/g;
 
     if (!this.supportedFeatures.search && search) {
-      const problematicQueries = this.selfUrl.match(regex).join("&");
+      const problematicQueries = this.selfUrl.match(regex)?.join("&");
       const description = `This endpoint does not support the following queries: '${problematicQueries}'`;
       DestinationDataError.throwUnknownQueryError(description);
     }
@@ -300,8 +301,8 @@ class Request {
       search !== undefined &&
       !testSchema(search, schemas.search)
     ) {
-      const problematicQueries = this.selfUrl.match(regex).join("&");
-      const description = `The 'search' query contains issues: '${problematicQueries}'`;
+      const problematicQueries = this.selfUrl.match(regex)?.join("&");
+      const description = `The 'search' query contains issues in the values passed: '${problematicQueries}'`;
       DestinationDataError.throwBadQueryError(description);
     }
   }
@@ -311,7 +312,7 @@ class Request {
     const regex = /filter(.+?(?=&|$))/g;
 
     if (!this.supportedFeatures.filter && filter) {
-      const problematicQueries = this.selfUrl.match(regex).join("&");
+      const problematicQueries = this.selfUrl.match(regex)?.join("&");
       const description = `This endpoint does not support the following queries: '${problematicQueries}'`;
       DestinationDataError.throwUnknownQueryError(description);
     }
@@ -321,8 +322,8 @@ class Request {
       filter !== undefined &&
       !testSchema(filter, schemas.filter)
     ) {
-      const problematicQueries = this.selfUrl.match(regex).join("&");
-      const description = `The 'filter' query contains issues: '${problematicQueries}'`;
+      const problematicQueries = this.selfUrl.match(regex)?.join("&");
+      const description = `The 'filter' query contains issues in the values passed: '${problematicQueries}'`;
       DestinationDataError.throwBadQueryError(description);
     }
   }

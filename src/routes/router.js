@@ -193,8 +193,8 @@ class Router {
 
     // Return to the client
     try {
-      return connector
-        .retrieve()
+      return Promise.resolve(parsedRequest.validate())
+        .then(() => connector.retrieve())
         .then((ret) => (resources = ret))
         .then(() => this.getResourcesToInclude(parsedRequest, resources))
         .then((includes) =>
@@ -288,6 +288,11 @@ class Router {
     // Return to the client
     try {
       return connector.delete();
+      then((ret) => {
+        if (ret !== 1) {
+          console.error("Unexpected ");
+        }
+      });
     } catch (error) {
       console.error(error);
       throw error;

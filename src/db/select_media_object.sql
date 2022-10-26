@@ -1,4 +1,5 @@
 SELECT media_objects.id,
+  author,
   content_type AS "contentType",
   duration,
   height,

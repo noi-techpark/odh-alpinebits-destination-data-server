@@ -11,6 +11,7 @@ const { SkiSlope } = require("./ski_slope");
 const { Snowpark } = require("./snowpark");
 
 const _ = require("lodash");
+const { DestinationDataError } = require("../../errors");
 const baseUrl = `${process.env.REF_SERVER_URL}/${process.env.API_VERSION}`;
 
 const baseResourceSerialization = {
@@ -34,21 +35,25 @@ function isReferenceObject(data) {
   return _.has(data, "type") && _.has(data, "id") && _.size(data) === 2;
 }
 
+function keepNull(value) {
+  return _.isNull(value);
+}
+
 function deserializeResourceFields(resource, json) {
   const { id, type, meta, attributes } = json;
 
   resource.id = id ?? resource?.id;
   resource.type = type ?? resource?.type;
 
-  resource.dataProvider = meta?.dataProvider ?? resource?.dataProvider;
+  resource.dataProvider = meta?.dataProvider;
   resource.lastUpdate =
-    (meta?.lastUpdate && new Date(meta?.lastUpdate)) ?? resource?.lastUpdate; // TODO: review whether we should deserialize by creating an instance of Date();
+    (meta?.lastUpdate && new Date(meta?.lastUpdate)) ?? undefined; // TODO: review whether we should deserialize by creating an instance of Date();
 
-  resource.abstract = attributes?.abstract ?? resource?.abstract;
-  resource.description = attributes?.description ?? resource?.description;
-  resource.name = attributes?.name ?? resource?.name;
-  resource.shortName = attributes?.shortName ?? resource?.shortName;
-  resource.url = attributes?.url ?? resource?.url;
+  resource.abstract = attributes?.abstract;
+  resource.description = attributes?.description;
+  resource.name = attributes?.name;
+  resource.shortName = attributes?.shortName;
+  resource.url = attributes?.url;
 
   return resource;
 }
@@ -57,10 +62,10 @@ function deserializeIndividualResourceFields(individualResource, json) {
   const { relationships } = json;
 
   individualResource.categories =
-    relationships?.categories?.data ?? individualResource?.categories;
+    relationships?.categories?.data ?? relationships?.categories;
   individualResource.multimediaDescriptions =
     relationships?.multimediaDescriptions?.data ??
-    individualResource?.multimediaDescriptions;
+    relationships?.multimediaDescriptions;
 
   return individualResource;
 }
@@ -72,7 +77,7 @@ function deserializeAgent(json) {
   deserializeResourceFields(agent, json);
   deserializeIndividualResourceFields(agent, json);
 
-  agent.contactPoints = attributes?.contactPoints ?? agent?.contactPoints;
+  agent.contactPoints = attributes?.contactPoints;
 
   return agent;
 }
@@ -83,14 +88,14 @@ function deserializeCategory(json) {
 
   deserializeResourceFields(category, json);
 
-  category.namespace = attributes?.namespace ?? category?.namespace;
-  category.resourceTypes = attributes?.resourceTypes ?? category?.resourceTypes;
+  category.namespace = attributes?.namespace;
+  category.resourceTypes = attributes?.resourceTypes;
 
-  category.children = relationships?.children?.data ?? category?.children;
+  category.children = relationships?.children?.data ?? relationships?.children;
   category.multimediaDescriptions =
     relationships?.multimediaDescriptions?.data ??
-    category?.multimediaDescriptions;
-  category.parents = relationships?.parents?.data ?? category?.parents;
+    relationships?.multimediaDescriptions;
+  category.parents = relationships?.parents?.data ?? relationships?.parents;
 
   return category;
 }
@@ -102,9 +107,10 @@ function deserializeEventSeries(json) {
   deserializeResourceFields(eventSeries, json);
   deserializeIndividualResourceFields(eventSeries, json);
 
-  eventSeries.frequency = attributes?.frequency ?? eventSeries?.frequency;
+  eventSeries.frequency = attributes?.frequency;
 
-  eventSeries.editions = relationships?.editions?.data ?? eventSeries?.editions;
+  eventSeries.editions =
+    relationships?.editions?.data ?? relationships?.editions;
 
   return eventSeries;
 }
@@ -116,24 +122,24 @@ function deserializeEvent(json) {
   deserializeResourceFields(event, json);
   deserializeIndividualResourceFields(event, json);
 
-  event.endDate = attributes?.endDate ?? event?.endDate;
-  event.inPersonCapacity =
-    attributes?.inPersonCapacity ?? event?.inPersonCapacity;
-  event.onlineCapacity = attributes?.onlineCapacity ?? event?.onlineCapacity;
-  event.participationUrl =
-    attributes?.participationUrl ?? event?.participationUrl;
-  event.recorded = attributes?.recorded ?? event?.recorded;
-  event.registrationUrl = attributes?.registrationUrl ?? event?.registrationUrl;
-  event.startDate = attributes?.startDate ?? event?.startDate;
-  event.status = attributes?.status ?? event?.status;
+  event.endDate = attributes?.endDate;
+  event.inPersonCapacity = attributes?.inPersonCapacity;
+  event.onlineCapacity = attributes?.onlineCapacity;
+  event.participationUrl = attributes?.participationUrl;
+  event.recorded = attributes?.recorded;
+  event.registrationUrl = attributes?.registrationUrl;
+  event.startDate = attributes?.startDate;
+  event.status = attributes?.status;
 
-  event.contributors = relationships?.contributors?.data ?? event?.contributors;
-  event.organizers = relationships?.organizers?.data ?? event?.organizers;
-  event.publisher = relationships?.publisher?.data ?? event?.publisher;
-  event.series = relationships?.series?.data ?? event?.series;
-  event.sponsors = relationships?.sponsors?.data ?? event?.sponsors;
-  event.subEvents = relationships?.subEvents?.data ?? event?.subEvents;
-  event.venues = relationships?.venues?.data ?? event?.venues;
+  event.contributors =
+    relationships?.contributors?.data ?? relationships?.contributors;
+  event.organizers =
+    relationships?.organizers?.data ?? relationships?.organizers;
+  event.publisher = relationships?.publisher?.data ?? relationships?.publisher;
+  event.series = relationships?.series?.data ?? relationships?.series;
+  event.sponsors = relationships?.sponsors?.data ?? relationships?.sponsors;
+  event.subEvents = relationships?.subEvents?.data ?? relationships?.subEvents;
+  event.venues = relationships?.venues?.data ?? relationships?.venues;
 
   return event;
 }
@@ -144,14 +150,14 @@ function deserializeFeature(json) {
 
   deserializeResourceFields(feature, json);
 
-  feature.namespace = attributes?.namespace ?? feature?.namespace;
-  feature.resourceTypes = attributes?.resourceTypes ?? feature?.resourceTypes;
+  feature.namespace = attributes?.namespace;
+  feature.resourceTypes = attributes?.resourceTypes;
 
-  feature.children = relationships?.children?.data ?? feature?.children;
+  feature.children = relationships?.children?.data ?? relationships?.children;
   feature.multimediaDescriptions =
     relationships?.multimediaDescriptions?.data ??
-    feature?.multimediaDescriptions;
-  feature.parents = relationships?.parents?.data ?? feature?.parents;
+    relationships?.multimediaDescriptions;
+  feature.parents = relationships?.parents?.data ?? relationships?.parents;
 
   return feature;
 }
@@ -162,16 +168,17 @@ function deserializeMediaObject(json) {
 
   deserializeResourceFields(mediaObject, json);
 
-  mediaObject.contentType = attributes?.contentType ?? mediaObject?.contentType;
-  mediaObject.duration = attributes?.duration ?? mediaObject?.duration;
-  mediaObject.height = attributes?.height ?? mediaObject?.height;
-  mediaObject.license = attributes?.license ?? mediaObject?.license;
-  mediaObject.width = attributes?.width ?? mediaObject?.width;
+  mediaObject.author = attributes?.author;
+  mediaObject.contentType = attributes?.contentType;
+  mediaObject.duration = attributes?.duration;
+  mediaObject.height = attributes?.height;
+  mediaObject.license = attributes?.license;
+  mediaObject.width = attributes?.width;
 
   mediaObject.categories =
-    relationships?.categories?.data ?? mediaObject?.categories;
+    relationships?.categories?.data ?? relationships?.categories;
   mediaObject.licenseHolder =
-    relationships?.licenseHolder?.data ?? mediaObject?.licenseHolder;
+    relationships?.licenseHolder?.data ?? relationships?.licenseHolder;
 
   return mediaObject;
 }
@@ -183,9 +190,9 @@ function deserializeVenue(json) {
   deserializeResourceFields(venue, json);
   deserializeIndividualResourceFields(venue, json);
 
-  venue.address = attributes?.address ?? venue?.address;
-  venue.howToArrive = attributes?.howToArrive ?? venue?.howToArrive;
-  venue.geometries = attributes?.geometries ?? venue?.geometries;
+  venue.address = attributes?.address;
+  venue.howToArrive = attributes?.howToArrive;
+  venue.geometries = attributes?.geometries;
 
   return venue;
 }
@@ -197,17 +204,18 @@ function deserializeLift(json) {
   deserializeResourceFields(lift, json);
   deserializeIndividualResourceFields(lift, json);
 
-  lift.address = attributes?.address ?? lift?.address;
-  lift.capacity = attributes?.capacity ?? lift?.capacity;
-  lift.geometries = attributes?.geometries ?? lift?.geometries;
-  lift.howToArrive = attributes?.howToArrive ?? lift?.howToArrive;
-  lift.length = attributes?.length ?? lift?.length;
-  lift.maxAltitude = attributes?.maxAltitude ?? lift?.maxAltitude;
-  lift.minAltitude = attributes?.minAltitude ?? lift?.minAltitude;
-  lift.openingHours = attributes?.openingHours ?? lift?.openingHours;
-  lift.personsPerChair = attributes?.personsPerChair ?? lift?.personsPerChair;
+  lift.address = attributes?.address;
+  lift.capacity = attributes?.capacity;
+  lift.geometries = attributes?.geometries;
+  lift.howToArrive = attributes?.howToArrive;
+  lift.length = attributes?.length;
+  lift.maxAltitude = attributes?.maxAltitude;
+  lift.minAltitude = attributes?.minAltitude;
+  lift.openingHours = attributes?.openingHours;
+  lift.personsPerChair = attributes?.personsPerChair;
 
-  lift.connections = relationships?.connections?.data ?? lift?.connections;
+  lift.connections =
+    relationships?.connections?.data ?? relationships?.connections;
 
   return lift;
 }
@@ -219,34 +227,27 @@ function deserializeMountainArea(json) {
   deserializeResourceFields(mountainArea, json);
   deserializeIndividualResourceFields(mountainArea, json);
 
-  mountainArea.area = attributes?.area ?? mountainArea?.area;
-  mountainArea.geometries = attributes?.geometries ?? mountainArea?.geometries;
-  mountainArea.howToArrive =
-    attributes?.howToArrive ?? mountainArea?.howToArrive;
-  mountainArea.maxAltitude =
-    attributes?.maxAltitude ?? mountainArea?.maxAltitude;
-  mountainArea.minAltitude =
-    attributes?.minAltitude ?? mountainArea?.minAltitude;
-  mountainArea.openingHours =
-    attributes?.openingHours ?? mountainArea?.openingHours;
-  mountainArea.snowCondition =
-    attributes?.snowCondition ?? mountainArea?.snowCondition;
-  mountainArea.totalParkArea =
-    attributes?.totalParkArea ?? mountainArea?.totalParkArea;
-  mountainArea.totalTrailLength =
-    attributes?.totalTrailLength ?? mountainArea?.totalTrailLength;
+  mountainArea.area = attributes?.area;
+  mountainArea.geometries = attributes?.geometries;
+  mountainArea.howToArrive = attributes?.howToArrive;
+  mountainArea.maxAltitude = attributes?.maxAltitude;
+  mountainArea.minAltitude = attributes?.minAltitude;
+  mountainArea.openingHours = attributes?.openingHours;
+  mountainArea.snowCondition = attributes?.snowCondition;
+  mountainArea.totalParkArea = attributes?.totalParkArea;
+  mountainArea.totalTrailLength = attributes?.totalTrailLength;
 
   mountainArea.areaOwner =
-    relationships?.areaOwner?.data ?? mountainArea?.areaOwner;
+    relationships?.areaOwner?.data ?? relationships?.areaOwner;
   mountainArea.connections =
-    relationships?.connections?.data ?? mountainArea?.connections;
-  mountainArea.lifts = relationships?.lifts?.data ?? mountainArea?.lifts;
+    relationships?.connections?.data ?? relationships?.connections;
+  mountainArea.lifts = relationships?.lifts?.data ?? relationships?.lifts;
   mountainArea.snowparks =
-    relationships?.snowparks?.data ?? mountainArea?.snowparks;
+    relationships?.snowparks?.data ?? relationships?.snowparks;
   mountainArea.subAreas =
-    relationships?.subAreas?.data ?? mountainArea?.subAreas;
+    relationships?.subAreas?.data ?? relationships?.subAreas;
   mountainArea.skiSlopes =
-    relationships?.skiSlopes?.data ?? mountainArea?.skiSlopes;
+    relationships?.skiSlopes?.data ?? relationships?.skiSlopes;
 
   return mountainArea;
 }
@@ -258,18 +259,18 @@ function deserializeSkiSlope(json) {
   deserializeResourceFields(skiSlope, json);
   deserializeIndividualResourceFields(skiSlope, json);
 
-  skiSlope.address = attributes?.address ?? skiSlope?.address;
-  skiSlope.difficulty = attributes?.difficulty ?? skiSlope?.difficulty;
-  skiSlope.geometries = attributes?.geometries ?? skiSlope?.geometries;
-  skiSlope.howToArrive = attributes?.howToArrive ?? skiSlope?.howToArrive;
-  skiSlope.length = attributes?.length ?? skiSlope?.length;
-  skiSlope.maxAltitude = attributes?.maxAltitude ?? skiSlope?.maxAltitude;
-  skiSlope.minAltitude = attributes?.minAltitude ?? skiSlope?.minAltitude;
-  skiSlope.openingHours = attributes?.openingHours ?? skiSlope?.openingHours;
-  skiSlope.snowCondition = attributes?.snowCondition ?? skiSlope?.snowCondition;
+  skiSlope.address = attributes?.address;
+  skiSlope.difficulty = attributes?.difficulty;
+  skiSlope.geometries = attributes?.geometries;
+  skiSlope.howToArrive = attributes?.howToArrive;
+  skiSlope.length = attributes?.length;
+  skiSlope.maxAltitude = attributes?.maxAltitude;
+  skiSlope.minAltitude = attributes?.minAltitude;
+  skiSlope.openingHours = attributes?.openingHours;
+  skiSlope.snowCondition = attributes?.snowCondition;
 
   skiSlope.connections =
-    relationships?.connections?.data ?? skiSlope?.connections;
+    relationships?.connections?.data ?? relationships?.connections;
 
   return skiSlope;
 }
@@ -281,19 +282,19 @@ function deserializeSnowpark(json) {
   deserializeResourceFields(snowpark, json);
   deserializeIndividualResourceFields(snowpark, json);
 
-  snowpark.address = attributes?.address ?? snowpark?.address;
-  snowpark.difficulty = attributes?.difficulty ?? snowpark?.difficulty;
-  snowpark.geometries = attributes?.geometries ?? snowpark?.geometries;
-  snowpark.howToArrive = attributes?.howToArrive ?? snowpark?.howToArrive;
-  snowpark.length = attributes?.length ?? snowpark?.length;
-  snowpark.maxAltitude = attributes?.maxAltitude ?? snowpark?.maxAltitude;
-  snowpark.minAltitude = attributes?.minAltitude ?? snowpark?.minAltitude;
-  snowpark.openingHours = attributes?.openingHours ?? snowpark?.openingHours;
-  snowpark.snowCondition = attributes?.snowCondition ?? snowpark?.snowCondition;
+  snowpark.address = attributes?.address;
+  snowpark.difficulty = attributes?.difficulty;
+  snowpark.geometries = attributes?.geometries;
+  snowpark.howToArrive = attributes?.howToArrive;
+  snowpark.length = attributes?.length;
+  snowpark.maxAltitude = attributes?.maxAltitude;
+  snowpark.minAltitude = attributes?.minAltitude;
+  snowpark.openingHours = attributes?.openingHours;
+  snowpark.snowCondition = attributes?.snowCondition;
 
   snowpark.connections =
-    relationships?.connections?.data ?? snowpark?.connections;
-  snowpark.features = relationships?.features?.data ?? snowpark?.features;
+    relationships?.connections?.data ?? relationships?.connections;
+  snowpark.features = relationships?.features?.data ?? relationships?.features;
 
   return snowpark;
 }
@@ -340,8 +341,8 @@ function serializeResource(resource) {
 
   meta.dataProvider = resource.dataProvider;
   meta.lastUpdate = resource.lastUpdate;
-  meta.license = resource.license;
-  meta.licenseHolder = resource.licenseHolder;
+  // meta.license = resource.license;
+  // meta.licenseHolder = resource.licenseHolder;
 
   links.self = `${baseUrl}/${resource.type}/${resource.id}`;
 
@@ -464,8 +465,9 @@ function serializeFeature(feature) {
 function serializeMediaObject(mediaObject) {
   const json = serializeResource(mediaObject);
 
-  const { meta, attributes, relationships } = json;
+  const { attributes, relationships } = json;
 
+  attributes.author = mediaObject.author;
   attributes.contentType = mediaObject.contentType;
   attributes.duration = mediaObject.duration;
   attributes.height = mediaObject.height;
@@ -686,6 +688,11 @@ function serializeResourceCollection(resources, request, include) {
   const prev = number <= 1 ? 1 : number > last ? last : number - 1;
   const next = number < last ? number + 1 : last;
 
+  const meta = {
+    pages: last,
+    count,
+  };
+
   const { selfUrl } = request;
   const links = { swagger: process.env.SWAGGER_URL };
   const regexPageQuery = /page\[number\]=[0-9]+/;
@@ -708,12 +715,13 @@ function serializeResourceCollection(resources, request, include) {
     links.last = selfUrl + separator + pageQuery + last;
   }
 
+  if (number > 1 && !count) {
+    DestinationDataError.throwPageNotFound(meta, links);
+  }
+
   return {
     jsonapi: { version: "1.0" },
-    meta: {
-      pages: last,
-      count,
-    },
+    meta,
     links,
     data: resources?.map((resource) => serializeAnyResource(resource, request)),
     include: request?.query?.include

@@ -52,9 +52,18 @@ class MediaObjectConnector extends ResourceConnector {
   retrieveMediaObject(id) {
     const offset = !_.isString(id) ? this.getOffset() : null;
     const limit = !_.isString(id) ? this.getLimit() : null;
+    const orderBy = !_.isString(id) ? this.getOrderBy() : null;
+    const filters = !_.isString(id) ? this.getFilters() : null;
 
     return dbFn
-      .selectMediaObjectFromId(this.connection, id, offset, limit)
+      .selectMediaObjectFromId(
+        this.connection,
+        id,
+        offset,
+        limit,
+        orderBy,
+        filters
+      )
       .then((rows) => {
         if (_.isString(id)) {
           if (_.size(rows) === 1) {
@@ -108,6 +117,7 @@ class MediaObjectConnector extends ResourceConnector {
   mapMediaObjectToColumns(mediaObject) {
     return {
       [mediaObjects.id]: mediaObject?.id,
+      [mediaObjects.author]: mediaObject?.author,
       [mediaObjects.contentType]: mediaObject?.contentType,
       [mediaObjects.licenseHolderId]: mediaObject?.licenseHolder?.id,
       [mediaObjects.duration]: mediaObject?.duration,

@@ -2,7 +2,7 @@ const _ = require("lodash");
 const knex = require("../db/connect");
 const dbFn = require("../db/functions");
 
-const { schemas } = require("../db");
+const { schemas, views } = require("../db");
 const {
   abstracts,
   descriptions,
@@ -382,9 +382,11 @@ class ResourceConnector {
   }
 
   throwNoUpdate(serversResource) {
-    const err = new Error("Not updated: no effective change");
-    err.resource = serversResource;
-    throw err;
+    console.log("WARNING: Not updated: no effective change");
+    console.log("Exception suppressed");
+    // const err = new Error("Not updated: no effective change");
+    // err.resource = serversResource;
+    // throw err;
   }
 
   shouldUpdate(_old, _new) {
@@ -410,7 +412,9 @@ class ResourceConnector {
       }
     }
 
-    return result;
+    return true;
+    // TODO: re-enable no changes check if necessary
+    // return result;
   }
 
   isAddition(oldValue, newValue) {
@@ -446,6 +450,150 @@ class ResourceConnector {
     const pageSize = this.request?.query?.page?.size || 10;
 
     return pageSize;
+  }
+
+  mapFieldToColumns(field) {
+    switch (field) {
+      case "id":
+        return schemas.resources.id;
+      case "dataProvider":
+        return schemas.resources.dataProvider;
+      case "lastUpdate":
+        return schemas.resources.lastUpdate;
+      case "type":
+        return schemas.resources.type;
+      case "namespace":
+        return schemas.categories.namespace;
+      case "endDate":
+        return schemas.events.endDate;
+      case "inPersonCapacity":
+        return schemas.events.inPersonCapacity;
+      case "onlineCapacity":
+        return schemas.events.onlineCapacity;
+      case "recorded":
+        return schemas.events.recorded;
+      case "startDate":
+        return schemas.events.startDate;
+      case "status":
+        return schemas.events.status;
+      case "frequency":
+        return schemas.eventSeries.frequency;
+      case "namespace":
+        return schemas.features.namespace;
+      case "namespace":
+        return schemas.features.namespace;
+      case "capacity":
+        return schemas.lifts.capacity;
+      case "personsPerChair":
+        return schemas.lifts.personsPerChair;
+      case "contentType":
+        return schemas.mediaObjects.contentType;
+      case "duration":
+        return schemas.mediaObjects.duration;
+      case "height":
+        return schemas.mediaObjects.height;
+      case "license":
+        return schemas.mediaObjects.license;
+      case "width":
+        return schemas.mediaObjects.width;
+      case "area":
+        return schemas.mountainAreas.area;
+      case "totalParkArea":
+        return schemas.mountainAreas.totalParkArea;
+      case "totalSlopeLength":
+        return schemas.mountainAreas.totalSlopeLength;
+      case "difficulty":
+        return schemas.snowparks.difficulty;
+      case "length":
+        return schemas.places.length;
+      case "maxAltitude":
+        return schemas.places.maxAltitude;
+      case "minAltitude":
+        return schemas.places.minAltitude;
+      /* ------------ */
+      case "difficulty.eu":
+        return schemas.skiSlopes.difficultyEu;
+      case "difficulty.us":
+        return schemas.skiSlopes.difficultyUs;
+      // case "children":
+      // TODO: add 'children_array' view
+      // case "parents":
+      // TODO: add 'parents_array' view
+      // case "contributors":
+      // TODO: add 'contributors_array' view
+      // case "organizers":
+      // TODO: add 'organizers_array' view
+      // case "sponsors":
+      // TODO: add 'sponsors_array' view
+      // case "subEvents":
+      // TODO: add 'subEvents_array' view
+      // case "venues":
+      // TODO: add 'venues_array' view
+      // case "editions":
+      // TODO: add 'editions_array' view
+      case "categories":
+        return views.categoriesArrays._name;
+      case "multimediaDescriptions":
+        return views.multimediaDescriptionsArrays._name;
+      case "publisher":
+        return schemas.events.publisherId;
+      case "series":
+        return schemas.events.seriesId;
+      case "connections":
+        return views.connectionsArrays._name;
+      case "licenseHolder":
+        return schemas.mediaObjects.licenseHolderId;
+      case "areaOwner":
+        return schemas.mountainAreas.areaOwnerId;
+      case "lifts":
+        return views.areaLiftsArrays._name;
+      case "skiSlopes":
+        return views.areaSkiSlopesArrays._name;
+      case "snowparks":
+        return views.areaSnowparksArrays._name;
+      case "subAreas":
+        return views.subAreasArrays._name;
+    }
+
+    return null;
+  }
+
+  getOrderBy() {
+    return _.isEmpty(this.request?.query?.sort)
+      ? []
+      : this.request?.query?.sort?.split(",")?.map((field) => {
+          const desc = field?.startsWith("-");
+          field = field.replace("-", "");
+          const column = this.mapFieldToColumns(field);
+          return `${column}${desc ? " DESC" : ""}`;
+        });
+  }
+
+  getFilters() {
+    if (_.isEmpty(this.request?.query?.filter)) return [];
+
+    return Object.entries(this.request?.query?.filter)?.map(
+      ([field, filterAndValue]) =>
+        [
+          this.mapFieldToColumns(field),
+          this.mapFilterAndValue(filterAndValue),
+        ].join(" ")
+    );
+  }
+
+  mapFilterAndValue(filterAndValue) {
+    if (_.isEmpty(filterAndValue) || !_.isObject(filterAndValue)) return null;
+
+    return Object.entries(filterAndValue)?.map(([operation, value]) => {
+      if (operation === "exists")
+        return value === "true" ? "IS NOT NULL" : "IS NULL";
+      if (operation === "eq") return `= '${value}'`;
+      if (operation === "neq") return `!= '${value}'`;
+      if (operation === "gt") return `> '${value}'`;
+      if (operation === "gte") return `>= '${value}'`;
+      if (operation === "lt") return `< '${value}'`;
+      if (operation === "lte") return `<= '${value}'`;
+    });
   }
 }
 

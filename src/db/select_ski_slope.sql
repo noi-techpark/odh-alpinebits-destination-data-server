@@ -6,10 +6,13 @@ SELECT ski_slopes.id,
   resource_objects.description,
   resource_objects.name,
   short_name AS "shortName",
-  json_build_object(
-    'eu', difficulty_eu,
-    'us', difficulty_us
-  ) AS "difficulty",
+  CASE
+		WHEN difficulty_eu IS NOT NULL OR difficulty_us IS NOT NULL
+		  THEN json_build_object(
+        'eu', difficulty_eu,
+        'us', difficulty_us
+		  )
+	END AS "difficulty",
   resource_objects.url,
   resource_objects.categories,
   resource_objects.media AS "multimediaDescriptions",

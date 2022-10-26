@@ -10,7 +10,6 @@ const {
   insertResourceType,
   insertSeriesFrequency,
   insertEventStatus,
-  insertLanguageCode,
 } = require("./functions");
 
 knex
@@ -24,9 +23,9 @@ knex
         return connection.commit();
       })
       .catch((err) => {
-        console.error("Failed to (re)insert tables.");
-        console.log(err);
-        return connection.rollback();
+        console.error("Failed to (re)insert tables.", err);
+        connection.rollback();
+        process.exit(1);
       })
       .finally(() => {
         console.log(
@@ -34,9 +33,18 @@ knex
           connection.isCompleted()
         );
         connection = null;
+        knex.destroy();
+        process.exit(0);
       });
   })
-  .finally(() => knex.destroy());
+  .catch((err) => {
+    console.error("Failed to run the transaction.");
+    console.log(err);
+    process.exit(1);
+  })
+  .finally(() => {
+    process.exit(0);
+  });
 
 function deletePredefinedRecords() {
   return deleteResourceTypes(connection)
@@ -154,14 +162,21 @@ function insertAllEventStatus() {
 }
 
 function insertLanguageCodes() {
-  const inserts = [];
+  let values = [];
   for (const { iso6393: code, name, scope, type } of iso6393) {
     if (type === "living" && scope === "individual") {
-      inserts.push(insertLanguageCode(knex, { lang: code, title: name }));
+      values.push(
+        `('${code?.replace(/'+/g, "")}', '${name?.replace(/'+/g, "")}')`
+      );
     }
   }
 
-  return Promise.all(inserts);
+  const query = `INSERT INTO language_codes (lang, title)
+  VALUES
+    ${values.join(", ")}
+  ON CONFLICT (lang) DO NOTHING;`;
+
+  return connection.raw(query);
 }
 
 function insertDefaultCategories() {
@@ -403,11 +418,24 @@ function insertDefaultCategories() {
 }
 
 function insertPredefinedRecords() {
+  console.log("Running insertAllEventStatus()");
   return insertAllEventStatus()
-    .then(() => insertResourceTypes())
-    .then(() => insertSeriesFrequencies())
-    .then(() => insertLanguageCodes())
-    .then(() => insertDefaultCategories())
+    .then(() => {
+      console.log("Running insertResourceTypes()");
+      return insertResourceTypes();
+    })
+    .then(() => {
+      console.log("Running insertSeriesFrequencies()");
+      return insertSeriesFrequencies();
+    })
+    .then(() => {
+      console.log("Running insertLanguageCodes()");
+      return insertLanguageCodes();
+    })
+    .then(() => {
+      console.log("Running insertDefaultCategories()");
+      return insertDefaultCategories();
+    })
     .then((ret) => {
       console.log("All default records inserted");
       return ret;

@@ -180,6 +180,7 @@ module.exports = {
     mediaObjects: {
       _name: "media_objects",
       id: "id",
+      author: "author",
       contentType: "content_type",
       duration: "duration",
       height: "height",
