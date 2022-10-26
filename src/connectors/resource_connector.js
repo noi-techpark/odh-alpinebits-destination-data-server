@@ -382,9 +382,11 @@ class ResourceConnector {
   }
 
   throwNoUpdate(serversResource) {
-    const err = new Error("Not updated: no effective change");
-    err.resource = serversResource;
-    throw err;
+    console.log("WARNING: Not updated: no effective change");
+    console.log("Exception suppressed");
+    // const err = new Error("Not updated: no effective change");
+    // err.resource = serversResource;
+    // throw err;
   }
 
   shouldUpdate(_old, _new) {
@@ -410,7 +412,9 @@ class ResourceConnector {
       }
     }
 
-    return result;
+    return true;
+    // TODO: re-enable no changes check if necessary
+    // return result;
   }
 
   isAddition(oldValue, newValue) {

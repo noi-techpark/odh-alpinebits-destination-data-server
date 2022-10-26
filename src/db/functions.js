@@ -559,10 +559,10 @@ function selectUsingFile(
   return fs.promises
     .readFile(queryPath, "utf-8")
     .then((query) => {
-      console.log(
-        "run query",
-        `${query} ${where} ${orderBy} ${offset} ${limit};`
-      );
+      // console.log(
+      //   "run query",
+      //   `${query} ${where} ${orderBy} ${offset} ${limit};`
+      // );
       return connection.raw(`${query} ${where} ${orderBy} ${offset} ${limit};`);
     })
     .then((result) => result?.rows)
