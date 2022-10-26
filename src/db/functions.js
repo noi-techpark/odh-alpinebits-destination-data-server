@@ -832,9 +832,9 @@ function getWhereIdMatchesClause(ids, fieldName, filters) {
     clauses.push(`${fieldName} in (${_.isEmpty(ids) ? "''" : idList})`);
   }
 
-  if (!_.isEmpty(filters)) clauses.push(filters);
+  if (!_.isEmpty(filters)) clauses.push(...filters);
 
-  const where = _.isEmpty(clauses) ? "" : `WHERE ${clauses.join(", ")}`;
+  const where = _.isEmpty(clauses) ? "" : `WHERE ${clauses.join(" AND ")}`;
 
   return where;
 }
