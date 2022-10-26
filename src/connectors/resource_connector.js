@@ -572,19 +572,22 @@ class ResourceConnector {
   getFilters() {
     if (_.isEmpty(this.request?.query?.filter)) return [];
 
-    return Object.entries(this.request?.query?.filter)?.map(
-      ([field, filterAndValue]) =>
-        [
-          this.mapFieldToColumns(field),
-          this.mapFilterAndValue(filterAndValue),
-        ].join(" ")
-    );
+    return Object.entries(this.request?.query?.filter)
+      ?.map(([field, filtersAndValues]) => {
+        const column = this.mapFieldToColumns(field);
+
+        return this.mapFilterAndValue(filtersAndValues)
+          .map((filterAndValue) => [column, filterAndValue].join(" "))
+          .flat();
+      })
+      .flat();
   }
 
-  mapFilterAndValue(filterAndValue) {
-    if (_.isEmpty(filterAndValue) || !_.isObject(filterAndValue)) return null;
+  mapFilterAndValue(filtersAndValues) {
+    if (_.isEmpty(filtersAndValues) || !_.isObject(filtersAndValues))
+      return null;
 
-    return Object.entries(filterAndValue)?.map(([operation, value]) => {
+    return Object.entries(filtersAndValues)?.map(([operation, value]) => {
       if (operation === "exists")
         return value === "true" ? "IS NOT NULL" : "IS NULL";
       if (operation === "eq") return `= '${value}'`;
