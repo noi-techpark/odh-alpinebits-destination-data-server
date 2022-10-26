@@ -163,6 +163,7 @@ function deserializeMediaObject(json) {
 
   deserializeResourceFields(mediaObject, json);
 
+  mediaObject.author = attributes?.author ?? mediaObject?.author;
   mediaObject.contentType = attributes?.contentType ?? mediaObject?.contentType;
   mediaObject.duration = attributes?.duration ?? mediaObject?.duration;
   mediaObject.height = attributes?.height ?? mediaObject?.height;
@@ -341,8 +342,8 @@ function serializeResource(resource) {
 
   meta.dataProvider = resource.dataProvider;
   meta.lastUpdate = resource.lastUpdate;
-  meta.license = resource.license;
-  meta.licenseHolder = resource.licenseHolder;
+  // meta.license = resource.license;
+  // meta.licenseHolder = resource.licenseHolder;
 
   links.self = `${baseUrl}/${resource.type}/${resource.id}`;
 
@@ -465,8 +466,9 @@ function serializeFeature(feature) {
 function serializeMediaObject(mediaObject) {
   const json = serializeResource(mediaObject);
 
-  const { meta, attributes, relationships } = json;
+  const { attributes, relationships } = json;
 
+  attributes.author = mediaObject.author;
   attributes.contentType = mediaObject.contentType;
   attributes.duration = mediaObject.duration;
   attributes.height = mediaObject.height;

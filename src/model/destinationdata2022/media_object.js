@@ -4,6 +4,7 @@ class MediaObject extends Resource {
   constructor() {
     super();
 
+    this.author = undefined;
     this.contentType = undefined;
     this.duration = undefined;
     this.height = undefined;

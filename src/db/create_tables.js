@@ -281,6 +281,7 @@ function createMediaObjectsTable() {
       .references(agents.id)
       .inTable(agents._name)
       .onDelete(SET_NULL);
+    table.string(mediaObjects.author);
     table.string(mediaObjects.contentType);
     table.integer(mediaObjects.duration);
     table.integer(mediaObjects.height);

@@ -204,6 +204,18 @@ function insertAddress(connection, address) {
 
   checkNotNullable(country, addresses.country);
 
+  if (!address.id) {
+    return connection
+      .raw(
+        `SELECT ${addresses.id} FROM ${addresses._name} ORDER BY ${addresses.id} DESC LIMIT 1;`
+      )
+      .then((select) => {
+        const maxId = select?.rows?.[0]?.id || 1;
+        address.id = maxId + 1;
+        return insert(connection, addresses._name, address, addresses.id);
+      });
+  }
+
   return insert(connection, addresses._name, address, addresses.id);
 }
 
@@ -817,7 +829,7 @@ function getWhereIdMatchesClause(ids, fieldName, filters) {
   if (_.isString(ids)) clauses.push(`${fieldName} = '${ids}'`);
   else if (_.isArray(ids)) {
     const idList = ids.map((id) => `'${id}'`).join(", ");
-    clauses.push(`${fieldName} in (${_.isEmpty(ids) ? "" : idList})`);
+    clauses.push(`${fieldName} in (${_.isEmpty(ids) ? "''" : idList})`);
   }
 
   if (!_.isEmpty(filters)) clauses.push(filters);

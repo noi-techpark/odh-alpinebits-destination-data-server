@@ -117,6 +117,7 @@ class MediaObjectConnector extends ResourceConnector {
   mapMediaObjectToColumns(mediaObject) {
     return {
       [mediaObjects.id]: mediaObject?.id,
+      [mediaObjects.author]: mediaObject?.author,
       [mediaObjects.contentType]: mediaObject?.contentType,
       [mediaObjects.licenseHolderId]: mediaObject?.licenseHolder?.id,
       [mediaObjects.duration]: mediaObject?.duration,
