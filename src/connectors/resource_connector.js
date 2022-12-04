@@ -3,6 +3,7 @@ const knex = require("../db/connect");
 const dbFn = require("../db/functions");
 
 const { schemas, views } = require("../db");
+const { isEmpty } = require("lodash");
 const {
   abstracts,
   descriptions,
@@ -480,8 +481,6 @@ class ResourceConnector {
         return schemas.eventSeries.frequency;
       case "namespace":
         return schemas.features.namespace;
-      case "namespace":
-        return schemas.features.namespace;
       case "capacity":
         return schemas.lifts.capacity;
       case "personsPerChair":
@@ -515,24 +514,45 @@ class ResourceConnector {
         return schemas.skiSlopes.difficultyEu;
       case "difficulty.us":
         return schemas.skiSlopes.difficultyUs;
-      // case "children":
-      // TODO: add 'children_array' view
-      // case "parents":
-      // TODO: add 'parents_array' view
-      // case "contributors":
-      // TODO: add 'contributors_array' view
-      // case "organizers":
-      // TODO: add 'organizers_array' view
-      // case "sponsors":
-      // TODO: add 'sponsors_array' view
-      // case "subEvents":
-      // TODO: add 'subEvents_array' view
-      // case "venues":
-      // TODO: add 'venues_array' view
-      // case "editions":
-      // TODO: add 'editions_array' view
+      /* ------------ */
+      case "abstract":
+        return "abstract";
+      case "description":
+        return "description";
+      case "howToArrive":
+        return "how_to_arrive";
+      case "name":
+        return "name";
+      case "shortName":
+        return "short_name";
+      case "url":
+        return "url";
+      case "geometries":
+        return "geometries";
+      case "address":
+        return "address";
+      case "snowCondition":
+        return "snow_condition_objects.snow_condition";
+      /* ------------ */
+      case "children":
+        return "children"; // no view needed
+      case "parents":
+        return "parents"; // no view needed
+      case "contributors":
+        return "contributors"; // no view needed
+      case "organizers":
+        return "organizers"; // no view needed
+      case "sponsors":
+        return "sponsors"; // no view needed
+      case "subEvents":
+        return "subEvents"; // no view needed
+      case "venues":
+        return "venues"; // no view needed
+      case "editions":
+        return "editions"; // no view needed
       case "categories":
-        return views.categoriesArrays._name;
+        return "resource_objects.categories";
+      // return views.categoriesArrays._name;
       case "multimediaDescriptions":
         return views.multimediaDescriptionsArrays._name;
       case "publisher":
@@ -559,14 +579,21 @@ class ResourceConnector {
   }
 
   getOrderBy() {
-    return _.isEmpty(this.request?.query?.sort)
-      ? []
-      : this.request?.query?.sort?.split(",")?.map((field) => {
-          const desc = field?.startsWith("-");
-          field = field.replace("-", "");
-          const column = this.mapFieldToColumns(field);
-          return `${column}${desc ? " DESC" : ""}`;
-        });
+    const sort = this.request?.query?.sort;
+    const random = this.request?.query?.random;
+
+    if (!_.isEmpty(sort))
+      return sort?.split(",")?.map((field) => {
+        const desc = field?.startsWith("-");
+        field = field.replace("-", "");
+        const column = this.mapFieldToColumns(field);
+        return `${column}${desc ? " DESC NULLS LAST" : ""}`;
+      });
+
+    if (!_.isEmpty(random))
+      return [`md5(resource_objects.id || ${random || 0})`];
+
+    return [];
   }
 
   getFilters() {
@@ -576,27 +603,49 @@ class ResourceConnector {
       ?.map(([field, filtersAndValues]) => {
         const column = this.mapFieldToColumns(field);
 
-        return this.mapFilterAndValue(filtersAndValues)
-          .map((filterAndValue) => [column, filterAndValue].join(" "))
-          .flat();
+        return this.mapFilterAndValue(filtersAndValues, column);
+        // .map((filterAndValue) => [column, filterAndValue].join(" "))
+        // .flat()
       })
       .flat();
   }
 
-  mapFilterAndValue(filtersAndValues) {
+  mapFilterAndValue(filtersAndValues, column) {
     if (_.isEmpty(filtersAndValues) || !_.isObject(filtersAndValues))
       return null;
 
     return Object.entries(filtersAndValues)?.map(([operation, value]) => {
       if (operation === "exists")
-        return value === "true" ? "IS NOT NULL" : "IS NULL";
-      if (operation === "eq") return `= '${value}'`;
-      if (operation === "neq") return `!= '${value}'`;
-      if (operation === "gt") return `> '${value}'`;
-      if (operation === "gte") return `>= '${value}'`;
-      if (operation === "lt") return `< '${value}'`;
-      if (operation === "lte") return `<= '${value}'`;
+        return value === "true" ? `${column} IS NOT NULL` : `${column} IS NULL`;
+      if (operation === "eq") return `${column} = '${value}'`;
+      if (operation === "neq") return `${column} != '${value}'`;
+      if (operation === "gt") return `${column} > '${value}'`;
+      if (operation === "gte") return `${column} >= '${value}'`;
+      if (operation === "lt") return `${column} < '${value}'`;
+      if (operation === "lte") return `${column} <= '${value}'`;
+      if (operation === "in")
+        return `${column} IN ('${value?.split(",").join("','") || ""}')`;
+      if (operation === "nin")
+        return `${column} NOT IN ('${value?.split(",").join("','") || ""}')`;
+      if (operation === "any")
+        return `(${column} ::TEXT) ~ '"${value?.split(",").join('"|"')}"'`;
+      if (operation === "near") {
+        const [long, lat, dis] = value?.split(",");
+        return `ST_DWithin(postgis_geography, ST_GeomFromText('POINT(${long} ${lat})', 4326)::geography, ${dis})`;
+      }
+      if (operation === "within")
+        return `ST_DWithin(postgis_geography, ST_GeomFromGeoJSON('${value}')::geography, 0)`;
     });
+  }
+
+  getSearch() {
+    const search = this.request?.query?.search;
+
+    return isEmpty(search)
+      ? []
+      : [
+          `((resource_objects.name ::TEXT) ILIKE '%${search}%' OR (resource_objects.description ::TEXT) ILIKE '%${search}%')`,
+        ];
   }
 }
 

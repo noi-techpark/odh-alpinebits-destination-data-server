@@ -1,0 +1,120 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "$id": "https://www.alpinebits.org/destinationdata/schemas/2022-04/category",
+  "description": "A resource that implements the concept of Category defined in the AlpineBits® DestinationData Ontology.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["type"],
+  "properties": {
+    "id": {
+      "$ref": "/destinationdata/schemas/2022-04/datatypes#/definitions/id"
+    },
+    "type": {
+      "const": "categories"
+    },
+    "meta": {
+      "$ref": "/destinationdata/schemas/2022-04/datatypes#/definitions/meta"
+    },
+    "links": {
+      "$ref": "/destinationdata/schemas/2022-04/datatypes#/definitions/links"
+    },
+    "attributes": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "abstract": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "/destinationdata/schemas/2022-04/datatypes#/definitions/text"
+            }
+          ]
+        },
+        "description": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "/destinationdata/schemas/2022-04/datatypes#/definitions/text"
+            }
+          ]
+        },
+        "name": {
+          "$ref": "/destinationdata/schemas/2022-04/datatypes#/definitions/text"
+        },
+        "namespace": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "^([a-z]|[A-Z]|[0-9])+$"
+        },
+        "resourceTypes": {
+          "type": "array",
+          "minItems": 1,
+          "additionalItems": false,
+          "items": {
+            "$ref": "/destinationdata/schemas/2022-04/datatypes#/definitions/resourceTypes"
+          }
+        },
+        "shortName": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "/destinationdata/schemas/2022-04/datatypes#/definitions/text"
+            }
+          ]
+        },
+        "url": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "/destinationdata/schemas/2022-04/datatypes#/definitions/complexUrl"
+            }
+          ]
+        }
+      }
+    },
+    "relationships": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "children": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "/destinationdata/schemas/2022-04/datatypes#/definitions/relationshipToMany"
+            }
+          ]
+        },
+        "multimediaDescriptions": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "/destinationdata/schemas/2022-04/datatypes#/definitions/relationshipToMany"
+            }
+          ]
+        },
+        "parents": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "/destinationdata/schemas/2022-04/datatypes#/definitions/relationshipToMany"
+            }
+          ]
+        }
+      }
+    }
+  }
+}

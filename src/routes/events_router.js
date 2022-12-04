@@ -6,6 +6,7 @@ const {
   EventSeriesConnector,
 } = require("../connectors/event_series_connector");
 const { VenueConnector } = require("../connectors/venue_connector");
+const schemas = require("./../schemas");
 
 class EventsRouter extends Router {
   constructor(app) {
@@ -36,7 +37,12 @@ class EventsRouter extends Router {
   }
 
   postEvent = (request) =>
-    this.postResource(request, EventConnector, deserializeEvent);
+    this.postResource(
+      request,
+      EventConnector,
+      deserializeEvent,
+      schemas["/events/post"]
+    );
 
   getEvents = (request) => this.getResources(request, EventConnector);
 
@@ -45,11 +51,12 @@ class EventsRouter extends Router {
   deleteEvent = (request) => this.deleteResource(request, EventConnector);
 
   patchEvent = (request) =>
-    this.patchResource(request, EventConnector, deserializeEvent);
-
-  validate(eventMessage) {
-    console.log("The event message HAS NOT BEEN validated.");
-  }
+    this.patchResource(
+      request,
+      EventConnector,
+      deserializeEvent,
+      schemas["/events/:id/patch"]
+    );
 
   getEventCategories = async (request) =>
     this.getResourceCategories(request, EventConnector);

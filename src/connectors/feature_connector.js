@@ -18,7 +18,6 @@ class FeatureConnector extends ResourceConnector {
     );
   }
 
-  // TODO: change default sorting on response
   retrieve(id) {
     const featureId = id ?? this?.request?.params?.id;
     return this.runTransaction(() => this.retrieveFeature(featureId));
@@ -56,7 +55,9 @@ class FeatureConnector extends ResourceConnector {
     const offset = !_.isString(id) ? this.getOffset() : null;
     const limit = !_.isString(id) ? this.getLimit() : null;
     const orderBy = !_.isString(id) ? this.getOrderBy() : null;
-    const filters = !_.isString(id) ? this.getFilters() : null;
+    const filters = !_.isString(id)
+      ? [...this.getFilters(), ...this.getSearch()]
+      : null;
 
     return dbFn
       .selectFeatureFromId(this.connection, id, offset, limit, orderBy, filters)

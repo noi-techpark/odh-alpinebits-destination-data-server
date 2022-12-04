@@ -1,6 +1,7 @@
 const { Router } = require("./router");
 const { FeatureConnector } = require("../connectors/feature_connector");
 const { deserializeFeature } = require("../model/destinationdata2022");
+const schemas = require("./../schemas");
 
 class FeaturesRouter extends Router {
   constructor(app) {
@@ -29,10 +30,20 @@ class FeaturesRouter extends Router {
   getFeatureById = (request) => this.getResourceById(request, FeatureConnector);
 
   postFeature = (request) =>
-    this.postResource(request, FeatureConnector, deserializeFeature);
+    this.postResource(
+      request,
+      FeatureConnector,
+      deserializeFeature,
+      schemas["/features/post"]
+    );
 
   patchFeature = (request) =>
-    this.patchResource(request, FeatureConnector, deserializeFeature);
+    this.patchResource(
+      request,
+      FeatureConnector,
+      deserializeFeature,
+      schemas["/features/:id/patch"]
+    );
 
   deleteFeature = (request) => this.deleteResource(request, FeatureConnector);
 

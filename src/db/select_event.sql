@@ -84,15 +84,27 @@ FROM events
     GROUP BY id
   ) AS sub_events_array ON sub_events_array.id = events.id
   LEFT JOIN (
-    SELECT event_venues.event_id AS "id",
+    SELECT event_id AS "id",
       json_agg(
         json_build_object(
           'id', venue_id,
           'type', 'venues'
         )
-      ) FILTER (WHERE venue_id IS NOT NULL) AS "venues"
-    FROM event_venues
-    GROUP BY id
+      ) FILTER (WHERE venue_id IS NOT NULL) AS "venues",
+      postgis_geography
+    FROM (
+      SELECT
+        event_id,
+        venue_id,
+        CASE
+          WHEN places.geometries IS NOT NULL
+            THEN ST_GeomFromGeoJSON(places.geometries->0) ::geography
+        END AS "postgis_geography"
+      FROM event_venues
+      LEFT JOIN places ON places.id = event_venues.venue_id
+      GROUP BY venue_id, event_id, places.geometries
+    ) AS "event_venues_plus"
+    GROUP BY event_id, event_venues_plus.postgis_geography
   ) AS event_venues_array ON event_venues_array.id = events.id
   LEFT JOIN participation_url_objects ON participation_url_objects.id = events.id
   LEFT JOIN registration_url_objects ON registration_url_objects.id = events.id

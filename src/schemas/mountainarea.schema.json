@@ -1,0 +1,213 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "$id": "https://www.alpinebits.org/destinationdata/schemas/2022-04/mountainArea",
+  "description": "A resource that implements the concept of Mountain Area defined in the AlpineBits® DestinationData Ontology.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["type"],
+  "properties": {
+    "id": {
+      "$ref": "/destinationdata/schemas/2022-04/datatypes#/definitions/id"
+    },
+    "type": {
+      "const": "mountainAreas"
+    },
+    "meta": {
+      "$ref": "/destinationdata/schemas/2022-04/datatypes#/definitions/meta"
+    },
+    "links": {
+      "$ref": "/destinationdata/schemas/2022-04/datatypes#/definitions/links"
+    },
+    "attributes": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "abstract": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "/destinationdata/schemas/2022-04/datatypes#/definitions/text"
+            }
+          ]
+        },
+        "area": {
+          "type": [ "null", "number" ],
+          "exclusiveMinimum": 0
+        },
+        "description": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "/destinationdata/schemas/2022-04/datatypes#/definitions/text"
+            }
+          ]
+        },
+        "geometries": {
+          "type": [ "null", "array" ],
+          "minItems": 1,
+          "additionalItems": false,
+          "items": {
+            "$ref": "/destinationdata/schemas/2022-04/datatypes#/definitions/geometry"
+          }
+        },
+        "howToArrive": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "/destinationdata/schemas/2022-04/datatypes#/definitions/text"
+            }
+          ]
+        },
+        "maxAltitude": {
+          "type": [ "null", "number" ]
+        },
+        "minAltitude": {
+          "type": [ "null", "number" ]
+        },
+        "name": {
+          "$ref": "/destinationdata/schemas/2022-04/datatypes#/definitions/text"
+        },
+        "openingHours": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "/destinationdata/schemas/2022-04/datatypes#/definitions/hoursSpecification"
+            }
+          ]
+        },
+        "shortName": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "/destinationdata/schemas/2022-04/datatypes#/definitions/text"
+            }
+          ]
+        },
+        "snowCondition": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "/destinationdata/schemas/2022-04/datatypes#/definitions/snowCondition"
+            }
+          ]
+        },
+        "totalParkArea": {
+          "type": [ "null", "number" ],
+          "exclusiveMinimum": 0
+        },
+        "totalSlopeLength": {
+          "type": [ "null", "number" ],
+          "exclusiveMinimum": 0
+        },
+        "url": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "/destinationdata/schemas/2022-04/datatypes#/definitions/complexUrl"
+            }
+          ]
+        }
+      }
+    },
+    "relationships": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "areaOwner": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "/destinationdata/schemas/2022-04/datatypes#/definitions/relationshipToOne"
+            }
+          ]
+        },
+        "categories": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "/destinationdata/schemas/2022-04/datatypes#/definitions/relationshipToMany"
+            }
+          ]
+        },
+        "connections": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "/destinationdata/schemas/2022-04/datatypes#/definitions/relationshipToMany"
+            }
+          ]
+        },
+        "lifts": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "/destinationdata/schemas/2022-04/datatypes#/definitions/relationshipToMany"
+            }
+          ]
+        },
+        "multimediaDescriptions": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "/destinationdata/schemas/2022-04/datatypes#/definitions/relationshipToMany"
+            }
+          ]
+        },
+        "skiSlopes": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "/destinationdata/schemas/2022-04/datatypes#/definitions/relationshipToMany"
+            }
+          ]
+        },
+        "snowparks": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "/destinationdata/schemas/2022-04/datatypes#/definitions/relationshipToMany"
+            }
+          ]
+        },
+        "subAreas": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "/destinationdata/schemas/2022-04/datatypes#/definitions/relationshipToMany"
+            }
+          ]
+        }
+      }
+    }
+  }
+}
