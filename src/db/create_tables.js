@@ -342,8 +342,7 @@ function createEventsTable() {
       .string(events.publisherId, 100)
       .references(agents.id)
       .inTable(agents._name)
-      .notNullable()
-      .onDelete(CASCADE);
+      .notNullable();
     table
       .string(events.seriesId, 100)
       .references(eventSeries.id)
@@ -1149,6 +1148,74 @@ function createMultimediaDescriptionsArraysView() {
   `);
 }
 
+function createCategoriesChildrenArraysView() {
+  return connection.raw(`
+  CREATE VIEW category_children_arrays AS
+    SELECT parent_id AS "id",
+        json_agg(
+          json_build_object(
+            'id',
+            child_id,
+            'type',
+            'categories'
+          )
+        ) AS "children"
+      FROM category_specializations
+      GROUP BY parent_id;
+  `);
+}
+
+function createCategoriesParentsArraysView() {
+  return connection.raw(`
+  CREATE VIEW category_parents_arrays AS
+    SELECT child_id AS "id",
+        json_agg(
+          json_build_object(
+            'id',
+            parent_id,
+            'type',
+            'categories'
+          )
+        ) AS "parents"
+      FROM category_specializations
+      GROUP BY child_id;
+  `);
+}
+
+function createFeaturesChildrenArraysView() {
+  return connection.raw(`
+  CREATE VIEW feature_children_arrays AS
+    SELECT parent_id AS "id",
+        json_agg(
+          json_build_object(
+            'id',
+            child_id,
+            'type',
+            'features'
+          )
+        ) AS "children"
+      FROM feature_specializations
+      GROUP BY parent_id;
+  `);
+}
+
+function createFeaturesParentsArraysView() {
+  return connection.raw(`
+  CREATE VIEW feature_parents_arrays AS
+    SELECT child_id AS "id",
+        json_agg(
+          json_build_object(
+            'id',
+            parent_id,
+            'type',
+            'features'
+          )
+        ) AS "parents"
+      FROM feature_specializations
+      GROUP BY child_id;
+  `);
+}
+
 function createCityObjectsView() {
   return connection.raw(`
   CREATE VIEW city_objects AS
@@ -1353,7 +1420,11 @@ function createPlaceObjectsView() {
     SELECT places.id, geometries, length, max_altitude, min_altitude, opening_hours,
         address_objects.address AS "address",
         how_to_arrive_objects.how_to_arrive AS "how_to_arrive",
-		    snow_condition_objects.snow_condition AS "snow_condition"
+		    snow_condition_objects.snow_condition AS "snow_condition",
+        CASE
+          WHEN geometries IS NOT NULL
+            THEN ST_GeomFromGeoJSON(geometries->0) ::geography
+        END AS "postgis_geography"
       FROM places
       LEFT JOIN snow_condition_objects ON snow_condition_objects.id = places.id
       LEFT JOIN address_objects ON address_objects.id = places.address_id
@@ -1385,6 +1456,10 @@ function createAllViews() {
     .then(() => createSubAreasArraysView())
     .then(() => createConnectionsArraysView())
     .then(() => createSnowConditionObjectsView())
+    .then(() => createCategoriesChildrenArraysView())
+    .then(() => createCategoriesParentsArraysView())
+    .then(() => createFeaturesChildrenArraysView())
+    .then(() => createFeaturesParentsArraysView())
     .then(() => createPlaceObjectsView());
 }
 
@@ -1413,6 +1488,10 @@ function dropAllViews() {
     dropViewIfExists(views.subAreasArrays._name),
     dropViewIfExists(views.connectionsArrays._name),
     dropViewIfExists(views.snowConditionObjects._name),
+    dropViewIfExists(views.categoryChildrenArrays._name),
+    dropViewIfExists(views.categoryParentsArrays._name),
+    dropViewIfExists(views.featureChildrenArrays._name),
+    dropViewIfExists(views.featureParentsArrays._name),
     dropViewIfExists(views.placeObjects._name),
   ]);
 }

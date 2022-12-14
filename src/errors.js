@@ -9,8 +9,17 @@ const types = {
     title: "Query parameter contains bad values",
     status: 400,
   },
+  badMessage: {
+    title: "Request body failed schema validation",
+    status: 400,
+  },
   queryConflict: {
     title: "Request contains conflicting queries",
+    status: 400,
+  },
+  unableToDelete: {
+    title:
+      "Unable to delete due to required dependencies from other resources.",
     status: 400,
   },
   noCredentials: {
@@ -51,6 +60,10 @@ const types = {
   },
   cantTransform: {
     title: "Server failed to transform gateway's response.",
+    status: 500,
+  },
+  badDatabaseQuerySyntax: {
+    title: "The server-generated database query contains syntactical errors.",
     status: 500,
   },
   notImplemented: {
@@ -119,7 +132,12 @@ class DestinationDataError {
       const { first, last, prev, next } = links;
       const errorLinks = { first, last, prev, next };
 
-      if (errorLinks.first && errorLinks.last && errorLinks.prev && errorLinks.next) {
+      if (
+        errorLinks.first &&
+        errorLinks.last &&
+        errorLinks.prev &&
+        errorLinks.next
+      ) {
         error.links = errorLinks;
         error.description = "Requested page is out of bounds.";
       }
@@ -140,6 +158,16 @@ class DestinationDataError {
   static throwNotFound(description) {
     const { title, status } = types.notFound;
     throw new DestinationDataError(title, status, description);
+  }
+
+  static throwBadMessage(description, errors, schema) {
+    const { title, status } = types.badMessage;
+    const exception = new DestinationDataError(title, status, description);
+
+    exception.errors = errors || undefined;
+    exception.schema = schema || undefined;
+
+    throw exception;
   }
 }
 
@@ -172,7 +200,16 @@ function getSelfUrl(request) {
 }
 
 function handleError(err, req, res) {
-  console.log("  Handling error", err, "");
+  console.log("Handling error", err, "");
+
+  if (err?.code?.match(/^23503/)) {
+    err = { ...types.unableToDelete };
+    console.log("Database consult error detected", err, "");
+  }
+  if (err?.code?.match(/^42\S{3}/)) {
+    err = { ...types.badDatabaseQuerySyntax };
+    console.log("Database consult error detected", err, "");
+  }
 
   const links = {
     self: getSelfUrl(req) ? getSelfUrl(req) : undefined,
@@ -182,7 +219,11 @@ function handleError(err, req, res) {
   const errorMessage = {
     jsonapi: { version: "1.0" },
     links,
-    errors: ["status" in err && "title" in err ? err : types.serverFailedToProcessError],
+    errors: [
+      "status" in err && "title" in err
+        ? err
+        : types.serverFailedToProcessError,
+    ],
   };
 
   res.status(errorMessage.errors[0].status);

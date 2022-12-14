@@ -1,6 +1,7 @@
 const { Router } = require("./router");
 const { AgentConnector } = require("../connectors/agent_connector");
 const { deserializeAgent } = require("../model/destinationdata2022");
+const schemas = require("./../schemas");
 
 class AgentsRouter extends Router {
   constructor(app) {
@@ -24,7 +25,12 @@ class AgentsRouter extends Router {
   }
 
   postAgent = (request) =>
-    this.postResource(request, AgentConnector, deserializeAgent);
+    this.postResource(
+      request,
+      AgentConnector,
+      deserializeAgent,
+      schemas["/agents/post"]
+    );
 
   getAgents = (request) => this.getResources(request, AgentConnector);
 
@@ -33,11 +39,12 @@ class AgentsRouter extends Router {
   deleteAgent = (request) => this.deleteResource(request, AgentConnector);
 
   patchAgent = (request) =>
-    this.patchResource(request, AgentConnector, deserializeAgent);
-
-  validate(agentMessage) {
-    console.log("The agent message HAS NOT BEEN validated.");
-  }
+    this.patchResource(
+      request,
+      AgentConnector,
+      deserializeAgent,
+      schemas["/agents/:id/patch"]
+    );
 
   getAgentCategories = async (request) =>
     this.getResourceCategories(request, AgentConnector);

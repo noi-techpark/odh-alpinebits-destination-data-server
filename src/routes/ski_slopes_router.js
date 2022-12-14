@@ -1,11 +1,7 @@
 const { Router } = require("./router");
 const { SkiSlopeConnector } = require("../connectors/ski_slope_connector");
-const {
-  deserializeSkiSlope,
-  serializeSingleResource,
-  serializeResourceCollection,
-} = require("../model/destinationdata2022");
-const { Request } = require("../model/request/request");
+const { deserializeSkiSlope } = require("../model/destinationdata2022");
+const schemas = require("./../schemas");
 
 class SkiSlopesRouter extends Router {
   constructor(app) {
@@ -30,7 +26,12 @@ class SkiSlopesRouter extends Router {
   }
 
   postSkiSlope = (request) =>
-    this.postResource(request, SkiSlopeConnector, deserializeSkiSlope);
+    this.postResource(
+      request,
+      SkiSlopeConnector,
+      deserializeSkiSlope,
+      schemas["/skiSlopes/post"]
+    );
 
   getSkiSlope = (request) => this.getResources(request, SkiSlopeConnector);
 
@@ -40,11 +41,12 @@ class SkiSlopesRouter extends Router {
   deleteSkiSlope = (request) => this.deleteResource(request, SkiSlopeConnector);
 
   patchSkiSlope = (request) =>
-    this.patchResource(request, SkiSlopeConnector, deserializeSkiSlope);
-
-  validate(skiSlopeMessage) {
-    console.log("The skiSlope message HAS NOT BEEN validated.");
-  }
+    this.patchResource(
+      request,
+      SkiSlopeConnector,
+      deserializeSkiSlope,
+      schemas["/skiSlopes/:id/patch"]
+    );
 
   getSkiSlopeCategories = async (request) =>
     this.getResourceCategories(request, SkiSlopeConnector);

@@ -1,6 +1,7 @@
 const { Router } = require("./router");
 const { LiftConnector } = require("../connectors/lift_connector");
 const { deserializeLift } = require("../model/destinationdata2022");
+const schemas = require("./../schemas");
 
 class LiftsRouter extends Router {
   constructor(app) {
@@ -25,7 +26,12 @@ class LiftsRouter extends Router {
   }
 
   postLift = (request) =>
-    this.postResource(request, LiftConnector, deserializeLift);
+    this.postResource(
+      request,
+      LiftConnector,
+      deserializeLift,
+      schemas["/lifts/post"]
+    );
 
   getLifts = (request) => this.getResources(request, LiftConnector);
 
@@ -34,11 +40,12 @@ class LiftsRouter extends Router {
   deleteLift = (request) => this.deleteResource(request, LiftConnector);
 
   patchLift = (request) =>
-    this.patchResource(request, LiftConnector, deserializeLift);
-
-  validate(liftMessage) {
-    console.log("The lift message HAS NOT BEEN validated.");
-  }
+    this.patchResource(
+      request,
+      LiftConnector,
+      deserializeLift,
+      schemas["/lifts/:id/patch"]
+    );
 
   getLiftCategories = async (request) =>
     this.getResourceCategories(request, LiftConnector);

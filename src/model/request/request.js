@@ -69,8 +69,8 @@ class Request {
       page: true,
       filter: true,
       sort: true,
-      random: false,
-      search: false,
+      random: true,
+      search: true,
     };
 
     /** An array of the classes that requested resources may instantiate. The default value is `[]`. */
@@ -108,7 +108,7 @@ class Request {
     if ([query.sort, query.random].every((item) => item !== null)) {
       const regex = /(sort|random)(.+?(?=&|$))/g;
       const problematicQueries = this.selfUrl.match(regex)?.join("&");
-      const description = `The query 'random' and 'sort' are incompatible: '${problematicQueries}'`;
+      const description = `The queries 'random' and 'sort' are incompatible: '${problematicQueries}'`;
       DestinationDataError.throwQueryConflictError(description);
     }
 
@@ -194,22 +194,23 @@ class Request {
       DestinationDataError.throwBadQueryError(description);
     }
 
-    if (fields) {
-      Object.entries(fields).forEach(([resourceType, fieldNames]) => {
-        const fieldNamesArray = fieldNames.split(",");
-        const ResourceClass = resourceTypeMap[resourceType];
-        const _dummyInstance = new ResourceClass();
-        const allFields = _dummyInstance.getFieldsNames();
+    // TODO: update with new mappings of DestinationData 2022
+    // if (fields) {
+    //   Object.entries(fields).forEach(([resourceType, fieldNames]) => {
+    //     const fieldNamesArray = fieldNames.split(",");
+    //     const ResourceClass = resourceTypeMap[resourceType];
+    //     const _dummyInstance = new ResourceClass();
+    //     const allFields = _dummyInstance.getFieldsNames();
 
-        if (
-          fieldNamesArray.some((fieldName) => !allFields.includes(fieldName))
-        ) {
-          DestinationDataError.throwBadQueryError(
-            `The 'fields' query contains attributes or relationships that are not available in the selected resource: 'fields[${resourceType}]=${fieldNames}'`
-          );
-        }
-      });
-    }
+    //     if (
+    //       fieldNamesArray.some((fieldName) => !allFields.includes(fieldName))
+    //     ) {
+    //       DestinationDataError.throwBadQueryError(
+    //         `The 'fields' query contains attributes or relationships that are not available in the selected resource: 'fields[${resourceType}]=${fieldNames}'`
+    //       );
+    //     }
+    //   });
+    // }
   }
 
   validatePageQuery() {

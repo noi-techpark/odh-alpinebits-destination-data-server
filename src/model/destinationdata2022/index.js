@@ -724,7 +724,7 @@ function serializeResourceCollection(resources, request, include) {
     meta,
     links,
     data: resources?.map((resource) => serializeAnyResource(resource, request)),
-    include: request?.query?.include
+    included: request?.query?.include
       ? include?.map((resource) => serializeAnyResource(resource, request)) ??
         []
       : undefined,

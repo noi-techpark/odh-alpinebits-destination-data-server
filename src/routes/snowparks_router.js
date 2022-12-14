@@ -1,6 +1,8 @@
 const { Router } = require("./router");
 const { SnowparkConnector } = require("../connectors/snowparks_connector");
 const { deserializeSnowpark } = require("../model/destinationdata2022");
+const schemas = require("./../schemas");
+const { FeatureConnector } = require("../connectors/feature_connector");
 
 class SnowparksRouter extends Router {
   constructor(app) {
@@ -16,6 +18,7 @@ class SnowparksRouter extends Router {
 
     this.addGetRoute(`/snowparks/:id/categories`, this.getSnowparkCategories);
     this.addGetRoute(`/snowparks/:id/connections`, this.getSnowparkConnections);
+    this.addGetRoute(`/snowparks/:id/features`, this.getSnowparkFeatures);
     this.addGetRoute(
       `/snowparks/:id/multimediaDescriptions`,
       this.getSnowparkMultimediaDescriptions
@@ -27,7 +30,12 @@ class SnowparksRouter extends Router {
   }
 
   postSnowpark = (request) =>
-    this.postResource(request, SnowparkConnector, deserializeSnowpark);
+    this.postResource(
+      request,
+      SnowparkConnector,
+      deserializeSnowpark,
+      schemas["/snowparks/post"]
+    );
 
   getSnowpark = (request) => this.getResources(request, SnowparkConnector);
 
@@ -37,17 +45,31 @@ class SnowparksRouter extends Router {
   deleteSnowpark = (request) => this.deleteResource(request, SnowparkConnector);
 
   patchSnowpark = (request) =>
-    this.patchResource(request, SnowparkConnector, deserializeSnowpark);
-
-  validate(snowparkMessage) {
-    console.log("The snowpark message HAS NOT BEEN validated.");
-  }
+    this.patchResource(
+      request,
+      SnowparkConnector,
+      deserializeSnowpark,
+      schemas["/snowparks/:id/patch"]
+    );
 
   getSnowparkCategories = async (request) =>
     this.getResourceCategories(request, SnowparkConnector);
 
   getSnowparkConnections = async (request) =>
     this.getPlaceConnections(request, SnowparkConnector);
+
+  getSnowparkConnections = async (request) =>
+    this.getPlaceConnections(request, SnowparkConnector);
+
+  getSnowparkFeatures = async (request) => {
+    const fnRetrieveSnowparkFeatures = (snowpark, parsedRequest) =>
+      new FeatureConnector(parsedRequest).retrieveResourceFeatures(snowpark);
+    return this.getResourceRelationshipToMany(
+      request,
+      SnowparkConnector,
+      fnRetrieveSnowparkFeatures
+    );
+  };
 
   getSnowparkMultimediaDescriptions = async (request) =>
     this.getResourceMultimediaDescriptions(request, SnowparkConnector);

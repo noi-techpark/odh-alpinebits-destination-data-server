@@ -1,0 +1,28 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "$id": "https://www.alpinebits.org/destinationdata/schemas/2022-04/base/get",
+  "description": "The JSON response of a GET message for retrieving hte links in the base endpoint of an AlpineBits® DestinationData server.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["data"],
+  "properties": {
+    "jsonapi": {
+      "$ref": "/destinationdata/schemas/2022-04/datatypes#/definitions/jsonapi"
+    },
+    "meta": {
+      "$ref": "/destinationdata/schemas/2022-04/datatypes#/definitions/meta"
+    },
+    "links": {
+      "type": "object",
+      "patternProperties": {
+        "^(agents|categories|events|eventSeries|features|lifts|mediaObjects|mountainAreas|skiSlopes|snowparks|venues)$": {
+          "type": "string",
+          "format": "uri"
+        }
+      }
+    },
+    "data": {
+      "const": null
+    }
+  }
+}

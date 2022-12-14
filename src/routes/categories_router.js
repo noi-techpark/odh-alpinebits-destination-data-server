@@ -1,6 +1,7 @@
 const { Router } = require("./router");
 const { CategoryConnector } = require("../connectors/category_connector");
 const { deserializeCategory } = require("../model/destinationdata2022");
+const schemas = require("./../schemas");
 
 class CategoriesRouter extends Router {
   constructor(app) {
@@ -25,7 +26,12 @@ class CategoriesRouter extends Router {
   }
 
   postCategory = (request) =>
-    this.postResource(request, CategoryConnector, deserializeCategory);
+    this.postResource(
+      request,
+      CategoryConnector,
+      deserializeCategory,
+      schemas["/categories/post"]
+    );
 
   getCategories = (request) => this.getResources(request, CategoryConnector);
 
@@ -35,11 +41,12 @@ class CategoriesRouter extends Router {
   deleteCategory = (request) => this.deleteResource(request, CategoryConnector);
 
   patchCategory = (request) =>
-    this.patchResource(request, CategoryConnector, deserializeCategory);
-
-  validate(categoryMessage) {
-    console.log("The category message HAS NOT BEEN validated.");
-  }
+    this.patchResource(
+      request,
+      CategoryConnector,
+      deserializeCategory,
+      schemas["/categories/:id/patch"]
+    );
 
   getCategoryChildren = async (request) => {
     const fnRetrieveCategories = (category, parsedRequest) =>

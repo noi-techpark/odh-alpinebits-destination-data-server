@@ -1,11 +1,7 @@
 const { Router } = require("./router");
 const { VenueConnector } = require("../connectors/venue_connector");
-const {
-  deserializeVenue,
-  serializeSingleResource,
-  serializeResourceCollection,
-} = require("../model/destinationdata2022");
-const { Request } = require("../model/request/request");
+const { deserializeVenue } = require("../model/destinationdata2022");
+const schemas = require("./../schemas");
 
 class VenuesRouter extends Router {
   constructor(app) {
@@ -29,7 +25,12 @@ class VenuesRouter extends Router {
   }
 
   postVenue = (request) =>
-    this.postResource(request, VenueConnector, deserializeVenue);
+    this.postResource(
+      request,
+      VenueConnector,
+      deserializeVenue,
+      schemas["/snowparks/post"]
+    );
 
   getVenues = (request) => this.getResources(request, VenueConnector);
 
@@ -38,11 +39,12 @@ class VenuesRouter extends Router {
   deleteVenue = (request) => this.deleteResource(request, VenueConnector);
 
   patchVenue = (request) =>
-    this.patchResource(request, VenueConnector, deserializeVenue);
-
-  validate(venueMessage) {
-    console.log("The venue message HAS NOT BEEN validated.");
-  }
+    this.patchResource(
+      request,
+      VenueConnector,
+      deserializeVenue,
+      schemas["/snowparks/:id/patch"]
+    );
 
   getVenueCategories = async (request) =>
     this.getResourceCategories(request, VenueConnector);

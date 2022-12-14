@@ -20,9 +20,11 @@ SELECT snowparks.id,
   place_objects.opening_hours AS "openingHours",
   snow_condition_objects.snow_condition AS "snowCondition",
   connections_arrays.connections,
+  features_arrays.features,
   COUNT(snowparks.id) OVER() AS total
 FROM snowparks
   LEFT JOIN resource_objects ON resource_objects.id = snowparks.id
   LEFT JOIN place_objects ON place_objects.id = snowparks.id
   LEFT JOIN snow_condition_objects ON snow_condition_objects.id = snowparks.id
   LEFT JOIN connections_arrays ON connections_arrays.id = snowparks.id
+  LEFT JOIN features_arrays ON features_arrays.id = snowparks.id
