@@ -28,7 +28,7 @@
   },
   "homepage": "https://github.com/noi-techpark/odh-alpinebits-destination-data-server#readme",
   "dependencies": {
-    "ajv": "^6.10.2",
+    "ajv": "^6.12.3",
     "axios": "^0.24.0",
     "cors": "^2.8.5",
     "custom-env": "^1.0.2",
