@@ -7,6 +7,7 @@ const { AgentConnector } = require("../connectors/agent_connector");
 const { LiftConnector } = require("../connectors/lift_connector");
 const { SkiSlopeConnector } = require("../connectors/ski_slope_connector");
 const { SnowparkConnector } = require("../connectors/snowparks_connector");
+const schemas = require("./../schemas");
 
 class MountainAreasRouter extends Router {
   constructor(app) {
@@ -55,7 +56,12 @@ class MountainAreasRouter extends Router {
   }
 
   postMountainArea = (request) =>
-    this.postResource(request, MountainAreaConnector, deserializeMountainArea);
+    this.postResource(
+      request,
+      MountainAreaConnector,
+      deserializeMountainArea,
+      schemas["/mountainAreas/post"]
+    );
 
   getMountainArea = (request) =>
     this.getResources(request, MountainAreaConnector);
@@ -67,11 +73,12 @@ class MountainAreasRouter extends Router {
     this.deleteResource(request, MountainAreaConnector);
 
   patchMountainArea = (request) =>
-    this.patchResource(request, MountainAreaConnector, deserializeMountainArea);
-
-  validate(mountainAreaMessage) {
-    console.log("The mountainArea message HAS NOT BEEN validated.");
-  }
+    this.patchResource(
+      request,
+      MountainAreaConnector,
+      deserializeMountainArea,
+      schemas["/mountainAreas/:id/patch"]
+    );
 
   getMountainAreaCategories = async (request) =>
     this.getResourceCategories(request, MountainAreaConnector);

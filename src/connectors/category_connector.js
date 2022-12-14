@@ -19,7 +19,6 @@ class CategoryConnector extends ResourceConnector {
     );
   }
 
-  // TODO: change default sorting on response
   retrieve(id) {
     const categoryId = id ?? this?.request?.params?.id;
     return this.runTransaction(() => this.retrieveCategory(categoryId));
@@ -57,7 +56,9 @@ class CategoryConnector extends ResourceConnector {
     const offset = !_.isString(id) ? this.getOffset() : null;
     const limit = !_.isString(id) ? this.getLimit() : null;
     const orderBy = !_.isString(id) ? this.getOrderBy() : null;
-    const filters = !_.isString(id) ? this.getFilters() : null;
+    const filters = !_.isString(id)
+      ? [...this.getFilters(), ...this.getSearch()]
+      : null;
 
     return dbFn
       .selectCategoryFromId(

@@ -1,6 +1,8 @@
 const _ = require("lodash");
 
 const errors = require("./../errors");
+const schemas = require("./../schemas");
+
 const { DestinationDataError } = require("./../errors");
 const { Request } = require("./../model/request/request");
 const {
@@ -138,60 +140,19 @@ class Router {
     );
   }
 
-  async handleGetRequest(request, requestFn, fetchFn, transformFn, validateFn) {
-    console.log("  Validating request...");
-    request = requestFn(request);
+  validate(data, schemaObj) {
+    const [isValid, ajv] = schemaObj.validate(data);
 
-    console.log("  Fetching data...");
-    const sourceData = await fetchFn(request);
-
-    console.log("  Transforming response into DestinationData format...");
-    const data = transformFn(sourceData, request);
-
-    console.log("  Validating data...");
-    validateFn(request, data);
-
-    console.log("  Request processed, sending to client");
-
-    return data;
-  }
-
-  validate(request, data, schema) {
-    const { page } = request.query;
-    const { number } = page || {};
-    const { pages } = data.meta;
-    const { id } = request.params;
-
-    if (number && (!pages || number > pages) && !id) {
-      // checking for "id" avoids issues with default pagination
-      // TODO: remove "!id" from "if"; the request must be rejected earlier if the route does not supported a requested pagination, as well as, setting default pagination only when needed
-      const { meta, links } = data;
-      DestinationDataError.throwPageNotFound(meta, links);
-    }
-
-    if (schema) {
-      const validateDataFormat = ajv.compile(schema);
-      const isValidAgainstSchema = validateDataFormat(data);
-
-      if (!isValidAgainstSchema) {
-        console.error(
-          "  The data is not valid against the provided schema",
-          JSON.stringify(validateDataFormat.errors, null, 2)
-        );
-      }
-    } else {
-      console.error("  Schema validation skipped: no schema provided");
+    if (!isValid) {
+      DestinationDataError.throwBadMessage(null, ajv.errors, schemaObj.schema);
     }
   }
 
   getResources = async (request, resourceConnectorClass) => {
-    // Process request and authentication
-    // Retrieve data
     const parsedRequest = new Request(request);
     const connector = new resourceConnectorClass(parsedRequest);
     let resources = [];
 
-    // Return to the client
     try {
       return Promise.resolve(parsedRequest.validate())
         .then(() => connector.retrieve())
@@ -211,13 +172,10 @@ class Router {
   };
 
   getResourceById = async (request, resourceConnectorClass) => {
-    // Process request and authentication
-    // Retrieve data
     const parsedRequest = new Request(request);
     const connector = new resourceConnectorClass(parsedRequest);
     let resource = null;
 
-    // Return to the client
     try {
       return connector
         .retrieve()
@@ -232,17 +190,20 @@ class Router {
     }
   };
 
-  postResource = async (request, resourceConnectorClass, fnDeserialize) => {
-    // Process request and authentication
+  postResource = async (
+    request,
+    resourceConnectorClass,
+    fnDeserialize,
+    schemaObj
+  ) => {
     const parsedRequest = new Request(request);
     const { body } = request;
-    // Validate object
-    this.validate(body);
-    // Store data
+
+    if (schemaObj) this.validate(body, schemaObj);
+
     const inputResource = fnDeserialize(body.data);
     const connector = new resourceConnectorClass(parsedRequest);
 
-    // Return to the client
     try {
       return connector
         .create(inputResource)
@@ -255,17 +216,25 @@ class Router {
     }
   };
 
-  patchResource = async (request, resourceConnectorClass, fnDeserialize) => {
-    // Process request and authentication
+  patchResource = async (
+    request,
+    resourceConnectorClass,
+    fnDeserialize,
+    schemaObj
+  ) => {
     const parsedRequest = new Request(request);
     const { body } = request;
-    // Validate object
-    this.validate(body);
-    // Store data
+
+    console.log("beep");
+    if (schemaObj) {
+      this.validate(body, schemaObj);
+      console.log("bop");
+    }
+    console.log("boop");
+
     const inputResource = fnDeserialize(body.data);
     const connector = new resourceConnectorClass(parsedRequest);
 
-    // Return to the client
     try {
       return connector
         .update(inputResource)
@@ -279,20 +248,11 @@ class Router {
   };
 
   deleteResource = async (request, resourceConnectorClass) => {
-    // Process request and authentication
-    // Retrieve data
     const parsedRequest = new Request(request);
     const connector = new resourceConnectorClass(parsedRequest);
-    console.log("delete resource");
 
-    // Return to the client
     try {
       return connector.delete();
-      then((ret) => {
-        if (ret !== 1) {
-          console.error("Unexpected ");
-        }
-      });
     } catch (error) {
       console.error(error);
       throw error;

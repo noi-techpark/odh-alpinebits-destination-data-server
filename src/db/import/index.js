@@ -84,12 +84,18 @@ function getOdhEventTopicData() {
   const path = "https://api.tourism.testingmachine.eu/v1/EventTopics";
 
   return fetch(path);
+  // return Promise.resolve(
+  //   getOdhData("/Users/cmoraisfonseca/Downloads/EventTopics.json")
+  // );
 }
 
 function getOdhEventData() {
   const path = "https://api.tourism.testingmachine.eu/v1/Event?pagesize=10000";
 
   return fetch(path);
+  // return Promise.resolve(
+  //   getOdhData("/Users/cmoraisfonseca/Downloads/Event.json")
+  // );
 }
 
 function getOdhActivityData() {
@@ -97,12 +103,18 @@ function getOdhActivityData() {
     "https://api.tourism.testingmachine.eu/v1/Activity?pagesize=10000&odhtagfilter=ski alpin,ski alpin (rundkurs),rodelbahnen,loipen,aufstiegsanlagen,snowpark";
 
   return fetch(path);
+  // return Promise.resolve(
+  //   getOdhData("/Users/cmoraisfonseca/Downloads/Activity.json")
+  // );
 }
 
 function getOdhActivityTypeData() {
   const path = "https://api.tourism.testingmachine.eu/v1/ActivityTypes";
 
   return fetch(path);
+  // return Promise.resolve(
+  //   getOdhData("/Users/cmoraisfonseca/Downloads/ActivityTypes.json")
+  // );
 }
 
 function getOdhMountainAreaData() {
@@ -112,32 +124,45 @@ function getOdhMountainAreaData() {
   return Promise.all([fetch(pathSkiArea), fetch(pathSkiRegion)]).then(
     (promises) => promises.flat()
   );
+  // return Promise.all([
+  //   getOdhData("/Users/cmoraisfonseca/Downloads/SkiArea.json"),
+  //   getOdhData("/Users/cmoraisfonseca/Downloads/SkiRegion.json"),
+  // ]).then((promises) => promises.flat());
 }
 
 Promise.all([
-  getOdhEventTopicData().then((data) =>
-    data.forEach((item) => processEventTopic(item))
-  ),
-  getOdhEventData().then((data) =>
-    data.Items.forEach((item) => processEvent(item))
-  ),
-  getOdhActivityTypeData().then((data) =>
-    data.forEach((item) => processActivityType(item))
-  ),
-  getOdhActivityData().then((data) =>
-    data.Items.forEach((item) => processActivity(item))
-  ),
+  getOdhEventTopicData().then((data) => {
+    console.log("processEventTopic()");
+    return data.forEach((item) => processEventTopic(item));
+  }),
+  getOdhEventData().then((data) => {
+    console.log("processEvent()");
+    return data.Items.forEach((item) => processEvent(item));
+  }),
+  getOdhActivityTypeData().then((data) => {
+    console.log("processActivityType()");
+    return data.forEach((item) => processActivityType(item));
+  }),
+  getOdhActivityData().then((data) => {
+    console.log("processActivity()");
+    return data.Items.forEach((item) => processActivity(item));
+  }),
 ])
   .then(() =>
-    getOdhMountainAreaData().then((data) =>
-      data.forEach((item) => processMountainArea(item))
-    )
+    getOdhMountainAreaData().then((data) => {
+      console.log("processMountainArea()");
+      return data.forEach((item) => processMountainArea(item));
+    })
   )
-  .then(() => runQueries())
+  .then(() => {
+    console.log("runQueries()");
+    return runQueries();
+  })
   .catch((err) => {
     console.error(err);
     process.exit(1);
   });
+// .finally(() => process.exit(0));
 
 /** *************************** FUNCTIONS *************************** */
 
@@ -1315,7 +1340,17 @@ function getEventStartDate(event) {
 
 function getEventStatus(event) {
   const status = db.defaults.eventStatus;
-  return event?.EventDate?.[0]?.Cancelled ? status.canceled : status.published;
+
+  const isCancelled = event?.EventDate?.every(
+    (date) => date?.Cancelled === "1"
+  );
+  const isPublished = event?.EventDate?.every(
+    (date) => date?.Cancelled === "0"
+  );
+
+  if (isCancelled) return status.canceled;
+  if (isPublished) return status.published;
+  return null; // "isUnclear"
 }
 
 function getEventOrganizerId(event) {
@@ -1377,8 +1412,14 @@ function getEventOrganizerTelephone(item) {
     item?.OrganizerInfos,
     "Phonenumber"
   );
+
   phoneNumber = sanitizeAndConvertLanguageTags(phoneNumber);
-  return !_.isEmpty(phoneNumber) ? _.first(Object.values(phoneNumber)) : null;
+
+  if (_.isEmpty(phoneNumber)) return null;
+
+  phoneNumber = _.first(Object.values(phoneNumber))?.replace(/\/|\s/g, "");
+
+  return !phoneNumber?.startsWith("+") ? `+39${phoneNumber}` : phoneNumber;
 }
 
 function getEventOrganizerName(item) {
@@ -1437,7 +1478,12 @@ function getAreaOwnerTelephone(item) {
     "Phonenumber"
   );
   phoneNumber = sanitizeAndConvertLanguageTags(phoneNumber);
-  return !_.isEmpty(phoneNumber) ? _.first(Object.values(phoneNumber)) : null;
+
+  if (_.isEmpty(phoneNumber)) return null;
+
+  phoneNumber = _.first(Object.values(phoneNumber))?.replace(/\/|\s/g, "");
+
+  return !phoneNumber?.startsWith("+") ? `+39${phoneNumber}` : phoneNumber;
 }
 
 function getEventVenueName(event) {
@@ -1452,10 +1498,12 @@ function getEventVenueName(event) {
 }
 
 function getVenueGeometry(event) {
-  return {
-    type: "Point",
-    coordinates: [event.Longitude, event.Latitude],
-  };
+  return [
+    {
+      type: "Point",
+      coordinates: [event.Longitude, event.Latitude],
+    },
+  ];
 }
 
 function getVenueCountryCode(event) {

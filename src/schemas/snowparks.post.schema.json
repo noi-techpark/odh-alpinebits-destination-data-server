@@ -1,0 +1,25 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "$id": "https://www.alpinebits.org/destinationdata/schemas/2022-04/snowparks/post",
+  "description": "The JSON body of a POST message for creating an snowpark resource.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["data"],
+  "properties": {
+    "data": {
+      "allOf": [
+        {
+          "$ref": "/destinationdata/schemas/2022-04/snowpark"
+        },
+        {
+          "required": ["type", "attributes"],
+          "properties": {
+            "attributes": {
+              "required": ["name"]
+            }
+          }
+        }
+      ]
+    }
+  }
+}

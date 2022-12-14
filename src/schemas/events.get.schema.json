@@ -1,0 +1,67 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "$id": "https://www.alpinebits.org/destinationdata/schemas/2022-04/events/get",
+  "description": "The JSON response of a GET message for retrieving a collection of event resources.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["data"],
+  "properties": {
+    "jsonapi": {
+      "$ref": "/destinationdata/schemas/2022-04/datatypes#/definitions/jsonapi"
+    },
+    "meta": {
+      "$ref": "/destinationdata/schemas/2022-04/datatypes#/definitions/meta"
+    },
+    "links": {
+      "$ref": "/destinationdata/schemas/2022-04/datatypes#/definitions/links"
+    },
+    "data": {
+      "type": "array",
+      "additionalItems": false,
+      "items": {
+        "$ref": "/destinationdata/schemas/2022-04/event"
+      }
+    },
+    "included": {
+      "type": "array",
+      "additionalItems": false,
+      "items": {
+        "anyOf": [
+          {
+            "$ref": "/destinationdata/schemas/2022-04/agent"
+          },
+          {
+            "$ref": "/destinationdata/schemas/2022-04/category"
+          },
+          {
+            "$ref": "/destinationdata/schemas/2022-04/event"
+          },
+          {
+            "$ref": "/destinationdata/schemas/2022-04/eventSeries"
+          },
+          {
+            "$ref": "/destinationdata/schemas/2022-04/feature"
+          },
+          {
+            "$ref": "/destinationdata/schemas/2022-04/lift"
+          },
+          {
+            "$ref": "/destinationdata/schemas/2022-04/mediaObject"
+          },
+          {
+            "$ref": "/destinationdata/schemas/2022-04/mountainArea"
+          },
+          {
+            "$ref": "/destinationdata/schemas/2022-04/skiSlope"
+          },
+          {
+            "$ref": "/destinationdata/schemas/2022-04/snowpark"
+          },
+          {
+            "$ref": "/destinationdata/schemas/2022-04/venue"
+          }
+        ]
+      }
+    }
+  }
+}

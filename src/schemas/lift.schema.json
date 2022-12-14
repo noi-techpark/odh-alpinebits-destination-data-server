@@ -1,0 +1,163 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "$id": "https://www.alpinebits.org/destinationdata/schemas/2022-04/lift",
+  "description": "A resource that implements the concept of Lift defined in the AlpineBits® DestinationData Ontology.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["type"],
+  "properties": {
+    "id": {
+      "$ref": "/destinationdata/schemas/2022-04/datatypes#/definitions/id"
+    },
+    "type": {
+      "const": "lifts"
+    },
+    "meta": {
+      "$ref": "/destinationdata/schemas/2022-04/datatypes#/definitions/meta"
+    },
+    "links": {
+      "$ref": "/destinationdata/schemas/2022-04/datatypes#/definitions/links"
+    },
+    "attributes": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "abstract": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "/destinationdata/schemas/2022-04/datatypes#/definitions/text"
+            }
+          ]
+        },
+        "address": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "/destinationdata/schemas/2022-04/datatypes#/definitions/address"
+            }
+          ]
+        },
+        "capacity": {
+          "type": [ "null", "integer" ],
+          "minimum": 1
+        },
+        "description": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "/destinationdata/schemas/2022-04/datatypes#/definitions/text"
+            }
+          ]
+        },
+        "geometries": {
+          "type": [ "null", "array" ],
+          "minItems": 1,
+          "additionalItems": false,
+          "items": {
+            "$ref": "/destinationdata/schemas/2022-04/datatypes#/definitions/geometry"
+          }
+        },
+        "howToArrive": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "/destinationdata/schemas/2022-04/datatypes#/definitions/text"
+            }
+          ]
+        },
+        "length": {
+          "type": [ "null", "number" ],
+          "exclusiveMinimum": 0
+        },
+        "maxAltitude": {
+          "type": [ "null", "number" ]
+        },
+        "minAltitude": {
+          "type": [ "null", "number" ]
+        },
+        "name": {
+          "$ref": "/destinationdata/schemas/2022-04/datatypes#/definitions/text"
+        },
+        "openingHours": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "/destinationdata/schemas/2022-04/datatypes#/definitions/hoursSpecification"
+            }
+          ]
+        },
+        "personsPerChair": {
+          "type": [ "null", "integer" ],
+          "minimum": 1
+        },
+        "shortName": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "/destinationdata/schemas/2022-04/datatypes#/definitions/text"
+            }
+          ]
+        },
+        "url": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "/destinationdata/schemas/2022-04/datatypes#/definitions/complexUrl"
+            }
+          ]
+        }
+      }
+    },
+    "relationships": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "categories": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "/destinationdata/schemas/2022-04/datatypes#/definitions/relationshipToMany"
+            }
+          ]
+        },
+        "connections": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "/destinationdata/schemas/2022-04/datatypes#/definitions/relationshipToMany"
+            }
+          ]
+        },
+        "multimediaDescriptions": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "/destinationdata/schemas/2022-04/datatypes#/definitions/relationshipToMany"
+            }
+          ]
+        }
+      }
+    }
+  }
+}
