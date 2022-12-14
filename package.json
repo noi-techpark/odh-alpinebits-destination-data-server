@@ -47,7 +47,7 @@
   },
   "devDependencies": {
     "@types/jest": "^26.0.22",
-    "jest": "^24.9.0",
+    "jest": "^29.3.1",
     "nodemon": "^1.19.2"
   },
   "_moduleAliases": {
