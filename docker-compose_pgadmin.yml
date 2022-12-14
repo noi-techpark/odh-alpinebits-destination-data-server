@@ -1,0 +1,12 @@
+services:  
+  pgadmin:
+    container_name: pgadmin
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: "${PGADMIN_LOGIN}"
+      PGADMIN_DEFAULT_PASSWORD: "${PGADMIN_PASSWORD}"
+      PGADMIN_LISTEN_PORT: "${PGADMIN_PORT}"
+    ports:
+      - "${PGADMIN_PORT}:${PGADMIN_EXT_PORT}"
+    volumes:
+      - ./pgadmin-servers.json:/pgadmin4/servers.json

@@ -1,0 +1,219 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "$id": "https://www.alpinebits.org/destinationdata/schemas/2022-04/event",
+  "description": "A resource that implements the concept of Event defined in the AlpineBits® DestinationData Ontology.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["type"],
+  "properties": {
+    "id": {
+      "$ref": "/destinationdata/schemas/2022-04/datatypes#/definitions/id"
+    },
+    "type": {
+      "const": "events"
+    },
+    "meta": {
+      "$ref": "/destinationdata/schemas/2022-04/datatypes#/definitions/meta"
+    },
+    "links": {
+      "$ref": "/destinationdata/schemas/2022-04/datatypes#/definitions/links"
+    },
+    "attributes": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "abstract": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "/destinationdata/schemas/2022-04/datatypes#/definitions/text"
+            }
+          ]
+        },
+        "description": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "/destinationdata/schemas/2022-04/datatypes#/definitions/text"
+            }
+          ]
+        },
+        "endDate": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "/destinationdata/schemas/2022-04/datatypes#/definitions/date"
+            },
+            {
+              "$ref": "/destinationdata/schemas/2022-04/datatypes#/definitions/date-time"
+            }
+          ]
+        },
+        "inPersonCapacity": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "/destinationdata/schemas/2022-04/datatypes#/definitions/positiveInteger"
+            }
+          ]
+        },
+        "name": {
+          "$ref": "/destinationdata/schemas/2022-04/datatypes#/definitions/text"
+        },
+        "onlineCapacity": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "/destinationdata/schemas/2022-04/datatypes#/definitions/positiveInteger"
+            }
+          ]
+        },
+        "participationUrl": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "/destinationdata/schemas/2022-04/datatypes#/definitions/complexUrl"
+            }
+          ]
+        },
+        "recorded": {
+          "type": ["null", "boolean"]
+        },
+        "registrationUrl": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "/destinationdata/schemas/2022-04/datatypes#/definitions/complexUrl"
+            }
+          ]
+        },
+        "shortName": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "/destinationdata/schemas/2022-04/datatypes#/definitions/text"
+            }
+          ]
+        },
+        "startDate": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "/destinationdata/schemas/2022-04/datatypes#/definitions/date"
+            },
+            {
+              "$ref": "/destinationdata/schemas/2022-04/datatypes#/definitions/date-time"
+            }
+          ]
+        },
+        "status": {
+          "type": ["null", "string"],
+          "enum": [null,"canceled", "published"]
+        },
+        "url": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "/destinationdata/schemas/2022-04/datatypes#/definitions/complexUrl"
+            }
+          ]
+        }
+      }
+    },
+    "relationships": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "categories": {
+          "$ref": "/destinationdata/schemas/2022-04/datatypes#/definitions/relationshipToMany"
+        },
+        "contributors": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "/destinationdata/schemas/2022-04/datatypes#/definitions/relationshipToMany"
+            }
+          ]
+        },
+        "multimediaDescriptions": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "/destinationdata/schemas/2022-04/datatypes#/definitions/relationshipToMany"
+            }
+          ]
+        },
+        "organizers": {
+          "$ref": "/destinationdata/schemas/2022-04/datatypes#/definitions/relationshipToMany"
+        },
+        "publisher": {
+          "$ref": "/destinationdata/schemas/2022-04/datatypes#/definitions/relationshipToOne"
+        },
+        "series": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "/destinationdata/schemas/2022-04/datatypes#/definitions/relationshipToOne"
+            }
+          ]
+        },
+        "sponsors": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "/destinationdata/schemas/2022-04/datatypes#/definitions/relationshipToMany"
+            }
+          ]
+        },
+        "subEvents": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "/destinationdata/schemas/2022-04/datatypes#/definitions/relationshipToMany"
+            }
+          ]
+        },
+        "venues": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "/destinationdata/schemas/2022-04/datatypes#/definitions/relationshipToMany"
+            }
+          ]
+        }
+      }
+    }
+  }
+}

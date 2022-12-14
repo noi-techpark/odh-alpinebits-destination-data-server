@@ -1,0 +1,27 @@
+{
+  "type": "agents",
+  "id": "bc59f5dd810efdceb1fc673567d02a2f_licenseHolder",
+  "meta": {
+    "dataProvider": "http://tourism.opendatahub.bz.it/",
+    "lastUpdate": "2021-03-10T13:09:12.1985011+01:00"
+  },
+  "links": {
+    "self": "http://example.com/2021-04/agents/bc59f5dd810efdceb1fc673567d02a2f_licenseHolder"
+  },
+  "attributes": {
+    "abstract": null,
+    "description": null,
+    "name": {
+      "deu": "Tourimusverein Lajen",
+      "eng": "Tourimusverein Lajen",
+      "ita": "Tourimusverein Lajen"
+    },
+    "shortName": null,
+    "url": null,
+    "contactPoints": null
+  },
+  "relationships": {
+    "categories": null,
+    "multimediaDescriptions": null
+  }
+}

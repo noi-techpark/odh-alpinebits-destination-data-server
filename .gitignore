@@ -10,6 +10,11 @@
 # production
 /build
 
+# db volume
+/postgres-data
+# pgadmin configuration
+pgadmin-servers.json
+
 # misc
 .DS_Store
 .env
@@ -30,3 +35,7 @@ yarn-error.log*
 __requests__/
 
 dist/
+
+src/validator/
+
+output.pgsql

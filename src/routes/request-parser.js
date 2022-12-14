@@ -27,7 +27,7 @@ function validateResourceRequestQueries(request) {
       default:
         errors.throwUnknownQuery(
           `The request contains unsupported query parameters for this endpoint ` +
-          `${urlQueriesToString(request,queryName)}.`
+            `${urlQueriesToString(request, queryName)}.`
         );
     }
   }
@@ -69,47 +69,49 @@ function validateCollectionRequestQueries(request) {
       default:
         errors.throwUnknownQuery(
           `The request contains unsupported query parameters for this endpoint ` +
-          `${urlQueriesToString(request,queryName)}.`
+            `${urlQueriesToString(request, queryName)}.`
         );
     }
   }
 }
 
 function urlQueriesToString(request, queryName) {
-  const regex = new RegExp(`${queryName}[^&]*`, "g")
+  const regex = new RegExp(`${queryName}[^&]*`, "g");
   const urlSerializedQueries = request.originalUrl
-      .match(regex)
-      .reduce((acc, current) => `${acc ? acc + ',': acc} '${current}'`, '');
+    .match(regex)
+    .reduce((acc, current) => `${acc ? acc + "," : acc} '${current}'`, "");
   return urlSerializedQueries;
 }
 
 function getResourceTypeFromPath(request) {
-  const regex = /\/1\.0\/\w+/;
+  const regex = /\/\d+\.\d+\/\w+/;
   const { path } = request;
   let resourceType = path.match(regex);
 
-  if(resourceType && resourceType.length === 1) {
-    resourceType = resourceType[0].replace("/1.0/","");
+  if (resourceType && resourceType.length === 1) {
+    resourceType = resourceType[0].replace(/\/\d+\.\d+\//, "");
   } else {
-    throw new Error("Unable to extract resource type from path")
+    throw new Error("Unable to extract resource type from path");
   }
 
-  return resourceType
+  return resourceType;
 }
 
 function containsRepeatedValues(queryParameterValue) {
   const arr = queryParameterValue.split(",");
   const set = new Set(arr);
-  return arr.length > set.size
+  return arr.length > set.size;
 }
 
 function validateQueryParameterWithSchema(request, schema, queryName) {
   const validate = ajv.compile(schema);
-  const query = request.query[queryName]
-  
-  if(!validate(query)) {
-    console.log(`\nQuery parameter '${queryName}' failed the schema:`, validate.errors)
-    errors.throwBadQuery(`Some error is present in some of the following query parameters: ${urlQueriesToString(request, queryName)}`);
+  const query = request.query[queryName];
+
+  if (!validate(query)) {
+    console.log(`\nQuery parameter '${queryName}' failed the schema:`, validate.errors);
+    errors.throwBadQuery(
+      `Some error is present in some of the following query parameters: ${urlQueriesToString(request, queryName)}`
+    );
   }
 }
 
@@ -118,27 +120,27 @@ function validatePageQuery(request) {
 }
 
 function validateIncludeQuery(request) {
+  console.log(getApiVersion(request));
+  console.log(getApiVersion(templates[getApiVersion(request)]));
   const { include } = request.query;
   const resourceType = getResourceTypeFromPath(request);
-  const relationships = templates[resourceType].relationships;
+  const relationships = templates[getApiVersion(request)][resourceType].relationships;
 
   validateQueryParameterWithSchema(request, schemas.include, "include");
 
   if (containsRepeatedValues(include)) {
     errors.throwBadQuery(
-      `The following query cannot contain repeated values: ${urlQueriesToString(
-        request,
-        "include"
-      )}`
+      `The following query cannot contain repeated values: ${urlQueriesToString(request, "include")}`
     );
   }
 
-  for (const includeRelationship of include.split(',')) {
-    if(relationships[includeRelationship] !== null) {
+  for (const includeRelationship of include.split(",")) {
+    if (relationships[includeRelationship] !== null) {
       errors.throwUnknownQuery(
-        `The value '${includeRelationship}' is not a supported relationship for this endpoint's resource types. ` + 
-        `Please review the following query parameters: ${urlQueriesToString(request, 'include')}.`);
-    } 
+        `The value '${includeRelationship}' is not a supported relationship for this endpoint's resource types. ` +
+          `Please review the following query parameters: ${urlQueriesToString(request, "include")}.`
+      );
+    }
   }
 }
 
@@ -151,22 +153,17 @@ function validateSortQuery(request) {
     },
   };
 
-  validateQueryParameterWithSchema(request, schemas.sort, 'sort');
+  validateQueryParameterWithSchema(request, schemas.sort, "sort");
 
-  if(containsRepeatedValues(sort.replace(/-/g,""))) {
-    errors.throwBadQuery(
-      `The following query cannot contain repeated values: ${urlQueriesToString(
-        request,
-        'sort'
-      )}`
-    );
+  if (containsRepeatedValues(sort.replace(/-/g, ""))) {
+    errors.throwBadQuery(`The following query cannot contain repeated values: ${urlQueriesToString(request, "sort")}`);
   }
 
-  for (const sortBy of sort.split( ',')) {
-    if(!supportedFields[resourceType][sortBy.replace(/-/g,"")]) {
+  for (const sortBy of sort.split(",")) {
+    if (!supportedFields[resourceType][sortBy.replace(/-/g, "")]) {
       errors.throwUnknownQuery(
         `Sorting by '${sortBy}' is not supported. ` +
-        `Please review the following query parameters: ${urlQueriesToString(request, 'sort')}.`
+          `Please review the following query parameters: ${urlQueriesToString(request, "sort")}.`
       );
     }
   }
@@ -176,19 +173,18 @@ function validateRandomQuery(request) {
   const resourceType = getResourceTypeFromPath(request);
   const supportedResourceTypes = ["events", "lifts", "snowparks", "trails"];
 
-  validateQueryParameterWithSchema(request, schemas.random, 'random');
+  validateQueryParameterWithSchema(request, schemas.random, "random");
 
   if (request.query.sort) {
     errors.throwQueryConflict(
       `Unable to process the following query parameters in the same request: ` +
-      `${urlQueriesToString(request,'(random|sort)')}.`
+        `${urlQueriesToString(request, "(random|sort)")}.`
     );
   }
 
   if (!supportedResourceTypes.includes(resourceType)) {
     errors.throwUnknownQuery(
-      `Query parameter 'random' not supported on the requested endpoint: ` +
-      `${urlQueriesToString(request,'random')}.`
+      `Query parameter 'random' not supported on the requested endpoint: ` + `${urlQueriesToString(request, "random")}.`
     );
   }
 }
@@ -210,21 +206,20 @@ function validateSearchQuery(request) {
       name: true,
     },
   };
-  
-  validateQueryParameterWithSchema(request, schemas.search, 'search');
+
+  validateQueryParameterWithSchema(request, schemas.search, "search");
 
   if (!supportedFields[resourceType]) {
     errors.throwUnknownQuery(
-      `Search query parameter not supported on the requested endpoint: ` +
-      `${urlQueriesToString(request,'search')}.`
+      `Search query parameter not supported on the requested endpoint: ` + `${urlQueriesToString(request, "search")}.`
     );
   }
 
   for (const searchFieldName of Object.keys(search)) {
-    if(!supportedFields[resourceType][searchFieldName]) {
+    if (!supportedFields[resourceType][searchFieldName]) {
       errors.throwUnknownQuery(
         `Search field '${searchFieldName}' not supported on the requested endpoint: ` +
-        `${urlQueriesToString(request,'search')}.`
+          `${urlQueriesToString(request, "search")}.`
       );
     }
   }
@@ -233,56 +228,65 @@ function validateSearchQuery(request) {
 function validateFilterQuery(request) {
   const { filter } = request.query;
   const resourceType = getResourceTypeFromPath(request);
-  const checkLangCodes = input => {
-    const languages = input.split(',');
+  const checkLangCodes = (input) => {
+    const languages = input.split(",");
     for (const languageCode of languages) {
-      if(!iso6393to6391[languageCode]) {
+      if (!iso6393to6391[languageCode]) {
         errors.throwBadQuery(
           `Language code '${languageCode}' in 'lang' filter does not match an ISO 639-3 language code.`
-        )
+        );
       }
     }
-  }
+  };
   const additionalValidation = {
     events: { lang: checkLangCodes },
     lifts: { lang: checkLangCodes },
     snowparks: { lang: checkLangCodes },
     trails: { lang: checkLangCodes },
-  }
+  };
 
-  validateQueryParameterWithSchema(request, schemas.filter[resourceType], 'filter');
+  validateQueryParameterWithSchema(request, schemas.filter[resourceType], "filter");
 
   for (const filterName of Object.keys(filter)) {
     // Adding validations per operand would require an additional loop
-    if(additionalValidation[resourceType][filterName]) {
-      const validate = additionalValidation[resourceType][filterName]
-      validate(filter[filterName])
+    if (additionalValidation[resourceType][filterName]) {
+      const validate = additionalValidation[resourceType][filterName];
+      validate(filter[filterName]);
     }
   }
 }
 
 function validateFieldsQuery(request) {
   const { fields } = request.query;
-  
-  validateQueryParameterWithSchema(request, schemas.fields, 'fields');
-  
-  for (const resourceType of Object.keys(fields)) {
-    const attributes = templates[resourceType].attributes;
-    const relationships = templates[resourceType].relationships;
 
-    for (const fieldName of fields[resourceType].split(',')) {
-      if(attributes[fieldName] !== null && relationships[fieldName] !== null) {
+  validateQueryParameterWithSchema(request, schemas.fields, "fields");
+
+  for (const resourceType of Object.keys(fields)) {
+    const attributes = templates[getApiVersion(request)][resourceType].attributes;
+    const relationships = templates[getApiVersion(request)][resourceType].relationships;
+
+    for (const fieldName of fields[resourceType].split(",")) {
+      if (attributes[fieldName] !== null && relationships[fieldName] !== null) {
         errors.throwUnknownQuery(
           `In the query parameters, '${fieldName}' is not an attribute or relationship field name in the queried resource type '${resourceType}': ` +
-          `${urlQueriesToString(request,'fields')}.`
+            `${urlQueriesToString(request, "fields")}.`
         );
       }
     }
   }
 }
 
+function getApiVersion(req) {
+  const urlRegex = /\/\d+\.\d+\/?/;
+  const versionRegex = /\d+\.\d+/;
+  const apiVersionInUrl = urlRegex.test(req.originalUrl) ? req.originalUrl.match(urlRegex)[0] : "";
+  const apiVersion = versionRegex.test(apiVersionInUrl) ? apiVersionInUrl.match(versionRegex)[0] : "";
+  return apiVersion;
+}
+
 function getBaseUrl(req) {
-  return process.env.REF_SERVER_URL + "/1.0";
+  const apiVersion = getApiVersion(req);
+  return process.env.REF_SERVER_URL + (apiVersion ? `/${apiVersion}` : "");
 }
 
 function getSelfUrl(req) {
@@ -291,6 +295,7 @@ function getSelfUrl(req) {
 
 function createRequest(req) {
   return {
+    apiVersion: getApiVersion(req),
     baseUrl: getBaseUrl(req),
     selfUrl: getSelfUrl(req),
     params: req.params,
@@ -343,11 +348,8 @@ function parseInclude(req) {
   return result;
 }
 
-
 function normalize(queryValues) {
-  queryValues = Array.isArray(queryValues)
-    ? queryValues.flatMap((value) => value.split(","))
-    : queryValues.split(",");
+  queryValues = Array.isArray(queryValues) ? queryValues.flatMap((value) => value.split(",")) : queryValues.split(",");
   return queryValues;
 }
 

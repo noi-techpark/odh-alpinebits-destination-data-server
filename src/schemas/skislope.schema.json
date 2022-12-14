@@ -1,0 +1,200 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "$id": "https://www.alpinebits.org/destinationdata/schemas/2022-04/skiSlope",
+  "description": "A resource that implements the concept of Ski Slope defined in the AlpineBits® DestinationData Ontology.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["type"],
+  "properties": {
+    "id": {
+      "$ref": "/destinationdata/schemas/2022-04/datatypes#/definitions/id"
+    },
+    "type": {
+      "const": "skiSlopes"
+    },
+    "meta": {
+      "$ref": "/destinationdata/schemas/2022-04/datatypes#/definitions/meta"
+    },
+    "links": {
+      "$ref": "/destinationdata/schemas/2022-04/datatypes#/definitions/links"
+    },
+    "attributes": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "abstract": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "/destinationdata/schemas/2022-04/datatypes#/definitions/text"
+            }
+          ]
+        },
+        "address": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "/destinationdata/schemas/2022-04/datatypes#/definitions/address"
+            }
+          ]
+        },
+        "description": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "/destinationdata/schemas/2022-04/datatypes#/definitions/text"
+            }
+          ]
+        },
+        "difficulty": {
+          "type": [ "null", "object" ],
+          "additionalProperties": false,
+          "required": ["eu", "us"],
+          "properties": {
+            "eu": {
+              "type":["null", "string"],
+              "enum": [null,"novice", "beginner", "intermediate", "expert"]
+            },
+            "us": {
+              "type":["null", "string"],
+              "enum": [null,"beginner", "beginner-intermediate", "intermediate", "intermediate-advanced", "expert"]
+            }
+          },
+          "anyOf": [
+            {
+              "properties": {
+                "eu": {
+                  "not": {
+                    "type": "null"
+                  }
+                }
+              }
+            },
+            {
+              "properties": {
+                "us": {
+                  "not": {
+                    "type": "null"
+                  }
+                }
+              }
+            }
+          ]
+        },
+        "geometries": {
+          "type": [ "null", "array" ],
+          "minItems": 1,
+          "additionalItems": false,
+          "items": {
+            "$ref": "/destinationdata/schemas/2022-04/datatypes#/definitions/geometry"
+          }
+        },
+        "howToArrive": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "/destinationdata/schemas/2022-04/datatypes#/definitions/text"
+            }
+          ]
+        },
+        "length": {
+          "type": [ "null", "number" ],
+          "exclusiveMinimum": 0
+        },
+        "maxAltitude": {
+          "type": [ "null", "number" ]
+        },
+        "minAltitude": {
+          "type": [ "null", "number" ]
+        },
+        "name": {
+          "$ref": "/destinationdata/schemas/2022-04/datatypes#/definitions/text"
+        },
+        "openingHours": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "/destinationdata/schemas/2022-04/datatypes#/definitions/hoursSpecification"
+            }
+          ]
+        },
+        "shortName": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "/destinationdata/schemas/2022-04/datatypes#/definitions/text"
+            }
+          ]
+        },
+        "snowCondition": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "/destinationdata/schemas/2022-04/datatypes#/definitions/snowCondition"
+            }
+          ]
+        },
+        "url": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "/destinationdata/schemas/2022-04/datatypes#/definitions/complexUrl"
+            }
+          ]
+        }
+      }
+    },
+    "relationships": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "categories": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "/destinationdata/schemas/2022-04/datatypes#/definitions/relationshipToMany"
+            }
+          ]
+        },
+        "connections": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "/destinationdata/schemas/2022-04/datatypes#/definitions/relationshipToMany"
+            }
+          ]
+        },
+        "multimediaDescriptions": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "/destinationdata/schemas/2022-04/datatypes#/definitions/relationshipToMany"
+            }
+          ]
+        }
+      }
+    }
+  }
+}
