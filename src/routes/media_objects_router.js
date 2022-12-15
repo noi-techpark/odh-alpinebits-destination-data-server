@@ -4,6 +4,7 @@ const {
 } = require("../connectors/media_object_connector");
 const { deserializeMediaObject } = require("../model/destinationdata2022");
 const { Router } = require("./router");
+const schemas = require("./../schemas");
 
 class MediaObjectsRouter extends Router {
   constructor(app) {
@@ -30,7 +31,12 @@ class MediaObjectsRouter extends Router {
   }
 
   postMediaObject = (request) =>
-    this.postResource(request, MediaObjectConnector, deserializeMediaObject);
+    this.postResource(
+      request,
+      MediaObjectConnector,
+      deserializeMediaObject,
+      schemas["/mediaObjects/post"]
+    );
 
   getMediaObjects = (request) =>
     this.getResources(request, MediaObjectConnector);
@@ -42,11 +48,12 @@ class MediaObjectsRouter extends Router {
     this.deleteResource(request, MediaObjectConnector);
 
   patchMediaObject = (request) =>
-    this.patchResource(request, MediaObjectConnector, deserializeMediaObject);
-
-  validate(mediaObjectMessage) {
-    console.log("The media object message HAS NOT BEEN validated.");
-  }
+    this.patchResource(
+      request,
+      MediaObjectConnector,
+      deserializeMediaObject,
+      schemas["/mediaObjects/:id/patch"]
+    );
 
   getMediaObjectCategories = async (request) =>
     this.getResourceCategories(request, MediaObjectConnector);

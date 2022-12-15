@@ -1,0 +1,613 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "$id": "https://www.alpinebits.org/destinationdata/schemas/2022-04/datatypes",
+  "description": "This JSON Schema contains the definitions AlpineBits DestinationData datatypes.",
+  "type": "object",
+  "properties": {
+    "address": {
+      "$ref": "address"
+    },
+    "contactPoint": {
+      "$ref": "contactPoint"
+    },
+    "date": {
+      "$ref": "date"
+    },
+    "date-time": {
+      "$ref": "date-time"
+    },
+    "email": {
+      "$ref": "email"
+    },
+    "geometry": {
+      "$ref": "geometry"
+    },
+    "hoursSpecification": {
+      "$ref": "hoursSpecification"
+    },
+    "snowCondition": {
+      "$ref": "snowCondition"
+    },
+    "text": {
+      "$ref": "text"
+    },
+    "time": {
+      "$ref": "time"
+    },
+    "url": {
+      "$ref": "url"
+    },
+    "complexUrl": {
+      "$ref": "complexUrl"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "address": {
+      "$id": "address",
+      "description": "An address is represented as an object containing the following fields: street, city, region, country, zipcode, complement, type.",
+      "type": "object",
+      "properties": {
+        "street": {
+          "oneOf": [
+            {
+              "$ref": "text"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "city": {
+          "$ref": "text"
+        },
+        "region": {
+          "oneOf": [
+            {
+              "$ref": "text"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "country": {
+          "type": "string",
+          "pattern": "^[A-Z]{2}$"
+        },
+        "zipcode": {
+          "type": ["null", "string"],
+          "minLength": 1
+        },
+        "complement": {
+          "oneOf": [
+            {
+              "$ref": "text"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "type": {
+          "type": ["null", "string"],
+          "minLength": 1
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "street",
+        "city",
+        "region",
+        "country",
+        "zipcode",
+        "complement",
+        "type"
+      ]
+    },
+    "contactPoint": {
+      "$id": "contactPoint",
+      "description": "A contact point contains data that one can use to contact an agent.",
+      "type": "object",
+      "properties": {
+        "email": {
+          "oneOf": [
+            {
+              "$ref": "email"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "telephone": {
+          "type": ["null", "string"],
+          "pattern": "^\\+\\d+$"
+        },
+        "address": {
+          "oneOf": [
+            {
+              "$ref": "address"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "availableHours": {
+          "oneOf": [
+            {
+              "$ref": "hoursSpecification"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "additionalProperties": false,
+      "required": ["email", "telephone", "address", "availableHours"],
+      "anyOf": [
+        {
+          "properties": {
+            "email": {
+              "not": {
+                "type": "null"
+              }
+            }
+          }
+        },
+        {
+          "properties": {
+            "telephone": {
+              "not": {
+                "type": "null"
+              }
+            }
+          }
+        },
+        {
+          "properties": {
+            "address": {
+              "not": {
+                "type": "null"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "date": {
+      "$id": "date",
+      "description": "A string that contains a year, a month, and a day, formatted as YYYY-MM-DD. Corresponds to full-date in RFC 3339.",
+      "type": "string",
+      "format": "date"
+    },
+    "date-time": {
+      "$id": "date-time",
+      "description": "A string that contains a date, a time, and a time offset (to account for time zones) and formatted as YYYY-MM-DDThh:mm:ss+hh:mm (or YYYY-MM-DDThh:mm:ss-hh:mm). Corresponds to date-time in RFC 3339.",
+      "type": "string",
+      "format": "date-time"
+    },
+    "email": {
+      "$id": "email",
+      "description": "A string containing a valid internet email address, as defined in RFC 5322, section 3.4.1.",
+      "type": "string",
+      "format": "email"
+    },
+    "geometry": {
+      "$id": "geometry",
+      "description": "An object representing a geographic data structure according to the definitions of the GeoJSON standard specification.",
+      "type": "object",
+      "required": ["type", "coordinates"],
+      "oneOf": [
+        {
+          "properties": {
+            "type": { "const": "Point" },
+            "coordinates": { "$ref": "geojson-position" }
+          }
+        },
+        {
+          "properties": {
+            "type": { "const": "MultiPoint" },
+            "coordinates": { "$ref": "geojson-positionArray" }
+          }
+        },
+        {
+          "properties": {
+            "type": { "const": "LineString" },
+            "coordinates": { "$ref": "geojson-lineString" }
+          }
+        },
+        {
+          "properties": {
+            "type": { "const": "MultiLineString" },
+            "coordinates": {
+              "type": "array",
+              "items": { "$ref": "geojson-lineString" }
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": { "const": "Polygon" },
+            "coordinates": { "$ref": "geojson-polygon" }
+          }
+        },
+        {
+          "properties": {
+            "type": { "const": "MultiPolygon" },
+            "coordinates": {
+              "type": "array",
+              "items": { "$ref": "geojson-polygon" }
+            }
+          }
+        }
+      ]
+    },
+    "geojson-position": {
+      "$id": "geojson-position",
+      "description": "Auxiliary GeoJSON schema definition.",
+      "type": "array",
+      "minItems": 2,
+      "items": [{ "type": "number" }, { "type": "number" }],
+      "additionalItems": false
+    },
+    "geojson-positionArray": {
+      "$id": "geojson-positionArray",
+      "description": "Auxiliary GeoJSON schema definition.",
+      "type": "array",
+      "items": { "$ref": "geojson-position" }
+    },
+    "geojson-lineString": {
+      "$id": "geojson-lineString",
+      "description": "Auxiliary GeoJSON schema definition.",
+      "allOf": [{ "$ref": "geojson-positionArray" }, { "minItems": 2 }]
+    },
+    "geojson-linearRing": {
+      "$id": "geojson-linearRing",
+      "description": "Auxiliary GeoJSON schema definition.",
+      "allOf": [{ "$ref": "geojson-positionArray" }, { "minItems": 4 }]
+    },
+    "geojson-polygon": {
+      "$id": "geojson-polygon",
+      "description": "Auxiliary GeoJSON schema definition.",
+      "type": "array",
+      "items": { "$ref": "geojson-linearRing" }
+    },
+    "hoursSpecification": {
+      "$id": "hoursSpecification",
+      "description": "An hours specification object allows the representations of schedules over periods of time. They can be used to specify when a person or organization can be contacted, when a place is open, or when a recurrent event will occur. Hours specification objects may contain daily and weekly schedules, which in turn contain arrays of opening and closing hours for a given day.",
+      "type": "object",
+      "properties": {
+        "dailySchedules": {
+          "type": ["null", "object"],
+          "patternProperties": {
+            "^(?:\\d{4})-(?:\\d{2})-(?:\\d{2})$": {
+              "$ref": "hours-specification-interval-array"
+            }
+          },
+          "additionalProperties": false
+        },
+        "weeklySchedules": {
+          "type": ["null", "array"],
+          "items": {
+            "type": "object",
+            "properties": {
+              "validFrom": {
+                "type": "string",
+                "format": "date"
+              },
+              "validTo": {
+                "type": "string",
+                "format": "date"
+              },
+              "monday": {
+                "$ref": "hours-specification-interval-array"
+              },
+              "tuesday": {
+                "$ref": "hours-specification-interval-array"
+              },
+              "wednesday": {
+                "$ref": "hours-specification-interval-array"
+              },
+              "thursday": {
+                "$ref": "hours-specification-interval-array"
+              },
+              "friday": {
+                "$ref": "hours-specification-interval-array"
+              },
+              "saturday": {
+                "$ref": "hours-specification-interval-array"
+              },
+              "sunday": {
+                "$ref": "hours-specification-interval-array"
+              }
+            },
+            "additionalProperties": false,
+            "required": [
+              "validFrom",
+              "validTo",
+              "monday",
+              "tuesday",
+              "wednesday",
+              "thursday",
+              "friday",
+              "saturday",
+              "sunday"
+            ]
+          },
+          "minItems": 1,
+          "additionalItems": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "hours-specification-interval-array": {
+      "$id": "hours-specification-interval-array",
+      "description": "Auxiliary schema for representing time intervals in hour specification objects.",
+      "type": ["null", "array"],
+      "items": {
+        "type": "object",
+        "properties": {
+          "closes": {
+            "type": "string",
+            "format": "time"
+          },
+          "opens": {
+            "type": "string",
+            "format": "time"
+          }
+        },
+        "additionalProperties": false,
+        "required": ["opens", "closes"]
+      },
+      "minItems": 1,
+      "additionalItems": false
+    },
+    "snowCondition": {
+      "$id": "snowCondition",
+      "description": "A snow condition object allows the representation of the conditions of a ski slope, a snowpark, or a mountain area at a given point in time.",
+      "type": "object",
+      "properties": {
+        "baseSnow": {
+          "description": "A number representing the depth of base snow in a location. Measured in centimeters.",
+          "type": "number",
+          "minimum": 0
+        },
+        "baseSnowRange": {
+          "description": "An object that identifies the variation in the depth of snow in a location.",
+          "type": ["null", "object"],
+          "properties": {
+            "lower": {
+              "description": "A number that identifies the smallest depth of snow found in a location. Measured in centimeters.",
+              "type": "number",
+              "minimum": 0
+            },
+            "upper": {
+              "description": "A number that identifies the biggest depth of snow found in a location. Measured in centimeters.",
+              "type": "number",
+              "minimum": 0
+            }
+          },
+          "additionalProperties": false
+        },
+        "groomed": {
+          "description": "A boolean flag indicating whether or not the snow in a location has been groomed.",
+          "type": ["null", "boolean"]
+        },
+        "latestStorm": {
+          "description": "A number representing the amount of snow from the latest storm cycle in a location. Measured in centimeters.",
+          "type": ["null", "number"],
+          "minimum": 0
+        },
+        "obtainedIn": {
+          "description": "A date or date-time string that identifies when the data contained in the snow condition objects was obtained.",
+          "oneOf": [
+            {
+              "type": "string",
+              "format": "date"
+            },
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "primarySurface": {
+          "description": "A string that indicates the primary type of snow found in a location. It is RECOMMENDED the usage of snow types defined in MTN.XML: \"packed-powder\", \"powder\", \"hard-pack\", \"loose-granular\", \"frozen-granular\"\", \"wet-packed\", \"wet-granular\", \"wet-snow\", \"spring-conditions\", \"windblown\", \"corn-snow\", \"icy\", \"variable\"",
+          "type": "string",
+          "minLength": 1
+        },
+        "secondarySurface": {
+          "description": "A string that indicates the secondary type of snow found in a location. It is RECOMMENDED the usage of snow types defined in MTN.XML: \"packed-powder\", \"powder\", \"hard-pack\", \"loose-granular\", \"frozen-granular\"\", \"wet-packed\", \"wet-granular\", \"wet-snow\", \"spring-conditions\", \"windblown\", \"corn-snow\", \"icy\", \"variable\"",
+          "type": ["null", "string"],
+          "minLength": 1
+        },
+        "snowMaking": {
+          "description": "A boolean flag indicating whether or not the snow in a location has been artificially produced.",
+          "type": ["null", "boolean"]
+        },
+        "snowOverNight": {
+          "description": "A number representing the amount of snow accumulated in a location throughout the night before the measurement. Measured in centimeters.",
+          "type": ["null", "number"],
+          "minimum": 0
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "baseSnow",
+        "baseSnowRange",
+        "groomed",
+        "latestStorm",
+        "obtainedIn",
+        "primarySurface",
+        "secondarySurface",
+        "snowMaking",
+        "snowOverNight"
+      ]
+    },
+    "text": {
+      "$id": "text",
+      "description": "Every field used to exchange textual data (e.g. name, description) supports the use of multiple languages. Such fields have, like their values, objects containing language codes as keys (e.g. eng, ita, deu), and the actual text in each language as values.",
+      "type": ["object"],
+      "patternProperties": {
+        "^[a-z]{3}$": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "additionalProperties": false
+    },
+    "time": {
+      "$id": "time",
+      "description": "A string that contains hours, minutes, and seconds, formatted as hh:mm:ss. Corresponds to full-time in RFC 3339.",
+      "type": "string",
+      "format": "time"
+    },
+    "url": {
+      "$id": "url",
+      "description": "A string containing a valid universal resource identifier (URI), as defined in RFC 3986.",
+      "type": "string",
+      "format": "uri"
+    },
+    "complexUrl": {
+      "$id": "complexUrl",
+      "description": "A string or text object containing a valid universal resource identifier (URI), as defined in RFC 3986.",
+      "type": ["object", "string"],
+      "patternProperties": {
+        "^[a-z]{3}$": {
+          "type": "string",
+          "format": "uri"
+        }
+      },
+      "additionalProperties": false,
+      "format": "uri"
+    },
+    "id": {
+      "$id": "id",
+      "type": "string",
+      "minLength": 1
+    },
+    "resourceTypes": {
+      "$id": "resourceTypes",
+      "type": "string",
+      "enum": [
+        "agents",
+        "categories",
+        "events",
+        "eventSeries",
+        "features",
+        "lifts",
+        "mediaObjects",
+        "mountainAreas",
+        "skiSlopes",
+        "snowparks",
+        "venues"
+      ]
+    },
+    "jsonapi": {
+      "$id": "jsonapi",
+      "const": {
+        "version": "1.0"
+      }
+    },
+    "meta": {
+      "$id": "meta",
+      "type": "object",
+      "properties": {
+        "dataProvider": {
+          "type": "string",
+          "format": "uri"
+        },
+        "lastUpdate": {
+          "type": ["null", "string"],
+          "format": "date-time"
+        },
+        "pages": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "count": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "links": {
+      "$id": "links",
+      "type": "object",
+      "additionalProperties": {
+        "oneOf": [
+          {
+            "type": "string",
+            "format": "uri"
+          },
+          {
+            "type": "object",
+            "minProperties": 1,
+            "additionalProperties": {
+              "type": "string",
+              "format": "uri"
+            }
+          }
+        ]
+      }
+    },
+    "referenceObject": {
+      "$id": "referenceObject",
+      "type": "object",
+      "properties": {
+        "type": {
+          "$ref": "resourceTypes"
+        },
+        "id": {
+          "$ref": "id"
+        }
+      }
+    },
+    "referenceArray": {
+      "$id": "referenceArray",
+      "type": "array",
+      "items": {
+        "$ref": "referenceObject"
+      },
+      "additionalItems": false
+    },
+    "relationshipToOne": {
+      "type": "object",
+      "properties": {
+        "data": {
+          "$ref": "referenceObject"
+        },
+        "links": {
+          "$ref": "links"
+        }
+      }
+    },
+    "relationshipToMany": {
+      "type": "object",
+      "properties": {
+        "data": {
+          "$ref": "referenceArray"
+        },
+        "links": {
+          "$ref": "links"
+        }
+      }
+    },
+    "positiveNumber": {
+      "$id": "positiveNumber",
+      "type": "number",
+      "minimum": 0
+    },
+    "positiveInteger": {
+      "$id": "positiveInteger",
+      "type": "integer",
+      "minimum": 0
+    }
+  }
+}

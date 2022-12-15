@@ -4,6 +4,7 @@ const {
 } = require("./../connectors/event_series_connector");
 const { EventConnector } = require("./../connectors/event_connector");
 const { deserializeEventSeries } = require("../model/destinationdata2022");
+const schemas = require("./../schemas");
 
 class EventSeriesRouter extends Router {
   constructor(app) {
@@ -31,7 +32,12 @@ class EventSeriesRouter extends Router {
   }
 
   postEventSeries = (request) =>
-    this.postResource(request, EventSeriesConnector, deserializeEventSeries);
+    this.postResource(
+      request,
+      EventSeriesConnector,
+      deserializeEventSeries,
+      schemas["/eventSeries/post"]
+    );
 
   getEventSeries = (request) =>
     this.getResources(request, EventSeriesConnector);
@@ -43,11 +49,12 @@ class EventSeriesRouter extends Router {
     this.deleteResource(request, EventSeriesConnector);
 
   patchEventSeries = (request) =>
-    this.patchResource(request, EventSeriesConnector, deserializeEventSeries);
-
-  validate(eventSeriesMessage) {
-    console.log("The event series message HAS NOT BEEN validated.");
-  }
+    this.patchResource(
+      request,
+      EventSeriesConnector,
+      deserializeEventSeries,
+      schemas["/eventSeries/:id/patch"]
+    );
 
   getEventSeriesCategories = async (request) =>
     this.getResourceCategories(request, EventSeriesConnector);

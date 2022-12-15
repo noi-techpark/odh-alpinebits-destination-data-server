@@ -374,6 +374,26 @@ module.exports = {
       id: "id",
       features: "features",
     },
+    categoryChildrenArrays: {
+      _name: "category_children_arrays",
+      id: "id",
+      children: "children",
+    },
+    categoryParentsArrays: {
+      _name: "category_parents_arrays",
+      id: "id",
+      parents: "parents",
+    },
+    featureChildrenArrays: {
+      _name: "feature_children_arrays",
+      id: "id",
+      children: "children",
+    },
+    featureParentsArrays: {
+      _name: "feature_parents_arrays",
+      id: "id",
+      parents: "parents",
+    },
     multimediaDescriptionsArrays: {
       _name: "multimedia_descriptions_arrays",
       id: "id",

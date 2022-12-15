@@ -1,0 +1,20 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "$id": "https://www.alpinebits.org/destinationdata/schemas/2022-04/skiSlopes/:id/patch",
+  "description": "The JSON body of a PATCH message for updating an ski slope resource.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["data"],
+  "properties": {
+    "data": {
+      "allOf": [
+        {
+          "$ref": "/destinationdata/schemas/2022-04/skiSlope"
+        },
+        {
+          "required": ["id", "type"]
+        }
+      ]
+    }
+  }
+}
