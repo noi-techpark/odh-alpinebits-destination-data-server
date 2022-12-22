@@ -223,8 +223,12 @@ class EventConnector extends ResourceConnector {
   }
 
   getOrderBy() {
-    const orderBy = super.getOrderBy();
-    return _.isEmpty(orderBy) ? [`${events.startDate} DESC`] : orderBy;
+    const sort = this.request?.query?.sort;
+    const random = this.request?.query?.random;
+
+    return _.isEmpty(sort) && _.isEmpty(random)
+      ? [`${events.startDate} DESC`, `${resources.lastUpdate} DESC`]
+      : super.getOrderBy();
   }
 }
 

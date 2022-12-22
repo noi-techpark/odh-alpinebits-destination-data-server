@@ -581,19 +581,24 @@ class ResourceConnector {
   getOrderBy() {
     const sort = this.request?.query?.sort;
     const random = this.request?.query?.random;
+    let orderBy = [];
 
-    if (!_.isEmpty(sort))
-      return sort?.split(",")?.map((field) => {
+    if (!_.isEmpty(random))
+      return [`md5(resource_objects.id || ${random || 0})`];
+
+    if (!_.isEmpty(sort)) {
+      orderBy = sort?.split(",")?.map((field) => {
         const desc = field?.startsWith("-");
         field = field.replace("-", "");
         const column = this.mapFieldToColumns(field);
         return `${column}${desc ? " DESC NULLS LAST" : ""}`;
       });
+    }
 
-    if (!_.isEmpty(random))
-      return [`md5(resource_objects.id || ${random || 0})`];
+    if (!sort?.contains("lastUpdate"))
+      orderBy.push(`${resources.lastUpdate} DESC`);
 
-    return [];
+    return orderBy;
   }
 
   getFilters() {

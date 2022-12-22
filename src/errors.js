@@ -22,6 +22,10 @@ const types = {
       "Unable to delete due to required dependencies from other resources.",
     status: 400,
   },
+  idConflict: {
+    title: "Resource ID already in use.",
+    status: 400,
+  },
   noCredentials: {
     title: "No credentials were provided.",
     status: 401,
@@ -64,6 +68,11 @@ const types = {
   },
   badDatabaseQuerySyntax: {
     title: "The server-generated database query contains syntactical errors.",
+    status: 500,
+  },
+  databaseConstraintViolation: {
+    title:
+      "The server-generated database query caused a internal constraint violation.",
     status: 500,
   },
   notImplemented: {
@@ -204,11 +213,16 @@ function handleError(err, req, res) {
 
   if (err?.code?.match(/^23503/)) {
     err = { ...types.unableToDelete };
-    console.log("Database consult error detected", err, "");
-  }
-  if (err?.code?.match(/^42\S{3}/)) {
+    console.log("Database consult error detected");
+  } else if (err?.code?.match(/^23505/)) {
+    err = { ...types.idConflict };
+    console.log("Database consult error detected");
+  } else if (err?.code?.match(/^23\S{3}/)) {
+    err = { ...types.databaseConstraintViolation };
+    console.log("Database consult error detected");
+  } else if (err?.code?.match(/^42\S{3}/)) {
     err = { ...types.badDatabaseQuerySyntax };
-    console.log("Database consult error detected", err, "");
+    console.log("Database consult error detected");
   }
 
   const links = {
