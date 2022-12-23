@@ -595,7 +595,7 @@ class ResourceConnector {
       });
     }
 
-    if (!sort?.contains("lastUpdate"))
+    if (!sort?.includes("lastUpdate"))
       orderBy.push(`${resources.lastUpdate} DESC`);
 
     return orderBy;

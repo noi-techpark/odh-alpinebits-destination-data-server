@@ -1,4 +1,5 @@
 require("custom-env").env();
+const _ = require("lodash");
 
 const types = {
   unknownQuery: {
@@ -68,6 +69,10 @@ const types = {
   },
   badDatabaseQuerySyntax: {
     title: "The server-generated database query contains syntactical errors.",
+    status: 500,
+  },
+  unexpectedDatabaseError: {
+    title: "Unexpected error while accessing the database.",
     status: 500,
   },
   databaseConstraintViolation: {
@@ -211,18 +216,17 @@ function getSelfUrl(request) {
 function handleError(err, req, res) {
   console.log("Handling error", err, "");
 
-  if (err?.code?.match(/^23503/)) {
-    err = { ...types.unableToDelete };
-    console.log("Database consult error detected");
-  } else if (err?.code?.match(/^23505/)) {
-    err = { ...types.idConflict };
-    console.log("Database consult error detected");
-  } else if (err?.code?.match(/^23\S{3}/)) {
-    err = { ...types.databaseConstraintViolation };
-    console.log("Database consult error detected");
-  } else if (err?.code?.match(/^42\S{3}/)) {
-    err = { ...types.badDatabaseQuerySyntax };
-    console.log("Database consult error detected");
+  const dbErr = checkDbError(err, req, res);
+
+  if (!_.isEqual(dbErr, err)) {
+    console.log(
+      `Database error error detected
+        Code: '${err?.code}'
+        Severity: '${err?.severity}'
+        Hint: '${err?.hint}'
+        `
+    );
+    err = dbErr;
   }
 
   const links = {
@@ -242,6 +246,22 @@ function handleError(err, req, res) {
 
   res.status(errorMessage.errors[0].status);
   res.json(errorMessage);
+}
+
+function checkDbError(err, req, res) {
+  if (err?.code?.match(/^23503/)) {
+    err = { ...types.unableToDelete };
+  } else if (err?.code?.match(/^23505/)) {
+    err = { ...types.idConflict };
+  } else if (err?.code?.match(/^23\S{3}/)) {
+    err = { ...types.databaseConstraintViolation };
+  } else if (err?.code?.match(/^42\S{3}/)) {
+    err = { ...types.badDatabaseQuerySyntax };
+  } else if (err?.code?.match(/^\S{5}/) && err?.severity === "ERROR") {
+    err = { ...types.unexpectedDatabaseError };
+  }
+
+  return err;
 }
 
 function createJSON(err, req) {
