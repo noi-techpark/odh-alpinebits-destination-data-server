@@ -9,7 +9,13 @@ const resourceSchema = require("../src/validator/schemas/snowparks.id.schema.jso
 let opts = {
   route: "snowparks",
   resourceType: "snowparks",
-  sampleAttributes: ["name", "address", "geometries", "openingHours", "difficulty"],
+  sampleAttributes: [
+    "name",
+    "address",
+    "geometries",
+    "openingHours",
+    "difficulty",
+  ],
   sampleRelationships: ["connections", "multimediaDescriptions"],
   schema: {
     resourceSchema,
@@ -38,7 +44,7 @@ let opts = {
   ],
 };
 
-basicRouteTests(opts);
-basicResourceRouteTests(opts);
+// basicRouteTests(opts);
+// basicResourceRouteTests(opts);
 // basicSchemaTests(opts);
-basicQueriesTest(opts);
+// basicQueriesTest(opts);

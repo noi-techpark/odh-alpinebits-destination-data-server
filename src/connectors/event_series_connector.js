@@ -95,15 +95,24 @@ class EventSeriesConnector extends ResourceConnector {
     });
 
     if (this.shouldUpdate(oldEventSeries, newEventSeries)) {
-      return Promise.all([
-        this.updateResource(newEventSeries),
-        this.updateEditions(newEventSeries),
-      ]).then((promises) => {
-        newEventSeries.lastUpdate = _.first(_.flatten(promises))[
-          resources.lastUpdate
-        ];
-        return newEventSeries;
-      });
+      const columns = this.mapEventSeriesToColumns(newEventSeries);
+
+      return dbFn
+        .updateEventSeries(this.connection, columns)
+        .then((ret) => {
+          newEventSeries.id = _.first(ret)?.id;
+
+          return Promise.all([
+            this.updateResource(newEventSeries),
+            this.updateEditions(newEventSeries),
+          ]);
+        })
+        .then((promises) => {
+          newEventSeries.lastUpdate = _.first(_.flatten(promises))[
+            resources.lastUpdate
+          ];
+          return newEventSeries;
+        });
     }
 
     this.throwNoUpdate(oldEventSeries);

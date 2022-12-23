@@ -42,7 +42,7 @@ let opts = {
   ],
 };
 
-basicRouteTests(opts);
-basicResourceRouteTests(opts);
+// basicRouteTests(opts);
+// basicResourceRouteTests(opts);
 // basicSchemaTests(opts);
-basicQueriesTest(opts);
+// basicQueriesTest(opts);

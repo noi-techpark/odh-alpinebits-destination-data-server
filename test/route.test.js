@@ -1,5 +1,5 @@
-// todo: replace with env variable
-const apiVersion = "2021-04";
+require("custom-env").env();
+const apiVersion = process.env.API_VERSION;
 
 module.exports.basicRouteTests = (opts) => {
   const utils = require("./utils");
@@ -10,10 +10,12 @@ module.exports.basicRouteTests = (opts) => {
   const pageSize = opts.pageSize || 10;
 
   beforeAll(() => {
-    return utils.axiosInstance.get(`/${apiVersion}/${opts.route}`).then((response) => {
-      ({ headers, status } = response);
-      ({ meta, data, links } = response.data);
-    });
+    return utils.axiosInstance
+      .get(`/${apiVersion}/${opts.route}`)
+      .then((response) => {
+        ({ headers, status } = response);
+        ({ meta, data, links } = response.data);
+      });
   });
 
   describe(`Basic API tests for /${opts.route}`, () => {
@@ -22,7 +24,9 @@ module.exports.basicRouteTests = (opts) => {
     });
 
     test(`/${opts.route}: content-type "application/vnd.api+json"`, () => {
-      expect(headers["content-type"]).toEqual(expect.stringContaining("application/vnd.api+json"));
+      expect(headers["content-type"]).toEqual(
+        expect.stringContaining("application/vnd.api+json")
+      );
     });
 
     test(`/${opts.route}: status 200 OK`, () => {
@@ -56,20 +60,25 @@ module.exports.basicRouteTests = (opts) => {
 
     test(`/${opts.route}: page size works`, () => {
       const customPageSize = 3;
-      return utils.axiosInstance.get(`/${apiVersion}/${opts.route}?page[size]=${customPageSize}`).then((res) => {
-        let { pages, count } = res.data.meta;
+      return utils.axiosInstance
+        .get(`/${apiVersion}/${opts.route}?page[size]=${customPageSize}`)
+        .then((res) => {
+          let { pages, count } = res.data.meta;
 
-        if (count >= customPageSize) expect(res.data.data.length).toEqual(customPageSize);
-        else expect(res.data.data.length).toEqual(count);
+          if (count >= customPageSize)
+            expect(res.data.data.length).toEqual(customPageSize);
+          else expect(res.data.data.length).toEqual(count);
 
-        expect(pages).toEqual(Math.ceil(count / customPageSize));
-      });
+          expect(pages).toEqual(Math.ceil(count / customPageSize));
+        });
     });
 
     test(`/${opts.route}: page number works`, () => {
-      return utils.axiosInstance.get(`/${apiVersion}/${opts.route}?page[size]=1&page[number]=2`).then((res) => {
-        expect(data[1].id).toEqual(res.data.data[0].id);
-      });
+      return utils.axiosInstance
+        .get(`/${apiVersion}/${opts.route}?page[size]=1&page[number]=2`)
+        .then((res) => {
+          expect(data[1].id).toEqual(res.data.data[0].id);
+        });
     });
 
     test(`/${opts.route}: single attribute selection`, () => {
@@ -77,10 +86,14 @@ module.exports.basicRouteTests = (opts) => {
       if (opts.route === "events") return;
 
       return utils.axiosInstance
-        .get(`/${apiVersion}/${opts.route}?${pageParam}&fields[${opts.resourceType}]=${opts.sampleAttributes[0]}`)
+        .get(
+          `/${apiVersion}/${opts.route}?${pageParam}&fields[${opts.resourceType}]=${opts.sampleAttributes[0]}`
+        )
         .then((res) => {
           res.data.data.forEach((object) => {
-            expect(Object.keys(object.attributes).sort()).toEqual([opts.sampleAttributes[0]]);
+            expect(Object.keys(object.attributes).sort()).toEqual([
+              opts.sampleAttributes[0],
+            ]);
           });
         });
     });
@@ -88,10 +101,16 @@ module.exports.basicRouteTests = (opts) => {
     test(`/${opts.route}: multi-attribute selection`, () => {
       const fields = opts.sampleAttributes;
       return utils.axiosInstance
-        .get(`/${apiVersion}/${opts.route}?${pageParam}&fields[${opts.resourceType}]=${fields.join(",")}`)
+        .get(
+          `/${apiVersion}/${opts.route}?${pageParam}&fields[${
+            opts.resourceType
+          }]=${fields.join(",")}`
+        )
         .then((res) => {
           res.data.data.forEach((object) => {
-            expect(Object.keys(object.attributes).sort()).toEqual(fields.sort());
+            expect(Object.keys(object.attributes).sort()).toEqual(
+              fields.sort()
+            );
           });
         });
     });
@@ -99,29 +118,44 @@ module.exports.basicRouteTests = (opts) => {
     test(`/${opts.route}: attribute and relationship selection`, () => {
       const fields = [...opts.sampleAttributes, ...opts.sampleRelationships];
       return utils.axiosInstance
-        .get(`/${apiVersion}/${opts.route}?${pageParam}&fields[${opts.resourceType}]=` + fields.join(","))
+        .get(
+          `/${apiVersion}/${opts.route}?${pageParam}&fields[${opts.resourceType}]=` +
+            fields.join(",")
+        )
         .then((res) => {
           res.data.data.forEach((object) => {
-            expect(Object.keys(object.attributes).sort()).toEqual(opts.sampleAttributes.sort());
-            expect(Object.keys(object.relationships).sort()).toEqual(opts.sampleRelationships.sort());
+            expect(Object.keys(object.attributes).sort()).toEqual(
+              opts.sampleAttributes.sort()
+            );
+            expect(Object.keys(object.relationships).sort()).toEqual(
+              opts.sampleRelationships.sort()
+            );
           });
         });
     });
 
     test(`/${opts.route}: pagination 'next' link works`, () => {
-      return utils.get(links.next).then((res) => expect(res.data.data).toBeDefined());
+      return utils
+        .get(links.next)
+        .then((res) => expect(res.data.data).toBeDefined());
     });
 
     test(`/${opts.route}: pagination 'prev' link works`, () => {
-      return utils.get(links.prev).then((res) => expect(res.data.data).toBeDefined());
+      return utils
+        .get(links.prev)
+        .then((res) => expect(res.data.data).toBeDefined());
     });
 
     test(`/${opts.route}: pagination 'first' link works`, () => {
-      return utils.get(links.first).then((res) => expect(res.data.data).toBeDefined());
+      return utils
+        .get(links.first)
+        .then((res) => expect(res.data.data).toBeDefined());
     });
 
     test(`/${opts.route}: pagination 'last' link works`, () => {
-      return utils.get(links.last).then((res) => expect(res.data.data).toBeDefined());
+      return utils
+        .get(links.last)
+        .then((res) => expect(res.data.data).toBeDefined());
     });
 
     test(`/${opts.route}: 'self' link works`, () => {
@@ -150,10 +184,14 @@ module.exports.basicRouteTests = (opts) => {
       if (!opts.include) return;
 
       return utils.axiosInstance
-        .get(`/${apiVersion}/${opts.route}?${pageParam}&include=${opts.include.relationship}`)
+        .get(
+          `/${apiVersion}/${opts.route}?${pageParam}&include=${opts.include.relationship}`
+        )
         .then((res) => {
           expect(res.data.included).toBeDefined();
-          res.data.included.forEach((object) => expect(object.type).toEqual(opts.include.resourceType));
+          res.data.included.forEach((object) =>
+            expect(object.type).toEqual(opts.include.resourceType)
+          );
         });
     });
 
@@ -161,10 +199,16 @@ module.exports.basicRouteTests = (opts) => {
       if (!opts.multiInclude) return;
 
       return utils.axiosInstance
-        .get(`/${apiVersion}/${opts.route}?${pageParam}&include=${opts.multiInclude.relationships.join(",")}`)
+        .get(
+          `/${apiVersion}/${
+            opts.route
+          }?${pageParam}&include=${opts.multiInclude.relationships.join(",")}`
+        )
         .then((res) => {
           expect(res.data.included).toBeDefined();
-          res.data.included.forEach((object) => expect(opts.multiInclude.resourceTypes).toContain(object.type));
+          res.data.included.forEach((object) =>
+            expect(opts.multiInclude.resourceTypes).toContain(object.type)
+          );
         });
     });
 
@@ -179,7 +223,9 @@ module.exports.basicRouteTests = (opts) => {
           expect(res.data.included).toBeDefined();
           res.data.included.forEach((object) => {
             expect(object.type).toEqual(opts.selectInclude.resourceType);
-            expect(Object.keys(object.attributes).sort()).toEqual([opts.selectInclude.attribute].sort());
+            expect(Object.keys(object.attributes).sort()).toEqual(
+              [opts.selectInclude.attribute].sort()
+            );
           });
         });
     });
@@ -187,24 +233,33 @@ module.exports.basicRouteTests = (opts) => {
     test(`/${opts.route}: multi-field selection on multi-included resources`, () => {
       if (!opts.multiSelectInclude) return;
 
-      let include = "include=" + opts.multiSelectInclude.map((entry) => entry.relationship).join(",");
+      let include =
+        "include=" +
+        opts.multiSelectInclude.map((entry) => entry.relationship).join(",");
       let fields = opts.multiSelectInclude.map(
         (entry) => `fields[${entry.resourceType}]=${entry.attributes.join(",")}`
       );
       let params = [pageParam, include, ...fields].join("&");
 
       let expectedAttributesPerType = {};
-      opts.multiSelectInclude.forEach((entry) => (expectedAttributesPerType[entry.resourceType] = entry.attributes));
+      opts.multiSelectInclude.forEach(
+        (entry) =>
+          (expectedAttributesPerType[entry.resourceType] = entry.attributes)
+      );
 
       let resourceTypes = Object.keys(expectedAttributesPerType);
 
-      return utils.axiosInstance.get(`/${apiVersion}/${opts.route}?${params}`).then((res) => {
-        expect(res.data.included).toBeDefined();
-        res.data.included.forEach((object) => {
-          expect(resourceTypes).toContain(object.type);
-          expect(Object.keys(object.attributes).sort()).toEqual(expectedAttributesPerType[object.type].sort());
+      return utils.axiosInstance
+        .get(`/${apiVersion}/${opts.route}?${params}`)
+        .then((res) => {
+          expect(res.data.included).toBeDefined();
+          res.data.included.forEach((object) => {
+            expect(resourceTypes).toContain(object.type);
+            expect(Object.keys(object.attributes).sort()).toEqual(
+              expectedAttributesPerType[object.type].sort()
+            );
+          });
         });
-      });
     });
   });
 };

@@ -108,7 +108,15 @@ class Router {
         handleRequestFn(request)
           .then((data) => {
             if (data > 0) {
-              return response.status(200).end();
+              return response
+                .status(200)
+                .header(
+                  "Location",
+                  `${request?.protocol}://${request?.get("host")}${
+                    request?.originalUrl
+                  }`
+                )
+                .end();
             } else {
               throw errors.notFound;
             }
@@ -173,12 +181,22 @@ class Router {
 
   getResourceById = async (request, resourceConnectorClass) => {
     const parsedRequest = new Request(request);
+    parsedRequest.supportedFeatures = {
+      include: true,
+      fields: true,
+      page: false,
+      filter: false,
+      sort: false,
+      random: false,
+      search: false,
+    };
+
     const connector = new resourceConnectorClass(parsedRequest);
     let resource = null;
 
     try {
-      return connector
-        .retrieve()
+      return Promise.resolve(parsedRequest.validate())
+        .then(() => connector.retrieve())
         .then((ret) => (resource = ret))
         .then(() => this.getResourcesToInclude(request, resource))
         .then((includes) =>

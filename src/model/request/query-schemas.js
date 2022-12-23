@@ -37,13 +37,13 @@ const search = {
       type: "string",
       minLength: 1,
     },
-    {
-      type: "object",
-      additionalProperties: {
-        type: "string",
-        minLength: 1,
-      },
-    },
+    // {
+    //   type: "object",
+    //   additionalProperties: {
+    //     type: "string",
+    //     minLength: 1,
+    //   },
+    // },
   ],
 };
 
@@ -54,13 +54,13 @@ const filter = {
   },
   additionalProperties: {
     oneOf: [
-      {
-        type: "string",
-      },
+      // {
+      //   type: "string",
+      // },
       {
         type: "object",
         propertyNames: {
-          pattern: "^exists|eq|neq|in|nin|any|all|gt|gte|lt|lte|near|intersects|within|starts|ends|regex$",
+          pattern: "^exists|eq|neq|in|nin|any|gt|gte|lt|lte|near|within$",
         },
         additionalProperties: { type: "string" },
         minProperties: 1,
@@ -73,7 +73,8 @@ const filter = {
 const fields = {
   type: "object",
   patternProperties: {
-    "^agents|categories|events|eventSeries|features|lifts|mediaObjects|mountainAreas|snowparks|skiSlopes|venues$": commaSeparatedStrings,
+    "^agents|categories|events|eventSeries|features|lifts|mediaObjects|mountainAreas|snowparks|skiSlopes|venues$":
+      commaSeparatedStrings,
   },
   additionalProperties: false,
   minProperties: 1,

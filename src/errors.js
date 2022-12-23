@@ -214,20 +214,16 @@ function getSelfUrl(request) {
 }
 
 function handleError(err, req, res) {
-  console.log("Handling error", err, "");
+  console.log("Handling error");
 
   const dbErr = checkDbError(err, req, res);
 
   if (!_.isEqual(dbErr, err)) {
-    console.log(
-      `Database error error detected
-        Code: '${err?.code}'
-        Severity: '${err?.severity}'
-        Hint: '${err?.hint}'
-        `
-    );
+    console.log(`Database error error detected.`, err);
     err = dbErr;
   }
+
+  console.log(err, "");
 
   const links = {
     self: getSelfUrl(req) ? getSelfUrl(req) : undefined,
