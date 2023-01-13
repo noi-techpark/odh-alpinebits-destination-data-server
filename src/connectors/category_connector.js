@@ -111,7 +111,7 @@ class CategoryConnector extends ResourceConnector {
   }
 
   deleteCategory(id) {
-    return dbFn.deleteCategory(this.connection, id);
+    return dbFn.deleteResource(this.connection, id, "categories");
   }
 
   insertCategory(category) {

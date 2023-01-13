@@ -2,7 +2,7 @@ services:
   db:
     container_name: pgdb
     hostname: pgdb
-    image: postgres
+    image: postgis/postgis
     environment:
       POSTGRES_USER: "${DB_USERNAME}"
       POSTGRES_PASSWORD: "${DB_PASSWORD}"

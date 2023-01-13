@@ -4,6 +4,7 @@ const { basicSchemaTests } = require("./route.schema.test");
 const { basicQueriesTest } = require("./queries.test");
 const arraySchema = require("../src/validator/schemas/events.schema.json");
 const resourceSchema = require("../src/validator/schemas/events.id.schema.json");
+const apiVersion = process.env.API_VERSION;
 
 let opts = {
   route: "events",
@@ -44,18 +45,10 @@ let opts = {
     resourceSchema,
     arraySchema,
     pageStart: 1,
-    pageEnd: 10,
-    pageSize: 50,
+    pageEnd: 5,
+    pageSize: 4,
   },
   queries: [
-    {
-      query: "filter[lang]=eng",
-      expectStatus: 200,
-    },
-    {
-      query: "filter[lang]=eng,fra",
-      expectStatus: 200,
-    },
     {
       query: "filter[venues][near]=11.309245,46.862025,10000",
       expectStatus: 200,
@@ -89,11 +82,7 @@ let opts = {
       expectStatus: 200,
     },
     {
-      query: "filter[organizers][eq]=22C0A7135D3341A481BECEC0DCDB373F",
-      expectStatus: 200,
-    },
-    {
-      query: "search[name]=bolz",
+      query: "search=police",
       expectStatus: 200,
     },
     {
@@ -106,7 +95,7 @@ let opts = {
     },
     {
       query:
-        "filter[lang]=eng,fra&filter[venues][near]=11.309245,46.862025,10000&filter[startDate][lt]=2020-10-01&filter[endDate][gt]=2020-10-10&filter[lastUpdate][gt]=2020-10-01&filter[categories][any]=schema:VisualArts,odh:messen-markte&filter[organizers][eq]=22C0A7135D3341A481BECEC0DCDB373F&search[name]=bolz&sort=-startDate",
+        "filter[venues][near]=11.309245,46.862025,10000&filter[startDate][lt]=2020-10-01&filter[endDate][gt]=2020-10-10&filter[lastUpdate][gt]=2020-10-01&filter[categories][any]=schema:VisualArts,odh:messen-markte&search=Police&sort=-startDate",
       expectStatus: 200,
     },
   ],
@@ -119,14 +108,14 @@ function eventSortingTest() {
     let unsortedData;
 
     beforeAll(() => {
-      return utils.axiosInstance.get(`/2021-04/events`).then((res) => {
+      return utils.axiosInstance.get(`/${apiVersion}/events`).then((res) => {
         ({ data: unsortedData } = res.data);
       });
     });
 
     test(`Test events on descending order of startDate`, () => {
       return utils.axiosInstance
-        .get(`/2021-04/events?sort=-startDate`)
+        .get(`/${apiVersion}/events?sort=-startDate`)
         .then((res) => {
           let { data } = res.data;
           let isInDescendingOrder = true;
@@ -147,8 +136,8 @@ function eventSortingTest() {
   });
 }
 
-// basicRouteTests(opts);
-// basicResourceRouteTests(opts);
-// basicSchemaTests(opts);
-// basicQueriesTest(opts);
-// eventSortingTest();
+basicRouteTests(opts);
+basicResourceRouteTests(opts);
+basicSchemaTests(opts);
+basicQueriesTest(opts);
+eventSortingTest();

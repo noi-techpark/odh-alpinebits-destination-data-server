@@ -252,12 +252,12 @@ function createFeatureSpecializationsTable() {
     function (table) {
       table
         .string(featureSpecializations.parentId, 100)
-        .references(features.categoryId)
+        .references(features.id)
         .inTable(features._name)
         .onDelete(CASCADE);
       table
         .string(featureSpecializations.childId, 100)
-        .references(features.categoryId)
+        .references(features.id)
         .inTable(features._name)
         .onDelete(CASCADE);
       table.primary([
@@ -730,8 +730,8 @@ function createSkiSlopesTable() {
       .inTable(resources._name)
       .onDelete(CASCADE);
 
-    table.string(skiSlopes.difficultyEu, 20);
-    table.string(skiSlopes.difficultyUs, 20);
+    table.string(skiSlopes.difficultyEu, 50);
+    table.string(skiSlopes.difficultyUs, 50);
   });
 }
 
@@ -744,7 +744,7 @@ function createSnowparksTable() {
       .inTable(resources._name)
       .onDelete(CASCADE);
 
-    table.string(snowparks.difficulty, 20);
+    table.string(snowparks.difficulty, 50);
   });
 }
 
@@ -1398,10 +1398,13 @@ function createSnowConditionObjectsView() {
     SELECT snow_conditions.id,
         json_build_object(
           'baseSnow', base_snow,
-          'baseSnowRange', json_build_object(
-            'lower', base_snow_range_lower,
-            'upper', base_snow_range_upper
-          ),
+          'baseSnowRange', CASE
+            WHEN base_snow_range_lower IS NOT NULL AND base_snow_range_upper IS NOT NULL
+              THEN json_build_object(
+                'lower', base_snow_range_lower,
+                'upper', base_snow_range_upper
+              )
+          END,
           'groomed', groomed,
           'latestStorm', latest_storm,
           'obtainedIn', obtained_in,

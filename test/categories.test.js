@@ -34,6 +34,6 @@ let opts = {
   },
 };
 
-// basicRouteTests(opts);
-// basicResourceRouteTests(opts);
-// basicSchemaTests(opts);
+basicRouteTests(opts);
+basicResourceRouteTests(opts);
+basicSchemaTests(opts);

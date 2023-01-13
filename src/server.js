@@ -3,9 +3,14 @@ const http = require("http");
 const basicAuth = require("express-basic-auth");
 const cors = require("cors");
 const errors = require("./errors");
-require("custom-env").env();
 
-var app = express();
+if (process.argv.includes("--test")) {
+  require("custom-env").env("test");
+} else {
+  require("custom-env").env();
+}
+
+const app = express();
 
 const corsOptions = {
   origin: process.env.REF_SERVER_CORS_ORIGIN,
@@ -18,10 +23,11 @@ app.use(express.json({ type: "application/vnd.api+json" }));
 app.use((req, res, next) => {
   const timestamp = new Date().toISOString();
   console.log(
-    `[${timestamp}] -------------------------------------------------`
-  );
-  console.log(
-    "  Request received: " + process.env.REF_SERVER_URL + req.originalUrl
+    `-------------------------------------------------
+Request received
+  Method: ${req.method}
+  Endpoint: ${process.env.REF_SERVER_URL + req.originalUrl}
+  Timestamp: ${timestamp}`
   );
   next();
 });

@@ -6,14 +6,21 @@
   },
   "scripts": {
     "dev-server": "nodemon src/server.js",
+    "test-server": "nodemon src/server.js --test",
     "server": "node src/server.js",
-    "test": "jest",
-    "test2": "jest test/categories.test.js",
-    "db": "docker-compose -f docker-compose_postgres.yml up",
+    "test": "jest --runInBand",
+    "db": "docker-compose -f docker-compose_postgres.yml up -d",
     "pgadmin": "node pgadmin-setup.js && docker-compose -f docker-compose_pgadmin.yml up",
-    "create-tables": "node --trace-warnings src/db/create_tables.js",
+    "create-tables": "node src/db/create_tables.js",
     "insert-defaults": "node src/db/insert_defaults.js",
-    "import-odh-data": "node src/db/import/index.js"
+    "import-odh-data": "node src/db/import/index.js",
+    "test-db": "npm-run-all -s -c test-db:create test-db:start test-db:create-tables test-db:insert-defaults test-db:insert-test-data",
+    "test-db:create": "if docker container inspect postgis-test-db  > /dev/null 2>&1 ; then echo 'Container already exists' ; else docker create --name postgis-test-db -p 5432:5432 -e POSTGRES_PASSWORD=mysecretpassword postgis/postgis ; fi",
+    "test-db:start": "docker start postgis-test-db",
+    "test-db:stop": "docker stop postgis-test-db",
+    "test-db:create-tables": "node src/db/create_tables.js --test",
+    "test-db:insert-defaults": "node src/db/insert_defaults.js --test",
+    "test-db:insert-test-data": "node test/data/insert_test_data.js --test"
   },
   "repository": {
     "type": "git",
@@ -49,7 +56,8 @@
   "devDependencies": {
     "@types/jest": "^26.0.22",
     "jest": "^29.0.0",
-    "nodemon": "^1.19.2"
+    "nodemon": "^1.19.2",
+    "npm-run-all": "^4.1.5"
   },
   "_moduleAliases": {
     "@src": "src",

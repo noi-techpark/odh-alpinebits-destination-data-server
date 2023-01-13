@@ -1,10 +1,11 @@
 const utils = require("./utils");
+const apiVersion = process.env.API_VERSION;
 
 module.exports.basicQueriesTest = (opts) => {
-  describe(`Basic queries tests for /2021-04/${opts.route}`, () => {
+  describe(`Basic queries tests for /${apiVersion}/${opts.route}`, () => {
     opts.queries.forEach((queryItem) => {
       const { query, expectStatus, description } = queryItem;
-      const path = `/2021-04/${opts.route}?${query}`;
+      const path = `/${apiVersion}/${opts.route}?${query}`;
 
       test(`${path}${description ? " - " + description : ""}`, () =>
         utils.axiosInstance

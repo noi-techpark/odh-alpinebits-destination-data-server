@@ -103,7 +103,7 @@ class FeatureConnector extends ResourceConnector {
   }
 
   deleteFeature(id) {
-    return dbFn.deleteFeature(this.connection, id);
+    return dbFn.deleteResource(this.connection, id, "features");
   }
 
   insertFeature(feature) {

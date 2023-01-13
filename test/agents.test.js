@@ -5,15 +5,16 @@ const { basicSchemaTests } = require("./route.schema.test");
 let opts = {
   route: "agents",
   resourceType: "agents",
+  selectedResourceId: "71f05b57-47a4-417e-ad81-f11364798073",
   sampleAttributes: ["name", "description", "url"],
   sampleRelationships: ["multimediaDescriptions"],
   include: {
-    relationship: "multimediaDescriptions",
-    resourceType: "mediaObjects",
+    relationship: "categories",
+    resourceType: "categories",
   },
   multiInclude: {
-    relationships: ["categories", "multimediaDescriptions"],
-    resourceTypes: ["categories", "mediaObjects"],
+    relationships: ["categories"],
+    resourceTypes: ["categories"],
   },
   selectInclude: {
     attribute: "name",
@@ -34,6 +35,6 @@ let opts = {
   },
 };
 
-// basicRouteTests(opts);
-// basicResourceRouteTests(opts);
-// basicSchemaTests(opts); // some agents are breaking the schema for lack of data
+basicRouteTests(opts);
+basicResourceRouteTests(opts);
+basicSchemaTests(opts); // some agents are breaking the schema for lack of data

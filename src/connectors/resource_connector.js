@@ -596,7 +596,7 @@ class ResourceConnector {
     }
 
     if (!sort?.includes("lastUpdate"))
-      orderBy.push(`${resources.lastUpdate} DESC`);
+      orderBy.push(`${resources.lastUpdate} DESC, id`);
 
     return orderBy;
   }
