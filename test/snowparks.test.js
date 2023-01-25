@@ -9,7 +9,13 @@ const resourceSchema = require("../src/validator/schemas/snowparks.id.schema.jso
 let opts = {
   route: "snowparks",
   resourceType: "snowparks",
-  sampleAttributes: ["name", "address", "geometries", "openingHours", "difficulty"],
+  sampleAttributes: [
+    "name",
+    "address",
+    "geometries",
+    "openingHours",
+    "difficulty",
+  ],
   sampleRelationships: ["connections", "multimediaDescriptions"],
   schema: {
     resourceSchema,
@@ -20,10 +26,6 @@ let opts = {
   },
   queries: [
     {
-      query: "filter[lang]=eng",
-      expectStatus: 200,
-    },
-    {
       query: "filter[geometries][near]=11.309245,46.862025,1000",
       expectStatus: 200,
     },
@@ -32,7 +34,7 @@ let opts = {
       expectStatus: 200,
     },
     {
-      query: "search[name]=gardena",
+      query: "search=gardena",
       expectStatus: 200,
     },
   ],
@@ -40,5 +42,5 @@ let opts = {
 
 basicRouteTests(opts);
 basicResourceRouteTests(opts);
-// basicSchemaTests(opts);
+basicSchemaTests(opts);
 basicQueriesTest(opts);

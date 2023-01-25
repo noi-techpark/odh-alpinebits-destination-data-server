@@ -75,7 +75,14 @@ class VenueConnector extends ResourceConnector {
     this.ignoreNonListedFields(newInput, newVenue);
 
     if (this.shouldUpdate(oldVenue, newVenue)) {
-      return Promise.all([this.updateResource(newVenue)])
+      const columns = this.mapVenueToColumns(newVenue);
+
+      return dbFn
+        .updateVenue(this.connection, columns)
+        .then((ret) => {
+          newVenue.id = _.first(ret)?.id;
+          return Promise.all([this.updateResource(newVenue)]);
+        })
         .then((promises) => {
           newVenue.lastUpdate = _.first(_.flatten(promises))[
             schemas.resources.lastUpdate

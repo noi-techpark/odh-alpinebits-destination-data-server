@@ -1,4 +1,5 @@
 require("custom-env").env();
+const _ = require("lodash");
 
 const types = {
   unknownQuery: {
@@ -20,6 +21,10 @@ const types = {
   unableToDelete: {
     title:
       "Unable to delete due to required dependencies from other resources.",
+    status: 400,
+  },
+  idConflict: {
+    title: "Resource ID already in use.",
     status: 400,
   },
   noCredentials: {
@@ -64,6 +69,15 @@ const types = {
   },
   badDatabaseQuerySyntax: {
     title: "The server-generated database query contains syntactical errors.",
+    status: 500,
+  },
+  unexpectedDatabaseError: {
+    title: "Unexpected error while accessing the database.",
+    status: 500,
+  },
+  databaseConstraintViolation: {
+    title:
+      "The server-generated database query caused a internal constraint violation.",
     status: 500,
   },
   notImplemented: {
@@ -200,16 +214,16 @@ function getSelfUrl(request) {
 }
 
 function handleError(err, req, res) {
-  console.log("Handling error", err, "");
+  console.log("Handling error");
 
-  if (err?.code?.match(/^23503/)) {
-    err = { ...types.unableToDelete };
-    console.log("Database consult error detected", err, "");
+  const dbErr = checkDbError(err, req, res);
+
+  if (!_.isEqual(dbErr, err)) {
+    console.log(`Database error error detected.`, err);
+    err = dbErr;
   }
-  if (err?.code?.match(/^42\S{3}/)) {
-    err = { ...types.badDatabaseQuerySyntax };
-    console.log("Database consult error detected", err, "");
-  }
+
+  console.log(err, "");
 
   const links = {
     self: getSelfUrl(req) ? getSelfUrl(req) : undefined,
@@ -228,6 +242,22 @@ function handleError(err, req, res) {
 
   res.status(errorMessage.errors[0].status);
   res.json(errorMessage);
+}
+
+function checkDbError(err, req, res) {
+  if (err?.code?.match(/^23503/)) {
+    err = { ...types.unableToDelete };
+  } else if (err?.code?.match(/^23505/)) {
+    err = { ...types.idConflict };
+  } else if (err?.code?.match(/^23\S{3}/)) {
+    err = { ...types.databaseConstraintViolation };
+  } else if (err?.code?.match(/^42\S{3}/)) {
+    err = { ...types.badDatabaseQuerySyntax };
+  } else if (err?.code?.match(/^\S{5}/) && err?.severity === "ERROR") {
+    err = { ...types.unexpectedDatabaseError };
+  }
+
+  return err;
 }
 
 function createJSON(err, req) {

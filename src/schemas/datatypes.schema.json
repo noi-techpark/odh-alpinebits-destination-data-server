@@ -567,7 +567,8 @@
         "id": {
           "$ref": "id"
         }
-      }
+      },
+      "required": ["type", "id"]
     },
     "referenceArray": {
       "$id": "referenceArray",

@@ -1,0 +1,484 @@
+###
+
+POST /2022-04/agents
+Host:localhost:8080
+Content-Type:application/vnd.api+json
+
+{
+  "data": {
+    "id": "alpinebits",
+    "type": "agents",
+    "meta": {
+      "dataProvider": "https://example.com"
+    },
+    "attributes": {
+      "contactPoints": [
+        {
+          "email": "info@alpinebits.org",
+          "telephone": "+390000000000",
+          "address": {
+            "street": {
+              "deu": "Bozner Straße Nr. 63/A"
+            },
+            "city": {
+              "deu": "Frangart"
+            },
+            "region": {
+              "deu": "Frangart"
+            },
+            "complement": null,
+            "country": "IT",
+            "zipcode": "39057",
+            "type": null
+          },
+          "availableHours": null
+        }
+      ],
+      "description": {
+        "eng": "The \"AlpineBits Alliance\" is a group of SME operating in the touristic sector working together to innovate and open the data exchange in the alpine tourism, and therefore to optimize the online presence, sales and marketing efforts of the hotels and other accommodations in the alpine territory and also worldwide."
+      },
+      "name": {
+        "eng": "AlpineBits Alliance"
+      },
+      "url": "https://people.utwente.nl/c.moraisfonseca"
+    },
+    "relationships" : {
+      "categories": {
+        "data": [
+          {
+            "id": "alpinebits:organization",
+            "type": "categories"
+          }
+        ]
+      },
+      "multimediaDescriptions": null
+    }
+  }
+}
+
+###
+
+POST /2022-04/categories
+Host:localhost:8080
+Content-Type:application/vnd.api+json
+
+{
+  "data": {
+    "id": "example:category",
+    "type": "categories",
+    "meta": {
+      "dataProvider": "https://example.com"
+    },
+    "attributes": {
+      "name": {
+        "eng": "Example Category"
+      },
+      "namespace": "example",
+      "resourceTypes": [
+        "agents",
+        "categories",
+        "events",
+        "eventSeries",
+        "features",
+        "mediaObjects",
+        "mountainAreas",
+        "lifts",
+        "skiSlopes",
+        "snowparks",
+        "venues"
+      ]
+    },
+    "relationships" : {
+      "parents": {
+        "data": [
+          {
+            "id": "alpinebits:organization",
+            "type": "categories"
+          }
+        ]
+      },
+      "children": {
+        "data": [
+          {
+            "id": "alpinebits:person",
+            "type": "categories"
+          }
+        ]
+      },
+      "multimediaDescriptions": null
+    }
+  }
+}
+
+###
+
+POST /2022-04/events
+Host:localhost:8080
+Content-Type:application/vnd.api+json
+
+{
+  "data": {
+    "id": "example-event",
+    "type": "events",
+    "meta": {
+      "dataProvider": "https://example.com"
+    },
+    "attributes": {
+      "name": {
+        "eng": "Example Event"
+      },
+      "startDate": "2022-04-01"
+    },
+    "relationships" : {
+      "publisher": {
+        "data": {
+          "id": "alpinebits",
+          "type": "agents"
+        }
+      },
+      "organizers": {
+        "data": [
+          {
+            "id": "alpinebits",
+            "type": "agents"
+          }
+        ]
+      },
+      "categories": {
+        "data": [
+          {
+            "id": "alpinebits:inPersonEvent",
+            "type": "categories"
+          }
+        ]
+      }
+    }
+  }
+}
+###
+
+POST /2022-04/eventSeries
+Host:localhost:8080
+Content-Type:application/vnd.api+json
+
+{
+  "data": {
+    "id": "example-event-series",
+    "type": "eventSeries",
+    "meta": {
+      "dataProvider": "https://example.com"
+    },
+    "attributes": {
+      "name": {
+        "eng": "Example Event Series"
+      },
+      "frequency": "weekly"
+    },
+    "relationships" : {
+      "editions": {
+        "data": [
+          {
+            "id": "example-event",
+            "type": "events"
+          }
+        ]
+      },
+      "categories": {
+        "data": [
+          {
+            "id": "example:category",
+            "type": "categories"
+          }
+        ]
+      }
+    }
+  }
+}
+###
+
+POST /2022-04/features
+Host:localhost:8080
+Content-Type:application/vnd.api+json
+
+{
+  "data": {
+    "id": "example:feature",
+    "type": "features",
+    "meta": {
+      "dataProvider": "https://example.com"
+    },
+    "attributes": {
+      "name": {
+        "eng": "Example Feature"
+      },
+      "namespace": "example",
+      "resourceTypes": [
+        "agents",
+        "categories",
+        "events",
+        "eventSeries",
+        "features",
+        "mediaObjects",
+        "mountainAreas",
+        "lifts",
+        "skiSlopes",
+        "snowparks",
+        "venues"
+      ]
+    },
+    "relationships" : {
+      "parents": {
+        "data": [
+          {
+            "id": "example:feature",
+            "type": "features"
+          }
+        ]
+      },
+      "multimediaDescriptions": null
+    }
+  }
+}
+
+###
+
+POST /2022-04/lifts
+Host:localhost:8080
+Content-Type:application/vnd.api+json
+
+{
+  "data": {
+    "id": "example-lift",
+    "type": "lifts",
+    "meta": {
+      "dataProvider": "https://example.com"
+    },
+    "attributes": {
+      "name": {
+        "eng": "Example lift"
+      }
+    },
+    "relationships" : {
+    }
+  }
+}
+
+###
+
+POST /2022-04/mediaObjects
+Host:localhost:8080
+Content-Type:application/vnd.api+json
+
+{
+  "data": {
+    "id": "example-media-object",
+    "type": "mediaObjects",
+    "meta": {
+      "dataProvider": "https://example.com"
+    },
+    "attributes": {
+      "contentType": "image/example",
+      "url": "https://example.com"
+    },
+    "relationships" : {
+      "categories": {
+        "data": [
+          {
+            "id": "example:category",
+            "type": "categories"
+          }
+        ]
+      }
+    }
+  }
+}
+
+###
+
+POST /2022-04/mountainAreas
+Host:localhost:8080
+Content-Type:application/vnd.api+json
+
+{
+  "data": {
+    "id": "example-mountain-area",
+    "type": "mountainAreas",
+    "meta": {
+      "dataProvider": "https://example.com"
+    },
+    "attributes": {
+      "name": {
+        "eng": "Example Mountain Area"
+      }
+    },
+    "relationships" : {
+      "categories": {
+        "data": [
+          {
+            "id": "example:category",
+            "type": "categories"
+          }
+        ]
+      },
+      "connections": {
+        "data": [
+          {
+            "id": "example-lift",
+            "type": "lifts"
+          }
+        ]
+      },
+      "lifts": {
+        "data": [
+          {
+            "id": "example-lift",
+            "type": "lifts"
+          }
+        ]
+      }
+    }
+  }
+}
+
+###
+
+POST /2022-04/skiSlopes
+Host:localhost:8080
+Content-Type:application/vnd.api+json
+
+{
+  "data": {
+    "id": "example-ski-slope",
+    "type": "skiSlopes",
+    "meta": {
+      "dataProvider": "https://example.com"
+    },
+    "attributes": {
+      "name": {
+        "eng": "Example Ski Slope"
+      }
+    },
+    "relationships" : {
+      "categories": {
+        "data": [
+          {
+            "id": "example:category",
+            "type": "categories"
+          }
+        ]
+      },
+      "connections": {
+        "data": [
+          {
+            "id": "example-lift",
+            "type": "lifts"
+          }
+        ]
+      },
+      "multimediaDescriptions": {
+        "data": [
+          {
+            "id": "example-media-object",
+            "type": "mediaObjects"
+          }
+        ]
+      }
+    }
+  }
+}
+
+###
+
+POST /2022-04/snowparks
+Host:localhost:8080
+Content-Type:application/vnd.api+json
+
+{
+  "data": {
+    "id": "example-snowpark",
+    "type": "snowparks",
+    "meta": {
+      "dataProvider": "https://example.com"
+    },
+    "attributes": {
+      "name": {
+        "eng": "Example Snowpark"
+      }
+    },
+    "relationships" : {
+      "categories": {
+        "data": [
+          {
+            "id": "example:category",
+            "type": "categories"
+          }
+        ]
+      },
+      "features": {
+        "data": [
+          {
+            "id": "example:feature",
+            "type": "features"
+          }
+        ]
+      },
+      "connections": {
+        "data": [
+          {
+            "id": "example-lift",
+            "type": "lifts"
+          }
+        ]
+      },
+      "multimediaDescriptions": {
+        "data": [
+          {
+            "id": "example-media-object",
+            "type": "mediaObjects"
+          }
+        ]
+      }
+    }
+  }
+}
+
+###
+
+POST /2022-04/venues
+Host:localhost:8080
+Content-Type:application/vnd.api+json
+
+{
+  "data": {
+    "id": "example-venue",
+    "type": "venues",
+    "meta": {
+      "dataProvider": "https://example.com"
+    },
+    "attributes": {
+      "name": {
+        "eng": "Example Venue"
+      }
+    },
+    "relationships" : {
+      "categories": {
+        "data": [
+          {
+            "id": "example:category",
+            "type": "categories"
+          }
+        ]
+      },
+      "multimediaDescriptions": {
+        "data": [
+          {
+            "id": "example-media-object",
+            "type": "mediaObjects"
+          }
+        ]
+      }
+    }
+  }
+}
+
+###

@@ -1,0 +1,237 @@
+###
+
+PATCH /2022-04/agents/alpinebits
+Host:localhost:8080
+Content-Type:application/vnd.api+json
+
+{
+  "data": {
+    "id": "alpinebits",
+    "type": "agents",
+    "attributes": {
+      "description": {
+        "eng": "Example description"
+      },
+      "contactPoints": [
+        {
+          "email": "info@noi.bz.it",
+          "telephone": null,
+          "address": null,
+          "availableHours": null
+        }
+      ]
+    }
+  }
+}
+
+###
+
+PATCH /2022-04/categories/example:category
+Host:localhost:8080
+Content-Type:application/vnd.api+json
+
+{
+  "data": {
+    "id": "example:category",
+    "type": "categories",
+    "attributes": {
+      "description": {
+        "eng": "Example description"
+      },
+      "namespace": "another"
+    }
+  }
+}
+
+###
+
+PATCH /2022-04/events/example-event
+Host:localhost:8080
+Content-Type:application/vnd.api+json
+
+{
+  "data": {
+    "id": "example-event",
+    "type": "events",
+    "attributes": {
+      "description": {
+        "eng": "Example description"
+      }
+    },
+    "relationships" : {
+      "series": null
+    }
+  }
+}
+###
+
+PATCH /2022-04/eventSeries/example-event-series
+Host:localhost:8080
+Content-Type:application/vnd.api+json
+
+{
+  "data": {
+    "id": "example-event-series",
+    "type": "eventSeries",
+    "attributes": {
+      "description": {
+        "eng": "Example description"
+      },
+      "frequency": null
+    }
+  }
+}
+###
+
+PATCH /2022-04/features/example:feature
+Host:localhost:8080
+Content-Type:application/vnd.api+json
+
+{
+  "data": {
+    "id": "example:feature",
+    "type": "features",
+    "attributes": {
+      "description": {
+        "ita": "Example description"
+      },
+      "namespace": "another"
+    },
+    "relationships": {
+      "children": null
+    }
+  }
+}
+
+###
+
+PATCH /2022-04/lifts/example-lift
+Host:localhost:8080
+Content-Type:application/vnd.api+json
+
+{
+  "data": {
+    "id": "example-lift",
+    "type": "lifts",
+    "attributes": {
+      "capacity": 100
+    },
+    "relationships" : {
+    }
+  }
+}
+
+###
+
+PATCH /2022-04/mediaObjects/example-media-object
+Host:localhost:8080
+Content-Type:application/vnd.api+json
+
+{
+  "data": {
+    "id": "example-media-object",
+    "type": "mediaObjects",
+    "attributes": {
+      "author": "John Doe"
+    }
+  }
+}
+
+###
+
+PATCH /2022-04/mountainAreas/example-mountain-area
+Host:localhost:8080
+Content-Type:application/vnd.api+json
+
+{
+  "data": {
+    "id": "example-mountain-area",
+    "type": "mountainAreas",
+    "relationships" : {
+      "areaOwner": {
+        "data": {
+          "id": "alpinebits",
+          "type": "agents"
+        }
+      }
+    }
+  }
+}
+
+###
+
+PATCH /2022-04/skiSlopes/example-ski-slope
+Host:localhost:8080
+Content-Type:application/vnd.api+json
+
+{
+  "data": {
+    "id": "example-ski-slope",
+    "type": "skiSlopes",
+    "attributes": {
+      "difficulty": {
+        "eu": "expert",
+        "us": null
+      }
+    }
+  }
+}
+
+###
+
+PATCH /2022-04/snowparks/example-snowpark
+Host:localhost:8080
+Content-Type:application/vnd.api+json
+
+{
+  "data": {
+    "id": "example-snowpark",
+    "type": "snowparks",
+    "attributes": {
+      "difficulty": "expert",
+      "snowCondition": {
+        "obtainedIn": null,
+        "primarySurface": "powder",
+        "secondarySurface": null,
+        "baseSnow": 50,
+        "baseSnowRange": null,
+        "latestStorm": null,
+        "snowOverNight": null,
+        "groomed": null,
+        "snowMaking": null
+      }
+    },
+    "relationships": {
+      "features": null
+    }
+  }
+}
+
+###
+
+PATCH /2022-04/venues/example-venue
+Host:localhost:8080
+Content-Type:application/vnd.api+json
+
+{
+  "data": {
+    "id": "example-venue",
+    "type": "venues",
+    "meta": {
+      "dataProvider": "https://example.com"
+    },
+    "attributes": {
+      "geometries": [
+        {
+          "type": "Point",
+          "coordinates": [
+            11.358447074890137,
+            46.49667880447103
+          ]
+        }
+      ]
+    }
+  }
+}
+
+###

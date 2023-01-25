@@ -89,7 +89,14 @@ class SkiSlopeConnector extends ResourceConnector {
     this.ignoreNonListedFields(newInput, newSkiSlope);
 
     if (this.shouldUpdate(oldSkiSlope, newSkiSlope)) {
-      return Promise.all([this.updateResource(newSkiSlope)])
+      const columns = this.mapSkiSlopeToColumns(newSkiSlope);
+
+      return dbFn
+        .updateSkiSlope(this.connection, columns)
+        .then((ret) => {
+          newSkiSlope.id = _.first(ret)?.id;
+          return Promise.all([this.updateResource(newSkiSlope)]);
+        })
         .then((promises) => {
           newSkiSlope.lastUpdate = _.first(_.flatten(promises))[
             schemas.resources.lastUpdate

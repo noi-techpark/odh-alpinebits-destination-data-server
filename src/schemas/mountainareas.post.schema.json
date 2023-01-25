@@ -12,9 +12,19 @@
           "$ref": "/destinationdata/schemas/2022-04/mountainArea"
         },
         {
-          "required": ["type", "attributes"],
+          "required": ["type", "meta", "attributes"],
           "properties": {
+            "meta": {
+              "required": ["dataProvider"]
+            },
             "attributes": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "object",
+                  "minProperties": 1
+                }
+              },
               "required": ["name"]
             }
           }

@@ -29,7 +29,7 @@ class VenuesRouter extends Router {
       request,
       VenueConnector,
       deserializeVenue,
-      schemas["/snowparks/post"]
+      schemas["/venues/post"]
     );
 
   getVenues = (request) => this.getResources(request, VenueConnector);
@@ -43,7 +43,7 @@ class VenuesRouter extends Router {
       request,
       VenueConnector,
       deserializeVenue,
-      schemas["/snowparks/:id/patch"]
+      schemas["/venues/:id/patch"]
     );
 
   getVenueCategories = async (request) =>

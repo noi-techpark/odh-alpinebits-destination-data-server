@@ -9,7 +9,7 @@ let opts = {
   pageSize: 2,
   route: "mountainAreas",
   resourceType: "mountainAreas",
-  sampleAttributes: ["name", "geometries", "totalTrailLength"],
+  sampleAttributes: ["name", "geometries", "totalSlopeLength"],
   sampleRelationships: ["areaOwner", "lifts", "skiSlopes"],
   include: {
     relationship: "areaOwner",
@@ -40,11 +40,11 @@ let opts = {
     resourceSchema,
     arraySchema,
     pageStart: 1,
-    pageEnd: 2,
-    pageSize: 10,
+    pageEnd: 5,
+    pageSize: 4,
   },
 };
 
 basicRouteTests(opts);
 basicResourceRouteTests(opts);
-// basicSchemaTests(opts);
+basicSchemaTests(opts);

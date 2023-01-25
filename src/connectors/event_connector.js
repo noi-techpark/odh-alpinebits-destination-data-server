@@ -83,18 +83,26 @@ class EventConnector extends ResourceConnector {
     });
 
     if (this.shouldUpdate(oldEvent, newEvent)) {
-      return Promise.all([
-        this.updateResource(newEvent),
-        this.updateContributors(newEvent),
-        this.updateOrganizers(newEvent),
-        this.updateSponsors(newEvent),
-        this.updateSubEvents(newEvent),
-      ]).then((promises) => {
-        newEvent.lastUpdate = _.first(_.flatten(promises))[
-          resources.lastUpdate
-        ];
-        return newEvent;
-      });
+      const columns = this.mapEventToColumns(newEvent);
+
+      return dbFn
+        .updateEvent(this.connection, columns)
+        .then((ret) => {
+          newEvent.id = _.first(ret)?.id;
+          return Promise.all([
+            this.updateResource(newEvent),
+            this.updateContributors(newEvent),
+            this.updateOrganizers(newEvent),
+            this.updateSponsors(newEvent),
+            this.updateSubEvents(newEvent),
+          ]);
+        })
+        .then((promises) => {
+          newEvent.lastUpdate = _.first(_.flatten(promises))[
+            resources.lastUpdate
+          ];
+          return newEvent;
+        });
     }
 
     this.throwNoUpdate(oldEvent);
@@ -207,10 +215,10 @@ class EventConnector extends ResourceConnector {
       [events.inPersonCapacity]: event?.inPersonCapacity,
       [events.endDate]: event?.endDate,
       [events.onlineCapacity]: event?.onlineCapacity,
-      [events.parentId]: event?.parent?.id,
-      [events.publisherId]: event?.publisher?.id,
+      [events.parentId]: event?.parent?.id || null,
+      [events.publisherId]: event?.publisher?.id || null,
       [events.recorded]: event?.recorded,
-      [events.seriesId]: event?.series?.id,
+      [events.seriesId]: event?.series?.id || null,
       [events.simpleParticipationUrl]: _.isString(event?.simpleParticipationUrl)
         ? event?.simpleParticipationUrl
         : null,
@@ -223,8 +231,12 @@ class EventConnector extends ResourceConnector {
   }
 
   getOrderBy() {
-    const orderBy = super.getOrderBy();
-    return _.isEmpty(orderBy) ? [`${events.startDate} DESC`] : orderBy;
+    const sort = this.request?.query?.sort;
+    const random = this.request?.query?.random;
+
+    return _.isEmpty(sort) && _.isEmpty(random)
+      ? [`${events.startDate} DESC`, `${resources.lastUpdate} DESC`]
+      : super.getOrderBy();
   }
 }
 

@@ -88,14 +88,20 @@ class MediaObjectConnector extends ResourceConnector {
     });
 
     if (this.shouldUpdate(oldMediaObject, newMediaObject)) {
-      return Promise.all([this.updateResource(newMediaObject)]).then(
-        (promises) => {
+      const columns = this.mapMediaObjectToColumns(newMediaObject);
+
+      return dbFn
+        .updateMediaObject(this.connection, columns)
+        .then((ret) => {
+          newMediaObject.id = _.first(ret)?.id;
+          return Promise.all([this.updateResource(newMediaObject)]);
+        })
+        .then((promises) => {
           newMediaObject.lastUpdate = _.first(_.flatten(promises))[
             schemas.resources.lastUpdate
           ];
           return newMediaObject;
-        }
-      );
+        });
     }
 
     this.throwNoUpdate(oldMediaObject);

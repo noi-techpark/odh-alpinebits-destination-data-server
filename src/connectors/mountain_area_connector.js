@@ -90,7 +90,14 @@ class MountainAreaConnector extends ResourceConnector {
 
     // TODO: recover new "lastUpdate" value
     if (this.shouldUpdate(oldMountainArea, newMountainArea)) {
-      return Promise.all([this.updateResource(newMountainArea)])
+      const columns = this.mapMountainAreaToColumns(newMountainArea);
+
+      return dbFn
+        .updateMountainArea(this.connection, columns)
+        .then((ret) => {
+          newMountainArea.id = _.first(ret)?.id;
+          return Promise.all([this.updateResource(newMountainArea)]);
+        })
         .then((promises) => {
           newMountainArea.lastUpdate = _.first(_.flatten(promises))[
             schemas.resources.lastUpdate
@@ -184,7 +191,7 @@ class MountainAreaConnector extends ResourceConnector {
       [schemas.mountainAreas.id]: mountainArea?.id,
       [schemas.mountainAreas.area]: mountainArea?.area,
       [schemas.mountainAreas.areaOwnerId]: mountainArea?.areaOwner?.id,
-      [schemas.mountainAreas.totalParkLength]: mountainArea?.totalParkLength,
+      [schemas.mountainAreas.totalParkArea]: mountainArea?.totalParkArea,
       [schemas.mountainAreas.totalSlopeLength]: mountainArea?.totalSlopeLength,
     };
   }

@@ -1,0 +1,27 @@
+GET /2022-04/categories/example:category
+Host:localhost:8080
+
+###
+
+GET /2022-04/categories/example:category
+  ?include=parents
+  # &page[number]=1
+  &fields[categories]=name,resourceTypes
+Host:localhost:8080
+
+###
+
+GET /2022-04/events/example-event
+Host:localhost:8080
+
+###
+
+GET /2022-04/features
+Host:localhost:8080
+
+###
+
+DELETE /2022-04/snowparks/example-snowpark
+Host:localhost:8080
+
+###

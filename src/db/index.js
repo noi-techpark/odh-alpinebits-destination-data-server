@@ -64,7 +64,6 @@ module.exports = {
     categories: {
       _name: "categories",
       id: "id",
-      resourceId: "resource_id",
       namespace: "namespace",
     },
     categoryCoveredTypes: {
@@ -152,7 +151,6 @@ module.exports = {
     features: {
       _name: "features",
       id: "id",
-      resourceId: "resource_id",
       namespace: "namespace",
     },
     featureSpecializations: {

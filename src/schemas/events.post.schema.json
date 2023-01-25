@@ -12,9 +12,19 @@
           "$ref": "/destinationdata/schemas/2022-04/event"
         },
         {
-          "required": ["type", "attributes", "relationships"],
+          "required": ["type", "meta", "attributes", "relationships"],
           "properties": {
+            "meta": {
+              "required": ["dataProvider"]
+            },
             "attributes": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "object",
+                  "minProperties": 1
+                }
+              },
               "required": ["name"]
             },
             "relationships": {

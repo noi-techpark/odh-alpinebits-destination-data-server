@@ -3,30 +3,24 @@ const { basicRouteTests } = require("./route.test");
 const { basicSchemaTests } = require("./route.schema.test");
 const { basicQueriesTest } = require("./queries.test");
 
-const arraySchema = require("../src/validator/schemas/trails.schema.json");
-const resourceSchema = require("../src/validator/schemas/trails.id.schema.json");
+const arraySchema = require("../src/validator/schemas/venues.schema.json");
+const resourceSchema = require("../src/validator/schemas/venues.id.schema.json");
 
 let opts = {
-  route: "skiSlopes",
-  resourceType: "skiSlopes",
-  sampleAttributes: [
-    "name",
-    "address",
-    "geometries",
-    "openingHours",
-    "difficulty",
-  ],
-  sampleRelationships: ["connections", "multimediaDescriptions"],
+  route: "venues",
+  resourceType: "venues",
+  sampleAttributes: ["name", "address", "geometries", "howToArrive"],
+  sampleRelationships: ["categories", "multimediaDescriptions"],
   schema: {
     resourceSchema,
     arraySchema,
     pageStart: 1,
-    pageEnd: 5,
-    pageSize: 4,
+    pageEnd: 1,
+    pageSize: 20,
   },
   queries: [
     {
-      query: "filter[geometries][near]=11.309245,46.862025,10000",
+      query: "filter[geometries][near]=11.309245,46.862025,1000",
       expectStatus: 200,
     },
     {
@@ -34,7 +28,7 @@ let opts = {
       expectStatus: 200,
     },
     {
-      query: "search=cross",
+      query: "search=gardena",
       expectStatus: 200,
     },
   ],

@@ -225,6 +225,11 @@ function getReturningColumns(returning) {
 
 function insert(connection, tableName, columns, returning) {
   const returnColumns = getReturningColumns(returning);
+
+  // console.log("tableName", tableName);
+  // console.log("columns", columns);
+  // console.log("returning", returning);
+
   return connection(tableName).insert(columns).returning(returnColumns);
 }
 
@@ -282,6 +287,18 @@ function insertCategoryCoveredType(connection, type, categoryId) {
   return insert(connection, categoryCoveredTypes._name, columns);
 }
 
+function insertFeatureCoveredType(connection, type, featureId) {
+  const columns = {
+    [featureCoveredTypes.type]: type,
+    [featureCoveredTypes.featureId]: featureId,
+  };
+
+  checkNotNullable(type, featureCoveredTypes.type);
+  checkNotNullable(featureId, featureCoveredTypes.featureId);
+
+  return insert(connection, featureCoveredTypes._name, columns);
+}
+
 function insertCategorySpecialization(connection, childId, parentId) {
   const columns = {
     [categorySpecializations.childId]: childId,
@@ -292,6 +309,18 @@ function insertCategorySpecialization(connection, childId, parentId) {
   checkNotNullable(parentId, categorySpecializations.parentId);
 
   return insert(connection, categorySpecializations._name, columns);
+}
+
+function insertFeatureSpecialization(connection, childId, parentId) {
+  const columns = {
+    [featureSpecializations.childId]: childId,
+    [featureSpecializations.parentId]: parentId,
+  };
+
+  checkNotNullable(childId, featureSpecializations.childId);
+  checkNotNullable(parentId, featureSpecializations.parentId);
+
+  return insert(connection, featureSpecializations._name, columns);
 }
 
 function insertResource(connection, resource) {
@@ -372,6 +401,18 @@ function insertCategory(connection, category) {
   );
 }
 
+function insertFeature(connection, feature) {
+  const featureId = feature[features.id];
+  const namespace = feature[features.namespace];
+
+  checkNotNullable(featureId, features.id);
+  checkNotNullable(namespace, features.namespace);
+
+  return insert(connection, features._name, feature, features.id).then(
+    (array) => _.first(array)
+  );
+}
+
 function insertMediaObject(connection, mediaObject) {
   return insert(
     connection,
@@ -416,6 +457,18 @@ function insertResourceCategory(connection, resourceId, categoryId) {
   checkNotNullable(resourceId, resourceCategories.resourceId);
 
   return insert(connection, resourceCategories._name, columns);
+}
+
+function insertResourceFeature(connection, resourceId, featureId) {
+  const columns = {
+    [resourceFeatures.featureId]: featureId,
+    [resourceFeatures.resourceId]: resourceId,
+  };
+
+  checkNotNullable(featureId, resourceFeatures.featureId);
+  checkNotNullable(resourceId, resourceFeatures.resourceId);
+
+  return insert(connection, resourceFeatures._name, columns);
 }
 
 function insertMultimediaDescriptions(connection, resourceId, descriptionId) {
@@ -861,8 +914,21 @@ function deleteCategory(connection, id) {
   return connection(categories._name).where(columns).del();
 }
 
+function deleteFeature(connection, id) {
+  const columns = {
+    [features.id]: id,
+  };
+  return connection(features._name).where(columns).del();
+}
+
 function update(connection, tableName, where, columns, returning) {
   const returnColumns = getReturningColumns(returning);
+
+  // console.log("Update tableName", tableName);
+  // console.log("Update where", where);
+  // console.log("Update columns", columns);
+  // console.log("Update returning", returning);
+
   return connection(tableName)
     .where(where)
     .update(columns)
@@ -885,6 +951,87 @@ function updateCategory(connection, category) {
 
   const where = { [categories.id]: categoryId };
   return update(connection, categories._name, where, category);
+}
+
+function updateEvent(connection, event) {
+  const eventId = event[events.id];
+
+  checkNotNullable(eventId, events.id);
+
+  const where = { [events.id]: eventId };
+  return update(connection, events._name, where, event);
+}
+
+function updateEventSeries(connection, eventSeries) {
+  const eventSeriesId = eventSeries[eventSeriesSchema.id];
+
+  checkNotNullable(eventSeriesId, eventSeriesSchema.id);
+
+  const where = { [eventSeriesSchema.id]: eventSeriesId };
+  return update(connection, eventSeriesSchema._name, where, eventSeries);
+}
+
+function updateFeature(connection, feature) {
+  const featureId = feature[features.id];
+
+  checkNotNullable(featureId, features.id);
+
+  const where = { [features.id]: featureId };
+  return update(connection, features._name, where, feature);
+}
+
+function updateLift(connection, lift) {
+  const liftId = lift[lifts.id];
+
+  checkNotNullable(liftId, lifts.id);
+
+  const where = { [lifts.id]: liftId };
+  return update(connection, lifts._name, where, lift);
+}
+
+function updateMediaObject(connection, mediaObject) {
+  const mediaObjectId = mediaObject[mediaObjects.id];
+
+  checkNotNullable(mediaObjectId, mediaObjects.id);
+
+  const where = { [mediaObjects.id]: mediaObjectId };
+  return update(connection, mediaObjects._name, where, mediaObject);
+}
+
+function updateMountainArea(connection, mountainArea) {
+  const mountainAreaId = mountainArea[mountainAreas.id];
+
+  checkNotNullable(mountainAreaId, mountainAreas.id);
+
+  const where = { [mountainAreas.id]: mountainAreaId };
+  return update(connection, mountainAreas._name, where, mountainArea);
+}
+
+function updateSkiSlope(connection, skiSlope) {
+  const skiSlopeId = skiSlope[skiSlopes.id];
+
+  checkNotNullable(skiSlopeId, skiSlopes.id);
+
+  const where = { [skiSlopes.id]: skiSlopeId };
+  return update(connection, skiSlopes._name, where, skiSlope);
+}
+
+function updateSnowpark(connection, snowpark) {
+  const snowparkId = snowpark[snowparks.id];
+
+  checkNotNullable(snowparkId, snowparks.id);
+
+  const where = { [snowparks.id]: snowparkId };
+  return update(connection, snowparks._name, where, snowpark);
+}
+
+function updateVenue(connection, venue) {
+  const venueId = venue[venues.id];
+
+  checkNotNullable(venueId, venues.id);
+
+  const where = { [venues.id]: venueId };
+  return update(connection, venues._name, where, venue);
 }
 
 function deleteAbstracts(connection, id) {
@@ -962,6 +1109,16 @@ function deleteResourceCategories(connection, resourceId) {
   checkNotNullable(resourceId, resourceCategories.resourceId);
 
   return connection(resourceCategories._name).where(columns).del();
+}
+
+function deleteResourceFeature(connection, resourceId) {
+  const columns = {
+    [resourceFeatures.resourceId]: resourceId,
+  };
+
+  checkNotNullable(resourceId, resourceFeatures.resourceId);
+
+  return connection(resourceFeatures._name).where(columns).del();
 }
 
 function deleteMultimediaDescriptions(connection, descriptionId) {
@@ -1112,6 +1269,16 @@ function deleteCategoryCoveredTypes(connection, categoryId) {
   return connection(categoryCoveredTypes._name).where(columns).del();
 }
 
+function deleteFeatureCoveredTypes(connection, featureId) {
+  const columns = {
+    [featureCoveredTypes.featureId]: featureId,
+  };
+
+  checkNotNullable(featureId, featureCoveredTypes.featureId);
+
+  return connection(featureCoveredTypes._name).where(columns).del();
+}
+
 function deleteChildrenCategories(connection, parentId) {
   const columns = {
     [categorySpecializations.parentId]: parentId,
@@ -1120,6 +1287,16 @@ function deleteChildrenCategories(connection, parentId) {
   checkNotNullable(parentId, categorySpecializations.parentId);
 
   return connection(categorySpecializations._name).where(columns).del();
+}
+
+function deleteChildrenFeatures(connection, parentId) {
+  const columns = {
+    [featureSpecializations.parentId]: parentId,
+  };
+
+  checkNotNullable(parentId, featureSpecializations.parentId);
+
+  return connection(featureSpecializations._name).where(columns).del();
 }
 
 function deleteParentCategories(connection, childId) {
@@ -1132,6 +1309,16 @@ function deleteParentCategories(connection, childId) {
   return connection(categorySpecializations._name).where(columns).del();
 }
 
+function deleteParentFeatures(connection, childId) {
+  const columns = {
+    [featureSpecializations.childId]: childId,
+  };
+
+  checkNotNullable(childId, featureSpecializations.childId);
+
+  return connection(featureSpecializations._name).where(columns).del();
+}
+
 module.exports = {
   deleteResourceTypes,
   deleteAllEventsStatus,
@@ -1141,6 +1328,7 @@ module.exports = {
   deleteResource,
   deletePlace,
   deleteCategory,
+  deleteFeature,
   deleteAbstracts,
   deleteDescriptions,
   deleteNames,
@@ -1150,6 +1338,7 @@ module.exports = {
   deleteResourceText,
   deleteAddressText,
   deleteResourceCategories,
+  deleteResourceFeature,
   deleteMultimediaDescriptions,
   deleteOrganizers,
   deleteContributors,
@@ -1181,12 +1370,15 @@ module.exports = {
   insertResourceCategory,
   insertCategoryCoveredType,
   insertCategorySpecialization,
+  insertFeature,
+  insertResourceFeature,
+  insertFeatureCoveredType,
+  insertFeatureSpecialization,
   insertEvent,
   insertEventSeries,
   insertResourceText,
   insertPlaceText,
   insertAddressText,
-  insertResourceCategory,
   insertMultimediaDescriptions,
   insertPlaceConnection,
   insertOrganizer,
@@ -1218,6 +1410,15 @@ module.exports = {
   selectContactPointsFromId,
   updateResource,
   updateCategory,
+  updateEvent,
+  updateEventSeries,
+  updateFeature,
+  updateLift,
+  updateMediaObject,
+  updateMountainArea,
+  updateSkiSlope,
+  updateSnowpark,
+  updateVenue,
   updateSubEvent,
   updateEdition,
   insertVenue,
@@ -1237,4 +1438,7 @@ module.exports = {
   deleteAreaSkiSlopes,
   deleteAreaSnowparks,
   deleteSubAreas,
+  deleteFeatureCoveredTypes,
+  deleteChildrenFeatures,
+  deleteParentFeatures,
 };

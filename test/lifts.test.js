@@ -15,14 +15,10 @@ let opts = {
     resourceSchema,
     arraySchema,
     pageStart: 1,
-    pageEnd: 10,
-    pageSize: 50,
+    pageEnd: 5,
+    pageSize: 4,
   },
   queries: [
-    {
-      query: "filter[lang]=eng",
-      expectStatus: 200,
-    },
     {
       query: "filter[categories][any]=alpinebits:skilift,odh:sessellift",
       expectStatus: 200,
@@ -36,7 +32,7 @@ let opts = {
       expectStatus: 200,
     },
     {
-      query: "search[name]=renon",
+      query: "search=renon",
       expectStatus: 200,
     },
   ],
@@ -44,5 +40,5 @@ let opts = {
 
 basicRouteTests(opts);
 basicResourceRouteTests(opts);
-// basicSchemaTests(opts);
+basicSchemaTests(opts);
 basicQueriesTest(opts);

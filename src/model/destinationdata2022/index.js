@@ -311,7 +311,9 @@ function toRelationshipToManyObject(relationshipName, resource) {
       const { id, type } = item;
       return { id, type };
     }),
-    link: `${baseUrl}/${resource.type}/${resource.id}/${relationshipName}`,
+    links: {
+      related: `${baseUrl}/${resource.type}/${resource.id}/${relationshipName}`,
+    },
   };
 }
 
@@ -327,7 +329,9 @@ function toRelationshipToOneObject(relationshipName, resource) {
       id: relationship.id,
       type: relationship.type,
     },
-    link: `${baseUrl}/${resource.type}/${resource.id}/${relationshipName}`,
+    links: {
+      related: `${baseUrl}/${resource.type}/${resource.id}/${relationshipName}`,
+    },
   };
 }
 
@@ -578,8 +582,8 @@ function serializeMountainArea(mountainArea) {
   attributes.openingHours = _.cloneDeep(mountainArea.openingHours) ?? null;
   attributes.snowCondition = _.cloneDeep(mountainArea.snowCondition) ?? null;
   attributes.totalParkArea = _.cloneDeep(mountainArea.totalParkArea) ?? null;
-  attributes.totalTrailLength =
-    _.cloneDeep(mountainArea.totalTrailLength) ?? null;
+  attributes.totalSlopeLength =
+    _.cloneDeep(mountainArea.totalSlopeLength) ?? null;
 
   relationships.areaOwner = toRelationshipToOneObject(
     "areaOwner",
@@ -647,7 +651,7 @@ function serializeAnyResource(resource, request) {
 
 function removeNonSelectedFields(resource, request) {
   const type = resource?.type;
-  const selectedFields = request?.query?.fields?.[type] ?? "";
+  const selectedFields = request?.query?.fields?.[type]?.split(",") ?? "";
 
   if (_.isEmpty(selectedFields)) return;
 
@@ -670,7 +674,7 @@ function serializeSingleResource(resource, request, include) {
     jsonapi: { version: "1.0" },
     links,
     data: !_.isEmpty(resource) ? serializeAnyResource(resource, request) : null,
-    include: request?.query?.include
+    included: request?.query?.include
       ? include?.map((resource) => serializeAnyResource(resource, request)) ??
         []
       : undefined,

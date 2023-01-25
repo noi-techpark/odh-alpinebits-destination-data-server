@@ -1,41 +1,13 @@
 # AlpineBits DestinationData Server
 
+[![CI/CD](https://github.com/noi-techpark/odh-alpinebits-destination-data-server/actions/workflows/main.yml/badge.svg)](https://github.com/noi-techpark/odh-alpinebits-destination-data-server/actions/workflows/main.yml)
+
 This is a reference implementation for an [AlpineBits](https://www.alpinebits.org/) DestinationData server.
 
 The server exposes data from the [OpenDataHub API](http://tourism.opendatahub.bz.it/) in accordance to the AlpineBits format.
 
-The current version of the server accepts HTTP GET requests on the following routes:
+To learn about the available routes, HTTP methods, and features, visit the server's [live documentation](https://swagger.opendatahub.bz.it/?url=https://destinationdata.alpinebits.opendatahub.testingmachine.eu/specification.json).
 
-[![CI/CD](https://github.com/noi-techpark/odh-alpinebits-destination-data-server/actions/workflows/main.yml/badge.svg)](https://github.com/noi-techpark/odh-alpinebits-destination-data-server/actions/workflows/main.yml)
-
-* /
-* /1.0
-* /1.0/events
-* /1.0/events/:id
-* /1.0/events/:id/multimediaDescriptions
-* /1.0/events/:id/venues
-* /1.0/events/:id/publisher
-* /1.0/events/:id/organizers
-* /1.0/eventSeries\*
-* /1.0/eventSeries/:id\*
-* /1.0/lifts
-* /1.0/lifts/:id
-* /1.0/lifts/:id/multimediaDescriptions
-* /1.0/trails
-* /1.0/trails/:id
-* /1.0/trails/:id/multimediaDescriptions
-* /1.0/snowparks
-* /1.0/snowparks/:id
-* /1.0/snowparks/:id/multimediaDescriptions
-* /1.0/mountainAreas
-* /1.0/mountainAreas/:id
-* /1.0/mountainAreas/:id/lifts
-* /1.0/mountainAreas/:id/trails
-* /1.0/mountainAreas/:id/snowparks
-* /1.0/mountainAreas/:id/areaOwner
-* /1.0/mountainAreas/:id/multimediaDescriptions
-
-\* These routes return dummy data, as they are not currently available on the OpenDataHub API.
 
 ### Install
 
@@ -59,7 +31,7 @@ To use `.env.example`, run:
 cp .evn.example .env
 ```
 
-#### Setup Database
+#### Setup Database (Development)
 
 The server must be connected to a PostgreSQL database. During development, the following commands can be used to get Docker instances of PostgreSQL and PgAdmin running, which will be configured with the variables setup on the `.env` file:
 
@@ -98,7 +70,13 @@ We set up the server to listen to HTTP request on the port 8080.
 
 ### Test
 
-To run the **end-to-end** tests, run:
+To run the tests, you will need to first deploy a local database with sample data (requires Docker), and a server connected to it:
+```
+npm run test-db
+npm run test-server
+```
+
+Once the test server is running, execute:
 ```
 npm run test
 ```
@@ -119,7 +97,7 @@ docker-compose start
 
 * *Please set the environment variables as you need within the '.env' file.*
 
-* *The whole test suite may take between 15 and 25 seconds to be executed, as it makes multiple HTTP requests to the OpenDataHub API.*
+* *The whole test suite may take around 35 seconds to be executed.
 
 For the tests, we are using the [Jest](https://jestjs.io/) framework.
 

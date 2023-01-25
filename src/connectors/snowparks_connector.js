@@ -89,12 +89,22 @@ class SnowparkConnector extends ResourceConnector {
     this.ignoreNonListedFields(newInput, newSnowpark);
 
     if (this.shouldUpdate(oldSnowpark, newSnowpark)) {
-      return Promise.all([this.updateResource(newSnowpark)])
+      const columns = this.mapSnowparkToColumns(newSnowpark);
+
+      return dbFn
+        .updateSnowpark(this.connection, columns)
+        .then((ret) => {
+          newSnowpark.id = _.first(ret)?.id;
+          return Promise.all([this.updateResource(newSnowpark)]);
+        })
         .then((promises) => {
           newSnowpark.lastUpdate = _.first(_.flatten(promises))[
             schemas.resources.lastUpdate
           ];
-          return this.updatePlace(newSnowpark);
+          return Promise.all([
+            this.updatePlace(newSnowpark),
+            this.updateSnowparkFeatures(newSnowpark),
+          ]);
         })
         .then(() => newSnowpark);
     }
@@ -114,8 +124,26 @@ class SnowparkConnector extends ResourceConnector {
         const columns = this.mapSnowparkToColumns(snowpark);
         return dbFn.insertSnowpark(this.connection, columns);
       })
-      .then(() => this.insertPlace(snowpark))
+      .then(() =>
+        Promise.all([
+          this.insertPlace(snowpark),
+          this.insertSnowparkFeatures(snowpark),
+        ])
+      )
       .then(() => snowpark.id);
+  }
+
+  insertSnowparkFeatures(snowpark) {
+    const inserts = snowpark?.features?.map((feature) =>
+      dbFn.insertResourceFeature(this.connection, snowpark.id, feature.id)
+    );
+    return Promise.all(inserts ?? []);
+  }
+
+  updateSnowparkFeatures(resource) {
+    return dbFn
+      .deleteResourceFeature(this.connection, resource.id)
+      .then(() => this.insertSnowparkFeatures(resource));
   }
 
   mapSnowparkToColumns(snowpark) {

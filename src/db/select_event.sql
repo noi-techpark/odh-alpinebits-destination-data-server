@@ -84,7 +84,7 @@ FROM events
     GROUP BY id
   ) AS sub_events_array ON sub_events_array.id = events.id
   LEFT JOIN (
-    SELECT event_id AS "id",
+    SELECT DISTINCT ON (event_id) event_id AS "id",
       json_agg(
         json_build_object(
           'id', venue_id,
@@ -105,6 +105,7 @@ FROM events
       GROUP BY venue_id, event_id, places.geometries
     ) AS "event_venues_plus"
     GROUP BY event_id, event_venues_plus.postgis_geography
+    ORDER BY event_id, postgis_geography
   ) AS event_venues_array ON event_venues_array.id = events.id
   LEFT JOIN participation_url_objects ON participation_url_objects.id = events.id
   LEFT JOIN registration_url_objects ON registration_url_objects.id = events.id

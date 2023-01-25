@@ -12,8 +12,11 @@
           "$ref": "/destinationdata/schemas/2022-04/mediaObject"
         },
         {
-          "required": ["type", "attributes"],
+          "required": ["type", "meta", "attributes"],
           "properties": {
+            "meta": {
+              "required": ["dataProvider"]
+            },
             "attributes": {
               "required": ["contentType", "url"]
             }

@@ -103,7 +103,7 @@ class FeatureConnector extends ResourceConnector {
   }
 
   deleteFeature(id) {
-    return dbFn.deleteFeature(this.connection, id);
+    return dbFn.deleteResource(this.connection, id, "features");
   }
 
   insertFeature(feature) {
@@ -173,7 +173,7 @@ class FeatureConnector extends ResourceConnector {
 
   updateParentFeatures(feature) {
     return dbFn
-      .deleteParentFeature(this.connection, feature.id)
+      .deleteParentFeatures(this.connection, feature.id)
       .then(() => this.insertParentFeatures(feature));
   }
 

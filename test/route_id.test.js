@@ -8,9 +8,11 @@ module.exports.basicResourceRouteTests = (opts) => {
     let status, data;
 
     beforeAll(() => {
-      return utils.axiosInstance.get(`/${apiVersion}/${opts.route}/i-dont-exist`).catch((res) => {
-        ({ status, data } = res.response);
-      });
+      return utils.axiosInstance
+        .get(`/${apiVersion}/${opts.route}/i-dont-exist`)
+        .catch((res) => {
+          ({ status, data } = res.response);
+        });
     });
 
     test(`/${opts.route}/:id: status should be 404 NOT FOUND`, () => {
@@ -47,7 +49,9 @@ module.exports.basicResourceRouteTests = (opts) => {
     });
 
     test(`/${opts.route}/:id: content-type 'application/vnd.api+json'`, () => {
-      expect(headers["content-type"]).toEqual(expect.stringContaining("application/vnd.api+json"));
+      expect(headers["content-type"]).toEqual(
+        expect.stringContaining("application/vnd.api+json")
+      );
     });
 
     test(`/${opts.route}/:id: status should be 200 OK`, () => {
@@ -70,15 +74,25 @@ module.exports.basicResourceRouteTests = (opts) => {
 
       return utils.axiosInstance
         .get(url)
-        .then((res) => expect(Object.keys(res.data.data.attributes)).toEqual([opts.sampleAttributes[0]]));
+        .then((res) =>
+          expect(Object.keys(res.data.data.attributes)).toEqual([
+            opts.sampleAttributes[0],
+          ])
+        );
     });
 
     test(`/${opts.route}/:id: multi-attribute selection`, () => {
-      const url = `${baseUrl}?fields[${opts.resourceType}]=${opts.sampleAttributes.join(",")}`;
+      const url = `${baseUrl}?fields[${
+        opts.resourceType
+      }]=${opts.sampleAttributes.join(",")}`;
 
       return utils.axiosInstance
         .get(url)
-        .then((res) => expect(Object.keys(res.data.data.attributes).sort()).toEqual(opts.sampleAttributes.sort()));
+        .then((res) =>
+          expect(Object.keys(res.data.data.attributes).sort()).toEqual(
+            opts.sampleAttributes.sort()
+          )
+        );
     });
 
     test(`/${opts.route}/:id: multi-attribute and multi-relationship selection`, () => {
@@ -86,8 +100,12 @@ module.exports.basicResourceRouteTests = (opts) => {
       const url = `${baseUrl}?fields[${opts.resourceType}]=${fields.join(",")}`;
 
       return utils.axiosInstance.get(url).then((res) => {
-        expect(Object.keys(res.data.data.attributes).sort()).toEqual(opts.sampleAttributes.sort());
-        expect(Object.keys(res.data.data.relationships).sort()).toEqual(opts.sampleRelationships.sort());
+        expect(Object.keys(res.data.data.attributes).sort()).toEqual(
+          opts.sampleAttributes.sort()
+        );
+        expect(Object.keys(res.data.data.relationships).sort()).toEqual(
+          opts.sampleRelationships.sort()
+        );
       });
     });
 
@@ -98,18 +116,24 @@ module.exports.basicResourceRouteTests = (opts) => {
 
       return utils.axiosInstance.get(url).then((res) => {
         expect(res.data.included).toBeDefined();
-        res.data.included.forEach((object) => expect(object.type).toEqual(opts.include.resourceType));
+        res.data.included.forEach((object) =>
+          expect(object.type).toEqual(opts.include.resourceType)
+        );
       });
     });
 
     test(`/${opts.route}/:id: multiple includes`, () => {
       if (!opts.multiInclude) return;
 
-      const url = `${baseUrl}?include=${opts.multiInclude.relationships.join(",")}`;
+      const url = `${baseUrl}?include=${opts.multiInclude.relationships.join(
+        ","
+      )}`;
 
       return utils.axiosInstance.get(url).then((res) => {
         expect(res.data.included).toBeDefined();
-        res.data.included.forEach((object) => expect(opts.multiInclude.resourceTypes).toContain(object.type));
+        res.data.included.forEach((object) =>
+          expect(opts.multiInclude.resourceTypes).toContain(object.type)
+        );
       });
     });
 
@@ -122,7 +146,9 @@ module.exports.basicResourceRouteTests = (opts) => {
         expect(res.data.included).toBeDefined();
         res.data.included.forEach((object) => {
           expect(object.type).toEqual(opts.selectInclude.resourceType);
-          expect(Object.keys(object.attributes).sort()).toEqual([opts.selectInclude.attribute].sort());
+          expect(Object.keys(object.attributes).sort()).toEqual(
+            [opts.selectInclude.attribute].sort()
+          );
         });
       });
     });
@@ -130,14 +156,19 @@ module.exports.basicResourceRouteTests = (opts) => {
     test(`/${opts.route}/:id: multiple fields selected on inclusion of multiple resource types`, () => {
       if (!opts.multiSelectInclude) return;
 
-      let include = "include=" + opts.multiSelectInclude.map((entry) => entry.relationship).join(",");
+      let include =
+        "include=" +
+        opts.multiSelectInclude.map((entry) => entry.relationship).join(",");
       let fields = opts.multiSelectInclude.map(
         (entry) => `fields[${entry.resourceType}]=${entry.attributes.join(",")}`
       );
       let url = `${baseUrl}?${[include, ...fields].join("&")}`;
 
       let expectedAttributesPerType = {};
-      opts.multiSelectInclude.forEach((entry) => (expectedAttributesPerType[entry.resourceType] = entry.attributes));
+      opts.multiSelectInclude.forEach(
+        (entry) =>
+          (expectedAttributesPerType[entry.resourceType] = entry.attributes)
+      );
 
       let resourceTypes = Object.keys(expectedAttributesPerType);
 
@@ -145,7 +176,9 @@ module.exports.basicResourceRouteTests = (opts) => {
         expect(res.data.included).toBeDefined();
         res.data.included.forEach((object) => {
           expect(resourceTypes).toContain(object.type);
-          expect(Object.keys(object.attributes).sort()).toEqual(expectedAttributesPerType[object.type].sort());
+          expect(Object.keys(object.attributes).sort()).toEqual(
+            expectedAttributesPerType[object.type].sort()
+          );
         });
       });
     });

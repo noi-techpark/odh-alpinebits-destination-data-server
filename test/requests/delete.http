@@ -1,0 +1,56 @@
+###
+
+DELETE /2022-04/agents/alpinebits
+Host:localhost:8080
+
+###
+
+DELETE /2022-04/categories/example:category
+Host:localhost:8080
+
+###
+
+DELETE /2022-04/events/example-event
+Host:localhost:8080
+
+###
+
+DELETE /2022-04/eventSeries/example-event-series
+Host:localhost:8080
+
+###
+
+DELETE /2022-04/features/example:feature
+Host:localhost:8080
+
+###
+
+DELETE /2022-04/lifts/example-lift
+Host:localhost:8080
+
+###
+
+DELETE /2022-04/mediaObjects/example-media-object
+Host:localhost:8080
+
+###
+
+DELETE /2022-04/mountainAreas/example-mountain-area
+Host:localhost:8080
+
+###
+
+DELETE /2022-04/skiSlopes/example-ski-slope
+Host:localhost:8080
+
+###
+
+DELETE /2022-04/snowparks/example-snowpark
+Host:localhost:8080
+
+###
+
+DELETE /2022-04/venues/example-venue
+Host:localhost:8080
+
+###

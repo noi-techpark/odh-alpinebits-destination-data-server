@@ -80,7 +80,14 @@ class LiftConnector extends ResourceConnector {
     this.ignoreNonListedFields(newInput, newLift);
 
     if (this.shouldUpdate(oldLift, newLift)) {
-      return Promise.all([this.updateResource(newLift)])
+      const columns = this.mapLiftToColumns(newLift);
+
+      return dbFn
+        .updateLift(this.connection, columns)
+        .then((ret) => {
+          newLift.id = _.first(ret)?.id;
+          return Promise.all([this.updateResource(newLift)]);
+        })
         .then((promises) => {
           newLift.lastUpdate = _.first(_.flatten(promises))[
             schemas.resources.lastUpdate

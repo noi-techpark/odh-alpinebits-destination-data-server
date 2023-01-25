@@ -13,6 +13,7 @@ const { Venue } = require("./../destinationdata/venue");
 const schemas = require("./query-schemas");
 const _ = require("lodash");
 const Ajv = require("ajv");
+const { isEmpty } = require("lodash");
 const ajv = new Ajv();
 
 function testSchema(input, schema) {
@@ -81,13 +82,18 @@ class Request {
     this.typesInIncluded = [];
   }
 
-  setMaxPagination() {
-    _.set(this, "query.page.size", 999);
-    _.set(this, "query.page.number", 1);
-  }
-
   validate() {
     const { query } = this;
+
+    const unknownQueries = Object.keys(query)?.filter(
+      (q) => !this.supportedFeatures?.[q] && !_.isEmpty(query?.[q])
+    );
+
+    if (!_.isEmpty(unknownQueries)) {
+      DestinationDataError.throwUnknownQueryError(
+        `The request contains unexpected queries: ${unknownQueries}`
+      );
+    }
 
     if (!testSchema(query, schemas.query)) {
       const features = Object.entries(this.supportedFeatures)
