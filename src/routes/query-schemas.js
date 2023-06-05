@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: NOI Techpark <digital@noi.bz.it>
+//
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
 const commaSeparatedStrings = {
     type: "string",
     pattern: "^[a-zA-Z0-9](?:[-\\w]*[a-zA-Z0-9])?(,([a-zA-Z0-9](?:[-\\w]*[a-zA-Z0-9])?))*$"

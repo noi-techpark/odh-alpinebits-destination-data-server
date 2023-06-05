@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: NOI Techpark <digital@noi.bz.it>
+//
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
 const { basicRouteTests } = require("./route.test");
 const { basicResourceRouteTests } = require("./route_id.test");
 const { basicSchemaTests } = require("./route.schema.test");

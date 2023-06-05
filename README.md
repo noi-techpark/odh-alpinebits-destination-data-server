@@ -1,3 +1,9 @@
+<!--
+SPDX-FileCopyrightText: NOI Techpark <digital@noi.bz.it>
+
+SPDX-License-Identifier: CC0-1.0
+-->
+
 # AlpineBits DestinationData Server
 
 This is a reference implementation for an [AlpineBits](https://www.alpinebits.org/) DestinationData server.

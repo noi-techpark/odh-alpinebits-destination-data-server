@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: NOI Techpark <digital@noi.bz.it>
+//
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
 const { Agent } = require("./agent");
 const { Category } = require("./category");
 const { Event } = require("./event");

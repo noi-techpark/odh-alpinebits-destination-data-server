@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: NOI Techpark <digital@noi.bz.it>
+//
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
 const OdhCollection2DestinationData = require("../../../src/model/odh2destinationdata/response_transform");
 const OdhEvent2DestinationData = require("../../../src/model/odh2destinationdata/event_transform");
 const OdhActivity2DestinationData = require("../../../src/model/odh2destinationdata/activity_transform");

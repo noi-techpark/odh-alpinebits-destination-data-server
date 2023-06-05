@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: NOI Techpark <digital@noi.bz.it>
+//
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
 const _ = require("lodash");
 const dbFn = require("../db/functions");
 const { schemas } = require("../db");

@@ -1,0 +1,12 @@
+Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: odh-alpinebits-destination-data-server
+Upstream-Contact: NOI Techpark <digital@noi.bz.it>
+Source: https://github.com/noi-techpark/odh-alpinebits-destination-data-server
+
+Files: .github/* infrastructure/* .gitignore LICENSE *.json .env.* test/model/odh2destinationdata/*.json sslcert/* src/schemas/* src/validator/schemas/*
+Copyright: (c) NOI Techpark <digital@noi.bz.it>
+License: CC0-1.0
+
+Files: src/db/*.sql
+Copyright: (c) NOI Techpark <digital@noi.bz.it>
+License: AGPL-3.0-or-later

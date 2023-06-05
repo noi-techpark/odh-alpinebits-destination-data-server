@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: NOI Techpark <digital@noi.bz.it>
+//
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
 const { Router } = require("./router");
 const { VenueConnector } = require("../connectors/venue_connector");
 const { deserializeVenue } = require("../model/destinationdata2022");

@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: NOI Techpark <digital@noi.bz.it>
+//
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
 const iso6391to6393 = {};
 
 for (const [iso6393tag, iso6391tag] of Object.entries(require("iso-639-3/to-1.json"))) {
