@@ -1,6 +1,6 @@
 // SPDX-FileCopyrightText: NOI Techpark <digital@noi.bz.it>
 //
-// SPDX-License-Identifier: AGPL-3.0-or-later
+// SPDX-License-Identifier: MPL-2.0
 
 // todo: replace with env variable
 const apiVersion = "2021-04";

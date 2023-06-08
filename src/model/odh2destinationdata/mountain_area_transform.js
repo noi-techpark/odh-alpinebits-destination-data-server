@@ -1,6 +1,6 @@
 // SPDX-FileCopyrightText: NOI Techpark <digital@noi.bz.it>
 //
-// SPDX-License-Identifier: AGPL-3.0-or-later
+// SPDX-License-Identifier: MPL-2.0
 
 const { Area: OdhArea } = require("../odh/area");
 const { MountainArea: DestinationDataMountainArea } = require("../destinationdata/mountain_area");
