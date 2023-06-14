@@ -8,7 +8,7 @@ SPDX-License-Identifier: CC0-1.0
 
 This is a reference implementation for an [AlpineBits](https://www.alpinebits.org/) DestinationData server.
 
-The server exposes data from the [OpenDataHub API](http://tourism.opendatahub.bz.it/) in accordance to the AlpineBits format.
+The server exposes data from the [OpenDataHub API](http://tourism.opendatahub.com/) in accordance to the AlpineBits format.
 
 The current version of the server accepts HTTP GET requests on the following routes:
 
@@ -87,7 +87,7 @@ npm run create-tables
 npm run insert-defaults
 ```
 
-... and (iii) to populate the database with data imported from the [OpenDataHub API](http://tourism.opendatahub.bz.it/)
+... and (iii) to populate the database with data imported from the [OpenDataHub API](http://tourism.opendatahub.com/)
 
 ```
 npm run import-odh-data
