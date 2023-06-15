@@ -60,7 +60,7 @@ describe('Test transformation ODH "items" into DestinationData resources', () =>
 
     it("The object meta must have a set data provider and last update timestamp greater than zero 0 (January 1, 1970, 00:00:00)", () => {
       const { meta } = resource;
-      expect(meta.dataProvider).toBe("http://tourism.opendatahub.bz.it/");
+      expect(meta.dataProvider).toBe("http://tourism.opendatahub.com/");
       expect(new Date(meta.lastUpdate) > new Date(0)).toBe(true);
     });
 

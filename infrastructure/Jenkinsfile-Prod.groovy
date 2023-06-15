@@ -9,8 +9,8 @@ pipeline {
         SERVER_PORT = "1006"
         
         REF_SERVER_CORS_ORIGIN = "*"
-        REF_SERVER_URL = "https://destinationdata.alpinebits.opendatahub.bz.it"
-        ODH_BASE_URL = "https://tourism.api.opendatahub.bz.it/v1/"
+        REF_SERVER_URL = "https://destinationdata.alpinebits.opendatahub.com"
+        ODH_BASE_URL = "https://tourism.api.opendatahub.com/v1/"
         ODH_TIMEOUT = "60000"
     }
 

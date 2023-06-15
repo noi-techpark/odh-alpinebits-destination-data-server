@@ -15,7 +15,7 @@ const htmlSanitizeOpts = {
 // TODO: replace the dataProvider with a environment variable
 // TODO: review whether changing the timezone with the "+01:00" suffix can damage data in CEST
 function transformMeta(item) {
-  const meta = { dataProvider: "http://tourism.opendatahub.bz.it/", lastUpdate: null };
+  const meta = { dataProvider: "http://tourism.opendatahub.com/", lastUpdate: null };
 
   if (typeof item.LastChange === "string" || item.LastChange instanceof String) {
     meta.lastUpdate = item.LastChange.replace(/Z/g, "") + "+01:00";
