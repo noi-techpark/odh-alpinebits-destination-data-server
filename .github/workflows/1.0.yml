@@ -56,13 +56,13 @@ jobs:
           X_REF_SERVER_PORT: ${{ env.REF_SERVER_PORT }}
           X_REF_SERVER_CORS_ORIGIN: "*"
           X_REF_SERVER_URL: "https://destinationdata.alpinebits.opendatahub.testingmachine.eu"
-          X_ODH_BASE_URL: "https://tourism.opendatahub.bz.it/v1/"
+          X_ODH_BASE_URL: "https://tourism.opendatahub.com/v1/"
           X_ODH_TIMEOUT: "60000"
           X_AUTH_METHOD: "none"
           X_REF_SERVER_EXPOSED_PORT: 8080
           X_USERNAME: alpinebits
           X_PASSWORD: supersecret
-          X_SWAGGER_URL: https://swagger.opendatahub.bz.it/?url=https://destinationdata.alpinebits.opendatahub.testingmachine.eu/specification.json
+          X_SWAGGER_URL: https://swagger.opendatahub.com/?url=https://destinationdata.alpinebits.opendatahub.testingmachine.eu/specification.json
 
 
       - name: Build and push 
@@ -98,14 +98,14 @@ jobs:
           X_SERVER_PORT: ${{ env.SERVER_PORT }}
           X_REF_SERVER_PORT: ${{ env.REF_SERVER_PORT }}
           X_REF_SERVER_CORS_ORIGIN: "*"
-          X_REF_SERVER_URL: "https://destinationdata.alpinebits.opendatahub.bz.it"
-          X_ODH_BASE_URL: "https://tourism.opendatahub.bz.it/v1/"
+          X_REF_SERVER_URL: "https://destinationdata.alpinebits.opendatahub.com"
+          X_ODH_BASE_URL: "https://tourism.opendatahub.com/v1/"
           X_ODH_TIMEOUT: "60000"
           X_AUTH_METHOD: "none"
           X_REF_SERVER_EXPOSED_PORT: 8080
           X_USERNAME: alpinebits
           X_PASSWORD: supersecret
-          X_SWAGGER_URL: https://swagger.opendatahub.bz.it/?url=https://destinationdata.alpinebits.opendatahub.testingmachine.eu/specification.json
+          X_SWAGGER_URL: https://swagger.opendatahub.com/?url=https://destinationdata.alpinebits.opendatahub.testingmachine.eu/specification.json
 
 
       - name: Build and push 
