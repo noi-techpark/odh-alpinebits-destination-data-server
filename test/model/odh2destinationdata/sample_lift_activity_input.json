@@ -1,11 +1,11 @@
 {
     "Id": "7FC702D2210CFAA29E153BA9AB5ABB62",
-    "Self": "http://tourism.api.opendatahub.bz.it/v1/Activity/7FC702D2210CFAA29E153BA9AB5ABB62",
+    "Self": "http://tourism.api.opendatahub.com/v1/Activity/7FC702D2210CFAA29E153BA9AB5ABB62",
     "Type": "Aufstiegsanlagen",
     "Areas": [
         {
             "Id": "4972D41A8DC042F88190C154D9CC8A8E",
-            "Self": "http://tourism.api.opendatahub.bz.it/v1/Area/4972D41A8DC042F88190C154D9CC8A8E"
+            "Self": "http://tourism.api.opendatahub.com/v1/Area/4972D41A8DC042F88190C154D9CC8A8E"
         }
     ],
     "SmgId": null,
@@ -76,19 +76,19 @@
     "ODHTags": [
         {
             "Id": "aufstiegsanlagen",
-            "Self": "http://tourism.api.opendatahub.bz.it/v1/ActivityTypes/aufstiegsanlagen"
+            "Self": "http://tourism.api.opendatahub.com/v1/ActivityTypes/aufstiegsanlagen"
         },
         {
             "Id": "weitere aufstiegsanlagen",
-            "Self": "http://tourism.api.opendatahub.bz.it/v1/ActivityTypes/weitere%20aufstiegsanlagen"
+            "Self": "http://tourism.api.opendatahub.com/v1/ActivityTypes/weitere%20aufstiegsanlagen"
         },
         {
             "Id": "skilift",
-            "Self": "http://tourism.api.opendatahub.bz.it/v1/ActivityTypes/skilift"
+            "Self": "http://tourism.api.opendatahub.com/v1/ActivityTypes/skilift"
         },
         {
             "Id": "kleinskilift",
-            "Self": "http://tourism.api.opendatahub.bz.it/v1/ActivityTypes/kleinskilift"
+            "Self": "http://tourism.api.opendatahub.com/v1/ActivityTypes/kleinskilift"
         }
     ],
     "PoiType": "Kleinskilift",
@@ -268,7 +268,7 @@
                 "pl": "Ratschings/Racines",
                 "ru": "Ратшингс/Racines"
             },
-            "Self": "http://tourism.api.opendatahub.bz.it/v1/TourismAssociation/522822D151CA11D18F1400A02427D15E"
+            "Self": "http://tourism.api.opendatahub.com/v1/TourismAssociation/522822D151CA11D18F1400A02427D15E"
         },
         "AreaInfo": {
             "Id": "4972D41A8DC042F88190C154D9CC8A8E",
@@ -282,7 +282,7 @@
                 "pl": "Ratschings–Jaufen",
                 "ru": "Ratschings–Jaufen"
             },
-            "Self": "http://tourism.api.opendatahub.bz.it/v1/Area/4972D41A8DC042F88190C154D9CC8A8E"
+            "Self": "http://tourism.api.opendatahub.com/v1/Area/4972D41A8DC042F88190C154D9CC8A8E"
         },
         "RegionInfo": {
             "Id": "D2633A1DC24E11D18F1B006097B8970B",
@@ -296,7 +296,7 @@
                 "pl": "Brixen/Bressanone i okolice",
                 "ru": "Бриксен/Bressanone и окрестности"
             },
-            "Self": "http://tourism.api.opendatahub.bz.it/v1/Region/D2633A1DC24E11D18F1B006097B8970B"
+            "Self": "http://tourism.api.opendatahub.com/v1/Region/D2633A1DC24E11D18F1B006097B8970B"
         },
         "DistrictInfo": null,
         "MunicipalityInfo": null
@@ -305,17 +305,17 @@
     "ActivityTypes": [
         {
             "Id": "Aufstiegsanlagen",
-            "Self": "http://tourism.api.opendatahub.bz.it/v1/ActivityTypes/Aufstiegsanlagen",
+            "Self": "http://tourism.api.opendatahub.com/v1/ActivityTypes/Aufstiegsanlagen",
             "Type": "Type"
         },
         {
             "Id": "Skilift",
-            "Self": "http://tourism.api.opendatahub.bz.it/v1/ActivityTypes/Skilift",
+            "Self": "http://tourism.api.opendatahub.com/v1/ActivityTypes/Skilift",
             "Type": "SubType"
         },
         {
             "Id": "Kleinskilift",
-            "Self": "http://tourism.api.opendatahub.bz.it/v1/ActivityTypes/Kleinskilift",
+            "Self": "http://tourism.api.opendatahub.com/v1/ActivityTypes/Kleinskilift",
             "Type": "PoiType"
         }
     ],

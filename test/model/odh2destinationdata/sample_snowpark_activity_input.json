@@ -1,11 +1,11 @@
 {
   "Id": "8781EFB8EDC5216BBF7A80DEB565569C",
-  "Self": "http://tourism.api.opendatahub.bz.it/v1/Activity/8781EFB8EDC5216BBF7A80DEB565569C",
+  "Self": "http://tourism.api.opendatahub.com/v1/Activity/8781EFB8EDC5216BBF7A80DEB565569C",
   "Type": "Piste",
   "Areas": [
     {
       "Id": "9408E5F8327642DF9B40A68A70B74815",
-      "Self": "http://tourism.api.opendatahub.bz.it/v1/Area/9408E5F8327642DF9B40A68A70B74815"
+      "Self": "http://tourism.api.opendatahub.com/v1/Area/9408E5F8327642DF9B40A68A70B74815"
     }
   ],
   "SmgId": null,
@@ -61,11 +61,11 @@
   "ODHTags": [
     {
       "Id": "piste",
-      "Self": "http://tourism.api.opendatahub.bz.it/v1/ActivityTypes/piste"
+      "Self": "http://tourism.api.opendatahub.com/v1/ActivityTypes/piste"
     },
     {
       "Id": "snowpark",
-      "Self": "http://tourism.api.opendatahub.bz.it/v1/ActivityTypes/snowpark"
+      "Self": "http://tourism.api.opendatahub.com/v1/ActivityTypes/snowpark"
     }
   ],
   "PoiType": "blau",
@@ -183,7 +183,7 @@
         "pl": "Sëlva/Selva",
         "ru": "Волькенштайн/Selva"
       },
-      "Self": "http://tourism.api.opendatahub.bz.it/v1/TourismAssociation/522822E651CA11D18F1400A02427D15E"
+      "Self": "http://tourism.api.opendatahub.com/v1/TourismAssociation/522822E651CA11D18F1400A02427D15E"
     },
     "AreaInfo": {
       "Id": "9408E5F8327642DF9B40A68A70B74815",
@@ -197,7 +197,7 @@
         "pl": "Wolkenstein",
         "ru": "Wolkenstein"
       },
-      "Self": "http://tourism.api.opendatahub.bz.it/v1/Area/9408E5F8327642DF9B40A68A70B74815"
+      "Self": "http://tourism.api.opendatahub.com/v1/Area/9408E5F8327642DF9B40A68A70B74815"
     },
     "RegionInfo": {
       "Id": "D2633A1EC24E11D18F1B006097B8970B",
@@ -211,7 +211,7 @@
         "pl": "Region Val Gardena w Dolomitach",
         "ru": "регион Валь-Гардена, Доломиты"
       },
-      "Self": "http://tourism.api.opendatahub.bz.it/v1/Region/D2633A1EC24E11D18F1B006097B8970B"
+      "Self": "http://tourism.api.opendatahub.com/v1/Region/D2633A1EC24E11D18F1B006097B8970B"
     },
     "DistrictInfo": null,
     "MunicipalityInfo": null
@@ -220,17 +220,17 @@
   "ActivityTypes": [
     {
       "Id": "Piste",
-      "Self": "http://tourism.api.opendatahub.bz.it/v1/ActivityTypes/Piste",
+      "Self": "http://tourism.api.opendatahub.com/v1/ActivityTypes/Piste",
       "Type": "Type"
     },
     {
       "Id": "Snowpark",
-      "Self": "http://tourism.api.opendatahub.bz.it/v1/ActivityTypes/Snowpark",
+      "Self": "http://tourism.api.opendatahub.com/v1/ActivityTypes/Snowpark",
       "Type": "SubType"
     },
     {
       "Id": "blau",
-      "Self": "http://tourism.api.opendatahub.bz.it/v1/ActivityTypes/blau",
+      "Self": "http://tourism.api.opendatahub.com/v1/ActivityTypes/blau",
       "Type": "PoiType"
     }
   ],

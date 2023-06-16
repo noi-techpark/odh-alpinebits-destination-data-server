@@ -2,14 +2,14 @@
     "TotalResults": 24791,
     "TotalPages": 12396,
     "CurrentPage": 15,
-    "PreviousPage": "http://tourism.api.opendatahub.bz.it/v1/Event?pagesize=2&pagenumber=14",
-    "NextPage": "http://tourism.api.opendatahub.bz.it/v1/Event?pagesize=2&pagenumber=16",
+    "PreviousPage": "http://tourism.api.opendatahub.com/v1/Event?pagesize=2&pagenumber=14",
+    "NextPage": "http://tourism.api.opendatahub.com/v1/Event?pagesize=2&pagenumber=16",
     "Seed": null,
     "Items": [
       {
         "Id": "47FD17D2DE264AAEBF6E44B3C32D1367",
         "Ranc": 0,
-        "Self": "http://tourism.api.opendatahub.bz.it/v1/Event/47FD17D2DE264AAEBF6E44B3C32D1367",
+        "Self": "http://tourism.api.opendatahub.com/v1/Event/47FD17D2DE264AAEBF6E44B3C32D1367",
         "Type": "1",
         "Active": true,
         "Detail": {
@@ -60,17 +60,17 @@
         "Ticket": "0",
         "Topics": [
           {
-            "Self": "http://tourism.api.opendatahub.bz.it/v1/EventTopics/252200A028C8449D9A6205369A6D0D36",
+            "Self": "http://tourism.api.opendatahub.com/v1/EventTopics/252200A028C8449D9A6205369A6D0D36",
             "TopicRID": "252200A028C8449D9A6205369A6D0D36",
             "TopicInfo": "Gastronomie/Typische Produkte"
           },
           {
-            "Self": "http://tourism.api.opendatahub.bz.it/v1/EventTopics/7E048074BA004EC58E29E330A9AA476B",
+            "Self": "http://tourism.api.opendatahub.com/v1/EventTopics/7E048074BA004EC58E29E330A9AA476B",
             "TopicRID": "7E048074BA004EC58E29E330A9AA476B",
             "TopicInfo": "Musik/Tanz"
           },
           {
-            "Self": "http://tourism.api.opendatahub.bz.it/v1/EventTopics/B5467FEFE5C74FA5AD32B83793A76165",
+            "Self": "http://tourism.api.opendatahub.com/v1/EventTopics/B5467FEFE5C74FA5AD32B83793A76165",
             "TopicRID": "B5467FEFE5C74FA5AD32B83793A76165",
             "TopicInfo": "Führungen/Besichtigungen"
           }
@@ -80,11 +80,11 @@
         "ODHTags": [
           {
             "Id": "eventi 10 anni unesco",
-            "Self": "http://tourism.api.opendatahub.bz.it/v1/ODHTag/eventi%2010%20anni%20unesco"
+            "Self": "http://tourism.api.opendatahub.com/v1/ODHTag/eventi%2010%20anni%20unesco"
           },
           {
             "Id": "eventi super",
-            "Self": "http://tourism.api.opendatahub.bz.it/v1/ODHTag/eventi%20super"
+            "Self": "http://tourism.api.opendatahub.com/v1/ODHTag/eventi%20super"
           }
         ],
         "SmgTags": [
@@ -97,7 +97,7 @@
         "Districts": [
           {
             "Id": "79CBD7D251C911D18F1400A02427D15E",
-            "Self": "http://tourism.api.opendatahub.bz.it/v1/District/79CBD7D251C911D18F1400A02427D15E"
+            "Self": "http://tourism.api.opendatahub.com/v1/District/79CBD7D251C911D18F1400A02427D15E"
           }
         ],
         "EventDate": [
@@ -215,7 +215,7 @@
               "pl": "Dolomites San Vigilio - San Martin",
               "ru": "Dolomites Сан-Виджилио-Сан-Мартино"
             },
-            "Self": "http://tourism.api.opendatahub.bz.it/v1/TourismAssociation/522822BA51CA11D18F1400A02427D15E"
+            "Self": "http://tourism.api.opendatahub.com/v1/TourismAssociation/522822BA51CA11D18F1400A02427D15E"
           },
           "AreaInfo": null,
           "RegionInfo": {
@@ -230,7 +230,7 @@
               "pl": "San Vigilio Dolomites",
               "ru": "Сан Вижилио Доломитес/San Vigilio Dolomites"
             },
-            "Self": "http://tourism.api.opendatahub.bz.it/v1/Region/D2633BBBB456F18F2A008088B4770B"
+            "Self": "http://tourism.api.opendatahub.com/v1/Region/D2633BBBB456F18F2A008088B4770B"
           },
           "DistrictInfo": {
             "Id": "79CBD7D251C911D18F1400A02427D15E",
@@ -244,7 +244,7 @@
               "pl": "San Vigilio",
               "ru": "Сан-Виджилио"
             },
-            "Self": "http://tourism.api.opendatahub.bz.it/v1/District/79CBD7D251C911D18F1400A02427D15E"
+            "Self": "http://tourism.api.opendatahub.com/v1/District/79CBD7D251C911D18F1400A02427D15E"
           },
           "MunicipalityInfo": {
             "Id": "1465A460C04946EFAD3D479EDC3329EB",
@@ -258,7 +258,7 @@
               "pl": "San Vigilio",
               "ru": "San Vigilio"
             },
-            "Self": "http://tourism.api.opendatahub.bz.it/v1/Municipality/1465A460C04946EFAD3D479EDC3329EB"
+            "Self": "http://tourism.api.opendatahub.com/v1/Municipality/1465A460C04946EFAD3D479EDC3329EB"
           }
         },
         "EventDatesEnd": [
@@ -354,7 +354,7 @@
       {
         "Id": "BFF16EC65D344F66BC1AB47D20347D74",
         "Ranc": 0,
-        "Self": "http://tourism.api.opendatahub.bz.it/v1/Event/BFF16EC65D344F66BC1AB47D20347D74",
+        "Self": "http://tourism.api.opendatahub.com/v1/Event/BFF16EC65D344F66BC1AB47D20347D74",
         "Type": "",
         "Active": true,
         "Detail": {
@@ -405,17 +405,17 @@
         "Ticket": "0",
         "Topics": [
           {
-            "Self": "http://tourism.api.opendatahub.bz.it/v1/EventTopics/0D25868CC23242D6AC97AEB2973CB3D6",
+            "Self": "http://tourism.api.opendatahub.com/v1/EventTopics/0D25868CC23242D6AC97AEB2973CB3D6",
             "TopicRID": "0D25868CC23242D6AC97AEB2973CB3D6",
             "TopicInfo": "Tagungen Vorträge"
           },
           {
-            "Self": "http://tourism.api.opendatahub.bz.it/v1/EventTopics/162C0067811B477DA725D2F5F2D98398",
+            "Self": "http://tourism.api.opendatahub.com/v1/EventTopics/162C0067811B477DA725D2F5F2D98398",
             "TopicRID": "162C0067811B477DA725D2F5F2D98398",
             "TopicInfo": "Sport"
           },
           {
-            "Self": "http://tourism.api.opendatahub.bz.it/v1/EventTopics/767F6F43FC394CE9A3C8A9725C6FF134",
+            "Self": "http://tourism.api.opendatahub.com/v1/EventTopics/767F6F43FC394CE9A3C8A9725C6FF134",
             "TopicRID": "767F6F43FC394CE9A3C8A9725C6FF134",
             "TopicInfo": "Kurse/Bildung"
           }
@@ -430,7 +430,7 @@
         "Districts": [
           {
             "Id": "79CBD7ED51C911D18F1400A02427D15E",
-            "Self": "http://tourism.api.opendatahub.bz.it/v1/District/79CBD7ED51C911D18F1400A02427D15E"
+            "Self": "http://tourism.api.opendatahub.com/v1/District/79CBD7ED51C911D18F1400A02427D15E"
           }
         ],
         "EventDate": [
@@ -574,7 +574,7 @@
               "pl": "Meran/Merano",
               "ru": "Меран/Merano"
             },
-            "Self": "http://tourism.api.opendatahub.bz.it/v1/TourismAssociation/522822BE51CA11D18F1400A02427D15E"
+            "Self": "http://tourism.api.opendatahub.com/v1/TourismAssociation/522822BE51CA11D18F1400A02427D15E"
           },
           "AreaInfo": null,
           "RegionInfo": {
@@ -589,7 +589,7 @@
               "pl": "Meran/Merano i okolice",
               "ru": "Меран/Merano и окрестности"
             },
-            "Self": "http://tourism.api.opendatahub.bz.it/v1/Region/D2633A20C24E11D18F1B006097B8970B"
+            "Self": "http://tourism.api.opendatahub.com/v1/Region/D2633A20C24E11D18F1B006097B8970B"
           },
           "DistrictInfo": {
             "Id": "79CBD7ED51C911D18F1400A02427D15E",
@@ -603,7 +603,7 @@
               "pl": "Merano/Meran",
               "ru": "Мерано"
             },
-            "Self": "http://tourism.api.opendatahub.bz.it/v1/District/79CBD7ED51C911D18F1400A02427D15E"
+            "Self": "http://tourism.api.opendatahub.com/v1/District/79CBD7ED51C911D18F1400A02427D15E"
           },
           "MunicipalityInfo": {
             "Id": "418E5CC913764648802DD2BE30AD91AC",
@@ -617,7 +617,7 @@
               "pl": "Meran/Merano",
               "ru": "Меран/Merano"
             },
-            "Self": "http://tourism.api.opendatahub.bz.it/v1/Municipality/418E5CC913764648802DD2BE30AD91AC"
+            "Self": "http://tourism.api.opendatahub.com/v1/Municipality/418E5CC913764648802DD2BE30AD91AC"
           }
         },
         "EventDatesEnd": [

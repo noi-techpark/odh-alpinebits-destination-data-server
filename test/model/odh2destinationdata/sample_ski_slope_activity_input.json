@@ -1,11 +1,11 @@
 {
     "Id": "4DA19B2B1328127FC062FB79F6F435A5",
-    "Self": "http://tourism.api.opendatahub.bz.it/v1/Activity/4DA19B2B1328127FC062FB79F6F435A5",
+    "Self": "http://tourism.api.opendatahub.com/v1/Activity/4DA19B2B1328127FC062FB79F6F435A5",
     "Type": "Loipen",
     "Areas": [
       {
         "Id": "C30DA5E46A194185A84AA8C774964E2A",
-        "Self": "http://tourism.api.opendatahub.bz.it/v1/Area/C30DA5E46A194185A84AA8C774964E2A"
+        "Self": "http://tourism.api.opendatahub.com/v1/Area/C30DA5E46A194185A84AA8C774964E2A"
       }
     ],
     "SmgId": null,
@@ -69,11 +69,11 @@
     "ODHTags": [
       {
         "Id": "loipen",
-        "Self": "http://tourism.api.opendatahub.bz.it/v1/ActivityTypes/loipen"
+        "Self": "http://tourism.api.opendatahub.com/v1/ActivityTypes/loipen"
       },
       {
         "Id": "klassisch",
-        "Self": "http://tourism.api.opendatahub.bz.it/v1/ActivityTypes/klassisch"
+        "Self": "http://tourism.api.opendatahub.com/v1/ActivityTypes/klassisch"
       }
     ],
     "PoiType": "blau",
@@ -220,7 +220,7 @@
           "pl": "Toblach/Dobbiaco",
           "ru": "Тоблах/Dobbiaco"
         },
-        "Self": "http://tourism.api.opendatahub.bz.it/v1/TourismAssociation/522822A751CA11D18F1400A02427D15E"
+        "Self": "http://tourism.api.opendatahub.com/v1/TourismAssociation/522822A751CA11D18F1400A02427D15E"
       },
       "AreaInfo": {
         "Id": "C30DA5E46A194185A84AA8C774964E2A",
@@ -234,7 +234,7 @@
           "pl": "Toblach ",
           "ru": "Toblach "
         },
-        "Self": "http://tourism.api.opendatahub.bz.it/v1/Area/C30DA5E46A194185A84AA8C774964E2A"
+        "Self": "http://tourism.api.opendatahub.com/v1/Area/C30DA5E46A194185A84AA8C774964E2A"
       },
       "RegionInfo": {
         "Id": "D2633A1FC24E11D18F1B006097B8970B",
@@ -248,7 +248,7 @@
           "pl": "Region Drei Zinnen w Dolomitach",
           "ru": "регион Драй-Циннен, Доломиты"
         },
-        "Self": "http://tourism.api.opendatahub.bz.it/v1/Region/D2633A1FC24E11D18F1B006097B8970B"
+        "Self": "http://tourism.api.opendatahub.com/v1/Region/D2633A1FC24E11D18F1B006097B8970B"
       },
       "DistrictInfo": null,
       "MunicipalityInfo": null
@@ -257,17 +257,17 @@
     "ActivityTypes": [
       {
         "Id": "Loipen",
-        "Self": "http://tourism.api.opendatahub.bz.it/v1/ActivityTypes/Loipen",
+        "Self": "http://tourism.api.opendatahub.com/v1/ActivityTypes/Loipen",
         "Type": "Type"
       },
       {
         "Id": "klassisch",
-        "Self": "http://tourism.api.opendatahub.bz.it/v1/ActivityTypes/klassisch",
+        "Self": "http://tourism.api.opendatahub.com/v1/ActivityTypes/klassisch",
         "Type": "SubType"
       },
       {
         "Id": "blau",
-        "Self": "http://tourism.api.opendatahub.bz.it/v1/ActivityTypes/blau",
+        "Self": "http://tourism.api.opendatahub.com/v1/ActivityTypes/blau",
         "Type": "PoiType"
       }
     ],

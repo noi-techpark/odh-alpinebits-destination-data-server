@@ -18,7 +18,7 @@
       "type": "events",
       "id": "47FD17D2DE264AAEBF6E44B3C32D1367",
       "meta": {
-        "dataProvider": "http://tourism.opendatahub.bz.it/",
+        "dataProvider": "http://tourism.opendatahub.com/",
         "lastUpdate": "2019-07-27T00:05:53.8397873+01:00"
       },
       "links": {
@@ -117,7 +117,7 @@
       "type": "events",
       "id": "BFF16EC65D344F66BC1AB47D20347D74",
       "meta": {
-        "dataProvider": "http://tourism.opendatahub.bz.it/",
+        "dataProvider": "http://tourism.opendatahub.com/",
         "lastUpdate": "2020-08-12T00:05:26.4618267+01:00"
       },
       "links": {
@@ -222,7 +222,7 @@
       "type": "agents",
       "id": "47FD17D2DE264AAEBF6E44B3C32D1367_publisher",
       "meta": {
-        "dataProvider": "http://tourism.opendatahub.bz.it/",
+        "dataProvider": "http://tourism.opendatahub.com/",
         "lastUpdate": "2019-07-27T00:05:53.8397873+01:00"
       },
       "links": {
@@ -241,7 +241,7 @@
       "type": "agents",
       "id": "BFF16EC65D344F66BC1AB47D20347D74_publisher",
       "meta": {
-        "dataProvider": "http://tourism.opendatahub.bz.it/",
+        "dataProvider": "http://tourism.opendatahub.com/",
         "lastUpdate": "2020-08-12T00:05:26.4618267+01:00"
       },
       "links": {

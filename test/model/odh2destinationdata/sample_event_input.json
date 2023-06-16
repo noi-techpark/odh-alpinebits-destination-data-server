@@ -1,7 +1,7 @@
 {
     "Id": "CDB3CC1EE2614488A451C467BE971571",
     "Ranc": 0,
-    "Self": "http://tourism.api.opendatahub.bz.it/v1/Event/CDB3CC1EE2614488A451C467BE971571",
+    "Self": "http://tourism.api.opendatahub.com/v1/Event/CDB3CC1EE2614488A451C467BE971571",
     "Type": "1",
     "Active": true,
     "Detail": {
@@ -52,7 +52,7 @@
     "Ticket": "0",
     "Topics": [
       {
-        "Self": "http://tourism.api.opendatahub.bz.it/v1/EventTopics/252200A028C8449D9A6205369A6D0D36",
+        "Self": "http://tourism.api.opendatahub.com/v1/EventTopics/252200A028C8449D9A6205369A6D0D36",
         "TopicRID": "252200A028C8449D9A6205369A6D0D36",
         "TopicInfo": "Gastronomie/Typische Produkte"
       }
@@ -67,7 +67,7 @@
     "Districts": [
       {
         "Id": "79CBD61251C911D18F1400A02427D15E",
-        "Self": "http://tourism.api.opendatahub.bz.it/v1/District/79CBD61251C911D18F1400A02427D15E"
+        "Self": "http://tourism.api.opendatahub.com/v1/District/79CBD61251C911D18F1400A02427D15E"
       }
     ],
     "EventDate": [
@@ -206,7 +206,7 @@
           "pl": "Chiusa/Klausen",
           "ru": "Кьюза/Klausen"
         },
-        "Self": "http://tourism.api.opendatahub.bz.it/v1/TourismAssociation/522822A151CA11D18F1400A02427D15E"
+        "Self": "http://tourism.api.opendatahub.com/v1/TourismAssociation/522822A151CA11D18F1400A02427D15E"
       },
       "AreaInfo": null,
       "RegionInfo": {
@@ -221,7 +221,7 @@
           "pl": "Bressanone/Brixen i okolice",
           "ru": "Брессаноне/Brixen и окрестности"
         },
-        "Self": "http://tourism.api.opendatahub.bz.it/v1/Region/D2633A1DC24E11D18F1B006097B8970B"
+        "Self": "http://tourism.api.opendatahub.com/v1/Region/D2633A1DC24E11D18F1B006097B8970B"
       },
       "DistrictInfo": {
         "Id": "79CBD61251C911D18F1400A02427D15E",
@@ -235,7 +235,7 @@
           "pl": "Velturno/Feldthurns",
           "ru": "Вельтурно"
         },
-        "Self": "http://tourism.api.opendatahub.bz.it/v1/District/79CBD61251C911D18F1400A02427D15E"
+        "Self": "http://tourism.api.opendatahub.com/v1/District/79CBD61251C911D18F1400A02427D15E"
       },
       "MunicipalityInfo": {
         "Id": "DFE9B747E3DE4BE49E048CC2D4A0CCDD",
@@ -249,7 +249,7 @@
           "pl": "Velturno/Feldthurns",
           "ru": "Вельтурно"
         },
-        "Self": "http://tourism.api.opendatahub.bz.it/v1/Municipality/DFE9B747E3DE4BE49E048CC2D4A0CCDD"
+        "Self": "http://tourism.api.opendatahub.com/v1/Municipality/DFE9B747E3DE4BE49E048CC2D4A0CCDD"
       }
     },
     "EventDatesEnd": [
