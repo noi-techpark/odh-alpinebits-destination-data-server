@@ -6,14 +6,14 @@ SPDX-License-Identifier: CC0-1.0
 
 # AlpineBits DestinationData Server
 
+![REUSE Compliance](https://github.com/noi-techpark/odh-alpinebits-destination-data-server/actions/workflows/reuse.yml/badge.svg)
+[![CI/CD](https://github.com/noi-techpark/odh-alpinebits-destination-data-server/actions/workflows/main.yml/badge.svg)](https://github.com/noi-techpark/odh-alpinebits-destination-data-server/actions/workflows/main.yml)
+
 This is a reference implementation for an [AlpineBits](https://www.alpinebits.org/) DestinationData server.
 
 The server exposes data from the [OpenDataHub API](http://tourism.opendatahub.com/) in accordance to the AlpineBits format.
 
 The current version of the server accepts HTTP GET requests on the following routes:
-
-![REUSE Compliance](https://github.com/noi-techpark/odh-alpinebits-destination-data-server/actions/workflows/reuse.yml/badge.svg)
-[![CI/CD](https://github.com/noi-techpark/odh-alpinebits-destination-data-server/actions/workflows/main.yml/badge.svg)](https://github.com/noi-techpark/odh-alpinebits-destination-data-server/actions/workflows/main.yml)
 
 * /
 * /1.0
